@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from db.database import db, User, add
+from db.database import db, User, DBM
 from util.func import reply_json
 
 user = Blueprint('user', __name__)
@@ -33,7 +33,7 @@ def signup():
     password = request.form.get('password')
     # db manipulation
     print('in signup')
-    add(User(username=username, password=password, group=0))
+    DBM.add(User(username=username, password=password, group=0))
 
 
     return reply_json(1, 'signed up')

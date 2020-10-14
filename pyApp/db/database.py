@@ -3,9 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-def add(model: db.Model):
-    db.session.add(model)
-    db.session.commit()
+class DBM(object):
+    @staticmethod
+    def initDB(app):
+        with app.app_context():
+            db.init_app(app)
+            db.create_all()
+
+    @staticmethod
+    def add(model: db.Model):
+        db.session.add(model)
+        db.session.commit()
 
 
 class User(db.Model):
