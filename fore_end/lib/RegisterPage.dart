@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
+import 'package:fore_end/Mycomponents/myTextField.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,14 +29,19 @@ class MyApp extends StatelessWidget {
               child: Column(
                   children: <Widget>[
                     Text(
-                      "Welcome",
+                      "Create your\naccount",
                       textDirection: TextDirection.ltr,
                       style: TextStyle(
                           fontSize: 50,
+                          fontWeight: FontWeight.bold,
                           fontFamily: "Futura",
                           color: Colors.black),
                     ),
-                    SizedBox(height:60),
+                    SizedBox(height:100),
+                    //上面是标题 下面准备写自己的输入框类
+
+
+
                     MyButton(
                         text: "Sign up",
                         fontsize: 25,
@@ -47,14 +53,11 @@ class MyApp extends StatelessWidget {
                           print("click!");
                         }),
                     SizedBox(height:20),
-                    Text(
-                      "Already have account?",
-                      textDirection: TextDirection.ltr,
-                      style:TextStyle(
-                        fontSize: 16,
-                        color: Colors.black
-                      )
-                    )
+
+                    MyTextField(placeholder: "1",emailAddress: "2",isPassword: false,),
+
+
+
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,  //水平居中
                   mainAxisAlignment: MainAxisAlignment.center)),  //垂直居中
