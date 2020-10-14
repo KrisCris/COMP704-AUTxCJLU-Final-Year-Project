@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 
 
@@ -12,6 +13,7 @@ class MyButton extends StatefulWidget {
   final String text;
   final double fontsize;
   final bool isBold;
+  bool disabled;
   double width;
   double height;
 
@@ -19,6 +21,7 @@ class MyButton extends StatefulWidget {
   double startOpac;
   double endOpac;
   int flashDura;
+  int flucDura;
   Color flashColor;
 
   MyButton(
@@ -30,9 +33,11 @@ class MyButton extends StatefulWidget {
       this.bgColor = Colors.blue,
       this.width = 120,
       this.height = 40,
+        this.disabled = true,
         this.startOpac=0,
         this.endOpac=0.5,
         this.flashDura=200,
+        this.flucDura=300,
         this.flashColor=Colors.white,
       this.tapFunc = null,
       this.doubleTapFunc = null,
@@ -49,52 +54,63 @@ class MyButton extends StatefulWidget {
   }
 }
 
-class MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin{
-  Tween tw;
-  AnimationController ctl;
-  Animation animation;
-  bool isFinish=false;
+class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
+
+  DoubleTweenAnimation flashAnimation = new DoubleTweenAnimation();
+  FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
+
   bool isTap=false;
 
   @override
   void initState() {
     super.initState();
-    this.tw = new Tween<double>(begin: widget.startOpac,end: widget.endOpac);
-    this.ctl = new AnimationController(duration: Duration(milliseconds:widget.flashDura),vsync:this)
-      ..addListener(() {setState(() {});})
-      ..addStatusListener((status) {
-        if(status == AnimationStatus.completed){
-          this.isFinish = true;
-          if(!isTap){
-            this.ctl.reverse();
-          }
-        }else if(status == AnimationStatus.dismissed){
-          this.isFinish=false;
+    this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this, () { setState(() {});});
+    this.flashAnimation.initAnimation(widget.startOpac, widget.endOpac, widget.flashDura, this,(){setState(() {});});
+    this.flashAnimation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        if(!isTap){
+                  this.flashAnimation.reverseFlash();
         }
-      });
-    this.animation = this.tw.animate(this.ctl);
+      }
+    });
   }
 
   @override
   void dispose() {
-    ctl.dispose();
+    this.flashAnimation.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (TapDownDetails tpd){
-        this.beginFlash();
-      },
-      onTapUp: (TapUpDetails tpu){
-        this.reverseFlash();
-        widget.tapFunc();
-      },
-        onTapCancel: (){
-         this.reverseFlash();
-        },
-      child: this.buttonUI
+    return Transform.translate(
+        offset: Offset(this.fluctuateAnimation.value,0),
+        child: GestureDetector(
+            onTapDown: (TapDownDetails tpd){
+              if(widget.disabled){
+                print("click disabled");
+                print(this.fluctuateAnimation.value);
+                this.fluctuateAnimation.forward();
+              }else{
+                this.isTap = true;
+                this.flashAnimation.beginFlash();
+              }
+            },
+            onTapUp: (TapUpDetails tpu){
+              if(widget.disabled)return;
+
+              this.isTap = false;
+              this.flashAnimation.reverseFlash();
+              widget.tapFunc();
+            },
+            onTapCancel: (){
+              if(widget.disabled)return;
+
+              this.isTap = false;
+              this.flashAnimation.reverseFlash();
+            },
+            child: this.buttonUI
+    )
     );
   }
   Widget get buttonUI{
@@ -120,7 +136,7 @@ class MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin{
             ),
           ),
           Opacity(
-            opacity: this.animation.value,
+            opacity: this.flashAnimation.value,
             child:Container(
               width: widget.width,
               height: widget.height,
@@ -132,16 +148,5 @@ class MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin{
           )
         ]
     );
-  }
-  void reverseFlash(){
-    isTap = false;
-    if(this.isFinish){
-      this.ctl.reverse();
-    }
-  }
-  void beginFlash(){
-    this.isTap = true;
-    this.isFinish = false;
-    this.ctl.forward();
   }
 }
