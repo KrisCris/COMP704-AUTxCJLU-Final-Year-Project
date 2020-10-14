@@ -1,5 +1,8 @@
 from flask import Blueprint, request
 
+from db.database import db, User, add
+from util.func import reply_json
+
 user = Blueprint('user', __name__)
 
 
@@ -29,6 +32,11 @@ def signup():
     username = request.form.get('username')
     password = request.form.get('password')
     # db manipulation
+    print('in signup')
+    add(User(username=username, password=password, group=0))
+
+
+    return reply_json(1, 'signed up')
 
 
 @user.route('/verify_mail', methods=['POST'])
