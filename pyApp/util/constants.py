@@ -1,10 +1,10 @@
 # DB
-USER_NAME = 'rnd'
-PASSWORD = 'sofop#rnd'
-HOST_ADDRESS = 'connlost.online'
-PORT = '33060'
+DB_USERNAME = 'rnd'
+DB_PASSWORD = 'sofop#rnd'
+DB_ADDRESS = 'connlost.online'
+DB_PORT = '33060'
 DATABASE = 'rnd'
-CHARSET = 'utf8mb4'
+DB_CHARSET = 'utf8mb4'
 
 # EMAIL
 # SENDER = 'rnd_mail@mail.connlost.online'
