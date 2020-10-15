@@ -44,7 +44,7 @@ class MyTextButtonState extends State<MyTextButton>
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         if(!widget.isTap){
-          this.animation.reverseFlash();
+          this.animation.reverseAnimation();
         }
       }
     });
@@ -72,18 +72,18 @@ class MyTextButtonState extends State<MyTextButton>
             ..onTapUp = (TapUpDetails tpd) {
               widget.isTap = false;
               print("tapUp");
-              this.animation.reverseFlash();
+              this.animation.reverseAnimation();
               widget.tapUpFunc();
             }
             ..onTapDown = (TapDownDetails details) {
               widget.isTap = true;
               print("tapDown");
-              this.animation.beginFlash();
+              this.animation.beginAnimation();
             }
             ..onTapCancel= (){
               widget.isTap = false;
               print("tapCancel");
-              this.animation.reverseFlash();
+              this.animation.reverseAnimation();
             }
         ));
   }
