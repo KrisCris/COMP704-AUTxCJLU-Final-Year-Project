@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return MaterialApp(home: FirstPage(), routes: {
+    return MaterialApp(home: FirstPage(), routes: <String,WidgetBuilder>{
       "login": (context) => Login(),
       "register": (context) => Register(),
     });
@@ -51,7 +51,7 @@ class FirstPage extends StatelessWidget {
             SizedBox(height: 60),
             MyButton(
                 text: "Sign up",
-                fontsize: 25,
+                fontsize: 18,
                 width: 0.7,
                 height: 55,
                 radius: 30,

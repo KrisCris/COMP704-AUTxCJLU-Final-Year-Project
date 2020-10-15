@@ -12,6 +12,8 @@ class MyTextField extends StatefulWidget {
   Color originalColor;
   Color focusColor;
   Color errorColor;
+  double ulDefaultWidth;
+  double ulFocusedWidth;
 
   // final inputController;  //用来获取输入内容的
 
@@ -20,7 +22,9 @@ class MyTextField extends StatefulWidget {
       this.isPassword = false,
       this.height,
       this.width,
-      this.errorColor,
+        this.ulFocusedWidth,
+        this.ulDefaultWidth,
+        this.errorColor,
       this.focusColor,
       this.originalColor,
       Key key})
@@ -36,27 +40,24 @@ class MyTextField extends StatefulWidget {
   }
 }
 
+///ASDASDASD
 class MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(  width: widget.ulDefaultWidth, color: widget.originalColor))),
+        //底部border的宽度和颜色
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: widget.placeholder,
 
-        // margin: EdgeInsets.only(left: 15),
-
-        child: (Expanded(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(width: 0.8, color: Colors.blue))),
-                //底部border的宽度和颜色
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: widget.placeholder,
-
-                    // contentPadding: EdgeInsets.fromLTRB(0, 17, 15, 15), //输入框内容部分设置padding，跳转跟icon的对其位置
-                    border: InputBorder.none,
-                  ),
-                  obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码
-                )))));
+            border: InputBorder.none,
+          ),
+          obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码
+        ));
   }
 }
