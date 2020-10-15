@@ -40,7 +40,6 @@ class MyTextField extends StatefulWidget {
   }
 }
 
-///ASDASDASD
 class MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
