@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return MaterialApp(home: FirstPage(), routes: {
+    return MaterialApp(home: FirstPage(), routes: <String,WidgetBuilder>{
       "login": (context) => Login(),
       "register": (context) => Register(),
     });
