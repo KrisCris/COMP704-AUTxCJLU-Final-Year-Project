@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 
+
 class MyButton extends StatefulWidget {
   ///The radius of border
   final double radius;
@@ -78,11 +79,12 @@ class MyButton extends StatefulWidget {
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
+
   }
 
   @override
   State<StatefulWidget> createState() {
-    return new MyButtonState();
+      return new MyButtonState();
   }
 }
 
@@ -91,23 +93,17 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
   TweenAnimation flashAnimation = new TweenAnimation();
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
 
-  bool isTap = false;
+  bool isTap=false;
 
   @override
   void initState() {
     super.initState();
-    this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this,
-        () {
-      setState(() {});
-    });
-    this.flashAnimation.initAnimation(
-        widget.startOpac, widget.endOpac, widget.flashDura, this, () {
-      setState(() {});
-    });
+    this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this, () { setState(() {});});
+    this.flashAnimation.initAnimation(widget.startOpac, widget.endOpac, widget.flashDura, this,(){setState(() {});});
     this.flashAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (!isTap) {
-          this.flashAnimation.reverseFlash();
+      if(status == AnimationStatus.completed){
+        if(!isTap){
+                  this.flashAnimation.reverseFlash();
         }
       }
     });
@@ -127,25 +123,27 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
             onTapDown: (TapDownDetails tpd){
               if(widget.disabled){
                 this.fluctuateAnimation.forward();
-              } else {
+              }else{
                 this.isTap = true;
                 this.flashAnimation.beginFlash();
               }
             },
-            onTapUp: (TapUpDetails tpu) {
-              if (widget.disabled) return;
+            onTapUp: (TapUpDetails tpu){
+              if(widget.disabled)return;
 
               this.isTap = false;
               this.flashAnimation.reverseFlash();
               widget.tapFunc();
             },
-            onTapCancel: () {
-              if (widget.disabled) return;
+            onTapCancel: (){
+              if(widget.disabled)return;
 
               this.isTap = false;
               this.flashAnimation.reverseFlash();
             },
-            child: this.buttonUI));
+            child: this.buttonUI
+    )
+    );
   }
   Widget get buttonUI{
     return Stack(
@@ -167,6 +165,8 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
                     decoration: TextDecoration.none,
                     fontWeight:
                     widget.isBold ? FontWeight.bold : FontWeight.normal),
+              ),
+            ),
           ),
           Opacity(
             opacity: this.flashAnimation.getValue(),
