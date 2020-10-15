@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
                         }),
                     SizedBox(height:20),
 
-                    MyTextField(placeholder: "1",emailAddress: "2",isPassword: false,),
+                    
 
 
 
