@@ -55,7 +55,7 @@ class Register extends StatelessWidget {
                 SizedBox(height: 45),
                 MyTextField(
                   placeholder: 'Username',
-                  isPassword: true,
+                  isPassword: false,
                   focusColor: Constants.FOCUSED_COLOR,
                   errorColor: Constants.ERROR_COLOR,
                   defaultColor: Constants.DEFAULT_COLOR,
