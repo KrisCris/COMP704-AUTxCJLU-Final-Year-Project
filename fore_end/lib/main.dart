@@ -4,6 +4,7 @@ import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
 
 import 'Pages/LoginPage.dart';
+import 'Pages/RegisterPage.dart';
 
 ///
 void main() {
@@ -12,17 +13,22 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  BuildContext context;
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return MaterialApp(
-      home: mainBody,
+      home: FirstPage(),
       routes:{
         "login":(context)=>Login(),
+        "register":(context)=>Register(),
       }
     );
   }
-
-  Widget get mainBody{
+}
+class FirstPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
     return new Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -58,17 +64,17 @@ class MyApp extends StatelessWidget {
                         radius: 30,
                         isBold: true,
                         tapFunc: () {
-                          print("click button!");
+                          Navigator.of(context).pushNamed("register");
                         }),
                     SizedBox(height:20),
                     MyTextButton(
-                        "Already have account?",
-                        fontsize: 16,
-                        textColor: Colors.black,
-                        focusColor: Colors.blueAccent,
-                        tapUpFunc: (){
-                          print("click text button!");
-                        },
+                      "Already have account?",
+                      fontsize: 16,
+                      textColor: Colors.black,
+                      focusColor: Colors.blueAccent,
+                      tapUpFunc: (){
+                        print("click text button!");
+                      },
                     ),
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,4 +83,5 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
 }
