@@ -4,10 +4,10 @@ import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Register());
 }
 
-class MyApp extends StatelessWidget {
+class Register extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
