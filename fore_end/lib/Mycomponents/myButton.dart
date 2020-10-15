@@ -5,24 +5,58 @@ import 'package:fore_end/MyTool/screenTool.dart';
 
 
 class MyButton extends StatefulWidget {
+  ///The radius of border
   final double radius;
+
+  ///The background color of button
   final Color bgColor;
+
+  ///The text color of button
   final Color textColor;
+
+  ///Function to be executed when button being
+  ///clicked
   final Function tapFunc;
+
+  ///Function to be executed when button being
+  ///double clicked
   final Function doubleTapFunc;
+
+  ///Text displayed on button
   final String text;
+
+  ///Text font size
   final double fontsize;
+
+  ///whether text is bold or not
   final bool isBold;
-  bool disabled;
+
+  ///width of the button. When this value <=1
+  ///it will be regard as the ratio of screen
+  ///width. When this value > 1, it will be
+  ///regard as pixel number of button width
   double width;
+
+  ///height of the button. Same as width
   double height;
 
-  //flash animation parameter
+  ///if the button is disabled
+  bool disabled;
+
+  /// the opacity that flash animation start at
   double startOpac;
+
+  ///the opacity that flash animation end at
   double endOpac;
+
+  ///duration of flash animation, use millionSecond
   int flashDura;
-  int flucDura;
+
+  ///the color of flash cover
   Color flashColor;
+
+  ///fluctuate duration
+  int flucDura;
 
   MyButton(
       {this.text,
@@ -33,7 +67,7 @@ class MyButton extends StatefulWidget {
       this.bgColor = Colors.blue,
       this.width = 120,
       this.height = 40,
-        this.disabled = true,
+        this.disabled = false,
         this.startOpac=0,
         this.endOpac=0.5,
         this.flashDura=200,
@@ -56,7 +90,7 @@ class MyButton extends StatefulWidget {
 
 class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
 
-  DoubleTweenAnimation flashAnimation = new DoubleTweenAnimation();
+  TweenAnimation flashAnimation = new TweenAnimation();
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
 
   bool isTap=false;
@@ -84,12 +118,10 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-        offset: Offset(this.fluctuateAnimation.value,0),
+        offset: Offset(this.fluctuateAnimation.getValue(),0),
         child: GestureDetector(
             onTapDown: (TapDownDetails tpd){
               if(widget.disabled){
-                print("click disabled");
-                print(this.fluctuateAnimation.value);
                 this.fluctuateAnimation.forward();
               }else{
                 this.isTap = true;
@@ -130,13 +162,14 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin{
                 style: TextStyle(
                     fontSize: widget.fontsize,
                     color: widget.textColor,
+                    decoration: TextDecoration.none,
                     fontWeight:
                     widget.isBold ? FontWeight.bold : FontWeight.normal),
               ),
             ),
           ),
           Opacity(
-            opacity: this.flashAnimation.value,
+            opacity: this.flashAnimation.getValue(),
             child:Container(
               width: widget.width,
               height: widget.height,
