@@ -121,14 +121,14 @@ class ColorTweenAnimation implements MyAnimation<Color>{
   void forward() {
     this.ctl.forward();
   }
-  void beginFlash(){
+  void beginAnimation(){
     this.isFinish = false;
     this.ctl.forward();
   }
   void reverse() {
     this.ctl.reverse();
   }
-  void reverseFlash(){
+  void reverseAnimation(){
     if (this.isFinish) {
       this.ctl.reverse();
     }
@@ -137,6 +137,7 @@ class ColorTweenAnimation implements MyAnimation<Color>{
     this.ctl.dispose();
   }
   Color getValue() {
+    print(animation.value);
     return animation.value;
   }
 }

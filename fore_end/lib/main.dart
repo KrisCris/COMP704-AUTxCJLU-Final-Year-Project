@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return MaterialApp(home: FirstPage(), routes: <String,WidgetBuilder>{
+    return MaterialApp(home: FirstPage(), routes: <String, WidgetBuilder>{
       "login": (context) => Login(),
       "register": (context) => Register(),
     });
@@ -53,12 +53,13 @@ class FirstPage extends StatelessWidget {
                 text: "Sign up",
                 fontsize: 18,
                 width: 0.7,
+                disabled: false,
                 height: 55,
                 radius: 30,
-                isBold: true,
-                tapFunc: () {
-                  Navigator.of(context).pushNamed("register");
-                }),
+                tapFunc: (){
+                  Navigator.pushNamed(context, "register");
+                },
+                isBold: true),
             SizedBox(height: 20),
             MyTextButton(
               "Already have account?",
@@ -71,5 +72,19 @@ class FirstPage extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  MyButton SignUpButton() {
+    MyButton bt = MyButton(
+        text: "Sign up",
+        fontsize: 18,
+        width: 0.7,
+        height: 55,
+        radius: 30,
+        isBold: true);
+    bt.tapFunc = () {
+      bt.setDisable(!bt.disabled);
+    };
+    return bt;
   }
 }
