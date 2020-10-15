@@ -10,6 +10,6 @@ class Constants{
   static Color COMPLETED_COLOR = Colors.lightBlueAccent;
   
 
-  static double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(2);
-  static double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(1.5);
+  static double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
+  static double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
 }
