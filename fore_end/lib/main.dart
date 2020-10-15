@@ -51,7 +51,7 @@ class FirstPage extends StatelessWidget {
             SizedBox(height: 60),
             MyButton(
                 text: "Sign up",
-                fontsize: 25,
+                fontsize: 18,
                 width: 0.7,
                 height: 55,
                 radius: 30,
