@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
               alignment: Alignment.center,
               color: Colors.white.withOpacity(0.79),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center, //水平居中
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
                     "Welcome",
