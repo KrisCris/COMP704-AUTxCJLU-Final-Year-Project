@@ -2,7 +2,7 @@ from flask import Flask
 from util.constants import HOST, PORT, DEBUG, ENV
 from util.constants import DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE
 
-from db.database import DBM
+from db.database import initDB
 
 from api.user import user
 
@@ -15,6 +15,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(user, url_prefix='/user')
 
 if __name__ == '__main__':
-    DBM.initDB(app)
+    initDB(app)
 
     app.run(host=HOST, port=PORT, debug=DEBUG)

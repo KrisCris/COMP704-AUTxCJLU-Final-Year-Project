@@ -4,17 +4,15 @@ from util.func import get_timestamp
 db = SQLAlchemy()
 
 
-class DBM(object):
-    @staticmethod
-    def initDB(app):
-        with app.app_context():
-            db.init_app(app)
-            db.create_all()
+def initDB(app):
+    with app.app_context():
+        db.init_app(app)
+        db.create_all()
 
-    @staticmethod
-    def add(model: db.Model):
-        db.session.add(model)
-        db.session.commit()
+
+def add(model: db.Model):
+    db.session.add(model)
+    db.session.commit()
 
 
 class User(db.Model):
@@ -26,7 +24,7 @@ class User(db.Model):
     group = db.Column(db.INTEGER, comment='用户组')
     token = db.Column(db.VARCHAR(40), server_default=db.text("''"))
     portrait = db.Column(db.VARCHAR(255), server_default=db.text("'/new_api/static/default.jpg'"),
-                         comment='头像'),
+                         comment='头像')
     email = db.Column(db.VARCHAR(255), nullable=False, unique=True)
     auth_code = db.Column(db.VARCHAR(6), comment='验证码')
     last_login = db.Column(db.INTEGER, nullable=False)

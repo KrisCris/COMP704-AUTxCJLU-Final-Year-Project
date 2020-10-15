@@ -29,7 +29,6 @@ def reply_json(code, data=None):
 
 
 def __send_email(receivers: list, content: str, subject: str):
-    img_data = open('../static/logo.jpg', 'rb').read()
     msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = SENDER_NAME
