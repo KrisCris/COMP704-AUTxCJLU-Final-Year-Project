@@ -53,6 +53,7 @@ class FirstPage extends StatelessWidget {
                 text: "Sign up",
                 fontsize: 18,
                 width: 0.7,
+                disabled: false,
                 height: 55,
                 radius: 30,
                 tapFunc: (){

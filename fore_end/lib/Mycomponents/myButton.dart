@@ -75,7 +75,7 @@ class MyButton extends StatefulWidget {
       this.disbaleColor = Colors.grey,
       this.width = 120,
       this.height = 40,
-      this.disabled = true,
+      this.disabled = false,
       this.startOpac = 0,
       this.endOpac = 0.5,
       this.flashDura = 200,
