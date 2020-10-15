@@ -1,3 +1,5 @@
+import util.func as func
+
 from flask import Blueprint, request
 
 from db.database import db, User, DBM
@@ -34,7 +36,8 @@ def signup():
     print('in signup')
     DBM.add(User(username=username, password=password, group=0))
 
-    return reply_json(1, 'signed up')
+    return func.reply_json(1, 'signed up')
+
 
 
 @user.route('/send_code', methods=['POST'])
