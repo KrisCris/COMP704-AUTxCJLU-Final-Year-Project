@@ -7,7 +7,7 @@ import 'package:fore_end/Mycomponents/textButton.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
-///
+
 void main() {
   runApp(MyApp());
 }

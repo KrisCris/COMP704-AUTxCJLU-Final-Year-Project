@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -23,9 +24,10 @@ class Register extends StatelessWidget {
             child: Column(
               children: [
                 Container(
+                  margin: EdgeInsets.only(top: ScreenTool.partOfScreenHeight(0.15)),
                   width: ScreenTool.partOfScreenWidth(0.7),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFF1F1F1), width: 5)),
+                  // decoration: BoxDecoration(
+                  //     border: Border.all(color: Color(0xFFF1F1F1), width: 5)),
                   child: Text(
                     "Create your\naccount",
                     textDirection: TextDirection.ltr,
@@ -37,22 +39,48 @@ class Register extends StatelessWidget {
                         color: Colors.black),
                   ),
                 ),
-                SizedBox(height: 60),
+                SizedBox(height: 40),
                 MyTextField(
-                  placeholder: 'abc',
+                  placeholder: 'Email',
                   isPassword: false,
                   focusColor: Constants.FOCUSED_COLOR,
                   errorColor: Constants.ERROR_COLOR,
-                  originalColor: Constants.DEFAULT_COLOR,
-                  height: ScreenTool.partOfScreenHeight(55),
+                  defaultColor: Constants.DEFAULT_COLOR,
+                  // height: ScreenTool.partOfScreenHeight(20),
                   width: ScreenTool.partOfScreenWidth(0.7),
                   ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
                   ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
 
-                )
+                ),
+                SizedBox(height: 45),
+                MyTextField(
+                  placeholder: 'Username',
+                  isPassword: true,
+                  focusColor: Constants.FOCUSED_COLOR,
+                  errorColor: Constants.ERROR_COLOR,
+                  defaultColor: Constants.DEFAULT_COLOR,
+                  // height: ScreenTool.partOfScreenHeight(20),
+                  width: ScreenTool.partOfScreenWidth(0.7),
+                  ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+                  ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+
+                ),
+                SizedBox(height: 10),
+                MyTextField(
+                  placeholder: 'Password',
+                  isPassword: true,
+                  focusColor: Constants.FOCUSED_COLOR,
+                  errorColor: Constants.ERROR_COLOR,
+                  defaultColor: Constants.DEFAULT_COLOR,
+                  // height: ScreenTool.partOfScreenHeight(55),
+                  width: ScreenTool.partOfScreenWidth(0.7),
+                  ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+                  ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+
+                ),
               ],
               crossAxisAlignment: CrossAxisAlignment.center, //水平居中
-              mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
             )) ,
     );
 
