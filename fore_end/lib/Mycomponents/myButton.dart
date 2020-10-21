@@ -1,20 +1,23 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 
 class MyButton extends StatefulWidget {
+  final MyTheme theme;
   ///The radius of border
   final double radius;
 
   ///The background color of button
-  final Color bgColor;
+  Color bgColor;
 
   ///The disable buttton color
-  final Color disbaleColor;
+  Color disbaleColor;
 
   ///The text color of button
-  final Color textColor;
+  Color textColor;
 
   ///Function to be executed when button being
   ///clicked
@@ -71,12 +74,10 @@ class MyButton extends StatefulWidget {
 
   MyButton(
       {this.text,
+        this.theme = MyTheme.blueStyle,
       this.fontsize = 18,
       this.isBold = false,
       this.radius = 30,
-      this.textColor = Colors.white,
-      this.bgColor = Colors.blue,
-      this.disbaleColor = Colors.grey,
       this.width = 120,
       this.height = 40,
         this.leftMargin = 0,
@@ -96,6 +97,11 @@ class MyButton extends StatefulWidget {
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
+
+    this.textColor = this.theme.textColorLight;
+    this.bgColor = this.theme.focusedColor;
+    this.disbaleColor = this.theme.disabledColor;
+
     if (this.disabled) this.firstDisabled = true;
   }
 
