@@ -4,6 +4,7 @@ import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
 
+import 'MyTool/MyTheme.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
@@ -56,6 +57,7 @@ class FirstPage extends StatelessWidget {
                 disabled: false,
                 height: 55,
                 radius: 30,
+                theme: MyTheme.blueStyle,
                 tapFunc: (){
                   Navigator.pushNamed(context, "register");
                 },
@@ -64,8 +66,7 @@ class FirstPage extends StatelessWidget {
             MyTextButton(
               "Already have account?",
               fontsize: 16,
-              textColor: Colors.black,
-              focusColor: Colors.blueAccent,
+              theme: MyTheme.blueStyle,
               tapUpFunc: () {
                 Navigator.pushNamed(context, "login");
               },
