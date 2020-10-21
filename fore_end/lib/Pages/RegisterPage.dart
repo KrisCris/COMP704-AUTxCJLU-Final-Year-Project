@@ -15,73 +15,59 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BackGround(
-            sigmaY: 15,
-            sigmaX: 15,
-            color: Colors.white,
-            opacity: 0.79,
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: ScreenTool.partOfScreenHeight(0.15)),
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  // decoration: BoxDecoration(
-                  //     border: Border.all(color: Color(0xFFF1F1F1), width: 5)),
-                  child: Text(
-                    "Create your\naccount",
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none,
-                        fontFamily: "Futura",
-                        color: Colors.black),
+      body: BackGround(
+          sigmaY: 15,
+          sigmaX: 15,
+          color: Colors.white,
+          opacity: 0.79,
+          child: SingleChildScrollView(
+              physics: new NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+
+                    margin: EdgeInsets.only(
+                        top: ScreenTool.partOfScreenHeight(0.15)),
+                        width: ScreenTool.partOfScreenWidth(0.7),
+                    child: Text(
+                      "Create your\naccount",
+                      textDirection: TextDirection.ltr,
+                      style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none,
+                          fontFamily: "Futura",
+                          color: Colors.black),
+                    ),
                   ),
-                ),
-                SizedBox(height: 40),
-                MyTextField(
-                  placeholder: 'Email',
-                  isPassword: false,
-                  focusColor: Constants.FOCUSED_COLOR,
-                  errorColor: Constants.ERROR_COLOR,
-                  defaultColor: Constants.DEFAULT_COLOR,
-                  // height: ScreenTool.partOfScreenHeight(20),
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-                  ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+                  SizedBox(height: 150),
+                  MyTextField(
+                    placeholder: 'Email',
+                    isPassword: false,
+                    focusColor: Constants.FOCUSED_COLOR,
+                    errorColor: Constants.ERROR_COLOR,
+                    defaultColor: Constants.DEFAULT_COLOR,
+                    width: ScreenTool.partOfScreenWidth(0.7),
+                    ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+                    ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+                    isAutoFocus: true,
+                  ),
+                  SizedBox(height: 80),
+                  MyTextField(  //这个要在按下按钮之后显示
+                    placeholder: 'Verify Code',
+                    isPassword: false,
+                    focusColor: Constants.FOCUSED_COLOR,
+                    errorColor: Constants.ERROR_COLOR,
+                    defaultColor: Constants.DEFAULT_COLOR,
+                    width: ScreenTool.partOfScreenWidth(0.7),
+                    ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+                    ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+                  ),
+                  SizedBox(height: 100),
 
-                ),
-                SizedBox(height: 45),
-                MyTextField(
-                  placeholder: 'Username',
-                  isPassword: true,
-                  focusColor: Constants.FOCUSED_COLOR,
-                  errorColor: Constants.ERROR_COLOR,
-                  defaultColor: Constants.DEFAULT_COLOR,
-                  // height: ScreenTool.partOfScreenHeight(20),
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-                  ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-
-                ),
-                SizedBox(height: 10),
-                MyTextField(
-                  placeholder: 'Password',
-                  isPassword: true,
-                  focusColor: Constants.FOCUSED_COLOR,
-                  errorColor: Constants.ERROR_COLOR,
-                  defaultColor: Constants.DEFAULT_COLOR,
-                  // height: ScreenTool.partOfScreenHeight(55),
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-                  ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-
-                ),
-              ],
-              crossAxisAlignment: CrossAxisAlignment.center, //水平居中
-              // mainAxisAlignment: MainAxisAlignment.center,
-            )) ,
-    );
-
+                ],
+                crossAxisAlignment: CrossAxisAlignment.center, //水平居中
+                // mainAxisAlignment: MainAxisAlignment.center,  //垂直居中
+              ))),);
   }
 }
