@@ -67,7 +67,7 @@ class FirstPage extends StatelessWidget {
               textColor: Colors.black,
               focusColor: Colors.blueAccent,
               tapUpFunc: () {
-                print("click text button!");
+                Navigator.pushNamed(context, "login");
               },
             ),
           ],

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 
 void main() {

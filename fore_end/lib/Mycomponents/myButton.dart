@@ -42,6 +42,10 @@ class MyButton extends StatefulWidget {
   ///height of the button. Same as width
   double height;
 
+  double leftMargin;
+  double rightMargin;
+  double topMargin;
+  double bottomMargin;
   ///if the button is disabled
   bool disabled;
 
@@ -69,12 +73,16 @@ class MyButton extends StatefulWidget {
       {this.text,
       this.fontsize = 18,
       this.isBold = false,
-      this.radius = 0,
+      this.radius = 30,
       this.textColor = Colors.white,
       this.bgColor = Colors.blue,
       this.disbaleColor = Colors.grey,
       this.width = 120,
       this.height = 40,
+        this.leftMargin = 0,
+        this.rightMargin = 0,
+        this.topMargin = 0,
+        this.bottomMargin = 0,
       this.disabled = false,
       this.startOpac = 0,
       this.endOpac = 0.5,
@@ -185,7 +193,14 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin {
         height: widget.height,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(widget.radius),
-            color: this.colorAnimation.getValue()),
+            color: this.colorAnimation.getValue()
+        ),
+        margin: EdgeInsets.only(
+                left: widget.leftMargin,
+                right: widget.rightMargin,
+                top: widget.topMargin,
+                bottom: widget.bottomMargin
+        ),
         child: Center(
           child: Text(
             widget.text,
@@ -204,9 +219,16 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin {
         child: Container(
           width: widget.width,
           height: widget.height,
+          margin: EdgeInsets.only(
+              left: widget.leftMargin,
+              right: widget.rightMargin,
+              top: widget.topMargin,
+              bottom: widget.bottomMargin
+          ),
           decoration: new BoxDecoration(
             color: widget.flashColor,
             borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
+
           ),
         ),
       )

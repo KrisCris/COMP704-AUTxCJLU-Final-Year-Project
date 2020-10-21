@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  keyboard_avoider: ^0.1.2
   ###font_awesome: 5.10.1 # uncomment and change for latest version
   flutter:
     sdk: flutter
