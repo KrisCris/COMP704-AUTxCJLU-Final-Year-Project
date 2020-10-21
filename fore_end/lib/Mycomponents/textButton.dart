@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 
 class MyTextButton extends StatefulWidget {
+  MyTheme theme;
   String text;
   double fontsize;
   Color textColor;
@@ -16,12 +18,14 @@ class MyTextButton extends StatefulWidget {
 
   MyTextButton(this.text,
       {this.fontsize = 16,
-      this.textColor = Colors.black,
-      this.focusColor = Colors.blue,
       this.tapUpFunc,
+        this.theme = MyTheme.blueStyle,
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
+
+      this.textColor = this.theme.textColorDark;
+      this.focusColor = this.theme.focusedColor;
   }
 
   @override

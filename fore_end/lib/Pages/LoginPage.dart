@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
@@ -20,8 +21,7 @@ class Login extends StatelessWidget {
       leftMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.18),
-      textColor: Colors.white,
-      bgColor: Color(0xFFFF6060),
+      theme: MyTheme.blueStyle,
       tapFunc: () {
         Navigator.pop(context);
       },
@@ -32,7 +32,7 @@ class Login extends StatelessWidget {
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
-      textColor: Colors.white,
+      theme: MyTheme.blueStyle,
       disabled: true,
       width: ScreenTool.partOfScreenWidth(0.18),
       tapFunc: () {},
