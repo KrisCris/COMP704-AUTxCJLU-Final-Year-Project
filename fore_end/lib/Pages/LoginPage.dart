@@ -20,7 +20,7 @@ class Login extends StatelessWidget {
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
-      width: ScreenTool.partOfScreenWidth(0.18),
+      width: ScreenTool.partOfScreenWidth(0.20),
       theme: MyTheme.blueStyle,
       tapFunc: () {
         Navigator.pop(context);
@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
       bottomMargin: 20,
       theme: MyTheme.blueStyle,
       disabled: true,
-      width: ScreenTool.partOfScreenWidth(0.18),
+      width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () {},
     );
     this.emailField = MyTextField(
