@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 class Login extends StatelessWidget {
   MyButton backButton;
@@ -33,7 +34,7 @@ class Login extends StatelessWidget {
       rightMargin: 20,
       bottomMargin: 20,
       theme: MyTheme.blueStyle,
-      disabled: true,
+      firstReactState: ComponentReactState.disabled,
       width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () {},
     );
@@ -76,14 +77,18 @@ class Login extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             SizedBox(height:ScreenTool.partOfScreenHeight(0.1)),
-            Text("Login your \naccount",
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Futura",
-                    color: Colors.black)),
+            Container(
+              width: ScreenTool.partOfScreenWidth(0.7),
+              child:Text("Login your \naccount",
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Futura",
+                      color: Colors.black)),
+            ),
+
             SizedBox(height: ScreenTool.partOfScreenHeight(0.08)),
             this.emailField,
             SizedBox(height: 20),

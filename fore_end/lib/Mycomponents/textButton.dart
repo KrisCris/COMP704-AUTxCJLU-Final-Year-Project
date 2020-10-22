@@ -3,13 +3,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 class MyTextButton extends StatefulWidget {
   MyTheme theme;
   String text;
   double fontsize;
   Color textColor;
-  Color focusColor;
+  Color clickColor;
   Function tapUpFunc;
   int colorChangeDura;
   bool isTap = false;
@@ -19,13 +20,13 @@ class MyTextButton extends StatefulWidget {
   MyTextButton(this.text,
       {this.fontsize = 16,
       this.tapUpFunc,
-        this.theme = MyTheme.blueStyle,
+        @required this.theme,
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
 
-      this.textColor = this.theme.textColorDark;
-      this.focusColor = this.theme.focusedColor;
+      this.textColor = this.theme.darkTextColor;
+      this.clickColor = this.theme.getReactColor(ComponentReactState.focused);
   }
 
   @override
@@ -35,15 +36,15 @@ class MyTextButton extends StatefulWidget {
 }
 
 class MyTextButtonState extends State<MyTextButton>
-    with TickerProviderStateMixin {
-
+    with TickerProviderStateMixin, Themeable {
   ColorTweenAnimation animation = new ColorTweenAnimation();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
 
   @override
   void initState() {
     super.initState();
-    this.animation.initAnimation(widget.textColor, widget.focusColor,
+
+    this.animation.initAnimation(widget.textColor, widget.theme.getReactColor(ComponentReactState.focused),
         widget.colorChangeDura, this, () {setState(() {});});
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
@@ -90,5 +91,32 @@ class MyTextButtonState extends State<MyTextButton>
               this.animation.reverseAnimation();
             }
         ));
+  }
+
+  @override
+  void setReactState(ComponentReactState rea) {
+    //textButton don't have focus/disable state, so do nothing
+  }
+
+  @override
+  void setThemeState(ComponentThemeState the) {
+    //do nothing when state not change
+    if(this.themeState == the)return;
+    //update the state
+    this.themeState = the;
+    //if button disabled, don't update color animation
+    if(this.reactState == ComponentReactState.disabled)return;
+    //update color animation
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.animation.initAnimation(widget.textColor, newColor, widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        widget.textColor = newColor;
+        this.animation.initAnimation(widget.textColor, widget.clickColor,
+            widget.colorChangeDura, this, () { setState(() {});});
+      }
+    });
+    this.animation.beginAnimation();
   }
 }
