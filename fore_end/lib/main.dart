@@ -5,6 +5,7 @@ import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
 
 import 'MyTool/MyTheme.dart';
+import 'Mycomponents/VerifyCode.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
