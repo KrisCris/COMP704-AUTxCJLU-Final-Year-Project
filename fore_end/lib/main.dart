@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
 import 'Mycomponents/VerifyCode.dart';
+import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
@@ -55,7 +57,6 @@ class FirstPage extends StatelessWidget {
                 text: "Sign up",
                 fontsize: 18,
                 width: 0.7,
-                disabled: false,
                 height: 55,
                 radius: 30,
                 theme: MyTheme.blueStyle,
@@ -74,19 +75,5 @@ class FirstPage extends StatelessWidget {
             ),
           ],
         ));
-  }
-
-  MyButton SignUpButton() {
-    MyButton bt = MyButton(
-        text: "Sign up",
-        fontsize: 18,
-        width: 0.7,
-        height: 55,
-        radius: 30,
-        isBold: true);
-    bt.tapFunc = () {
-      bt.setDisable(!bt.disabled);
-    };
-    return bt;
   }
 }
