@@ -23,6 +23,7 @@ class Login extends StatelessWidget {
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
       theme: MyTheme.blueStyle,
+      firstThemeState: ComponentThemeState.error,
       tapFunc: () {
         Navigator.pop(context);
       },

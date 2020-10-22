@@ -116,6 +116,14 @@ class MyButton extends StatefulWidget {
   void setReactState(ComponentReactState rea){
     this.state.setReactState(rea);
   }
+  void setDisable(bool d){
+    if(d){
+      this.setReactState(ComponentReactState.disabled);
+    }else{
+      this.setReactState(ComponentReactState.able);
+    }
+  }
+
   ComponentThemeState getThemeState(){
     return this.state.themeState;
   }
