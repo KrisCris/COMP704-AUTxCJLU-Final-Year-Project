@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
 import 'Pages/LoginPage.dart';
@@ -51,17 +52,16 @@ class FirstPage extends StatelessWidget {
             ),
             SizedBox(height: 60),
             MyButton(
-                text: "Sign up",
-                fontsize: 18,
-                width: 0.7,
-                disabled: false,
-                height: 55,
-                radius: 30,
-                theme: MyTheme.blueStyle,
-                tapFunc: (){
-                  Navigator.pushNamed(context, "register");
-                },
-                isBold: true),
+            text: "Sign up",
+            fontsize: 18,
+            width: 0.7,
+            height: 55,
+            radius: 30,
+            theme: MyTheme.blueStyle,
+            tapFunc: (){
+              Navigator.pushNamed(context, "register");
+            },
+            isBold: true),
             SizedBox(height: 20),
             MyTextButton(
               "Already have account?",
@@ -73,19 +73,5 @@ class FirstPage extends StatelessWidget {
             ),
           ],
         ));
-  }
-
-  MyButton SignUpButton() {
-    MyButton bt = MyButton(
-        text: "Sign up",
-        fontsize: 18,
-        width: 0.7,
-        height: 55,
-        radius: 30,
-        isBold: true);
-    bt.tapFunc = () {
-      bt.setDisable(!bt.disabled);
-    };
-    return bt;
   }
 }

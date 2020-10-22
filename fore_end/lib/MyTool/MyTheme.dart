@@ -1,28 +1,55 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 class MyTheme {
 
-  final Color unfocusedColor;
-  final Color disabledColor;
-  final Color errorColor;
-  final Color focusedColor;
-  final Color warningColor;
-  final Color completeColor;
-  final Color textColorDark;
-  final Color textColorLight;
+  // final Color unfocusedColor;
+  // final Color disabledColor;
+  // final Color errorColor;
+  // final Color focusedColor;
+  // final Color warningColor;
+  // final Color completeColor;
+  // final Color textColorDark;
+  // final Color textColorLight;
+  Map<ComponentThemeState,Color> themeMap;
+  Map<ComponentReactState,Color> reactMap;
+  Color darkTextColor;
+  Color lightTextColor;
+  MyTheme._privateConstructor( {final unfocusedColor, final disabledColor,
+    final errorColor,final focusedColor,final warningColor,final correctColor,
+    final normalColor, final textColorDark,final textColorLight}){
+    this.themeMap =  {
+      ComponentThemeState.correct : correctColor,
+      ComponentThemeState.warning : warningColor,
+      ComponentThemeState.error : errorColor,
+      ComponentThemeState.normal : normalColor
+    };
+    this.reactMap = {
+      ComponentReactState.focused : focusedColor,
+      ComponentReactState.unfocused:unfocusedColor,
+      ComponentReactState.disabled : disabledColor,
+      ComponentReactState.able : null
+    };
+    this.darkTextColor = textColorDark;
+    this.lightTextColor = textColorLight;
+  }
 
-  const MyTheme._privateConstructor( {this.unfocusedColor,this.disabledColor,
-    this.errorColor,this.focusedColor,this.warningColor,this.completeColor,
-  this.textColorDark,this.textColorLight});
+  Color getThemeColor(ComponentThemeState the){
+    return this.themeMap[the];
+  }
+  Color getReactColor(ComponentReactState rea){
+    return this.reactMap[rea];
+  }
 
-  static const MyTheme blueStyle = MyTheme._privateConstructor(
+  static final MyTheme blueStyle = MyTheme._privateConstructor(
       unfocusedColor: Color(0xFF929497),
       focusedColor:  Color(0xFF0090FF),
       disabledColor: Color(0xFF929497),
       errorColor: Color(0xFFFF6060),
       warningColor: Color(0xFFFFC35F),
-      completeColor: Color(0xFF0091EA),
+      normalColor: Color(0xFF0091EA),
+      correctColor: Color(0xFF4ED882),
       textColorDark: Colors.black,
       textColorLight: Colors.white,
   );
