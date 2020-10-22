@@ -6,6 +6,7 @@ import 'package:fore_end/Mycomponents/textButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
+import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
@@ -52,16 +53,16 @@ class FirstPage extends StatelessWidget {
             ),
             SizedBox(height: 60),
             MyButton(
-            text: "Sign up",
-            fontsize: 18,
-            width: 0.7,
-            height: 55,
-            radius: 30,
-            theme: MyTheme.blueStyle,
-            tapFunc: (){
-              Navigator.pushNamed(context, "register");
-            },
-            isBold: true),
+                text: "Sign up",
+                fontsize: 18,
+                width: 0.7,
+                height: 55,
+                radius: 30,
+                theme: MyTheme.blueStyle,
+                tapFunc: (){
+                  Navigator.pushNamed(context, "register");
+                },
+                isBold: true),
             SizedBox(height: 20),
             MyTextButton(
               "Already have account?",

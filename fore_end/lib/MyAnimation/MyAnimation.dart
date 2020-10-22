@@ -58,14 +58,14 @@ class TweenAnimation<T> implements MyAnimation<T>{
   void forward() {
     this.ctl.forward();
   }
-  void beginFlash(){
+  void beginAnimation(){
     this.isFinish = false;
     this.ctl.forward();
   }
   void reverse() {
     this.ctl.reverse();
   }
-  void reverseFlash(){
+  void reverseAnimation(){
     if (this.isFinish) {
       this.ctl.reverse();
     }

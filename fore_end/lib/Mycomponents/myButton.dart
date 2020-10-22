@@ -50,26 +50,22 @@ class MyButton extends StatefulWidget {
   double rightMargin;
   double topMargin;
   double bottomMargin;
-  ///if the button is disabled
-  // bool disabled;
 
   /// the opacity that flash animation start at
   double startOpac;
-
   ///the opacity that flash animation end at
   double endOpac;
-
-  ///duration of flash animation, use millionSecond
-  int flashDura;
-
   ///the color of flash cover
   Color flashColor;
 
   ///fluctuate duration
   int flucDura;
-
   ///color change duration
   int colorDura;
+  ///duration of flash animation, use millionSecond
+  int flashDura;
+  ///duration of length change animation
+  int lengthDura;
 
   MyButtonState state;
   ComponentReactState firstReactState;
@@ -90,8 +86,9 @@ class MyButton extends StatefulWidget {
       this.startOpac = 0,
       this.endOpac = 0.5,
       this.flashDura = 200,
-      this.flucDura = 300,
+      this.flucDura = 200,
       this.colorDura = 200,
+        this.lengthDura = 200,
       this.flashColor = Colors.white,
       this.tapFunc = null,
       this.doubleTapFunc = null,
@@ -123,6 +120,14 @@ class MyButton extends StatefulWidget {
       this.setReactState(ComponentReactState.able);
     }
   }
+  void setWidth(double len){
+    double newWidth = ScreenTool.partOfScreenWidth(len);
+    this.state.lengthAnimation.initAnimation(this.width,
+          newWidth, this.lengthDura, this.state,
+            () { this.state.setState(() {});});
+    this.width = newWidth;
+    this.state.lengthAnimation.beginAnimation();
+  }
 
   ComponentThemeState getThemeState(){
     return this.state.themeState;
@@ -134,6 +139,7 @@ class MyButton extends StatefulWidget {
 
 class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Themeable {
   TweenAnimation flashAnimation = new TweenAnimation();
+  TweenAnimation lengthAnimation = new TweenAnimation();
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
   ColorTweenAnimation colorAnimation = new ColorTweenAnimation();
   bool isTap = false;
@@ -158,6 +164,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
         () {
       setState(() {});
     });
+    this.lengthAnimation.initAnimation(widget.width, widget.width,
+        widget.lengthDura, this,  () {setState(() {});});
+
     this.colorAnimation.initAnimation(
         widget.bgColor, widget.bgColor, widget.colorDura, this, () {
       setState(() {});
@@ -170,7 +179,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
     this.flashAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (!isTap) {
-          this.flashAnimation.reverseFlash();
+          this.flashAnimation.reverseAnimation();
         }
       }
     });
@@ -195,7 +204,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
                 this.fluctuateAnimation.forward();
               } else {
                 this.isTap = true;
-                this.flashAnimation.beginFlash();
+                this.flashAnimation.beginAnimation();
               }
             },
             onTapUp: (TapUpDetails tpu) {
@@ -204,14 +213,14 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
               }
 
               this.isTap = false;
-              this.flashAnimation.reverseFlash();
+              this.flashAnimation.reverseAnimation();
               widget.tapFunc();
             },
             onTapCancel: () {
               if (this.reactState == ComponentReactState.disabled) return;
 
               this.isTap = false;
-              this.flashAnimation.reverseFlash();
+              this.flashAnimation.reverseAnimation();
             },
             child: this.buttonUI));
   }
@@ -225,7 +234,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
 
   Widget get buttonShape {
     return Container(
-      width: widget.width,
+      width: this.lengthAnimation.getValue(),
       height: widget.height,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.radius),
@@ -255,7 +264,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
     return Opacity(
       opacity: this.flashAnimation.getValue(),
       child: Container(
-        width: widget.width,
+        width: this.lengthAnimation.getValue(),
         height: widget.height,
         margin: EdgeInsets.only(
             left: widget.leftMargin,
