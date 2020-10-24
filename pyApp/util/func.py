@@ -1,5 +1,8 @@
+import random
 import smtplib
 import os
+import string
+import time
 
 from flask import request, jsonify, redirect
 from email.mime.text import MIMEText
@@ -26,7 +29,6 @@ def reply_json(code, data=None):
 
 
 def __send_email(receivers: list, content: str, subject: str):
-    img_data = open('../static/logo.jpg', 'rb').read()
     msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = SENDER_NAME
@@ -75,6 +77,14 @@ def send_verification_code(receiver: str, code: str):
             This code will expire in 10 minutes.
     '''.format(code)
     __send_email(receivers=[receiver], content=content, subject='DietLens verification code')
+
+
+def gen_auth_code():
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
+
+
+def get_timestamp():
+    return int(time.time())
 
 
 if __name__ == '__main__':
