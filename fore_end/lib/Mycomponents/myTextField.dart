@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -12,12 +13,19 @@ class MyTextField extends StatefulWidget {
   final bool isEmail;   //判断邮箱格式
   final bool isAutoFocus;
   final inputController; //用来获取文本框内容
+  final String inputTypes;
+  final int maxlength; //长度
+  final IconData myIcon;
   double width;   //文本框的宽
   Color defaultColor;  //不点击的颜色  灰
   Color focusColor; //点击的颜色   蓝
   Color errorColor;  //报错的颜色  红
   double ulDefaultWidth;  //未点击的下划线厚度
   double ulFocusedWidth;  //点击的厚度
+
+  MyTextFieldState st;
+
+
 
   // bool checkContent;
   // final inputController;  //用来获取输入内容的
@@ -34,6 +42,9 @@ class MyTextField extends StatefulWidget {
       this.defaultColor,
         this.isEmail=false,
         this.inputController,
+        this.inputTypes="text",
+        this.maxlength= 30, //默认文本框输入长度
+        this.myIcon=Icons.email_outlined,
       Key key})
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
@@ -55,13 +66,21 @@ class MyTextField extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new MyTextFieldState();
+      this.st = new MyTextFieldState();
+      return this.st;
+  }
+
+  void name(){
+    this.st.a +=10;
+    this.st.setState(() {
+
+    });
   }
 }
 
 class MyTextFieldState extends State<MyTextField> {
 
-
+  double a=10;
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +95,14 @@ class MyTextFieldState extends State<MyTextField> {
               // keyboardType: TextInputType.emailAddress,
 
               controller: widget.inputController,
+              // maxLength: widget.maxlength,
+
 
               style: TextStyle(fontSize: 18),
               autofocus: widget.isAutoFocus,
               cursorColor: Colors.blue,
               cursorWidth: 2,
+
 
 
               decoration: new InputDecoration(   //下划线的设置
@@ -99,11 +121,16 @@ class MyTextFieldState extends State<MyTextField> {
                   focusedErrorBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color:widget.errorColor,width:widget.ulFocusedWidth)
                   ),
+
+
                   hintText: widget.placeholder,
                   contentPadding: new EdgeInsets.fromLTRB(0, 0, 0, 6),
                   isDense: true,
-                  // border: InputBorder.none,
-                  // suffixIcon: Icon(MyIcons.icon_yes, color: Colors.green,size: 20,)
+
+
+                  // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
+                  //icon: Icon(Icons.phone),
+                  // suffixIcon: Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
 
               ),
               // obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码

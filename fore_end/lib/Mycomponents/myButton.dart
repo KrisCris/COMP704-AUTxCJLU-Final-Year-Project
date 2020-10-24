@@ -30,7 +30,7 @@ class MyButton extends StatefulWidget {
 String text;
 
   ///Text font size
-  final double fontsize;
+ double fontsize;
 
   ///whether text is bold or not
   final bool isBold;

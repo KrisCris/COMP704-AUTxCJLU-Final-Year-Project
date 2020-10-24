@@ -9,6 +9,7 @@ import 'package:fore_end/Mycomponents/textButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
+import 'Mycomponents/VerifyCode.dart';
 import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';

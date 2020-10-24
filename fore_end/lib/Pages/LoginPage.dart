@@ -73,7 +73,6 @@ class Login extends StatelessWidget {
 
   Widget get LoginUI {
     return Column(
-
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
