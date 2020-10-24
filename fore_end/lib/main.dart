@@ -1,6 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/MyCounter.dart';
+import 'package:fore_end/Mycomponents/background.dart';
+import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
+import 'package:fore_end/Mycomponents/textButton.dart';
+import 'package:fore_end/interface/Themeable.dart';
+
+import 'MyTool/MyTheme.dart';
+import 'Mycomponents/VerifyCode.dart';
+import 'MyTool/screenTool.dart';
+import 'Pages/LoginPage.dart';
+import 'Pages/RegisterPage.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -8,58 +21,70 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  BuildContext context;
+
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("image/fruit-main.jpg"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: ClipRRect(
-        // make sure we apply clip it properly
-        child: BackdropFilter(
-          //背景滤镜
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15), //背景模糊
-          child: Container(
-              alignment: Alignment.center,
-              color: Colors.white.withOpacity(0.79),
-              child: Column(
-                  children: <Widget>[
-                    Text(
-                      "Welcome",
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                          fontSize: 50,
-                          fontFamily: "Futura",
-                          color: Colors.black),
-                    ),
-                    SizedBox(height:60),
-                    MyButton(
-                        text: "Sign up",
-                        fontsize: 25,
-                        width: 0.7,
-                        height:55,
-                        radius: 30,
-                        isBold: true,
-                        tapFunc: () {
-                          print("click!");
-                        }),
-                    SizedBox(height:20),
-                    Text(
-                      "Already have account?",
-                      textDirection: TextDirection.ltr,
-                      style:TextStyle(
-                        fontSize: 16,
-                        color: Colors.black
-                      )
-                    )
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center)),
-        ),
-      ),
-    );
+    this.context = context;
+    return MaterialApp(home: FirstPage(), routes: <String, WidgetBuilder>{
+      "login": (context) => Login(),
+      "register": (context) => Register(),
+    });
+  }
+}
+
+class FirstPage extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    MyCounter mt = MyCounter(times: 5,duration: 1000,calling: (){
+    });
+    mt.setCall((){
+      print(mt.getRemain());
+    });
+    mt.start();
+    return new BackGround(
+        sigmaX: 15,
+        sigmaY: 15,
+        backgroundImage: "image/fruit-main.jpg",
+        color: Colors.white,
+        opacity: 0.79,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Welcome",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 50,
+                  fontFamily: "Futura",
+                  color: Colors.black),
+            ),
+            SizedBox(height: 60),
+            MyButton(
+                text: "Sign up",
+                fontsize: 18,
+                width: 0.7,
+                height: 55,
+                radius: 30,
+                sizeChangeMode: 2,
+                theme: MyTheme.blueStyle,
+                isBold: true,
+                tapFunc: (){
+                  Navigator.pushNamed(context, "register");
+                }),
+            SizedBox(height: 20),
+            MyTextButton(
+              "Already have account?",
+              fontsize: 16,
+              theme: MyTheme.blueStyle,
+              tapUpFunc: () {
+                Navigator.pushNamed(context, "login");
+              },
+            ),
+          ],
+        ));
   }
 }

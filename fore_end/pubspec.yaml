@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  keyboard_avoider: ^0.1.2
+  font_awesome_flutter: 8.10.0
   flutter:
     sdk: flutter
 
@@ -68,6 +70,9 @@ flutter:
           - asset: font/Futura/Futura-Heavy-4.ttf
           - asset: font/Futura/Futura-Light-3.ttf
           - asset: font/Futura/Futura-Medium-6.ttf
+      - family: myIcons  #自定义图标
+        fonts:
+          - asset: font/iconfont.ttf
 
   #         style: italic
   #   - family: Trajan Pro
