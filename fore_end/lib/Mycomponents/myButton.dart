@@ -127,7 +127,9 @@ String text;
     });
     this.state.lengthAnimation.beginAnimation();
   }
-
+  void refresh(){
+    this.state.refresh();
+  }
   ComponentThemeState getThemeState(){
     return this.state.themeState;
   }
@@ -339,5 +341,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
       }
     });
     this.colorAnimation.beginAnimation();
+  }
+
+  void refresh(){
+    this.setState(() {});
   }
 }

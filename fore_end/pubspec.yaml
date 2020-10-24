@@ -22,7 +22,7 @@ environment:
 
 dependencies:
   keyboard_avoider: ^0.1.2
-  ###font_awesome: 5.10.1 # uncomment and change for latest version
+  font_awesome_flutter: 8.10.0
   flutter:
     sdk: flutter
 
