@@ -27,7 +27,7 @@ class MyButton extends StatefulWidget {
   Function doubleTapFunc;
 
   ///Text displayed on button
-  final String text;
+String text;
 
   ///Text font size
   final double fontsize;
@@ -127,7 +127,9 @@ class MyButton extends StatefulWidget {
     });
     this.state.lengthAnimation.beginAnimation();
   }
-
+  void refresh(){
+    this.state.refresh();
+  }
   ComponentThemeState getThemeState(){
     return this.state.themeState;
   }
@@ -339,5 +341,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
       }
     });
     this.colorAnimation.beginAnimation();
+  }
+
+  void refresh(){
+    this.setState(() {});
   }
 }

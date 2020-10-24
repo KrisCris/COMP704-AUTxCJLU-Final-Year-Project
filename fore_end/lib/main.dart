@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/Mycomponents/background.dart';
+import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
 class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MyCounter ct = new MyCounter(times: 5,duration: 1000);
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,
@@ -52,6 +56,11 @@ class FirstPage extends StatelessWidget {
                   color: Colors.black),
             ),
             SizedBox(height: 60),
+            MyIconButton(
+                theme: MyTheme.blackAndWhite,
+                icon: FontAwesomeIcons.plus,
+                react: ComponentReactState.focused,
+            ),
             MyButton(
                 text: "Sign up",
                 fontsize: 18,
@@ -60,10 +69,10 @@ class FirstPage extends StatelessWidget {
                 radius: 30,
                 sizeChangeMode: 2,
                 theme: MyTheme.blueStyle,
+                isBold: true,
                 tapFunc: (){
                   Navigator.pushNamed(context, "register");
-                },
-                isBold: true),
+                }),
             SizedBox(height: 20),
             MyTextButton(
               "Already have account?",
