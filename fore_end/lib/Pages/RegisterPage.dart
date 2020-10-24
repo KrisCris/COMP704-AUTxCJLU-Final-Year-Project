@@ -187,16 +187,7 @@ class Register extends StatelessWidget {
                     ) ,
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    height: 150,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
 
-                    ),
-                    // child: VercodeTimerWidget(),
-
-                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
