@@ -34,9 +34,15 @@ class MyApp extends StatelessWidget {
 }
 
 class FirstPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    MyCounter ct = new MyCounter(times: 5,duration: 1000);
+    MyCounter mt = MyCounter(times: 5,duration: 1000,calling: (){
+    });
+    mt.setCall((){
+      print(mt.getRemain());
+    });
+    mt.start();
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,
