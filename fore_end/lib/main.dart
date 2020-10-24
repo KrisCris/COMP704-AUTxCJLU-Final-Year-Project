@@ -59,6 +59,7 @@ class FirstPage extends StatelessWidget {
                 width: 0.7,
                 height: 55,
                 radius: 30,
+                sizeChangeMode: 2,
                 theme: MyTheme.blueStyle,
                 tapFunc: (){
                   Navigator.pushNamed(context, "register");
