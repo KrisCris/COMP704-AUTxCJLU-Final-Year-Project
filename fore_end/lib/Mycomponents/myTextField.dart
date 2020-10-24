@@ -94,7 +94,7 @@ class MyTextFieldState extends State<MyTextField> {
               // keyboardType: TextInputType.emailAddress,
 
               controller: widget.inputController,
-              maxLength: widget.maxlength,
+              // maxLength: widget.maxlength,
 
 
               style: TextStyle(fontSize: 18),

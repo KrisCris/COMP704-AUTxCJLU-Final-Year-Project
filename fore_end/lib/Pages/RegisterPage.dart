@@ -1,8 +1,10 @@
 // import 'dart:js';
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
+// import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -20,32 +22,15 @@ void main() {
 class Register extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController verifyCodeController = TextEditingController();
-  // @override
-  // void initState() {
-  //   //监听输入改变
-  //   emailController.addListener(() {
-  //     print(emailController.text);
-  //   });
-  // }
 
-  // This widget is the root of your application.
+  //Timer倒计时的属性定义
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    MyTextField verifyTextFiled = MyTextField(
-      //这个要在按下按钮之后显示,暂时隐藏掉
-      inputController: verifyCodeController,
-      placeholder: 'Verify Code',
-      isPassword: false,
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
-      width: ScreenTool.partOfScreenWidth(0.8),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      maxlength: 6,
-      myIcon: Icons.check_circle_outline,
-    );
-
     MyTextField emailTextFiled = MyTextField(
       inputController: emailController,
       placeholder: 'Email',
@@ -56,37 +41,53 @@ class Register extends StatelessWidget {
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      isAutoFocus: true,
+      // isAutoFocus: true,
+    );
+
+    MyTextField verifyTextFiled = MyTextField(
+      //这个要在按下按钮之后显示,暂时隐藏掉
+      inputController: verifyCodeController,
+      placeholder: 'Verify Code',
+      isPassword: false,
+      focusColor: Constants.FOCUSED_COLOR,
+      errorColor: Constants.ERROR_COLOR,
+      defaultColor: Constants.DEFAULT_COLOR,
+      width: ScreenTool.partOfScreenWidth(0.45),
+      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+      maxlength: 6,
+      myIcon: Icons.check_circle_outline,
     );
 
     MyButton verifyButton = MyButton(
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        height: 40,
-        radius: 10,
+        height: 0.05,
+        radius: 8,
         theme: MyTheme.blueStyle,
-
+        sizeChangeMode:2,
         tapFunc: () {},
         isBold: true);
 
-    verifyButton.tapFunc = (){
-      // Navigator.pushNamed(context, "register");
-      print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
+      //按钮按下的方法
+      verifyButton.tapFunc = (){
 
-      //测试一下提示功能
-      if (testEmail(emailController.text)) {
-        print(emailController.text + "  是正确的邮箱格式");
-      } else {
-        print("未输入或者错误的邮箱格式");
-      }
 
       //调用函数修改某个textfield的数值
       // verifyTextFiled.name();
       verifyButton.setWidth(0.2);
       verifyButton.setDisable(true);
       verifyButton.text="Acquire\nagain";
-      verifyButton.fontsize = 12;
+      verifyButton.fontsize = 13;
+      // Navigator.pushNamed(context, "register");
+      print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
+      //测试一下提示功能
+      if (testEmail(emailController.text)) {
+        print(emailController.text + "  是正确的邮箱格式");
+      } else {
+        print("未输入或者错误的邮箱格式");
+      }
       print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
     };
 
@@ -122,20 +123,58 @@ class Register extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      emailTextFiled,
+                      Container(
+                        width: ScreenTool.partOfScreenWidth(0.7),
+                        child: emailTextFiled,
+                      ),
+
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                        child: Icon(
-                          MyIcons.icon_no,
-                          size: 30,
-                          color: Constants.ERROR_COLOR,
-                        ),
+                        // child: Icon(
+                        //
+                        //   MyIcons.icon_no,
+                        //   size: 30,
+                        //   color: Constants.ERROR_COLOR,
+                        // ),
                       )
                     ],
                   ),
-                  verifyTextFiled,
-                  verifyButton,
+
+                  Container(
+                    width: ScreenTool.partOfScreenWidth(0.7),
+                    height: ScreenTool.partOfScreenHeight(0.1),
+                    decoration: BoxDecoration(
+
+                      // border: Border.all(color: Colors.blue, width: 1),
+                    ),
+                    child: Stack(
+                        alignment:Alignment.center,
+                        children: <Widget>[
+                          Positioned(
+                            left: 0,
+                            child: verifyTextFiled,
+                          ),
+                          Positioned(
+                            // right: 0,
+                            child: verifyButton,
+
+                          ),
+
+
+                          ],
+                    ) ,
+                  ),
                   SizedBox(height: 20),
+                  Container(
+                    height: 150,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+
+                    ),
+                    // child: VercodeTimerWidget(),
+
+                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -147,6 +186,9 @@ class Register extends StatelessWidget {
                           width: ScreenTool.partOfScreenWidth(0.20),
                           theme: MyTheme.blueStyle,
                           firstThemeState: ComponentThemeState.error,
+                          tapFunc: () {
+                            Navigator.pop(context);
+                          },
                         ),
                         Expanded(child: Text("")),
                         MyButton(
@@ -157,7 +199,7 @@ class Register extends StatelessWidget {
                           width: ScreenTool.partOfScreenWidth(0.20),
                           theme: MyTheme.blueStyle,
                           tapFunc: () {
-                            // Navigator.pushNamed(context, "testVerifyCode");
+                            Navigator.pushNamed(context, "login");
                           },
                         )
                         //this.nextButton,
