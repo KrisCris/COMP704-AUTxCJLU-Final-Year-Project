@@ -56,8 +56,6 @@ class FirstPage extends StatelessWidget {
                   color: Colors.black),
             ),
             SizedBox(height: 60),
-            MyIconButton(theme: MyTheme.blackAndWhite,
-                icon: FontAwesomeIcons.plus, text: "Text",),
             MyButton(
                 text: "Sign up",
                 fontsize: 18,
