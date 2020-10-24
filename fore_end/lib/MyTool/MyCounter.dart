@@ -24,15 +24,15 @@ class MyCounter {
   void start(){
     if(this.calling == null)return;
     if(this._isRun)return;
+
+    this.calling();
     this._temp = this.times-1;
     this._isRun = true;
-    this.calling();
     this._tm = Timer.periodic(Duration(milliseconds: duration), (timer) {
       if(this._temp == 0){
         timer.cancel();
         this._isRun = false;
       }
-
       this.calling();
 
       if(this._temp >=0)this._temp--;
