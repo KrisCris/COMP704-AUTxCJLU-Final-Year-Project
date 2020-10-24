@@ -8,14 +8,12 @@ import 'package:fore_end/interface/Themeable.dart';
 
 class MyButton extends StatefulWidget {
   final MyTheme theme;
+
   ///The radius of border
   final double radius;
 
   ///The background color of button
   Color bgColor;
-
-  ///The disable buttton color
-  // Color disbaleColor;
 
   ///The text color of button
   Color textColor;
@@ -51,6 +49,8 @@ class MyButton extends StatefulWidget {
   double topMargin;
   double bottomMargin;
 
+  ///when length change, button fix at center(0),left(1) or right(2)
+  int sizeChangeMode;
   /// the opacity that flash animation start at
   double startOpac;
   ///the opacity that flash animation end at
@@ -75,6 +75,7 @@ class MyButton extends StatefulWidget {
       {this.text,
         @required this.theme,
       this.fontsize = 18,
+        this.sizeChangeMode=0,
       this.isBold = false,
       this.radius = 30,
       this.width = 120,
@@ -107,17 +108,11 @@ class MyButton extends StatefulWidget {
     return this.state;
   }
 
-  void setThemeState(ComponentThemeState the){
-    this.state.setThemeState(the);
-  }
-  void setReactState(ComponentReactState rea){
-    this.state.setReactState(rea);
-  }
   void setDisable(bool d){
     if(d){
-      this.setReactState(ComponentReactState.disabled);
+      this.state.setReactState(ComponentReactState.disabled);
     }else{
-      this.setReactState(ComponentReactState.able);
+      this.state.setReactState(ComponentReactState.able);
     }
   }
   void setWidth(double len){
@@ -125,7 +120,11 @@ class MyButton extends StatefulWidget {
     this.state.lengthAnimation.initAnimation(this.width,
           newWidth, this.lengthDura, this.state,
             () { this.state.setState(() {});});
-    this.width = newWidth;
+    this.state.lengthAnimation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        this.width = newWidth;
+      }
+    });
     this.state.lengthAnimation.beginAnimation();
   }
 
@@ -143,6 +142,8 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
   ColorTweenAnimation colorAnimation = new ColorTweenAnimation();
   bool isTap = false;
+  double firstWidth;
+
   MyButtonState(ComponentReactState rea, ComponentThemeState the):super(){
     this.reactState = rea;
     this.themeState = the;
@@ -160,6 +161,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   void initState() {
     super.initState();
     this.initBgColor();
+    this.firstWidth = widget.width;
     this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this,
         () {
       setState(() {});
@@ -194,7 +196,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-        offset: Offset(this.fluctuateAnimation.getValue(), 0),
+        offset: Offset(this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
         child: GestureDetector(
             onDoubleTap: (){
               widget.doubleTapFunc();
@@ -226,12 +228,13 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   }
 
   Widget get buttonUI {
-    return Stack(alignment: Alignment.center, children: <Widget>[
+    return Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
       this.buttonShape,
       this.buttonCover
     ]);
   }
-
   Widget get buttonShape {
     return Container(
       width: this.lengthAnimation.getValue(),
@@ -281,6 +284,16 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
     );
   }
 
+  double calculatePosition(){
+    if(widget.sizeChangeMode == 0)return 0;
+    else if(widget.sizeChangeMode == 1){
+      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      return -(gap/2);
+    }else if(widget.sizeChangeMode == 2){
+      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      return gap/2;
+    }
+  }
   @override
   void setReactState(ComponentReactState rea) {
     //do nothing when state not change
