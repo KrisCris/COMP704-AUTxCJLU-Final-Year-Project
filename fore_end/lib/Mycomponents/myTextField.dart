@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -129,7 +130,7 @@ class MyTextFieldState extends State<MyTextField> {
 
                   // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
                   //icon: Icon(Icons.phone),
-                  // suffixIcon: Icon(Icons.check_circle_outline, color: Colors.green,size: 20,)
+                  // suffixIcon: Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
 
               ),
               // obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码

@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
-// import 'package:fore_end/MyTool/MyCounter.dart';
+import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -31,6 +31,8 @@ class Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MyCounter c= new MyCounter(times:10, duration: 1000);
+
     MyTextField emailTextFiled = MyTextField(
       inputController: emailController,
       placeholder: 'Email',
@@ -68,28 +70,48 @@ class Register extends StatelessWidget {
         theme: MyTheme.blueStyle,
         sizeChangeMode:2,
         tapFunc: () {},
-        isBold: true);
+        isBold: true
+    );
 
       //按钮按下的方法
-      verifyButton.tapFunc = (){
+      verifyButton.tapFunc = () {
+        //调用计时器
+        verifyButton.fontsize=20;
+        verifyButton.setDisable(true);
+        verifyButton.setWidth(0.2);
+        if (c.isStop()) {
+          c.start();
+        }
+      };
+
+      c.calling = (){
+        verifyButton.text= c.getRemain().toString();
+        verifyButton.refresh();
+        if(c.isStop()) {
+          verifyButton.text="Acquire\nagain";
+          verifyButton.fontsize = 13;
+          verifyButton.setDisable(false);
+        }
+      };
 
 
-      //调用函数修改某个textfield的数值
-      // verifyTextFiled.name();
-      verifyButton.setWidth(0.2);
-      verifyButton.setDisable(true);
-      verifyButton.text="Acquire\nagain";
-      verifyButton.fontsize = 13;
-      // Navigator.pushNamed(context, "register");
-      print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
-      //测试一下提示功能
-      if (testEmail(emailController.text)) {
-        print(emailController.text + "  是正确的邮箱格式");
-      } else {
-        print("未输入或者错误的邮箱格式");
-      }
-      print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
-    };
+
+    //   //调用函数修改某个textfield的数值
+    //   // verifyTextFiled.name();
+    //   verifyButton.setWidth(0.2);
+    //   verifyButton.setDisable(true);
+    //   verifyButton.text="Acquire\nagain";
+    //   verifyButton.fontsize = 13;
+    //   // Navigator.pushNamed(context, "register");
+    //   // print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
+    //   // //测试一下提示功能
+    //   // if (testEmail(emailController.text)) {
+    //   //   print(emailController.text + "  是正确的邮箱格式");
+    //   // } else {
+    //   //   print("未输入或者错误的邮箱格式");
+    //   // }
+    //   // print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
+    // };
 
     return Scaffold(
       body: BackGround(
