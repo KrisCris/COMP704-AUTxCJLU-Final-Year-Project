@@ -65,7 +65,7 @@ class Register extends StatelessWidget {
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        height: 0.05,
+        height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
         sizeChangeMode:2,
@@ -187,16 +187,7 @@ class Register extends StatelessWidget {
                     ) ,
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    height: 150,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
 
-                    ),
-                    // child: VercodeTimerWidget(),
-
-                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

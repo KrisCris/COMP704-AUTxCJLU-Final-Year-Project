@@ -123,14 +123,23 @@ class MyTextFieldState extends State<MyTextField> {
                   ),
 
 
+
+
+
+                  //文本框基本属性
                   hintText: widget.placeholder,
-                  contentPadding: new EdgeInsets.fromLTRB(0, 0, 0, 6),
+                  contentPadding: new EdgeInsets.fromLTRB(0,20,0,0),
                   isDense: true,
 
 
                   // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
                   //icon: Icon(Icons.phone),
-                  // suffixIcon: Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
+                  suffixIcon: Padding(
+
+                      padding:  EdgeInsets.fromLTRB(0,10,0,0),
+                      child: Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 25,)
+                  ),
+                  //Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
 
               ),
               // obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码
