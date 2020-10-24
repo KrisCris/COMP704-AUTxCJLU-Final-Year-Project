@@ -10,6 +10,7 @@ import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 void main() {
@@ -62,27 +63,32 @@ class Register extends StatelessWidget {
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        disabled: false,
         height: 40,
         radius: 10,
         theme: MyTheme.blueStyle,
-        tapFunc: () {
-          // Navigator.pushNamed(context, "register");
-          print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
 
-          //测试一下提示功能
-          if (testEmail(emailController.text)) {
-            print(emailController.text + "  是正确的邮箱格式");
-          } else {
-            print("未输入或者错误的邮箱格式");
-          }
-
-          //调用函数修改某个textfield的数值
-          // verifyTextFiled.name();
-
-          print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
-        },
+        tapFunc: () {},
         isBold: true);
+
+    verifyButton.tapFunc = (){
+      // Navigator.pushNamed(context, "register");
+      print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
+
+      //测试一下提示功能
+      if (testEmail(emailController.text)) {
+        print(emailController.text + "  是正确的邮箱格式");
+      } else {
+        print("未输入或者错误的邮箱格式");
+      }
+
+      //调用函数修改某个textfield的数值
+      // verifyTextFiled.name();
+      verifyButton.setWidth(0.2);
+      verifyButton.setDisable(true);
+      verifyButton.text="Acquire\nagain";
+      verifyButton.fontsize = 12;
+      print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
+    };
 
     return Scaffold(
       body: BackGround(
@@ -140,6 +146,7 @@ class Register extends StatelessWidget {
                           bottomMargin: 20,
                           width: ScreenTool.partOfScreenWidth(0.20),
                           theme: MyTheme.blueStyle,
+                          firstThemeState: ComponentThemeState.error,
                         ),
                         Expanded(child: Text("")),
                         MyButton(
@@ -149,7 +156,6 @@ class Register extends StatelessWidget {
                           bottomMargin: 20,
                           width: ScreenTool.partOfScreenWidth(0.20),
                           theme: MyTheme.blueStyle,
-                          disabled: false,
                           tapFunc: () {
                             // Navigator.pushNamed(context, "testVerifyCode");
                           },

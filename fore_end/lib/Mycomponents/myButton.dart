@@ -29,10 +29,10 @@ class MyButton extends StatefulWidget {
   Function doubleTapFunc;
 
   ///Text displayed on button
-  final String text;
+String text;
 
   ///Text font size
-  final double fontsize;
+ double fontsize;
 
   ///whether text is bold or not
   final bool isBold;
