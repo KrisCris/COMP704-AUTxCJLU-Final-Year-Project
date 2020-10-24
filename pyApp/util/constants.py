@@ -13,7 +13,7 @@ DB_CHARSET = 'utf8mb4'
 # SMTP_PORT = 465
 SENDER = 'twr9738@autuni.ac.nz'
 SENDER_NAME = 'DietLens<twr9738@autuni.ac.nz>'
-SENDER_PW = ''
+SENDER_PW = 'Genius910189033'
 SMTP_URL = 'smtp.office365.com'
 SMTP_PORT = 587
 
@@ -25,5 +25,12 @@ ENV = 'development'
 
 # CODE
 REPLY_CODES = {
-    1: 'success'
+    -5: 'email sending failed',
+    -4: 'wrong verification code',
+    -3: 'user already exists',
+    -2: 'email or password wrong',
+    1: 'success',
+
 }
+
+SECRET_KEY = 'twr9728@autuni.ac.nz'

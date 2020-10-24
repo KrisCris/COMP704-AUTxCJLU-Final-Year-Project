@@ -14,7 +14,7 @@ class MyIconButton extends StatefulWidget{
   MyIconButtonState state;
 
   MyIconButton({@required this.theme, @required this.icon, this.text="",
-    this.iconSize = 12, this.fontSize=12,this.buttonRadius=25,
+    this.iconSize = 20, this.fontSize=14,this.buttonRadius=55,
     type=ComponentThemeState.normal,react = ComponentReactState.unfocused}):super(){
     this.state = new MyIconButtonState(type,react);
   }
@@ -45,6 +45,7 @@ class MyIconButtonState extends State<MyIconButton> with Themeable, TickerProvid
 
   Widget get IconText{
     return Column(
+      mainAxisAlignment:  MainAxisAlignment.center,
       children: <Widget>[
           Icon(widget.icon,color: widget.theme.getThemeColor(this.themeState),
             size: widget.iconSize),
@@ -53,6 +54,7 @@ class MyIconButtonState extends State<MyIconButton> with Themeable, TickerProvid
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: widget.fontSize,
+              fontWeight: FontWeight.bold,
               fontFamily: "Futura",
               color: widget.theme.darkTextColor),
         )
