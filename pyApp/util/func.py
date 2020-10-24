@@ -1,12 +1,11 @@
 import random
 import smtplib
-import os
 import string
 import time
+import uuid
 
 from flask import request, jsonify, redirect
 from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 from util.constants import REPLY_CODES
@@ -23,8 +22,9 @@ def reply_json(code, data=None):
             'data': data
         })
     return jsonify({
-        'code': -1,
-        'msg': ''
+        'code': 800,
+        'msg': 'Unknown code',
+        'data': data
     })
 
 
@@ -68,7 +68,7 @@ def __send_email(receivers: list, content: str, subject: str):
         return 1
     except Exception as e:
         print('[send_email] {0}'.format(str(e)))
-        return 0
+        return -5
 
 
 def send_verification_code(receiver: str, code: str):
@@ -76,15 +76,26 @@ def send_verification_code(receiver: str, code: str):
             Your verification code is: {0}.
             This code will expire in 10 minutes.
     '''.format(code)
-    __send_email(receivers=[receiver], content=content, subject='DietLens verification code')
+    return __send_email(receivers=[receiver], content=content, subject='DietLens verification code')
 
 
 def gen_auth_code():
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    s = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    s = s.upper()
+    return s
 
 
-def get_timestamp():
+def genToken(email):
+    time_uuid = uuid.uuid1()
+    return uuid.uuid5(time_uuid, email)
+
+
+def get_current_time():
     return int(time.time())
+
+
+def get_time_gap(old):
+    return int(time.time())-old
 
 
 if __name__ == '__main__':
