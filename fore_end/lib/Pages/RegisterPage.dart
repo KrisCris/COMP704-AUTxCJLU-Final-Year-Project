@@ -54,7 +54,6 @@ class Register extends StatelessWidget {
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       maxlength: 6,
-      myIcon: Icons.check_circle_outline,
     );
 
     MyButton verifyButton = MyButton(
@@ -69,8 +68,11 @@ class Register extends StatelessWidget {
         isBold: true
     );
 
-      //按钮按下的方法
+
       verifyButton.tapFunc = () {
+
+
+
         //调用计时器
         verifyButton.fontsize=20;
         verifyButton.setDisable(true);
@@ -92,22 +94,7 @@ class Register extends StatelessWidget {
 
 
 
-    //   //调用函数修改某个textfield的数值
-    //   // verifyTextFiled.name();
-    //   verifyButton.setWidth(0.2);
-    //   verifyButton.setDisable(true);
-    //   verifyButton.text="Acquire\nagain";
-    //   verifyButton.fontsize = 13;
-    //   // Navigator.pushNamed(context, "register");
-    //   // print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
-    //   // //测试一下提示功能
-    //   // if (testEmail(emailController.text)) {
-    //   //   print(emailController.text + "  是正确的邮箱格式");
-    //   // } else {
-    //   //   print("未输入或者错误的邮箱格式");
-    //   // }
-    //   // print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
-    // };
+
 
     return Scaffold(
       body: BackGround(
@@ -208,8 +195,11 @@ class Register extends StatelessWidget {
                           width: ScreenTool.partOfScreenWidth(0.20),
                           theme: MyTheme.blueStyle,
                           tapFunc: () {
-                            Navigator.pushNamed(context, "login");
+                            // Navigator.pushNamed(context, "login");
+                          emailTextFiled.iconSizeController();
+
                           },
+
                         )
                         //this.nextButton,
                       ]),
