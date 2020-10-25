@@ -5,13 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 

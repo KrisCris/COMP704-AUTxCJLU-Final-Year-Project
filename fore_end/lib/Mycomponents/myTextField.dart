@@ -1,9 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 
 class MyTextField extends StatefulWidget {

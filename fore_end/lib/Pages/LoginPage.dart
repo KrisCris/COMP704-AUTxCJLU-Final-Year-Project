@@ -54,6 +54,10 @@ class Login extends StatelessWidget {
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
     );
+    this.emailField.addListener((){
+
+    });
+
     this.passwordField = MyTextField(
       placeholder: "Password",
       focusColor: Constants.FOCUSED_COLOR,
