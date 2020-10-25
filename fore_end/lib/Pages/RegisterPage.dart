@@ -5,14 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
@@ -34,10 +32,10 @@ class Register extends StatelessWidget {
 
     MyTextField emailTextFiled = MyTextField(
       placeholder: 'Email',
-      type: InputFieldType.email,
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
+      inputType: InputFieldType.email,
+      // focusColor: Constants.FOCUSED_COLOR,
+      // errorColor: Constants.ERROR_COLOR,
+      // defaultColor: Constants.DEFAULT_COLOR,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
@@ -47,10 +45,10 @@ class Register extends StatelessWidget {
     MyTextField verifyTextFiled = MyTextField(
       //这个要在按下按钮之后显示,暂时隐藏掉
       placeholder: 'Verify Code',
-      type:InputFieldType.text,
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
+      inputType:InputFieldType.text,
+      // focusColor: Constants.FOCUSED_COLOR,
+      // errorColor: Constants.ERROR_COLOR,
+      // defaultColor: Constants.DEFAULT_COLOR,
       width: ScreenTool.partOfScreenWidth(0.45),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
@@ -193,8 +191,8 @@ class Register extends StatelessWidget {
                           theme: MyTheme.blueStyle,
                           tapFunc: () {
                             // Navigator.pushNamed(context, "login");
-                          emailTextFiled.iconSizeController();
-                          bool iscorrect = FormatChecker.check(emailTextFiled.type, emailTextFiled.getInput());
+                          // emailTextFiled.iconSizeController();
+                          bool iscorrect = FormatChecker.check(emailTextFiled.inputType, emailTextFiled.getInput());
                           if(iscorrect){
 
                           }
