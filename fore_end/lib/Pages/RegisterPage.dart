@@ -7,6 +7,7 @@ import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
@@ -60,7 +61,7 @@ class Register extends StatelessWidget {
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        height: 50,
+        height: 70,
         radius: 8,
         theme: MyTheme.blueStyle,
         sizeChangeMode:2,
@@ -70,9 +71,6 @@ class Register extends StatelessWidget {
 
 
       verifyButton.tapFunc = () {
-
-
-
         //调用计时器
         verifyButton.fontsize=20;
         verifyButton.setDisable(true);
@@ -81,7 +79,6 @@ class Register extends StatelessWidget {
           c.start();
         }
       };
-
       c.calling = (){
         verifyButton.text= c.getRemain().toString();
         verifyButton.refresh();
@@ -197,7 +194,10 @@ class Register extends StatelessWidget {
                           tapFunc: () {
                             // Navigator.pushNamed(context, "login");
                           emailTextFiled.iconSizeController();
+                          bool iscorrect = FormatChecker.check(emailTextFiled.type, emailTextFiled.getInput());
+                          if(iscorrect){
 
+                          }
                           },
 
                         )
