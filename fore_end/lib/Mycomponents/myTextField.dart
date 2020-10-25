@@ -1,29 +1,28 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 class MyTextField extends StatefulWidget {
+  final MyTheme theme;
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
-  // final bool isPassword; //判断是不是密码框
-  // final bool isEmail;   //判断邮箱格式
-  final InputFieldType type;
+  final String errorText;
+  final InputFieldType inputType;
   final bool isAutoFocus;
-  final String inputTypes;
   final int maxlength; //长度
   final IconData myIcon;
   final bool showIcon;
   double width;   //文本框的宽
-  Color defaultColor;  //不点击的颜色  灰
-  Color focusColor; //点击的颜色   蓝
-  Color errorColor;  //报错的颜色  红
   double ulDefaultWidth;  //未点击的下划线厚度
   double ulFocusedWidth;  //点击的厚度
+
+  ComponentReactState firstReactState;
+  ComponentThemeState firstThemeState;
 
   MyTextFieldState st;
 
@@ -34,15 +33,15 @@ class MyTextField extends StatefulWidget {
 
   MyTextField(
       {this.placeholder,
-        this.type = InputFieldType.text,
+        this.inputType = InputFieldType.text,
         this.isAutoFocus= false,
+        @required this.theme,
+        this.errorText = "input error",
       this.width,
       this.ulFocusedWidth,
       this.ulDefaultWidth,
-      this.errorColor,
-      this.focusColor,
-      this.defaultColor,
-        this.inputTypes="text",
+      this.firstReactState = ComponentReactState.unfocused,
+        this.firstThemeState = ComponentThemeState.normal,
         this.maxlength= 30, //默认文本框输入长度
         this.myIcon=Icons.email_outlined,
         this.showIcon=false,
@@ -60,53 +59,91 @@ class MyTextField extends StatefulWidget {
   bool isEmpty(){
     return this.st.isEmpty();
   }
-
+  bool isCorrect(){
+    return this.st.isCorrect;
+  }
   void addListener(Function f){
     this.st.addListener(f);
   }
   bool checkInput(){
-  return FormatChecker.check(this.type, this.getInput());
+  return FormatChecker.check(this.inputType, this.getInput());
   }
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-      this.st = new MyTextFieldState();
+      this.st = new MyTextFieldState(this.firstThemeState,this.firstReactState);
       return this.st;
   }
-
-  void iconSizeController(){
-    if(!this.checkInput()){
-
-      //如果输入错误的时候，显示错误图表，并且提示内容
-      this.st.iconSize =25;
-      // this.st.errorTextContent="email address not exist！";
-      this.st.setState(() {
-
-      });
-    }
-    return;
-  }
-
-
-
 }
 
-class MyTextFieldState extends State<MyTextField> {
+class MyTextFieldState extends State<MyTextField> with TickerProviderStateMixin, Themeable{
   TextEditingController _inputcontroller  = TextEditingController();
-  double iconSize=0;
+  ColorTweenAnimation colorAnimation = ColorTweenAnimation();
+  TweenAnimation suffixSizeAnimation = TweenAnimation();
+  TweenAnimation underlineWidthAnimation = TweenAnimation();
+  FocusNode _focusNode = FocusNode();
   Color errorColors=Colors.blue;
+  bool isCorrect = false;
+  int colorChangeDura = 350;
+  int sizeChangeDura = 250;
 
-
+  MyTextFieldState(ComponentThemeState the, ComponentReactState rea):super(){
+    this.themeState = the;
+    this.reactState = rea;
+  }
 
   @override
   void initState() {
     super.initState();
-    this._inputcontroller.addListener(() {
-      //监听内容的
+    this.initColor();
+    this.underlineWidthAnimation.initAnimation(
+        widget.ulDefaultWidth,
+        widget.ulFocusedWidth,
+        sizeChangeDura , this, () { setState(() {});});
 
+    this.suffixSizeAnimation.initAnimation(
+        0.0,
+        25.0,
+        sizeChangeDura, this, () {setState(() {});});
+
+    this._focusNode.addListener(() {
+      if(this._focusNode.hasFocus){
+        this.setReactState(ComponentReactState.focused);
+        print("focus");
+      }else{
+        this.setReactState(ComponentReactState.unfocused);
+        print("unfocus");
+      }
     });
-
+    this._inputcontroller.addListener(() {
+      if(this._inputcontroller.text.isEmpty){
+        this.suffixSizeAnimation.reverseAnimation();
+        this.setThemeState(ComponentThemeState.normal);
+        this.isCorrect = false;
+      }else{
+        if(this.themeState == ComponentThemeState.normal){
+          this.suffixSizeAnimation.beginAnimation();
+        }
+        if(FormatChecker.check(widget.inputType, this._inputcontroller.text)){
+          this.setThemeState(ComponentThemeState.correct);
+          this.isCorrect = true;
+        }else{
+          this.setThemeState(ComponentThemeState.error);
+          this.isCorrect = false;
+        }
+      }
+    });
+  }
+  void initColor(){
+    this.colorAnimation.initAnimation(
+        widget.theme.getReactColor(this.reactState),
+        widget.theme.getReactColor(this.reactState),
+        colorChangeDura, this, () {setState(() {});});
+    this.colorAnimation.beginAnimation();
+    if(widget.isAutoFocus){
+        this.setReactState(ComponentReactState.focused);
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -114,53 +151,55 @@ class MyTextFieldState extends State<MyTextField> {
         width: widget.width,
         margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
         child: TextField(
-
+          focusNode: this._focusNode,
           controller: this._inputcontroller,
           style: TextStyle(fontSize: 18),
           autofocus: widget.isAutoFocus,
-          cursorColor: Colors.blue,
+          cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
 
           decoration: new InputDecoration( //下划线的设置
-            // focusedBorder: UnderlineInputBorder(
-            //   borderSide: BorderSide(
-            //       color: widget.errorColor, width: widget.ulFocusedWidth),
-            // ),
-            // enabledBorder: UnderlineInputBorder(
-            //   borderSide: BorderSide(
-            //       color: widget.defaultColor, width: widget.ulDefaultWidth),
-            // ),
-            // disabledBorder: UnderlineInputBorder(
-            //     borderSide: BorderSide(
-            //         color: Colors.orange, width: widget.ulDefaultWidth)
-            // ),
-            // errorBorder: UnderlineInputBorder(
-            //     borderSide: BorderSide(
-            //         color: widget.errorColor, width: widget.ulDefaultWidth)
-            // ),
-            // focusedErrorBorder: UnderlineInputBorder(
-            //     borderSide: BorderSide(
-            //         color: widget.errorColor, width: widget.ulFocusedWidth)
-            // ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: colorAnimation.getValue(), width: this.underlineWidthAnimation.getValue()),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: colorAnimation.getValue(), width: this.underlineWidthAnimation.getValue()),
+            ),
+            disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(), width:this.underlineWidthAnimation.getValue())
+            ),
+            errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(), width: this.underlineWidthAnimation.getValue())
+            ),
+            focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(), width: this.underlineWidthAnimation.getValue())
+            ),
 
             //文本框基本属性
             hintText: widget.placeholder,
             contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
             isDense: true,
-            helperText: "Please input correct email!",
-            // errorText: !widget.checkInput()? null :"wrong email!",
-            //当失去焦点的时候去判断邮箱地址是不是正确
+            errorText:
+            this.isCorrect || (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                ? " " : widget.errorText,
 
             // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
             //icon: Icon(Icons.phone),
-            suffixIcon: Padding(
-
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            suffixIcon: Transform.translate(
+                offset:Offset(10, 5),
+                //padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
                 child: Icon(
-                  FontAwesomeIcons.timesCircle, color: Colors.red, size: iconSize,)
+                  this.isCorrect ? FontAwesomeIcons.checkCircle : FontAwesomeIcons.timesCircle,
+                  color: this.colorAnimation.getValue(),
+                  size: this.suffixSizeAnimation.getValue())
             ),
           ),
-          obscureText: widget.type == InputFieldType.password,
+          obscureText: widget.inputType == InputFieldType.password,
         )
     );
   }
@@ -173,6 +212,45 @@ class MyTextFieldState extends State<MyTextField> {
   }
   void addListener(Function f){
     this._inputcontroller.addListener(f);
+  }
+
+  @override
+  void setReactState(ComponentReactState rea) {
+    if(rea == this.reactState)return;
+
+    if(rea == ComponentReactState.unfocused){
+      if(this.themeState == ComponentThemeState.normal){
+        this.colorAnimation.initAnimation(
+            widget.theme.getThemeColor(this.themeState),
+            widget.theme.getReactColor(rea), colorChangeDura, this,
+                () {setState(() {});});
+        this.underlineWidthAnimation.reverseAnimation();
+      }
+    }else{
+      if(this.themeState == ComponentThemeState.normal){
+        this.colorAnimation.initAnimation(
+            widget.theme.getReactColor(this.reactState),
+            widget.theme.getThemeColor(this.themeState), colorChangeDura, this,
+                () {setState(() {});});
+        this.underlineWidthAnimation.beginAnimation();
+      }
+    }
+    this.colorAnimation.beginAnimation();
+    this.reactState = rea;
+  }
+  @override
+  void setThemeState(ComponentThemeState the) {
+    if(the == this.themeState)return;
+
+    if(this.reactState == ComponentReactState.focused){
+      this.colorAnimation.initAnimation(
+          widget.theme.getThemeColor(this.themeState),
+          widget.theme.getThemeColor(the), colorChangeDura, this, () {setState(() {});});
+      this.colorAnimation.beginAnimation();
+      this.themeState = the;
+    }else{
+        this.themeState = the;
+    }
   }
 }
 

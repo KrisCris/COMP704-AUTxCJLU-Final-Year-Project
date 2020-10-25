@@ -20,12 +20,14 @@ class FormatChecker {
         },
       });
   }
+
   static FormatChecker _getInstance(){
     if (_instance == null) {
       _instance = new FormatChecker._internal();
     }
     return _instance;
   }
+
   static bool check(InputFieldType tp, String text){
     return FormatChecker.instance.mapper[tp](text);
   }
