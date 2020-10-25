@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
 }
 
 class FirstPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
+    FormatChecker.check(InputFieldType.email, "zzwyxl@163.com");
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,

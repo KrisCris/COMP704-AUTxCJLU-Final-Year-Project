@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyIcons.dart';
+import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 
 class MyTextField extends StatefulWidget {
@@ -16,6 +17,7 @@ class MyTextField extends StatefulWidget {
   final String inputTypes;
   final int maxlength; //长度
   final IconData myIcon;
+  final bool showIcon;
   double width;   //文本框的宽
   Color defaultColor;  //不点击的颜色  灰
   Color focusColor; //点击的颜色   蓝
@@ -43,18 +45,13 @@ class MyTextField extends StatefulWidget {
         this.inputTypes="text",
         this.maxlength= 30, //默认文本框输入长度
         this.myIcon=Icons.email_outlined,
+        this.showIcon=false,
       Key key,})
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     } //构造函数
 
   //测试逻辑方法
-  bool testIsEmail(bool checkContent){
-    if(checkContent){
-      return true;
-    }
-    return false;
-  }
 
   String getInput(){
     return this.st.getInput();
@@ -67,6 +64,9 @@ class MyTextField extends StatefulWidget {
   void addListener(Function f){
     this.st.addListener(f);
   }
+  bool checkInput(){
+  return FormatChecker.check(this.type, this.getInput());
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -75,22 +75,35 @@ class MyTextField extends StatefulWidget {
       return this.st;
   }
 
-  void name(){
-    this.st.a +=10;
-    this.st.setState(() {
+  void iconSizeController(){
+    if(!this.checkInput()){
 
-    });
+      //如果输入错误的时候，显示错误图表，并且提示内容
+      this.st.iconSize =25;
+      // this.st.errorTextContent="email address not exist！";
+      this.st.setState(() {
+
+      });
+    }
+    return;
   }
+
+
+
 }
 
 class MyTextFieldState extends State<MyTextField> {
   TextEditingController _inputcontroller  = TextEditingController();
-  double a = 10;
+  double iconSize=0;
+  Color errorColors=Colors.blue;
+
+
 
   @override
   void initState() {
     super.initState();
     this._inputcontroller.addListener(() {
+      //监听内容的
 
     });
 
@@ -100,44 +113,43 @@ class MyTextFieldState extends State<MyTextField> {
     return Container(
         width: widget.width,
         margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
-        // //底部border的宽度和颜色
         child: TextField(
-          // keyboardType: TextInputType.emailAddress,
 
           controller: this._inputcontroller,
-          // maxLength: widget.maxlength,
-
           style: TextStyle(fontSize: 18),
           autofocus: widget.isAutoFocus,
           cursorColor: Colors.blue,
           cursorWidth: 2,
 
           decoration: new InputDecoration( //下划线的设置
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: widget.focusColor, width: widget.ulFocusedWidth),
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: widget.defaultColor, width: widget.ulDefaultWidth),
-            ),
-            disabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: Colors.orange, width: widget.ulDefaultWidth)
-            ),
-            errorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: widget.errorColor, width: widget.ulDefaultWidth)
-            ),
-            focusedErrorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: widget.errorColor, width: widget.ulFocusedWidth)
-            ),
+            // focusedBorder: UnderlineInputBorder(
+            //   borderSide: BorderSide(
+            //       color: widget.errorColor, width: widget.ulFocusedWidth),
+            // ),
+            // enabledBorder: UnderlineInputBorder(
+            //   borderSide: BorderSide(
+            //       color: widget.defaultColor, width: widget.ulDefaultWidth),
+            // ),
+            // disabledBorder: UnderlineInputBorder(
+            //     borderSide: BorderSide(
+            //         color: Colors.orange, width: widget.ulDefaultWidth)
+            // ),
+            // errorBorder: UnderlineInputBorder(
+            //     borderSide: BorderSide(
+            //         color: widget.errorColor, width: widget.ulDefaultWidth)
+            // ),
+            // focusedErrorBorder: UnderlineInputBorder(
+            //     borderSide: BorderSide(
+            //         color: widget.errorColor, width: widget.ulFocusedWidth)
+            // ),
 
             //文本框基本属性
             hintText: widget.placeholder,
             contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
             isDense: true,
+            helperText: "Please input correct email!",
+            // errorText: !widget.checkInput()? null :"wrong email!",
+            //当失去焦点的时候去判断邮箱地址是不是正确
 
             // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
             //icon: Icon(Icons.phone),
@@ -145,11 +157,9 @@ class MyTextFieldState extends State<MyTextField> {
 
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: Icon(
-                  FontAwesomeIcons.timesCircle, color: Colors.green, size: 25,)
+                  FontAwesomeIcons.timesCircle, color: Colors.red, size: iconSize,)
             ),
-            //Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
           ),
-          // obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码
           obscureText: widget.type == InputFieldType.password,
         )
     );
