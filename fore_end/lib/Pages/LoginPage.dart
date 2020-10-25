@@ -47,23 +47,17 @@ class Login extends StatelessWidget {
     );
     this.emailField = MyTextField(
       placeholder: "Email address",
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
+      theme: MyTheme.blueStyle,
+      inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
     );
-    this.emailField.addListener((){
-
-    });
 
     this.passwordField = MyTextField(
       placeholder: "Password",
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
-      type:InputFieldType.password,
+      theme: MyTheme.blueStyle,
+      inputType:InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
