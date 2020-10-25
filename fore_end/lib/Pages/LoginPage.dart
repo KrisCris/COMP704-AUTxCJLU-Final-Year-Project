@@ -37,7 +37,10 @@ class Login extends StatelessWidget {
       theme: MyTheme.blueStyle,
       firstReactState: ComponentReactState.disabled,
       width: ScreenTool.partOfScreenWidth(0.20),
-      tapFunc: () {},
+      tapFunc: () {
+        String emailVal = this.emailField.getInput();
+        String passwordVal = this.passwordField.getInput();
+      },
     );
     this.emailField = MyTextField(
       placeholder: "Email address",

@@ -20,8 +20,6 @@ void main() {
 }
 
 class Register extends StatelessWidget {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController verifyCodeController = TextEditingController();
 
   //Timer倒计时的属性定义
 
@@ -34,7 +32,6 @@ class Register extends StatelessWidget {
     MyCounter c= new MyCounter(times:10, duration: 1000);
 
     MyTextField emailTextFiled = MyTextField(
-      inputController: emailController,
       placeholder: 'Email',
       isPassword: false,
       focusColor: Constants.FOCUSED_COLOR,
@@ -48,7 +45,6 @@ class Register extends StatelessWidget {
 
     MyTextField verifyTextFiled = MyTextField(
       //这个要在按下按钮之后显示,暂时隐藏掉
-      inputController: verifyCodeController,
       placeholder: 'Verify Code',
       isPassword: false,
       focusColor: Constants.FOCUSED_COLOR,

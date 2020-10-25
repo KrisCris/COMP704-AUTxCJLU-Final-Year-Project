@@ -12,10 +12,10 @@ class MyTextField extends StatefulWidget {
   final bool isPassword; //判断是不是密码框
   final bool isEmail;   //判断邮箱格式
   final bool isAutoFocus;
-  final inputController; //用来获取文本框内容
   final String inputTypes;
   final int maxlength; //长度
   final IconData myIcon;
+  TextEditingController _inputcontroller  = TextEditingController();
   double width;   //文本框的宽
   Color defaultColor;  //不点击的颜色  灰
   Color focusColor; //点击的颜色   蓝
@@ -41,17 +41,13 @@ class MyTextField extends StatefulWidget {
       this.focusColor,
       this.defaultColor,
         this.isEmail=false,
-        this.inputController,
         this.inputTypes="text",
         this.maxlength= 30, //默认文本框输入长度
         this.myIcon=Icons.email_outlined,
-      Key key})
+      Key key,})
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
-
-
-
-  } //构造函数
+    } //构造函数
 
   //测试逻辑方法
   bool testIsEmail(bool checkContent){
@@ -62,6 +58,13 @@ class MyTextField extends StatefulWidget {
 
   }
 
+  TextEditingController getController(){
+    return this._inputcontroller;
+  }
+
+  String getInput(){
+    return this._inputcontroller.text;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -94,7 +97,7 @@ class MyTextFieldState extends State<MyTextField> {
 
               // keyboardType: TextInputType.emailAddress,
 
-              controller: widget.inputController,
+              controller: widget.getController(),
               // maxLength: widget.maxlength,
 
 
