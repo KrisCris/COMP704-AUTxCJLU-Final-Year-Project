@@ -14,6 +14,9 @@ class Login extends StatelessWidget {
   MyTextField emailField;
   MyTextField passwordField;
 
+  bool emailIsInput;
+  bool passwordIsInput;
+
   @override
   Widget build(BuildContext context) {
     this.backButton = MyButton(
@@ -56,7 +59,7 @@ class Login extends StatelessWidget {
       focusColor: Constants.FOCUSED_COLOR,
       errorColor: Constants.ERROR_COLOR,
       defaultColor: Constants.DEFAULT_COLOR,
-      isPassword: true,
+      type:InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,

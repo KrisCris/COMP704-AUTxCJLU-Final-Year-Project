@@ -33,7 +33,7 @@ class Register extends StatelessWidget {
 
     MyTextField emailTextFiled = MyTextField(
       placeholder: 'Email',
-      isPassword: false,
+      type: InputFieldType.email,
       focusColor: Constants.FOCUSED_COLOR,
       errorColor: Constants.ERROR_COLOR,
       defaultColor: Constants.DEFAULT_COLOR,
@@ -46,7 +46,7 @@ class Register extends StatelessWidget {
     MyTextField verifyTextFiled = MyTextField(
       //这个要在按下按钮之后显示,暂时隐藏掉
       placeholder: 'Verify Code',
-      isPassword: false,
+      type:InputFieldType.text,
       focusColor: Constants.FOCUSED_COLOR,
       errorColor: Constants.ERROR_COLOR,
       defaultColor: Constants.DEFAULT_COLOR,
