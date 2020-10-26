@@ -130,6 +130,11 @@ String text;
   void refresh(){
     this.state.refresh();
   }
+
+  bool isEnable(){
+    return this.state.reactState != ComponentReactState.disabled;
+  }
+
   ComponentThemeState getThemeState(){
     return this.state.themeState;
   }
