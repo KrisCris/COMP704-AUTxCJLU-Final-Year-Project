@@ -1,8 +1,9 @@
-// import 'dart:js';
-import 'dart:async';
+
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
@@ -13,17 +14,22 @@ import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(Register());
 }
 
 class Register extends StatelessWidget {
+  MyTextField emailTextField;
+  MyTextField verifyTextField;
+  MyButton verifyButton;
+  MyCounter counter;
   @override
   Widget build(BuildContext context) {
-    MyCounter c = new MyCounter(times: 10, duration: 1000);
+    this.counter = new MyCounter(times: 10, duration: 1000);
 
-    MyTextField emailTextFiled = MyTextField(
+    this.emailTextField = MyTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
@@ -34,9 +40,17 @@ class Register extends StatelessWidget {
       helpText: "Please input correct email!",
       maxlength: 30,
       isAutoFocus: true,
+      onCorrect: (){
+        if(!this.counter.isStop())return;
+
+        this.verifyButton.setDisable(false);
+      },
+      onError: (){
+        this.verifyButton.setDisable(true);
+      },
     );
 
-    MyTextField verifyTextFiled = MyTextField(
+    this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
       inputType: InputFieldType.text,
       theme: MyTheme.blueStyle,
@@ -46,13 +60,14 @@ class Register extends StatelessWidget {
       maxlength: null,
     );
 
-    MyButton verifyButton = MyButton(
+    this.verifyButton = MyButton(
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
         height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
+        firstReactState: ComponentReactState.disabled,
         sizeChangeMode: 2,
         tapFunc: () {},
         isBold: true);
@@ -62,18 +77,28 @@ class Register extends StatelessWidget {
       verifyButton.fontsize = 20;
       verifyButton.setDisable(true);
       verifyButton.setWidth(0.2);
-      if (c.isStop()) {
-        c.start();
+      if (this.counter.isStop()) {
+        this.counter.start();
       }
+      String emailVal = this.emailTextField.getInput();
+      http.post(Constants.REQUEST_URL + "/user/send_code",
+          body: {"email": emailVal}).then((value) {
+        var res = jsonDecode(value.body);
+        if (res['code'] == -5) {
+          EasyLoading.showError("Email send failed",
+              duration: Duration(milliseconds: 2000));
+        }
+      });
     };
-    c.calling = () {
+    this.counter.calling = () {
       if(verifyButton == null)return;
-      verifyButton.text = c.getRemain().toString();
+      verifyButton.text = this.counter.getRemain().toString();
       verifyButton.refresh();
-      if (c.isStop()) {
+      if (this.counter.isStop()) {
         verifyButton.text = "Acquire\nagain";
         verifyButton.fontsize = 13;
-        verifyButton.setDisable(false);
+        if(this.emailTextField.isCorrect())
+          verifyButton.setDisable(false);
       }
     };
 
@@ -109,7 +134,7 @@ class Register extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         width: ScreenTool.partOfScreenWidth(0.7),
-                        child: emailTextFiled,
+                        child: this.emailTextField,
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
@@ -126,7 +151,7 @@ class Register extends StatelessWidget {
                         Positioned(
                           left: 0,
                           top: 8,
-                          child: verifyTextFiled,
+                          child: this.verifyTextField,
                         ),
                         Positioned(
                           child: verifyButton,
@@ -161,8 +186,8 @@ class Register extends StatelessWidget {
                           tapFunc: () {
                             // Navigator.pushNamed(context, "login");
                             bool iscorrect = FormatChecker.check(
-                                emailTextFiled.inputType,
-                                emailTextFiled.getInput());
+                                this.emailTextField.inputType,
+                                this.emailTextField.getInput());
                             if (iscorrect) {}
                           },
                         )

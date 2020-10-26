@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
@@ -18,7 +17,6 @@ class Login extends StatelessWidget {
   MyButton nextButton;
   MyTextField emailField;
   MyTextField passwordField;
-  FlutterEasyLoading loading;
   bool emailIsInput = false;
   bool passwordIsInput = false;
 
@@ -98,17 +96,15 @@ class Login extends StatelessWidget {
         this.nextButton.setDisable(true);
       },
     );
-    this.loading = FlutterEasyLoading(
-        child: BackGround(
-            sigmaX: 15,
-            sigmaY: 15,
-            opacity: 0.79,
-            backgroundImage: "image/fruit-main.jpg",
-            color: Colors.white,
-            child: this.LoginUI));
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: this.loading,
+      body: BackGround(
+          sigmaX: 15,
+          sigmaY: 15,
+          opacity: 0.79,
+          backgroundImage: "image/fruit-main.jpg",
+          color: Colors.white,
+          child: this.LoginUI)
     );
   }
 
