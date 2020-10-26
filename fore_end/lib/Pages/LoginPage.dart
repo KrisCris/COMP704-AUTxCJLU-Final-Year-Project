@@ -1,4 +1,6 @@
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
@@ -7,6 +9,7 @@ import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   MyButton backButton;
@@ -40,27 +43,52 @@ class Login extends StatelessWidget {
       theme: MyTheme.blueStyle,
       firstReactState: ComponentReactState.disabled,
       width: ScreenTool.partOfScreenWidth(0.20),
-      tapFunc: () {
+      tapFunc: (){
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
+        http.post(Constants.REQUEST_URL+"/user/login",
+          body:{
+            "email":emailVal,
+            "password":passwordVal
+          }).then((value){
+            print(value.body.toString());
+        });
       },
     );
     this.emailField = MyTextField(
       placeholder: "Email address",
+      keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+      onCorrect: (){
+        emailIsInput = true;
+        if(passwordIsInput)this.nextButton.setDisable(false);
+      },
+      onError: (){
+        emailIsInput = false;
+        this.nextButton.setDisable(true);
+      },
     );
 
     this.passwordField = MyTextField(
       placeholder: "Password",
+      keyboardAction: TextInputAction.go,
       theme: MyTheme.blueStyle,
       inputType:InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+      onCorrect: (){
+        passwordIsInput = true;
+        if(emailIsInput)this.nextButton.setDisable(false);
+      },
+      onError: (){
+        passwordIsInput = false;
+        this.nextButton.setDisable(true);
+      },
     );
 
     return Scaffold(
