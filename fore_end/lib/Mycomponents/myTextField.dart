@@ -2,147 +2,369 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
 class MyTextField extends StatefulWidget {
+  final MyTheme theme;
+
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
-  final bool isPassword; //判断是不是密码框
-  final bool isEmail;   //判断邮箱格式
+  String errorText;
+  final String helpText;
+  final InputFieldType inputType;
   final bool isAutoFocus;
-  final inputController; //用来获取文本框内容
-  final String inputTypes;
   final int maxlength; //长度
   final IconData myIcon;
-  double width;   //文本框的宽
-  Color defaultColor;  //不点击的颜色  灰
-  Color focusColor; //点击的颜色   蓝
-  Color errorColor;  //报错的颜色  红
-  double ulDefaultWidth;  //未点击的下划线厚度
-  double ulFocusedWidth;  //点击的厚度
+  final bool showIcon;
+  bool autoChangeState;
+  double width; //文本框的宽
+  double ulDefaultWidth; //未点击的下划线厚度
+  double ulFocusedWidth; //点击的厚度
+  Function onCorrect;
+  Function onError;
+  TextInputType keyboardType;
+  final TextInputAction keyboardAction;
+  List<Function> listenerList;
+  ComponentReactState firstReactState;
+  ComponentThemeState firstThemeState;
 
   MyTextFieldState st;
-
-
 
   // bool checkContent;
   // final inputController;  //用来获取输入内容的
 
-  MyTextField(
-      {this.placeholder,
-      this.isPassword = false,
-        this.isAutoFocus= false,
-      this.width,
-      this.ulFocusedWidth,
-      this.ulDefaultWidth,
-      this.errorColor,
-      this.focusColor,
-      this.defaultColor,
-        this.isEmail=false,
-        this.inputController,
-        this.inputTypes="text",
-        this.maxlength= 30, //默认文本框输入长度
-        this.myIcon=Icons.email_outlined,
-      Key key})
-      : super(key: key) {
+  MyTextField({
+    this.placeholder,
+    this.keyboardAction = TextInputAction.go,
+    this.inputType = InputFieldType.text,
+    this.isAutoFocus = false,
+    this.errorText = "input error",
+    this.helpText="",
+    @required this.theme,
+    this.width,
+    this.ulFocusedWidth,
+    this.ulDefaultWidth,
+    this.firstReactState = ComponentReactState.unfocused,
+    this.firstThemeState = ComponentThemeState.normal,
+    this.myIcon = Icons.email_outlined,
+    this.showIcon = false,
+    this.maxlength = null,
+    this.onCorrect,
+    this.onError,
+    this.autoChangeState=true,
+    Key key,
+  }) : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
-
-
-
+    if (this.inputType == InputFieldType.email) {
+      this.keyboardType = TextInputType.emailAddress;
+    } else  {
+      this.keyboardType = TextInputType.text;
+    }
+    this.listenerList = List<Function>();
   } //构造函数
 
   //测试逻辑方法
-  bool testIsEmail(bool checkContent){
-    if(checkContent){
-      return true;
-    }
-    return false;
 
+  String getInput() {
+    return this.st.getInput();
   }
 
+  bool isEmpty() {
+    return this.st.isEmpty();
+  }
+
+  bool isCorrect() {
+    return this.st.isCorrect;
+  }
+  bool isChange(){
+    return this.st.isCorrect;
+  }
+  void clearInput(){
+    this.st._inputcontroller.clear();
+  }
+
+  void addListener(Function f) {
+    if(this.st == null)this.listenerList.add(f);
+    else this.st.addListener(f);
+  }
+
+  bool checkInput() {
+    return FormatChecker.check(this.inputType, this.getInput());
+  }
+  void setError(){
+    this.st.isCorrect = false;
+    this.setThemeState(ComponentThemeState.error,force: true);
+    this.st.suffixSizeAnimation.beginAnimation();
+  }
+  void setCorrect(){
+    this.st.isCorrect = true;
+    this.setThemeState(ComponentThemeState.correct,force: true);
+    this.st.suffixSizeAnimation.beginAnimation();
+  }
+
+  void setErrorText(String txt){
+    this.errorText = txt;
+    this.st.setState(() {});
+  }
+  void setThemeState(ComponentThemeState the,{bool force=false}){
+    this.st.setThemeState(the,force: force);
+  }
+  void setReactState(ComponentReactState rea){
+    this.st.setReactState(rea);
+  }
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-      this.st = new MyTextFieldState();
-      return this.st;
-  }
-
-  void name(){
-    this.st.a +=10;
-    this.st.setState(() {
-
-    });
+    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
+    return this.st;
   }
 }
 
-class MyTextFieldState extends State<MyTextField> {
+class MyTextFieldState extends State<MyTextField>
+    with TickerProviderStateMixin, Themeable {
+  TextEditingController _inputcontroller = TextEditingController();
+  ColorTweenAnimation colorAnimation = ColorTweenAnimation();
+  TweenAnimation suffixSizeAnimation = TweenAnimation();
+  TweenAnimation underlineWidthAnimation = TweenAnimation();
+  FocusNode _focusNode = FocusNode();
+  Color errorColors = Colors.blue;
+  bool isCorrect = false;
+  int colorChangeDura = 350;
+  int sizeChangeDura = 250;
 
-  double a=10;
+  MyTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
+    this.themeState = the;
+    this.reactState = rea;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.initColor();
+    for(Function f in widget.listenerList){
+      this.addListener(f);
+    }
+    this.underlineWidthAnimation.initAnimation(
+        widget.ulDefaultWidth, widget.ulFocusedWidth, sizeChangeDura, this, () {
+      setState(() {});
+    });
+
+    this.suffixSizeAnimation.initAnimation(0.0, 25.0, sizeChangeDura, this, () {
+      setState(() {});
+    });
+
+    this._focusNode.addListener(() {
+      if (this._focusNode.hasFocus) {
+        this.setReactState(ComponentReactState.focused);
+      } else {
+        this.setReactState(ComponentReactState.unfocused);
+      }
+    });
+
+    this._inputcontroller.addListener(() {
+      if (this._inputcontroller.text.isEmpty) {
+        if(widget.autoChangeState){
+          this.setThemeState(ComponentThemeState.normal);
+        }
+        this.suffixSizeAnimation.reverseAnimation();
+        this.isCorrect = false;
+      } else {
+        if (this.themeState == ComponentThemeState.normal && widget.autoChangeState) {
+          this.suffixSizeAnimation.beginAnimation();
+        }
+        if (FormatChecker.check(widget.inputType, this._inputcontroller.text)) {
+          if(widget.autoChangeState){
+            this.setThemeState(ComponentThemeState.correct);
+            this.isCorrect = true;
+          }
+
+          if (widget.onCorrect != null) {
+            widget.onCorrect();
+          }
+        } else {
+          if(widget.autoChangeState){
+            this.setThemeState(ComponentThemeState.error);
+            this.isCorrect = false;
+          }
+          if (widget.onError != null) {
+            widget.onError();
+          }
+        }
+      }
+    });
+  }
+
+  void initColor() {
+    this.colorAnimation.initAnimation(
+        widget.theme.getReactColor(this.reactState),
+        widget.theme.getReactColor(this.reactState),
+        colorChangeDura,
+        this, () {
+      setState(() {});
+    });
+    this.colorAnimation.beginAnimation();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    this.colorAnimation.dispose();
+    this.suffixSizeAnimation.dispose();
+    this.underlineWidthAnimation.dispose();
+    this._inputcontroller.dispose();
+    this._focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    return
-         Container(
-            width: widget.width,
-            margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
-            // //底部border的宽度和颜色
-            child: TextField(
-
-              // keyboardType: TextInputType.emailAddress,
-
-              controller: widget.inputController,
-              // maxLength: widget.maxlength,
-
-
-              style: TextStyle(fontSize: 18),
-              autofocus: widget.isAutoFocus,
-              cursorColor: Colors.blue,
-              cursorWidth: 2,
+    return Container(
+        width: widget.width,
+        margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
+        child: TextField(
+          inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
+          textInputAction: widget.keyboardAction,
+          keyboardType: widget.keyboardType,
+          focusNode: this._focusNode,
+          controller: this._inputcontroller,
+          style: TextStyle(fontSize: 18),
+          autofocus: widget.isAutoFocus,
+          cursorColor: colorAnimation.getValue(),
+          cursorWidth: 2,
+          maxLength: widget.maxlength,
 
 
 
-              decoration: new InputDecoration(   //下划线的设置
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: widget.focusColor, width: widget.ulFocusedWidth),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: widget.defaultColor, width: widget.ulDefaultWidth),
-                  ),
-                  disabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange, width: widget.ulDefaultWidth)
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color:widget.errorColor,width:widget.ulDefaultWidth)
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color:widget.errorColor,width:widget.ulFocusedWidth)
-                  ),
+          decoration: new InputDecoration(
+            //下划线的设置
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: colorAnimation.getValue(),
+                  width: this.underlineWidthAnimation.getValue()),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: colorAnimation.getValue(),
+                  width: this.underlineWidthAnimation.getValue()),
+            ),
+            disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(),
+                    width: this.underlineWidthAnimation.getValue())),
+            errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(),
+                    width: this.underlineWidthAnimation.getValue())),
+            focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: colorAnimation.getValue(),
+                    width: this.underlineWidthAnimation.getValue())),
 
+            //文本框基本属性
+            hintText: widget.placeholder,
+            contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
+            isDense: true,
+            helperText: this.isCorrect ? "" : widget.helpText,
+            errorText: this.isCorrect ||
+                    (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                ? null
+                : widget.errorText,
 
-                  hintText: widget.placeholder,
-                  contentPadding: new EdgeInsets.fromLTRB(0, 0, 0, 6),
-                  isDense: true,
+            // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
+            //icon: Icon(Icons.phone),
+            suffixIcon: Transform.translate(
+                offset: Offset(10, 5),
+                //padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
+                child: Icon(
+                    this.isCorrect
+                        ? FontAwesomeIcons.checkCircle
+                        : FontAwesomeIcons.timesCircle,
+                    color: this.colorAnimation.getValue(),
+                    size: this.suffixSizeAnimation.getValue())),
+          ),
+          obscureText: widget.inputType == InputFieldType.password,
+        ));
+  }
 
+  String getInput() {
+    return this._inputcontroller.text;
+  }
 
-                  // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
-                  //icon: Icon(Icons.phone),
-                  // suffixIcon: Icon(FontAwesomeIcons.timesCircle, color: Colors.green,size: 20,)
+  bool isEmpty() {
+    return this._inputcontroller.text == "";
+  }
 
-              ),
-              // obscureText: widget.isPassword, //是否切换到密码模式，是以星号*显示密码
-              obscureText: widget.testIsEmail(widget.isPassword),
-
-              //
-
-            )
-    );
+  void addListener(Function f) {
+    this._inputcontroller.addListener(f);
 
   }
 
 
+
+  @override
+  void setReactState(ComponentReactState rea) {
+    if (rea == this.reactState) return;
+
+    if (rea == ComponentReactState.unfocused) {
+      if (this.themeState == ComponentThemeState.normal) {
+        this.colorAnimation.initAnimation(
+            widget.theme.getThemeColor(this.themeState),
+            widget.theme.getReactColor(rea),
+            colorChangeDura,
+            this, () {
+          setState(() {});
+        });
+        this.underlineWidthAnimation.reverseAnimation();
+      }
+    } else {
+      if (this.themeState == ComponentThemeState.normal) {
+        this.colorAnimation.initAnimation(
+            widget.theme.getReactColor(this.reactState),
+            widget.theme.getThemeColor(this.themeState),
+            colorChangeDura,
+            this, () {
+          setState(() {});
+        });
+        this.underlineWidthAnimation.beginAnimation();
+      }
+    }
+    this.colorAnimation.beginAnimation();
+    this.reactState = rea;
+  }
+
+  @override
+  void setThemeState(ComponentThemeState the,{bool force = false}) {
+    if (the == this.themeState) return;
+
+    if (this.reactState == ComponentReactState.focused) {
+      this.colorAnimation.initAnimation(
+          widget.theme.getThemeColor(this.themeState),
+          widget.theme.getThemeColor(the),
+          colorChangeDura,
+          this, () {
+        setState(() {});
+      });
+      this.colorAnimation.beginAnimation();
+      this.themeState = the;
+    } else {
+      if(force){
+        this.colorAnimation.initAnimation(
+            widget.theme.getThemeColor(this.themeState),
+            widget.theme.getThemeColor(the),
+            colorChangeDura,
+            this, () {
+          setState(() {});
+        });
+        this.colorAnimation.beginAnimation();
+      }
+      this.themeState = the;
+    }
+  }
 }
 
+enum InputFieldType { email, password, text,verifyCode }
