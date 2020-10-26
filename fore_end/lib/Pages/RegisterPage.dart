@@ -58,6 +58,7 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () {
+      //调用计时器
       verifyButton.fontsize = 20;
       verifyButton.setDisable(true);
       verifyButton.setWidth(0.2);
@@ -66,6 +67,7 @@ class Register extends StatelessWidget {
       }
     };
     c.calling = () {
+      if(verifyButton == null)return;
       verifyButton.text = c.getRemain().toString();
       verifyButton.refresh();
       if (c.isStop()) {
