@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
@@ -26,8 +27,8 @@ class Register extends StatelessWidget {
   MyButton verifyButton;
   MyCounter counter;
   MyButton nextButton;
-  bool emailIsChange=false;
-  bool codeSuccess=false;
+  String emailWhenClickButton="";
+  bool verified = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,29 +56,39 @@ class Register extends StatelessWidget {
         this.nextButton.setDisable(true);
       },
     );
-
     this.emailTextField.addListener((){
-      this.emailIsChange=true;
-      if(this.codeSuccess && this.emailIsChange) {
+      if(this.emailWhenClickButton == null)return;
+      if(this.emailTextField.getInput() != this.emailWhenClickButton){
+        if(this.nextButton.isEnable()){
+          this.verifyTextField.setError();
+          this.verifyTextField.setErrorText("verify code invalid");
+        }
         this.nextButton.setDisable(true);
-        this.codeSuccess=false;
+      }else if(this.verified){
+      this.verifyTextField.setCorrect();
+      this.nextButton.setDisable(false);
       }
     });
 
     this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
-      errorText: "",
+      errorText: "asd",
+      autoChangeState: false,
       inputType: InputFieldType.verifyCode,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.45),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       maxlength: null,
-
-
-
       onCorrect: (){
         String emailVal = this.emailTextField.getInput();
+        if(emailVal != this.emailWhenClickButton){
+          this.verifyTextField.setError();
+          this.nextButton.setDisable(true);
+          this.verifyTextField.setErrorText("verify code invalid");
+          return;
+        }
+
         String codeVal = this.verifyTextField.getInput();
         http.post(Constants.REQUEST_URL + "/user/check_code",
             body: {"email": emailVal , "auth_code": codeVal} ).then((value) {
@@ -85,22 +96,18 @@ class Register extends StatelessWidget {
           if (res['code'] == -4) {
             EasyLoading.showError("Verify failed",
                 duration: Duration(milliseconds: 2000));
-          }else {
-            EasyLoading.showSuccess("Verify success",
-                duration: Duration(milliseconds: 2000));
-            if(!this.emailIsChange)
-              this.nextButton.setDisable(false);
-            //这里当正确后，判断是否change如果没有change就让next按钮可按
+            this.nextButton.setDisable(true);
+            this.verifyTextField.setError();
+            this.verifyTextField.setErrorText("verify code wrong");
 
+          }else {
+            this.nextButton.setDisable(false);
+            this.verifyTextField.setCorrect();
+            this.verified = true;
           }
         });
-
-
-
         if(!this.counter.isStop())return;
-
         this.verifyButton.setDisable(false);
-
       },
     );
 
@@ -117,22 +124,20 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () {
-      this.emailIsChange=false;
+      this.verified = false;
+      this.emailWhenClickButton = this.emailTextField.getInput();
       verifyButton.fontsize = 20;
       verifyButton.setDisable(true);
       verifyButton.setWidth(0.2);
       if (this.counter.isStop()) {
         this.counter.start();
       }
-      String emailVal = this.emailTextField.getInput();
       http.post(Constants.REQUEST_URL + "/user/send_code",
-          body: {"email": emailVal}).then((value) {
+          body: {"email": this.emailWhenClickButton}).then((value) {
         var res = jsonDecode(value.body);
         if (res['code'] == -5) {
           EasyLoading.showError("Email send failed",
               duration: Duration(milliseconds: 2000));
-        }else{
-          this.codeSuccess=true;
         }
       });
     };

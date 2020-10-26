@@ -13,13 +13,14 @@ class MyTextField extends StatefulWidget {
 
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
-  final String errorText;
+  String errorText;
   final String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
   final int maxlength; //长度
   final IconData myIcon;
   final bool showIcon;
+  bool autoChangeState;
   double width; //文本框的宽
   double ulDefaultWidth; //未点击的下划线厚度
   double ulFocusedWidth; //点击的厚度
@@ -27,7 +28,7 @@ class MyTextField extends StatefulWidget {
   Function onError;
   TextInputType keyboardType;
   final TextInputAction keyboardAction;
-
+  List<Function> listenerList;
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
 
@@ -54,6 +55,7 @@ class MyTextField extends StatefulWidget {
     this.maxlength = null,
     this.onCorrect,
     this.onError,
+    this.autoChangeState=true,
     Key key,
   }) : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
@@ -62,6 +64,7 @@ class MyTextField extends StatefulWidget {
     } else  {
       this.keyboardType = TextInputType.text;
     }
+    this.listenerList = List<Function>();
   } //构造函数
 
   //测试逻辑方法
@@ -80,14 +83,38 @@ class MyTextField extends StatefulWidget {
   bool isChange(){
     return this.st.isCorrect;
   }
-
+  void clearInput(){
+    this.st._inputcontroller.clear();
+  }
 
   void addListener(Function f) {
-    this.st.addListener(f);
+    if(this.st == null)this.listenerList.add(f);
+    else this.st.addListener(f);
   }
 
   bool checkInput() {
     return FormatChecker.check(this.inputType, this.getInput());
+  }
+  void setError(){
+    this.st.isCorrect = false;
+    this.setThemeState(ComponentThemeState.error,force: true);
+    this.st.suffixSizeAnimation.beginAnimation();
+  }
+  void setCorrect(){
+    this.st.isCorrect = true;
+    this.setThemeState(ComponentThemeState.correct,force: true);
+    this.st.suffixSizeAnimation.beginAnimation();
+  }
+
+  void setErrorText(String txt){
+    this.errorText = txt;
+    this.st.setState(() {});
+  }
+  void setThemeState(ComponentThemeState the,{bool force=false}){
+    this.st.setThemeState(the,force: force);
+  }
+  void setReactState(ComponentReactState rea){
+    this.st.setReactState(rea);
   }
 
   @override
@@ -119,6 +146,9 @@ class MyTextFieldState extends State<MyTextField>
   void initState() {
     super.initState();
     this.initColor();
+    for(Function f in widget.listenerList){
+      this.addListener(f);
+    }
     this.underlineWidthAnimation.initAnimation(
         widget.ulDefaultWidth, widget.ulFocusedWidth, sizeChangeDura, this, () {
       setState(() {});
@@ -135,24 +165,32 @@ class MyTextFieldState extends State<MyTextField>
         this.setReactState(ComponentReactState.unfocused);
       }
     });
+
     this._inputcontroller.addListener(() {
       if (this._inputcontroller.text.isEmpty) {
+        if(widget.autoChangeState){
+          this.setThemeState(ComponentThemeState.normal);
+        }
         this.suffixSizeAnimation.reverseAnimation();
-        this.setThemeState(ComponentThemeState.normal);
         this.isCorrect = false;
       } else {
-        if (this.themeState == ComponentThemeState.normal) {
+        if (this.themeState == ComponentThemeState.normal && widget.autoChangeState) {
           this.suffixSizeAnimation.beginAnimation();
         }
         if (FormatChecker.check(widget.inputType, this._inputcontroller.text)) {
-          this.setThemeState(ComponentThemeState.correct);
-          this.isCorrect = true;
+          if(widget.autoChangeState){
+            this.setThemeState(ComponentThemeState.correct);
+            this.isCorrect = true;
+          }
+
           if (widget.onCorrect != null) {
             widget.onCorrect();
           }
         } else {
-          this.setThemeState(ComponentThemeState.error);
-          this.isCorrect = false;
+          if(widget.autoChangeState){
+            this.setThemeState(ComponentThemeState.error);
+            this.isCorrect = false;
+          }
           if (widget.onError != null) {
             widget.onError();
           }
@@ -300,7 +338,7 @@ class MyTextFieldState extends State<MyTextField>
   }
 
   @override
-  void setThemeState(ComponentThemeState the) {
+  void setThemeState(ComponentThemeState the,{bool force = false}) {
     if (the == this.themeState) return;
 
     if (this.reactState == ComponentReactState.focused) {
@@ -314,6 +352,16 @@ class MyTextFieldState extends State<MyTextField>
       this.colorAnimation.beginAnimation();
       this.themeState = the;
     } else {
+      if(force){
+        this.colorAnimation.initAnimation(
+            widget.theme.getThemeColor(this.themeState),
+            widget.theme.getThemeColor(the),
+            colorChangeDura,
+            this, () {
+          setState(() {});
+        });
+        this.colorAnimation.beginAnimation();
+      }
       this.themeState = the;
     }
   }
