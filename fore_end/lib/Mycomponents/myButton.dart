@@ -191,6 +191,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
 
   @override
   void dispose() {
+    this.colorAnimation.dispose();
+    this.lengthAnimation.dispose();
+    this.fluctuateAnimation.dispose();
     this.flashAnimation.dispose();
     super.dispose();
   }
