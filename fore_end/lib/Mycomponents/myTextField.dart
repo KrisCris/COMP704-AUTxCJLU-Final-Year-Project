@@ -42,6 +42,7 @@ class MyTextField extends StatefulWidget {
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
     this.errorText = "input error",
+    this.helpText="",
     @required this.theme,
     this.width,
     this.ulFocusedWidth,
@@ -52,9 +53,11 @@ class MyTextField extends StatefulWidget {
     this.showIcon = false,
     this.onCorrect,
     this.onError,
+    this.maxlength= null, //默认文本框输入长度
+
     Key key,
   }) : super(key: key) {
-        this.maxlength= null, //默认文本框输入长度
+
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if(this.inputType == InputFieldType.email){
       this.keyboardType = TextInputType.emailAddress;
