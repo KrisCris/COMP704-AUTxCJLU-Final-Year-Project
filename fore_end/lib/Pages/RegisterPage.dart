@@ -25,12 +25,17 @@ class Register extends StatelessWidget {
   MyTextField verifyTextField;
   MyButton verifyButton;
   MyCounter counter;
+  MyButton nextButton;
+  bool emailIsChange=false;
+  bool codeSuccess=false;
+
   @override
   Widget build(BuildContext context) {
-    this.counter = new MyCounter(times: 10, duration: 1000);
+    this.counter = new MyCounter(times: 60, duration: 1000);
 
     this.emailTextField = MyTextField(
       placeholder: 'Email',
+      keyboardAction: TextInputAction.next,
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
       errorText: "Wrong email address!",
@@ -47,17 +52,56 @@ class Register extends StatelessWidget {
       },
       onError: (){
         this.verifyButton.setDisable(true);
+        this.nextButton.setDisable(true);
       },
     );
 
+    this.emailTextField.addListener((){
+      this.emailIsChange=true;
+      if(this.codeSuccess && this.emailIsChange) {
+        this.nextButton.setDisable(true);
+        this.codeSuccess=false;
+      }
+    });
+
     this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
-      inputType: InputFieldType.text,
+      errorText: "",
+      inputType: InputFieldType.verifyCode,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.45),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       maxlength: null,
+
+
+
+      onCorrect: (){
+        String emailVal = this.emailTextField.getInput();
+        String codeVal = this.verifyTextField.getInput();
+        http.post(Constants.REQUEST_URL + "/user/check_code",
+            body: {"email": emailVal , "auth_code": codeVal} ).then((value) {
+          var res = jsonDecode(value.body);
+          if (res['code'] == -4) {
+            EasyLoading.showError("Verify failed",
+                duration: Duration(milliseconds: 2000));
+          }else {
+            EasyLoading.showSuccess("Verify success",
+                duration: Duration(milliseconds: 2000));
+            if(!this.emailIsChange)
+              this.nextButton.setDisable(false);
+            //这里当正确后，判断是否change如果没有change就让next按钮可按
+
+          }
+        });
+
+
+
+        if(!this.counter.isStop())return;
+
+        this.verifyButton.setDisable(false);
+
+      },
     );
 
     this.verifyButton = MyButton(
@@ -73,7 +117,7 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () {
-      //调用计时器
+      this.emailIsChange=false;
       verifyButton.fontsize = 20;
       verifyButton.setDisable(true);
       verifyButton.setWidth(0.2);
@@ -87,9 +131,12 @@ class Register extends StatelessWidget {
         if (res['code'] == -5) {
           EasyLoading.showError("Email send failed",
               duration: Duration(milliseconds: 2000));
+        }else{
+          this.codeSuccess=true;
         }
       });
     };
+
     this.counter.calling = () {
       if(verifyButton == null)return;
       verifyButton.text = this.counter.getRemain().toString();
@@ -101,6 +148,36 @@ class Register extends StatelessWidget {
           verifyButton.setDisable(false);
       }
     };
+
+    this.nextButton =MyButton(
+      firstReactState: ComponentReactState.disabled,
+      text: "Next",
+      isBold: true,
+      rightMargin: 20,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.20),
+      theme: MyTheme.blueStyle,
+
+    );
+
+    nextButton.tapFunc =(){
+
+      this.nextButton.setDisable(true);
+      String email= this.emailTextField.getInput();
+      String code =this.verifyTextField.getInput();
+
+
+    // Navigator.pushNamed(context, "login");
+    bool iscorrect = FormatChecker.check(
+    this.emailTextField.inputType,
+    this.emailTextField.getInput());
+
+    if (iscorrect) {}
+
+    };
+
+
+
 
     return Scaffold(
       body: BackGround(
@@ -176,21 +253,7 @@ class Register extends StatelessWidget {
                           },
                         ),
                         Expanded(child: Text("")),
-                        MyButton(
-                          text: "Next",
-                          isBold: true,
-                          rightMargin: 20,
-                          bottomMargin: 20,
-                          width: ScreenTool.partOfScreenWidth(0.20),
-                          theme: MyTheme.blueStyle,
-                          tapFunc: () {
-                            // Navigator.pushNamed(context, "login");
-                            bool iscorrect = FormatChecker.check(
-                                this.emailTextField.inputType,
-                                this.emailTextField.getInput());
-                            if (iscorrect) {}
-                          },
-                        )
+                        this.nextButton
                       ]),
                 ],
               ))),
