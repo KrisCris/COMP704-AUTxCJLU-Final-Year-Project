@@ -1,0 +1,69 @@
+Login
+---
+tags:
+  - USER
+parameters:
+  - in: formData
+    name: email
+    type: string
+    required: true
+    description: Email
+    defalut: 'root@root.com'
+  - in: formData
+    name: password
+    type: string
+    required: true
+    description: Password
+    default: 'root'
+responses:
+  1:
+    description: Successful Login
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          items:
+            type: object
+            example: {"token":"6368f616-26df-5ad8-9603-56b6917c9559"}
+  -2:
+    description: Wrong Username or Password
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -2
+        msg:
+          type: string
+          description: return info
+          example: 'wrong email or password'
+        data:
+          type: array
+          example: []
+  403:
+    description: Bad Request (Lack of Params)
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 403
+        msg:
+          type: string
+          description: return info
+          example: 'bad request'
+        data:
+          type: array
+          example: [ ]
+
+
+
+

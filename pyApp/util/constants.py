@@ -1,7 +1,7 @@
 # DB
 DB_USERNAME = 'rnd'
 DB_PASSWORD = 'sofop#rnd'
-DB_ADDRESS = 'connlost.online'
+DB_ADDRESS = 'localhost'
 DB_PORT = '33060'
 DATABASE = 'rnd'
 DB_CHARSET = 'utf8mb4'
@@ -25,11 +25,14 @@ ENV = 'development'
 
 # CODE
 REPLY_CODES = {
+    -6: 'code expired',
     -5: 'email sending failed',
     -4: 'wrong verification code',
     -3: 'user already exists',
-    -2: 'email or password wrong',
+    -2: 'wrong email or password',
+    -1: 'login required',
     1: 'success',
+    403: 'bad request'
 
 }
 

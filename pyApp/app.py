@@ -1,6 +1,7 @@
 from flask import Flask
+from flasgger import Swagger
 
-from extensions import db
+from db.db import db
 from util.constants import HOST, PORT, DEBUG, ENV
 from util.constants import DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE
 from util.constants import SECRET_KEY
@@ -15,6 +16,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = SECRET_KEY
 
 app.register_blueprint(user, url_prefix='/user')
+
+swagger = Swagger(app)
 
 if __name__ == '__main__':
     with app.app_context():

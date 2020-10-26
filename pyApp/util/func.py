@@ -1,3 +1,4 @@
+import functools
 import random
 import smtplib
 import string
@@ -8,7 +9,9 @@ from flask import request, jsonify, redirect
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from util.constants import REPLY_CODES
+from werkzeug.security import check_password_hash
+
+from util.constants import REPLY_CODES, DEBUG
 from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
 
 
@@ -58,7 +61,7 @@ def __send_email(receivers: list, content: str, subject: str):
         # mail = smtplib.SMTP_SSL(SMTP_URL, SMTP_PORT)
 
         mail = smtplib.SMTP(SMTP_URL, SMTP_PORT)
-        mail.set_debuglevel(True)
+        mail.set_debuglevel(DEBUG)
         mail.ehlo()
         mail.starttls()
         mail.ehlo()
@@ -95,9 +98,59 @@ def get_current_time():
 
 
 def get_time_gap(old):
-    return int(time.time())-old
+    return int(time.time()) - old
 
 
-if __name__ == '__main__':
-    send_verification_code('hi.imhpc@outlook.com', 123456)
-    send_verification_code('zzwyxl@163.com', 123123)
+def login_required(func):
+    """
+    判断是否登陆
+    :param func: 函数
+    :return:
+    """
+
+    @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
+    def inner(*args, **kwargs):
+        token = ''
+        if request.method == 'POST':
+            if 'token' not in request.form.keys():
+                return redirect('/user/require_login')
+        else:
+            if not request.values.has_key('token'):
+                return redirect('/user/require_login')
+        token = request.form['token'] if request.method == 'POST' else request.values.get('token')
+        from db.User import User
+        users = User.query.filter(User.token == token).all()
+        if len(users) != 1:
+            return redirect('/user/require_login')
+        user = users[0]
+        if user.token != token:
+            return redirect('/user/require_login')
+        return func(*args, **kwargs)
+
+    return inner
+
+
+def remove_temp_account():
+    from db.User import User
+    unavailable_time = get_current_time() - 3600
+    users = User.query.filter(User.group == 0, User.last_code_sent < unavailable_time).all()
+    for user in users:
+        User.delete(user)
+        print('Removed temp account: {}'.format(user.email))
+
+
+def auth_user(email, password):
+    from db.User import getUserByEmail
+    if password is None:
+        password = ''
+    if email is None:
+        email = ''
+
+    u = getUserByEmail(email)
+    if u is None:
+        return -2
+
+    if check_password_hash(u.password, password):
+        return u
+    else:
+        return -2
