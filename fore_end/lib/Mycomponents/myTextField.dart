@@ -42,6 +42,7 @@ class MyTextField extends StatefulWidget {
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
     this.errorText = "input error",
+    this.helpText="",
     @required this.theme,
     this.width,
     this.ulFocusedWidth,
@@ -54,12 +55,11 @@ class MyTextField extends StatefulWidget {
     this.onCorrect,
     this.onError,
     Key key,
-    this.helpText,
   }) : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
-    } else {
+    } else  {
       this.keyboardType = TextInputType.text;
     }
   } //构造函数
@@ -77,6 +77,10 @@ class MyTextField extends StatefulWidget {
   bool isCorrect() {
     return this.st.isCorrect;
   }
+  bool isChange(){
+    return this.st.isCorrect;
+  }
+
 
   void addListener(Function f) {
     this.st.addListener(f);
@@ -195,6 +199,9 @@ class MyTextFieldState extends State<MyTextField>
           cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
           maxLength: widget.maxlength,
+
+
+
           decoration: new InputDecoration(
             //下划线的设置
             focusedBorder: UnderlineInputBorder(
@@ -256,7 +263,10 @@ class MyTextFieldState extends State<MyTextField>
 
   void addListener(Function f) {
     this._inputcontroller.addListener(f);
+
   }
+
+
 
   @override
   void setReactState(ComponentReactState rea) {
@@ -309,4 +319,4 @@ class MyTextFieldState extends State<MyTextField>
   }
 }
 
-enum InputFieldType { email, password, text }
+enum InputFieldType { email, password, text,verifyCode }
