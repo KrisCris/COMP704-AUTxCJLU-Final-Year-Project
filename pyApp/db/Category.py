@@ -1,4 +1,4 @@
-from extensions import db
+from db.db import db
 
 
 class Category(db.Model):
