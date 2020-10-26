@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class BackGround extends StatelessWidget {
   double sigmaX;
@@ -25,7 +26,8 @@ class BackGround extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return FlutterEasyLoading(
+        child: Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(this.backgroundImage),
@@ -42,6 +44,6 @@ class BackGround extends StatelessWidget {
                 color: this.color.withOpacity(this.opacity),
                 child: this.child)),
       ),
-    );
+    ));
   }
 }
