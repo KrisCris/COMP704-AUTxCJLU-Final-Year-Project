@@ -1,4 +1,4 @@
-from extensions import db
+from db.db import db
 from util.func import get_current_time
 
 
@@ -20,9 +20,10 @@ class User(db.Model):
     age = db.Column(db.INTEGER)
     auth_code = db.Column(db.VARCHAR(20), comment='verification code')
     last_code_sent = db.Column(db.INTEGER, nullable=False, comment='timestamp the last time server sent a auth_code')
+    code_check = db.Column(db.INTEGER)
 
     def __init__(self, email, auth_code, gender=0, age=0, last_code_sent=get_current_time(), nickname='', password='',
-                 group=0, token=''):
+                 group=0, token='', code_check=0):
         self.email = email
         self.nickname = nickname
         self.password = password
@@ -32,6 +33,7 @@ class User(db.Model):
         self.last_code_sent = last_code_sent
         self.gender = gender
         self.age = age
+        self.code_check = code_check
 
     def add(self):
         db.session.add(self)

@@ -1,42 +1,42 @@
 import util.func as func
 
 from flask import Blueprint, request
+from flasgger import swag_from
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from db.User import User
 from db.User import getUserByEmail
-from extensions import auth
 
 user = Blueprint('user', __name__)
 
 
-@user.route('/')
-def user_main():
-    return 'welcome to user main page.'
-
-
 @user.route('/login', methods=['POST'])
+@swag_from('docs/user/login.yml')
 def login():
-    email = request.form.get('email')
+    if 'email' or 'password' not in request.form.keys():
+        return func.reply_json(403)
+    email = request.form.get('email').lower()
     password = request.form.get('password')
 
-    u = getUserByEmail(email)
-    if u is None:
-        return func.reply_json(-2)
-
-    if check_password_hash(u.password, password):
+    # return user when true
+    auth_status = func.auth_user(email, password)
+    if type(auth_status) != User:
+        return func.reply_json(auth_status)
+    else:
+        u = auth_status
         token = func.genToken(email)
         u.token = token
         User.add(u)
         return func.reply_json(1, data={'token': token})
-    else:
-        return func.reply_json(-2)
 
 
-@auth.login_required
-@user.route('/logout', methods=['GET'])
+@user.route('/logout', methods=['POST'])
+@func.login_required
+@swag_from('docs/user/logout.yml')
 def logout():
-    email = request.args.get('email')
+    if 'email' not in request.form.keys():
+        return func.reply_json(403)
+    email = request.form.get('email').lower()
 
     u = getUserByEmail(email)
     u.token = func.genToken(email)
@@ -46,8 +46,11 @@ def logout():
 
 
 @user.route('/signup', methods=['POST'])
+@swag_from('docs/user/signup.yml')
 def signup():
-    email = request.form.get('email')
+    if 'email' or 'password' or 'nickname' not in request.form.keys():
+        return func.reply_json(403)
+    email = request.form.get('email').lower()
     nickname = request.form.get('nickname')
     password = generate_password_hash(request.form.get('password'))
 
@@ -55,17 +58,29 @@ def signup():
     if u is None:
         return func.reply_json(-2)
     else:
-        u.nickname = nickname
-        u.password = password
-        u.group = 1
+        if u.code_check != 1:
+            return func.reply_json(-4)
+        if func.get_time_gap(u.last_code_sent) > 60 * 10:
+            return func.reply_json(-6)
+        if u.group != 0:
+            return func.reply_json(-3)
+        else:
+            u.nickname = nickname
+            u.password = password
+            u.group = 1
+            u.code_check = 0
 
-        User.add(u)
+            User.add(u)
     return func.reply_json(1)
 
 
 @user.route('/send_code', methods=['POST'])
+@swag_from('docs/user/send_code.yml')
 def send_code():
-    email = request.form.get('email')
+    func.remove_temp_account()
+    if 'email' not in request.form.keys():
+        return func.reply_json(403)
+    email = request.form.get('email').lower()
     if email is None:
         return func.reply_json(-5)
 
@@ -74,7 +89,6 @@ def send_code():
     u = User.query.filter(User.email == email).first()
     if u is None:
         u = User(email=email, auth_code=func.gen_auth_code())
-        User.add(u)
     else:
         if u.group != 0:
             return func.reply_json(-3)
@@ -90,32 +104,60 @@ def send_code():
         else:
             # Resend code
             auth_code = u.auth_code
-
-    return func.reply_json(func.send_verification_code(email, auth_code))
+    status = func.send_verification_code(email, auth_code)
+    if status == 1:
+        User.add(u)
+    return func.reply_json(status)
 
 
 @user.route('/check_code', methods=['POST'])
+@swag_from('docs/user/check_code.yml')
 def check_code():
+    if 'email' or 'auth_code' not in request.form.keys():
+        return func.reply_json(403)
     auth_code = request.form.get('auth_code')
-    email = request.form.get('email')
+    email = request.form.get('email').lower()
     u = User.query.filter(User.email == email).first()
 
     if u is None:
-        pass
+        return func.reply_json(-4)
     else:
+        if func.get_time_gap(u.last_code_sent) > 60 * 5:
+            return func.reply_json(-6)
         if auth_code == auth_code.upper():
+            u.code_check = 1
+            User.add(u)
             return func.reply_json(1)
         else:
             return func.reply_json(-4)
 
 
-@auth.verify_token
-def verify_token(token):
-    users = User.query.filter(User.token == token).all()
-    if len(users) > 1:
-        return False
-    user = users[0]
-    if user.token == token:
-        return True
+@user.route('/modify_password', methods=['POST'])
+@func.login_required
+@swag_from('docs/user/modify_password.yml')
+def modify_password():
+    if 'email' or 'password' or 'new_password' not in request.form.keys():
+        return func.reply_json(403)
+    email = request.form.get('email')
+    password = request.form.get('password')
+    new_password = generate_password_hash(request.form.get('new_password'))
+    auth_status = func.auth_user(email, password)
+    if type(auth_status) != User:
+        return func.reply_json(auth_status)
     else:
-        return False
+        u = auth_status
+        u.password = new_password
+        u.code_check = 0
+        u.token = func.genToken(email)
+        User.add(u)
+        return func.reply_json(1)
+
+
+@user.route('retrieve_password', methods=['POST'])
+def retrieve_password():
+    pass
+
+
+@user.route('/require_login')
+def require_login():
+    return func.reply_json(-1)
