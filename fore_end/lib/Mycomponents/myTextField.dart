@@ -14,6 +14,7 @@ class MyTextField extends StatefulWidget {
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   final String errorText;
+  final String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
   final int maxlength; //长度
@@ -40,20 +41,20 @@ class MyTextField extends StatefulWidget {
     this.keyboardAction = TextInputAction.go,
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
-    @required this.theme,
     this.errorText = "input error",
+    @required this.theme,
     this.width,
     this.ulFocusedWidth,
     this.ulDefaultWidth,
     this.firstReactState = ComponentReactState.unfocused,
     this.firstThemeState = ComponentThemeState.normal,
-    this.maxlength = 30, //默认文本框输入长度
     this.myIcon = Icons.email_outlined,
     this.showIcon = false,
     this.onCorrect,
     this.onError,
     Key key,
   }) : super(key: key) {
+        this.maxlength= null, //默认文本框输入长度
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if(this.inputType == InputFieldType.email){
       this.keyboardType = TextInputType.emailAddress;
@@ -166,9 +167,7 @@ class MyTextFieldState extends State<MyTextField>
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
-    if (widget.isAutoFocus) {
-      this.setReactState(ComponentReactState.focused);
-    }
+
   }
 @override
 void dispose() {
@@ -197,6 +196,7 @@ void dispose() {
           autofocus: widget.isAutoFocus,
           cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
+          maxLength: widget.maxlength,
           decoration: new InputDecoration(
             //下划线的设置
             focusedBorder: UnderlineInputBorder(
@@ -226,10 +226,10 @@ void dispose() {
             hintText: widget.placeholder,
             contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
             isDense: true,
-            errorText: this.isCorrect ||
-                    (!this.isCorrect && this._inputcontroller.text.isEmpty)
-                ? " "
-                : widget.errorText,
+            helperText: this.isCorrect?"":widget.helpText,
+            errorText:
+            this.isCorrect || (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                ? null : widget.errorText,
 
             // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
             //icon: Icon(Icons.phone),
