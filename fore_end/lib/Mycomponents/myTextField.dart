@@ -51,17 +51,18 @@ class MyTextField extends StatefulWidget {
     this.firstThemeState = ComponentThemeState.normal,
     this.myIcon = Icons.email_outlined,
     this.showIcon = false,
+    this.maxlength = null,
     this.onCorrect,
     this.onError,
     this.maxlength= null, //默认文本框输入长度
 
     Key key,
+    this.helpText,
   }) : super(key: key) {
-
     this.width = ScreenTool.partOfScreenWidth(this.width);
-    if(this.inputType == InputFieldType.email){
+    if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
-    }else {
+    } else {
       this.keyboardType = TextInputType.text;
     }
   } //构造函数
@@ -129,10 +130,8 @@ class MyTextFieldState extends State<MyTextField>
     this._focusNode.addListener(() {
       if (this._focusNode.hasFocus) {
         this.setReactState(ComponentReactState.focused);
-        print("focus");
       } else {
         this.setReactState(ComponentReactState.unfocused);
-        print("unfocus");
       }
     });
     this._inputcontroller.addListener(() {
@@ -147,13 +146,13 @@ class MyTextFieldState extends State<MyTextField>
         if (FormatChecker.check(widget.inputType, this._inputcontroller.text)) {
           this.setThemeState(ComponentThemeState.correct);
           this.isCorrect = true;
-          if(widget.onCorrect != null){
+          if (widget.onCorrect != null) {
             widget.onCorrect();
           }
         } else {
           this.setThemeState(ComponentThemeState.error);
           this.isCorrect = false;
-          if(widget.onError != null){
+          if (widget.onError != null) {
             widget.onError();
           }
         }
@@ -170,10 +169,10 @@ class MyTextFieldState extends State<MyTextField>
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
-
   }
-@override
-void dispose() {
+
+  @override
+  void dispose() {
     // TODO: implement dispose
     this.colorAnimation.dispose();
     this.suffixSizeAnimation.dispose();
@@ -182,15 +181,14 @@ void dispose() {
     this._focusNode.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         width: widget.width,
         margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
         child: TextField(
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(' '))
-          ],
+          inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
           textInputAction: widget.keyboardAction,
           keyboardType: widget.keyboardType,
           focusNode: this._focusNode,
@@ -229,10 +227,11 @@ void dispose() {
             hintText: widget.placeholder,
             contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
             isDense: true,
-            helperText: this.isCorrect?"":widget.helpText,
-            errorText:
-            this.isCorrect || (!this.isCorrect && this._inputcontroller.text.isEmpty)
-                ? null : widget.errorText,
+            helperText: this.isCorrect ? "" : widget.helpText,
+            errorText: this.isCorrect ||
+                    (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                ? null
+                : widget.errorText,
 
             // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
             //icon: Icon(Icons.phone),
