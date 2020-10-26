@@ -8,7 +8,7 @@ class Constants{
   static Color DEFAULT_COLOR = Colors.grey;
   static Color FOCUSED_COLOR = Colors.lightBlue;
   static Color COMPLETED_COLOR = Colors.lightBlueAccent;
-  
+  static String REQUEST_URL = "http://connlost.online:23333";
 
   static double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
   static double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);

@@ -137,7 +137,6 @@ class ColorTweenAnimation implements MyAnimation<Color>{
     this.ctl.dispose();
   }
   Color getValue() {
-    print(animation.value);
     return animation.value;
   }
 }
