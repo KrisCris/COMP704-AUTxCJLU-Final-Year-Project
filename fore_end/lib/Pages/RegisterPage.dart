@@ -19,77 +19,61 @@ void main() {
 }
 
 class Register extends StatelessWidget {
-
-  //Timer倒计时的属性定义
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    MyCounter c= new MyCounter(times:10, duration: 1000);
+    MyCounter c = new MyCounter(times: 10, duration: 1000);
 
     MyTextField emailTextFiled = MyTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
-      // focusColor: Constants.FOCUSED_COLOR,
-      // errorColor: Constants.ERROR_COLOR,
-      // defaultColor: Constants.DEFAULT_COLOR,
+      theme: MyTheme.blueStyle,
+      errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      // isAutoFocus: true,
+      helpText: "Please input correct email!",
+      maxlength: 30,
+      isAutoFocus: true,
     );
 
     MyTextField verifyTextFiled = MyTextField(
-      //这个要在按下按钮之后显示,暂时隐藏掉
       placeholder: 'Verify Code',
-      inputType:InputFieldType.text,
-      // focusColor: Constants.FOCUSED_COLOR,
-      // errorColor: Constants.ERROR_COLOR,
-      // defaultColor: Constants.DEFAULT_COLOR,
+      inputType: InputFieldType.text,
+      theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.45),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      maxlength: 6,
+      maxlength: null,
     );
 
     MyButton verifyButton = MyButton(
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        height: 70,
+        height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
-        sizeChangeMode:2,
+        sizeChangeMode: 2,
         tapFunc: () {},
-        isBold: true
-    );
+        isBold: true);
 
-
-      verifyButton.tapFunc = () {
-        //调用计时器
-        verifyButton.fontsize=20;
-        verifyButton.setDisable(true);
-        verifyButton.setWidth(0.2);
-        if (c.isStop()) {
-          c.start();
-        }
-      };
-      c.calling = (){
-        verifyButton.text= c.getRemain().toString();
-        verifyButton.refresh();
-        if(c.isStop()) {
-          verifyButton.text="Acquire\nagain";
-          verifyButton.fontsize = 13;
-          verifyButton.setDisable(false);
-        }
-      };
-
-
-
-
+    verifyButton.tapFunc = () {
+      verifyButton.fontsize = 20;
+      verifyButton.setDisable(true);
+      verifyButton.setWidth(0.2);
+      if (c.isStop()) {
+        c.start();
+      }
+    };
+    c.calling = () {
+      verifyButton.text = c.getRemain().toString();
+      verifyButton.refresh();
+      if (c.isStop()) {
+        verifyButton.text = "Acquire\nagain";
+        verifyButton.fontsize = 13;
+        verifyButton.setDisable(false);
+      }
+    };
 
     return Scaffold(
       body: BackGround(
@@ -105,8 +89,6 @@ class Register extends StatelessWidget {
                 children: [
                   SizedBox(height: 80),
                   Container(
-                    // margin: EdgeInsets.only(
-                    // top: ScreenTool.partOfScreenHeight(0.01)),
                     width: ScreenTool.partOfScreenWidth(0.7),
                     child: Text(
                       "Create your\naccount",
@@ -127,45 +109,30 @@ class Register extends StatelessWidget {
                         width: ScreenTool.partOfScreenWidth(0.7),
                         child: emailTextFiled,
                       ),
-
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                        // child: Icon(
-                        //
-                        //   MyIcons.icon_no,
-                        //   size: 30,
-                        //   color: Constants.ERROR_COLOR,
-                        // ),
                       )
                     ],
                   ),
-
                   Container(
                     width: ScreenTool.partOfScreenWidth(0.7),
                     height: ScreenTool.partOfScreenHeight(0.1),
-                    decoration: BoxDecoration(
-
-                      // border: Border.all(color: Colors.blue, width: 1),
-                    ),
+                    decoration: BoxDecoration(),
                     child: Stack(
-                        alignment:Alignment.center,
-                        children: <Widget>[
-                          Positioned(
-                            left: 0,
-                            child: verifyTextFiled,
-                          ),
-                          Positioned(
-                            // right: 0,
-                            child: verifyButton,
-
-                          ),
-
-
-                          ],
-                    ) ,
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Positioned(
+                          left: 0,
+                          top: 8,
+                          child: verifyTextFiled,
+                        ),
+                        Positioned(
+                          child: verifyButton,
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20),
-
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -191,25 +158,15 @@ class Register extends StatelessWidget {
                           theme: MyTheme.blueStyle,
                           tapFunc: () {
                             // Navigator.pushNamed(context, "login");
-                          // emailTextFiled.iconSizeController();
-                          bool iscorrect = FormatChecker.check(emailTextFiled.inputType, emailTextFiled.getInput());
-                          if(iscorrect){
-
-                          }
+                            bool iscorrect = FormatChecker.check(
+                                emailTextFiled.inputType,
+                                emailTextFiled.getInput());
+                            if (iscorrect) {}
                           },
-
                         )
-                        //this.nextButton,
                       ]),
                 ],
               ))),
     );
-  }
-
-  bool testEmail(String input) {
-    final String regexEmail =
-        "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
-    if (input == null || input.isEmpty) return false;
-    return (new RegExp(regexEmail)).hasMatch(input);
   }
 }
