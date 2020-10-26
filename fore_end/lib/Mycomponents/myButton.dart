@@ -347,6 +347,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   }
 
   void refresh(){
-    this.setState(() {});
+    if(this.mounted)
+      this.setState(() {});
   }
 }

@@ -19,8 +19,8 @@ class Login extends StatelessWidget {
   MyTextField emailField;
   MyTextField passwordField;
   FlutterEasyLoading loading;
-  bool emailIsInput;
-  bool passwordIsInput;
+  bool emailIsInput = false;
+  bool passwordIsInput = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +50,22 @@ class Login extends StatelessWidget {
         this.nextButton.setDisable(true);
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
-        http.post(Constants.REQUEST_URL + "/user/login", body: {
-          "email": emailVal,
-          "password": passwordVal
-        }).then((value) {
+        http.post(Constants.REQUEST_URL + "/user/login",
+            body: {"email": emailVal, "password": passwordVal}).then((value) {
           var res = jsonDecode(value.body);
-          if(res['code'] == -2){
-            EasyLoading.showError("Email or password wrong",duration: Duration(milliseconds: 2000));
-          }else if(res['code'] == 1){
-            EasyLoading.showSuccess("Login Success",duration: Duration(milliseconds: 2000));
+          if (res['code'] == -2) {
+            EasyLoading.showError("Email or password wrong",
+                duration: Duration(milliseconds: 2000));
+          } else if (res['code'] == 1) {
+            EasyLoading.showSuccess("Login Success",
+                duration: Duration(milliseconds: 2000));
           }
         });
       },
     );
     this.emailField = MyTextField(
       placeholder: "Email address",
-      keyboardAction: TextInputAction.next,
+      // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
