@@ -12,6 +12,7 @@ class MyTextField extends StatefulWidget {
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   final String errorText;
+  final String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
   final int maxlength; //长度
@@ -42,9 +43,10 @@ class MyTextField extends StatefulWidget {
       this.ulDefaultWidth,
       this.firstReactState = ComponentReactState.unfocused,
         this.firstThemeState = ComponentThemeState.normal,
-        this.maxlength= 30, //默认文本框输入长度
+        this.maxlength= null, //默认文本框输入长度
         this.myIcon=Icons.email_outlined,
         this.showIcon=false,
+        this.helpText="",
       Key key,})
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
@@ -106,7 +108,6 @@ class MyTextFieldState extends State<MyTextField> with TickerProviderStateMixin,
         0.0,
         25.0,
         sizeChangeDura, this, () {setState(() {});});
-
     this._focusNode.addListener(() {
       if(this._focusNode.hasFocus){
         this.setReactState(ComponentReactState.focused);
@@ -141,9 +142,7 @@ class MyTextFieldState extends State<MyTextField> with TickerProviderStateMixin,
         widget.theme.getReactColor(this.reactState),
         colorChangeDura, this, () {setState(() {});});
     this.colorAnimation.beginAnimation();
-    if(widget.isAutoFocus){
-        this.setReactState(ComponentReactState.focused);
-    }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -157,6 +156,7 @@ class MyTextFieldState extends State<MyTextField> with TickerProviderStateMixin,
           autofocus: widget.isAutoFocus,
           cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
+          maxLength: widget.maxlength,
 
           decoration: new InputDecoration( //下划线的设置
             focusedBorder: UnderlineInputBorder(
@@ -184,9 +184,10 @@ class MyTextFieldState extends State<MyTextField> with TickerProviderStateMixin,
             hintText: widget.placeholder,
             contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
             isDense: true,
+            helperText: this.isCorrect?"":widget.helpText,
             errorText:
             this.isCorrect || (!this.isCorrect && this._inputcontroller.text.isEmpty)
-                ? " " : widget.errorText,
+                ? null : widget.errorText,
 
             // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
             //icon: Icon(Icons.phone),
