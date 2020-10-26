@@ -2,14 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
+import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
+import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/Mycomponents/textButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
-import 'Mycomponents/VerifyCode.dart';
 import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
@@ -34,15 +35,9 @@ class MyApp extends StatelessWidget {
 }
 
 class FirstPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    MyCounter mt = MyCounter(times: 5,duration: 1000,calling: (){
-    });
-    mt.setCall((){
-      print(mt.getRemain());
-    });
-    mt.start();
+    FormatChecker.check(InputFieldType.email, "zzwyxl@163.com");
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,

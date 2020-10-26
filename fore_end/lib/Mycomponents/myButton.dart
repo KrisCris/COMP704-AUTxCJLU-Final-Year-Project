@@ -130,6 +130,11 @@ String text;
   void refresh(){
     this.state.refresh();
   }
+
+  bool isEnable(){
+    return this.state.reactState != ComponentReactState.disabled;
+  }
+
   ComponentThemeState getThemeState(){
     return this.state.themeState;
   }
@@ -191,6 +196,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
 
   @override
   void dispose() {
+    this.colorAnimation.dispose();
+    this.lengthAnimation.dispose();
+    this.fluctuateAnimation.dispose();
     this.flashAnimation.dispose();
     super.dispose();
   }
@@ -344,6 +352,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   }
 
   void refresh(){
-    this.setState(() {});
+    if(this.mounted)
+      this.setState(() {});
   }
 }

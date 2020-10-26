@@ -1,117 +1,188 @@
-// import 'dart:js';
-import 'dart:async';
+
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
-import 'package:fore_end/MyTool/MyIcons.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(Register());
 }
 
 class Register extends StatelessWidget {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController verifyCodeController = TextEditingController();
-
-  //Timer倒计时的属性定义
-
-
-
-
+  MyTextField emailTextField;
+  MyTextField verifyTextField;
+  MyButton verifyButton;
+  MyCounter counter;
+  MyButton nextButton;
+  String emailWhenClickButton="";
+  bool verified = false;
 
   @override
   Widget build(BuildContext context) {
-    MyCounter c= new MyCounter(times:10, duration: 1000);
+    this.counter = new MyCounter(times: 60, duration: 1000);
 
-    MyTextField emailTextFiled = MyTextField(
-      inputController: emailController,
+    this.emailTextField = MyTextField(
       placeholder: 'Email',
-      isPassword: false,
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
+      keyboardAction: TextInputAction.next,
+      inputType: InputFieldType.email,
+      theme: MyTheme.blueStyle,
+      errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      // isAutoFocus: true,
-    );
+      helpText: "Please input correct email!",
+      maxlength: 30,
+      isAutoFocus: true,
+      onCorrect: (){
+        if(!this.counter.isStop())return;
 
-    MyTextField verifyTextFiled = MyTextField(
-      //这个要在按下按钮之后显示,暂时隐藏掉
-      inputController: verifyCodeController,
+        this.verifyButton.setDisable(false);
+      },
+      onError: (){
+        this.verifyButton.setDisable(true);
+        this.nextButton.setDisable(true);
+      },
+    );
+    this.emailTextField.addListener((){
+      if(this.emailWhenClickButton == null)return;
+      if(this.emailTextField.getInput() != this.emailWhenClickButton){
+        if(this.nextButton.isEnable()){
+          this.verifyTextField.setError();
+          this.verifyTextField.setErrorText("verify code invalid");
+        }
+        this.nextButton.setDisable(true);
+      }else if(this.verified){
+      this.verifyTextField.setCorrect();
+      this.nextButton.setDisable(false);
+      }
+    });
+
+    this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
-      isPassword: false,
-      focusColor: Constants.FOCUSED_COLOR,
-      errorColor: Constants.ERROR_COLOR,
-      defaultColor: Constants.DEFAULT_COLOR,
+      errorText: "asd",
+      autoChangeState: false,
+      inputType: InputFieldType.verifyCode,
+      theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.45),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      maxlength: 6,
-      myIcon: Icons.check_circle_outline,
+      maxlength: null,
+      onCorrect: (){
+        String emailVal = this.emailTextField.getInput();
+        if(emailVal != this.emailWhenClickButton){
+          this.verifyTextField.setError();
+          this.nextButton.setDisable(true);
+          this.verifyTextField.setErrorText("verify code invalid");
+          return;
+        }
+
+        String codeVal = this.verifyTextField.getInput();
+        http.post(Constants.REQUEST_URL + "/user/check_code",
+            body: {"email": emailVal , "auth_code": codeVal} ).then((value) {
+          var res = jsonDecode(value.body);
+          if (res['code'] == -4) {
+            EasyLoading.showError("Verify failed",
+                duration: Duration(milliseconds: 2000));
+            this.nextButton.setDisable(true);
+            this.verifyTextField.setError();
+            this.verifyTextField.setErrorText("verify code wrong");
+
+          }else {
+            this.nextButton.setDisable(false);
+            this.verifyTextField.setCorrect();
+            this.verified = true;
+          }
+        });
+        if(!this.counter.isStop())return;
+        this.verifyButton.setDisable(false);
+      },
     );
 
-    MyButton verifyButton = MyButton(
+    this.verifyButton = MyButton(
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
-        height: 0.05,
+        height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
-        sizeChangeMode:2,
+        firstReactState: ComponentReactState.disabled,
+        sizeChangeMode: 2,
         tapFunc: () {},
-        isBold: true
+        isBold: true);
+
+    verifyButton.tapFunc = () {
+      this.verified = false;
+      this.emailWhenClickButton = this.emailTextField.getInput();
+      verifyButton.fontsize = 20;
+      verifyButton.setDisable(true);
+      verifyButton.setWidth(0.2);
+      if (this.counter.isStop()) {
+        this.counter.start();
+      }
+      http.post(Constants.REQUEST_URL + "/user/send_code",
+          body: {"email": this.emailWhenClickButton}).then((value) {
+        var res = jsonDecode(value.body);
+        if (res['code'] == -5) {
+          EasyLoading.showError("Email send failed",
+              duration: Duration(milliseconds: 2000));
+        }
+      });
+    };
+
+    this.counter.calling = () {
+      if(verifyButton == null)return;
+      verifyButton.text = this.counter.getRemain().toString();
+      verifyButton.refresh();
+      if (this.counter.isStop()) {
+        verifyButton.text = "Acquire\nagain";
+        verifyButton.fontsize = 13;
+        if(this.emailTextField.isCorrect())
+          verifyButton.setDisable(false);
+      }
+    };
+
+    this.nextButton =MyButton(
+      firstReactState: ComponentReactState.disabled,
+      text: "Next",
+      isBold: true,
+      rightMargin: 20,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.20),
+      theme: MyTheme.blueStyle,
+
     );
 
-      //按钮按下的方法
-      verifyButton.tapFunc = () {
-        //调用计时器
-        verifyButton.fontsize=20;
-        verifyButton.setDisable(true);
-        verifyButton.setWidth(0.2);
-        if (c.isStop()) {
-          c.start();
-        }
-      };
+    nextButton.tapFunc =(){
 
-      c.calling = (){
-        verifyButton.text= c.getRemain().toString();
-        verifyButton.refresh();
-        if(c.isStop()) {
-          verifyButton.text="Acquire\nagain";
-          verifyButton.fontsize = 13;
-          verifyButton.setDisable(false);
-        }
-      };
+      this.nextButton.setDisable(true);
+      String email= this.emailTextField.getInput();
+      String code =this.verifyTextField.getInput();
+
+
+    // Navigator.pushNamed(context, "login");
+    bool iscorrect = FormatChecker.check(
+    this.emailTextField.inputType,
+    this.emailTextField.getInput());
+
+    if (iscorrect) {}
+
+    };
 
 
 
-    //   //调用函数修改某个textfield的数值
-    //   // verifyTextFiled.name();
-    //   verifyButton.setWidth(0.2);
-    //   verifyButton.setDisable(true);
-    //   verifyButton.text="Acquire\nagain";
-    //   verifyButton.fontsize = 13;
-    //   // Navigator.pushNamed(context, "register");
-    //   // print(">>>>>>>>>>>>>>>>这里面就是监听到文本框里面的内容>>>>>>>>>>>>>>>>>");
-    //   // //测试一下提示功能
-    //   // if (testEmail(emailController.text)) {
-    //   //   print(emailController.text + "  是正确的邮箱格式");
-    //   // } else {
-    //   //   print("未输入或者错误的邮箱格式");
-    //   // }
-    //   // print("<<<<<<<<<<<<<<<<这里面就是监听到文本框里面的内容<<<<<<<<<<<<<<<<<");
-    // };
 
     return Scaffold(
       body: BackGround(
@@ -127,8 +198,6 @@ class Register extends StatelessWidget {
                 children: [
                   SizedBox(height: 80),
                   Container(
-                    // margin: EdgeInsets.only(
-                    // top: ScreenTool.partOfScreenHeight(0.01)),
                     width: ScreenTool.partOfScreenWidth(0.7),
                     child: Text(
                       "Create your\naccount",
@@ -147,56 +216,32 @@ class Register extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         width: ScreenTool.partOfScreenWidth(0.7),
-                        child: emailTextFiled,
+                        child: this.emailTextField,
                       ),
-
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                        // child: Icon(
-                        //
-                        //   MyIcons.icon_no,
-                        //   size: 30,
-                        //   color: Constants.ERROR_COLOR,
-                        // ),
                       )
                     ],
                   ),
-
                   Container(
                     width: ScreenTool.partOfScreenWidth(0.7),
                     height: ScreenTool.partOfScreenHeight(0.1),
-                    decoration: BoxDecoration(
-
-                      // border: Border.all(color: Colors.blue, width: 1),
-                    ),
+                    decoration: BoxDecoration(),
                     child: Stack(
-                        alignment:Alignment.center,
-                        children: <Widget>[
-                          Positioned(
-                            left: 0,
-                            child: verifyTextFiled,
-                          ),
-                          Positioned(
-                            // right: 0,
-                            child: verifyButton,
-
-                          ),
-
-
-                          ],
-                    ) ,
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Positioned(
+                          left: 0,
+                          top: 8,
+                          child: this.verifyTextField,
+                        ),
+                        Positioned(
+                          child: verifyButton,
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    height: 150,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-
-                    ),
-                    // child: VercodeTimerWidget(),
-
-                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -213,28 +258,10 @@ class Register extends StatelessWidget {
                           },
                         ),
                         Expanded(child: Text("")),
-                        MyButton(
-                          text: "Next",
-                          isBold: true,
-                          rightMargin: 20,
-                          bottomMargin: 20,
-                          width: ScreenTool.partOfScreenWidth(0.20),
-                          theme: MyTheme.blueStyle,
-                          tapFunc: () {
-                            Navigator.pushNamed(context, "login");
-                          },
-                        )
-                        //this.nextButton,
+                        this.nextButton
                       ]),
                 ],
               ))),
     );
-  }
-
-  bool testEmail(String input) {
-    final String regexEmail =
-        "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
-    if (input == null || input.isEmpty) return false;
-    return (new RegExp(regexEmail)).hasMatch(input);
   }
 }
