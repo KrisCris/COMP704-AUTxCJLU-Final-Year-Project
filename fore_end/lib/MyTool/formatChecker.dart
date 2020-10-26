@@ -18,6 +18,10 @@ class FormatChecker {
         InputFieldType.password : (String s){
           return s.length > 6;
         },
+
+        InputFieldType.verifyCode:(String s){
+           return s.length==6;
+        }
       });
   }
 
