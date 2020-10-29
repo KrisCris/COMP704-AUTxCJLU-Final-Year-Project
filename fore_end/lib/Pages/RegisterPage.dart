@@ -38,28 +38,6 @@ class Register extends StatelessWidget {
     this.counter = new MyCounter(times: 60, duration: 1000);
     this.scrollCtl = new ScrollController();
 
-    this.emailTextField = MyTextField(
-      placeholder: 'Email',
-      keyboardAction: TextInputAction.next,
-      inputType: InputFieldType.email,
-      theme: MyTheme.blueStyle,
-      errorText: "Wrong email address!",
-      width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      helpText: "Please input correct email!",
-      maxlength: 30,
-      onCorrect: () {
-        if (!this.counter.isStop()) return;
-
-        this.verifyButton.setDisable(false);
-      },
-      onError: () {
-        this.verifyButton.setDisable(true);
-        this.nextButton.setDisable(true);
-      },
-    );
-
     this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
       errorText: "asd",
@@ -100,20 +78,43 @@ class Register extends StatelessWidget {
       },
     );
 
-    this.nicknameTextField = MyTextField(
-      placeholder: 'Nick name',
-      keyboardAction: TextInputAction.next,
-      inputType: InputFieldType.text,
+    this.emailTextField = MyTextField(
+      placeholder: 'Email',
+      next: this.verifyTextField.getFocusNode(),
+      inputType: InputFieldType.email,
+      theme: MyTheme.blueStyle,
+      errorText: "Wrong email address!",
+      width: ScreenTool.partOfScreenWidth(0.7),
+      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+      helpText: "Please input correct email!",
+      maxlength: 30,
+      onCorrect: () {
+        if (!this.counter.isStop()) return;
+
+        this.verifyButton.setDisable(false);
+      },
+      onError: () {
+        this.verifyButton.setDisable(true);
+        this.nextButton.setDisable(true);
+      },
+    );
+
+    this.confirmPasswordTextField = MyTextField(
+      placeholder: 'confirm password',
+      inputType: InputFieldType.password,
+      errorText: "two password different",
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      helpText: "please input your nick name",
+      helpText: "re-enter the password",
       maxlength: 30,
     );
+
     this.passwordTextField = MyTextField(
       placeholder: 'password',
-      keyboardAction: TextInputAction.next,
+      next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
@@ -122,16 +123,16 @@ class Register extends StatelessWidget {
       helpText: "At least 6 length, contain number and english characters",
       maxlength: 30,
     );
-    this.confirmPasswordTextField = MyTextField(
-      placeholder: 'confirm password',
-      keyboardAction: TextInputAction.go,
-      inputType: InputFieldType.password,
-      errorText: "two password different",
+
+    this.nicknameTextField = MyTextField(
+      placeholder: 'Nick name',
+      next: this.passwordTextField.getFocusNode(),
+      inputType: InputFieldType.text,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      helpText: "re-enter the password",
+      helpText: "please input your nick name",
       maxlength: 30,
     );
 
@@ -305,6 +306,7 @@ class Register extends StatelessWidget {
             ),
             SizedBox(height: 15),
             this.nicknameTextField,
+            SizedBox(height: 15),
             this.passwordTextField,
             this.confirmPasswordTextField,
             SizedBox(height: 40),

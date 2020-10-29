@@ -14,6 +14,7 @@ class MyTextField extends StatefulWidget {
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   String errorText;
+  final FocusNode next;
   final String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
@@ -27,11 +28,10 @@ class MyTextField extends StatefulWidget {
   Function onCorrect;
   Function onError;
   TextInputType keyboardType;
-  final TextInputAction keyboardAction;
+  TextInputAction keyboardAction;
   List<Function> listenerList;
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
-
   MyTextFieldState st;
 
   // bool checkContent;
@@ -39,7 +39,6 @@ class MyTextField extends StatefulWidget {
 
   MyTextField({
     this.placeholder,
-    this.keyboardAction = TextInputAction.go,
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
     this.errorText = "input error",
@@ -55,16 +54,21 @@ class MyTextField extends StatefulWidget {
     this.maxlength = null,
     this.onCorrect,
     this.onError,
+    this.next = null,
     this.autoChangeState=true,
     Key key,
   }) : super(key: key) {
+    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
-    } else if(this.inputType == InputFieldType.password)  {
-
+    } else {
+      this.keyboardType = TextInputType.text;
     }
-    this.keyboardType = TextInputType.text;
+    if(next != null){
+      this.keyboardAction = TextInputAction.next;
+    }
+
     this.listenerList = List<Function>();
   } //构造函数
 
@@ -72,6 +76,11 @@ class MyTextField extends StatefulWidget {
 
   String getInput() {
     return this.st.getInput();
+  }
+
+  FocusNode getFocusNode(){
+
+    return this.st._focusNode;
   }
 
   bool isEmpty() {
@@ -121,7 +130,6 @@ class MyTextField extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
     return this.st;
   }
 }
@@ -238,7 +246,11 @@ class MyTextFieldState extends State<MyTextField>
           cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
           maxLength: widget.maxlength,
-
+          onEditingComplete: (){
+            if(widget.next != null){
+              FocusScope.of(context).requestFocus(widget.next);
+            }
+          },
           decoration: new InputDecoration(
             //下划线的设置
             focusedBorder: UnderlineInputBorder(
