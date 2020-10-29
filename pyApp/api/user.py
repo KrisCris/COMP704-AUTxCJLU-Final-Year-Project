@@ -2,7 +2,7 @@ import util.func as func
 
 from flask import Blueprint, request
 from flasgger import swag_from
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 from db.User import User
 from db.User import getUserByEmail
@@ -13,8 +13,6 @@ user = Blueprint('user', __name__)
 @user.route('/login', methods=['POST'])
 @swag_from('docs/user/login.yml')
 def login():
-    if 'email' or 'password' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
     password = request.form.get('password')
 
@@ -34,8 +32,6 @@ def login():
 @func.login_required
 @swag_from('docs/user/logout.yml')
 def logout():
-    if 'email' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
 
     u = getUserByEmail(email)
@@ -48,8 +44,6 @@ def logout():
 @user.route('/signup', methods=['POST'])
 @swag_from('docs/user/signup.yml')
 def signup():
-    if 'email' or 'password' or 'nickname' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
     nickname = request.form.get('nickname')
     password = generate_password_hash(request.form.get('password'))
@@ -75,14 +69,10 @@ def signup():
 
 
 @user.route('/send_code', methods=['POST'])
-@swag_from('docs/user/send_code.yml')
-def send_code():
+@swag_from('docs/user/send_register_code.yml')
+def send_register_code():
     func.remove_temp_account()
-    if 'email' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
-    if email is None:
-        return func.reply_json(-5)
 
     auth_code = func.gen_auth_code()
 
@@ -100,7 +90,7 @@ def send_code():
             # Update
             User.add(u)
         elif gap < 60:
-            return func.reply_json(-1, 'Wait for 60s!')
+            return func.reply_json(-5, 'Wait for 60s!')
         else:
             # Resend code
             auth_code = u.auth_code
@@ -113,8 +103,6 @@ def send_code():
 @user.route('/check_code', methods=['POST'])
 @swag_from('docs/user/check_code.yml')
 def check_code():
-    if 'email' or 'auth_code' not in request.form.keys():
-        return func.reply_json(403)
     auth_code = request.form.get('auth_code')
     email = request.form.get('email').lower()
     u = User.query.filter(User.email == email).first()
@@ -136,8 +124,6 @@ def check_code():
 @func.login_required
 @swag_from('docs/user/modify_password.yml')
 def modify_password():
-    if 'email' or 'password' or 'new_password' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email')
     password = request.form.get('password')
     new_password = generate_password_hash(request.form.get('new_password'))
@@ -154,9 +140,19 @@ def modify_password():
 
 
 @user.route('retrieve_password', methods=['POST'])
+# @swag_from('docs/user/modify/retrieve_password')
 def retrieve_password():
-    pass
+    email = request.form.get('email')
+    password = request.form.get('new_password')
+    u = getUserByEmail(email)
+    if u is None:
+        func.reply_json(-2)
+    else:
+        pass
 
+
+def send_reset_pw_code():
+    pass
 
 @user.route('/require_login')
 def require_login():
