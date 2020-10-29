@@ -13,8 +13,6 @@ user = Blueprint('user', __name__)
 @user.route('/login', methods=['POST'])
 @swag_from('docs/user/login.yml')
 def login():
-    if 'email' or 'password' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
     password = request.form.get('password')
 
@@ -34,8 +32,6 @@ def login():
 @func.login_required
 @swag_from('docs/user/logout.yml')
 def logout():
-    if 'email' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
 
     u = getUserByEmail(email)
@@ -48,8 +44,6 @@ def logout():
 @user.route('/signup', methods=['POST'])
 @swag_from('docs/user/signup.yml')
 def signup():
-    if 'email' or 'password' or 'nickname' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
     nickname = request.form.get('nickname')
     password = generate_password_hash(request.form.get('password'))
@@ -78,8 +72,6 @@ def signup():
 @swag_from('docs/user/send_register_code.yml')
 def send_register_code():
     func.remove_temp_account()
-    if 'email' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email').lower()
 
     auth_code = func.gen_auth_code()
@@ -111,8 +103,6 @@ def send_register_code():
 @user.route('/check_code', methods=['POST'])
 @swag_from('docs/user/check_code.yml')
 def check_code():
-    if 'email' or 'auth_code' not in request.form.keys():
-        return func.reply_json(403)
     auth_code = request.form.get('auth_code')
     email = request.form.get('email').lower()
     u = User.query.filter(User.email == email).first()
@@ -134,8 +124,6 @@ def check_code():
 @func.login_required
 @swag_from('docs/user/modify_password.yml')
 def modify_password():
-    if 'email' or 'password' or 'new_password' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email')
     password = request.form.get('password')
     new_password = generate_password_hash(request.form.get('new_password'))
@@ -152,10 +140,8 @@ def modify_password():
 
 
 @user.route('retrieve_password', methods=['POST'])
-@swag_from('docs/user/modify/retrieve_password')
+# @swag_from('docs/user/modify/retrieve_password')
 def retrieve_password():
-    if 'email' or 'password' not in request.form.keys():
-        return func.reply_json(403)
     email = request.form.get('email')
     password = request.form.get('new_password')
     u = getUserByEmail(email)
