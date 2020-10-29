@@ -61,9 +61,10 @@ class MyTextField extends StatefulWidget {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
-    } else  {
-      this.keyboardType = TextInputType.text;
+    } else if(this.inputType == InputFieldType.password)  {
+
     }
+    this.keyboardType = TextInputType.text;
     this.listenerList = List<Function>();
   } //构造函数
 
@@ -237,8 +238,6 @@ class MyTextFieldState extends State<MyTextField>
           cursorColor: colorAnimation.getValue(),
           cursorWidth: 2,
           maxLength: widget.maxlength,
-
-
 
           decoration: new InputDecoration(
             //下划线的设置
