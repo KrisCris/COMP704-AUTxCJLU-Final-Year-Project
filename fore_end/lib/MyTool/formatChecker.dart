@@ -13,7 +13,7 @@ class FormatChecker {
           if (s == null || s.isEmpty) return false;
           return (new RegExp(regexEmail)).hasMatch(s);},
 
-        InputFieldType.text :(String s){return true;},
+        InputFieldType.text :(String s){return !s.isEmpty;},
 
         InputFieldType.password : (String s){
           return s.length > 6;
