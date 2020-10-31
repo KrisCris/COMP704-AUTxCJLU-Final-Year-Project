@@ -32,6 +32,11 @@ class Register extends StatelessWidget {
   String emailWhenClickButton = "";
   ScrollController scrollCtl;
   bool verified = false;
+  int step = 0;
+
+  bool nickNameDone = false;
+  bool passwordDone = false;
+  bool repasswordDone = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +45,11 @@ class Register extends StatelessWidget {
 
     this.verifyTextField = MyTextField(
       placeholder: 'Verify Code',
-      errorText: "asd",
       autoChangeState: false,
       inputType: InputFieldType.verifyCode,
       theme: MyTheme.blueStyle,
-      width: ScreenTool.partOfScreenWidth(0.45),
+      width: 0,
+      sizeChangeMode: 0,
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       maxlength: null,
@@ -91,7 +96,6 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () {
         if (!this.counter.isStop()) return;
-
         this.verifyButton.setDisable(false);
       },
       onError: () {
@@ -103,13 +107,34 @@ class Register extends StatelessWidget {
     this.confirmPasswordTextField = MyTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
-      errorText: "two password different",
       theme: MyTheme.blueStyle,
+      autoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "re-enter the password",
       maxlength: 30,
+      onCorrect: (){
+        if(this.confirmPasswordTextField.getInput() == this.passwordTextField.getInput()){
+          //correct
+          this.repasswordDone = true;
+          this.confirmPasswordTextField.setCorrect();
+          if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+            this.nextButton.setDisable(false);
+          }
+        }else{
+          this.repasswordDone = false;
+          this.confirmPasswordTextField.setError();
+          this.nextButton.setDisable(true);
+          this.confirmPasswordTextField.setErrorText("two password different");
+        }
+      },
+      onError: (){
+        this.repasswordDone = false;
+        this.confirmPasswordTextField.setError();
+        this.nextButton.setDisable(true);
+        this.confirmPasswordTextField.setErrorText("two password different");
+      },
     );
 
     this.passwordTextField = MyTextField(
@@ -120,8 +145,24 @@ class Register extends StatelessWidget {
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      helpText: "At least 6 length, contain number and english characters",
+      helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
+      onCorrect: (){
+        this.passwordDone = true;
+        if(this.confirmPasswordTextField.getInput() != this.passwordTextField.getInput()
+        && !this.confirmPasswordTextField.isEmpty()) {
+          this.confirmPasswordTextField.setError();
+          this.repasswordDone = false;
+          this.nextButton.setDisable(true);
+        }
+        if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+          this.nextButton.setDisable(false);
+        }
+      },
+      onError: (){
+        this.passwordDone = false;
+        this.nextButton.setDisable(true);
+      },
     );
 
     this.nicknameTextField = MyTextField(
@@ -134,6 +175,20 @@ class Register extends StatelessWidget {
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "please input your nick name",
       maxlength: 30,
+      onCorrect: (){
+        this.nickNameDone = true;
+        if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+          this.nextButton.setDisable(false);
+        }
+      },
+      onError: (){
+        this.nickNameDone = false;
+        this.nextButton.setDisable(true);
+      },
+      onEmpty: (){
+        this.nickNameDone = false;
+        this.nextButton.setDisable(true);
+      },
     );
 
     this.emailTextField.addListener(() {
@@ -168,6 +223,7 @@ class Register extends StatelessWidget {
       verifyButton.fontsize = 20;
       verifyButton.setDisable(true);
       verifyButton.setWidth(0.2);
+      verifyTextField.setWidth(0.45);
       if (this.counter.isStop()) {
         this.counter.start();
       }
@@ -193,7 +249,7 @@ class Register extends StatelessWidget {
     };
 
     this.nextButton = MyButton(
-      firstReactState: ComponentReactState.able,
+      firstReactState: ComponentReactState.disabled,
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -203,153 +259,148 @@ class Register extends StatelessWidget {
     );
 
     nextButton.tapFunc = () {
-     this.scrollCtl.animateTo(
-         ScreenTool.partOfScreenWidth(1),
-         duration: Duration(milliseconds: 800),
-         curve: Curves.ease);
+      if (this.step == 0) {
+        this.scrollCtl.animateTo(ScreenTool.partOfScreenWidth(1),
+            duration: Duration(milliseconds: 800), curve: Curves.ease);
+        this.step = 1;
+        nextButton.setDisable(true);
+      } else if (this.step == 1) {
+        this.nextButton.setDisable(true);
+        EasyLoading.showToast("Waiting for register...");
+        http.post(
+            Constants.REQUEST_URL + "/user/signup",
+            body: {
+              "email": this.emailWhenClickButton,
+              "password":this.passwordTextField.getInput(),
+              "nickname":this.nicknameTextField.getInput()
+            }
+        ).then((value) {
+          var res = jsonDecode(value.body);
+          print(res.toString());
+          if (res['code'] == 1) {
+              EasyLoading.showSuccess("Register success!",
+                  duration:Duration(milliseconds: 500));
+              Navigator.pop(context);
+          }
+        });
+      }
     };
 
     Widget emailPart = Container(
         width: ScreenTool.partOfScreenWidth(1),
-        child:KeyboardAvoider(
-          autoScroll: true,
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.center, //水平居中
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 80),
-              Container(
-                width: ScreenTool.partOfScreenWidth(0.7),
-                child: Text(
-                  "Create your\nAccount with Email",
-                  textDirection: TextDirection.ltr,
-                  style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none,
-                      fontFamily: "Futura",
-                      color: Colors.black),
-                ),
-              ),
-              SizedBox(height: ScreenTool.partOfScreenHeight(0.08)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    width: ScreenTool.partOfScreenWidth(0.7),
-                    child: this.emailTextField,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                  )
-                ],
-              ),
-              Container(
-                width: ScreenTool.partOfScreenWidth(0.7),
-                height: ScreenTool.partOfScreenHeight(0.1),
-                decoration: BoxDecoration(),
-                child: Stack(
-                  alignment: Alignment.center,
+        child: KeyboardAvoider(
+            autoScroll: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center, //水平居中
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(height: 10),
+                SizedBox(height: 1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Positioned(
-                      left: 0,
-                      top: 8,
-                      child: this.verifyTextField,
+                    Container(
+                      width: ScreenTool.partOfScreenWidth(0.7),
+                      child: this.emailTextField,
                     ),
-                    Positioned(
-                      child: verifyButton,
-                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
+                    )
                   ],
                 ),
-              ),
-              SizedBox(height: 20),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                MyButton(
-                  text: "Back",
-                  isBold: true,
-                  leftMargin: 20,
-                  bottomMargin: 20,
-                  width: ScreenTool.partOfScreenWidth(0.20),
-                  theme: MyTheme.blueStyle,
-                  firstThemeState: ComponentThemeState.error,
-                  tapFunc: () {
-                    Navigator.pop(context);
-                  },
+                Container(
+                  width: ScreenTool.partOfScreenWidth(0.7),
+                  height: ScreenTool.partOfScreenHeight(0.1),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Positioned(
+                        left: 0,
+                        top: 8,
+                        child: this.verifyTextField,
+                      ),
+                      Positioned(
+                        child: verifyButton,
+                      ),
+                    ],
+                  ),
                 ),
-                Expanded(child: Text("")),
-                this.nextButton
-              ]),
-            ],
-          )
-        ));
+                SizedBox(height: 20),
+                SizedBox(height: 1),
+                SizedBox(height: 1),
+              ],
+            )));
     Widget passwordPart = Container(
-      width: ScreenTool.partOfScreenWidth(1),
-      child: KeyboardAvoider(
-        autoScroll: true,
-        child:Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(height: 40),
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.7),
-              child: Text(
-                "Sign your nickname \nand password",
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.none,
-                    fontFamily: "Futura",
-                    color: Colors.black),
-              ),
-            ),
-            SizedBox(height: 15),
-            this.nicknameTextField,
-            SizedBox(height: 15),
-            this.passwordTextField,
-            this.confirmPasswordTextField,
-            SizedBox(height: 40),
-            SizedBox(height: 15),
-
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              MyButton(
-                text: "Back",
-                isBold: true,
-                leftMargin: 20,
-                bottomMargin: 20,
-                width: ScreenTool.partOfScreenWidth(0.20),
-                theme: MyTheme.blueStyle,
-                firstThemeState: ComponentThemeState.error,
-                tapFunc: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Expanded(child: Text("")),
-              this.nextButton
-            ]),
-          ],
-        )
-      )
-    );
-    Widget listScrool = ListView(
+        width: ScreenTool.partOfScreenWidth(1),
+        child: KeyboardAvoider(
+            autoScroll: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(height: 15),
+                this.nicknameTextField,
+                SizedBox(height: 15),
+                this.passwordTextField,
+                this.confirmPasswordTextField,
+                SizedBox(height: 1),
+                SizedBox(height: 1),
+                SizedBox(height: 15),
+              ],
+            )));
+    Widget listScrool = Flexible(
+        child: ListView(
       physics: const NeverScrollableScrollPhysics(),
       scrollDirection: Axis.horizontal,
       controller: this.scrollCtl,
-      children: [
-        emailPart,
-        passwordPart
-      ],
-    );
+      children: [emailPart, passwordPart],
+    ));
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BackGround(
           sigmaY: 15,
           sigmaX: 15,
           color: Colors.white,
           opacity: 0.79,
-          child: listScrool
-      ),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 40),
+                Container(
+                  width: ScreenTool.partOfScreenWidth(0.7),
+                  child: Text(
+                    "Create your\nAccount",
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.none,
+                        fontFamily: "Futura",
+                        color: Colors.black),
+                  ),
+                ),
+                listScrool,
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      MyButton(
+                        text: "Back",
+                        isBold: true,
+                        leftMargin: 20,
+                        bottomMargin: 20,
+                        width: ScreenTool.partOfScreenWidth(0.20),
+                        theme: MyTheme.blueStyle,
+                        firstThemeState: ComponentThemeState.error,
+                        tapFunc: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Expanded(child: Text("")),
+                      this.nextButton
+                    ]),
+              ])),
     );
   }
 }
