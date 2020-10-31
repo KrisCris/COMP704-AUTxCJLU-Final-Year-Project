@@ -14,6 +14,7 @@ class MyTextField extends StatefulWidget {
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   String errorText;
+  final FocusNode next;
   final String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
@@ -26,24 +27,23 @@ class MyTextField extends StatefulWidget {
   double ulFocusedWidth; //点击的厚度
   Function onCorrect;
   Function onError;
+  Function onEmpty;
   TextInputType keyboardType;
-  final TextInputAction keyboardAction;
+  TextInputAction keyboardAction;
   List<Function> listenerList;
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
-
   MyTextFieldState st;
 
-  // bool checkContent;
-  // final inputController;  //用来获取输入内容的
+  ///when length change, button fix at center(0),left(1) or right(2)
+  int sizeChangeMode;
 
   MyTextField({
     this.placeholder,
-    this.keyboardAction = TextInputAction.go,
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
     this.errorText = "input error",
-    this.helpText="",
+    this.helpText = "",
     @required this.theme,
     this.width,
     this.ulFocusedWidth,
@@ -55,16 +55,23 @@ class MyTextField extends StatefulWidget {
     this.maxlength = null,
     this.onCorrect,
     this.onError,
-    this.autoChangeState=true,
+    this.onEmpty,
+    this.next = null,
+    this.sizeChangeMode = 0,
+    this.autoChangeState = true,
     Key key,
   }) : super(key: key) {
+    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
-    } else if(this.inputType == InputFieldType.password)  {
-
+    } else {
+      this.keyboardType = TextInputType.text;
     }
-    this.keyboardType = TextInputType.text;
+    if (next != null) {
+      this.keyboardAction = TextInputAction.next;
+    }
+
     this.listenerList = List<Function>();
   } //构造函数
 
@@ -74,6 +81,21 @@ class MyTextField extends StatefulWidget {
     return this.st.getInput();
   }
 
+  FocusNode getFocusNode() {
+    return this.st._focusNode;
+  }
+  void setWidth(double len){
+    double newWidth = ScreenTool.partOfScreenWidth(len);
+    this.st.lengthAnimation.initAnimation(this.width,
+        newWidth, this.st.sizeChangeDura, this.st,
+            () { this.st.setState(() {});});
+    this.st.lengthAnimation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        this.width = newWidth;
+      }
+    });
+    this.st.lengthAnimation.beginAnimation();
+  }
   bool isEmpty() {
     return this.st.isEmpty();
   }
@@ -81,47 +103,54 @@ class MyTextField extends StatefulWidget {
   bool isCorrect() {
     return this.st.isCorrect;
   }
-  bool isChange(){
+
+  bool isChange() {
     return this.st.isCorrect;
   }
-  void clearInput(){
+
+  void clearInput() {
     this.st._inputcontroller.clear();
   }
 
   void addListener(Function f) {
-    if(this.st == null)this.listenerList.add(f);
-    else this.st.addListener(f);
+    if (this.st == null)
+      this.listenerList.add(f);
+    else
+      this.st.addListener(f);
   }
 
   bool checkInput() {
     return FormatChecker.check(this.inputType, this.getInput());
   }
-  void setError(){
+
+  void setError() {
     this.st.isCorrect = false;
-    this.setThemeState(ComponentThemeState.error,force: true);
-    this.st.suffixSizeAnimation.beginAnimation();
-  }
-  void setCorrect(){
-    this.st.isCorrect = true;
-    this.setThemeState(ComponentThemeState.correct,force: true);
+    this.setThemeState(ComponentThemeState.error, force: true);
     this.st.suffixSizeAnimation.beginAnimation();
   }
 
-  void setErrorText(String txt){
+  void setCorrect() {
+    this.st.isCorrect = true;
+    this.setThemeState(ComponentThemeState.correct, force: true);
+    this.st.suffixSizeAnimation.beginAnimation();
+  }
+
+  void setErrorText(String txt) {
     this.errorText = txt;
     this.st.setState(() {});
   }
-  void setThemeState(ComponentThemeState the,{bool force=false}){
-    this.st.setThemeState(the,force: force);
+
+  void setThemeState(ComponentThemeState the, {bool force = false}) {
+    this.st.setThemeState(the, force: force);
   }
-  void setReactState(ComponentReactState rea){
+
+  void setReactState(ComponentReactState rea) {
     this.st.setReactState(rea);
   }
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
     return this.st;
   }
 }
@@ -132,11 +161,14 @@ class MyTextFieldState extends State<MyTextField>
   ColorTweenAnimation colorAnimation = ColorTweenAnimation();
   TweenAnimation suffixSizeAnimation = TweenAnimation();
   TweenAnimation underlineWidthAnimation = TweenAnimation();
+  TweenAnimation lengthAnimation = TweenAnimation();
+
   FocusNode _focusNode = FocusNode();
   Color errorColors = Colors.blue;
   bool isCorrect = false;
   int colorChangeDura = 350;
-  int sizeChangeDura = 250;
+  int sizeChangeDura = 200;
+  double firstWidth;
 
   MyTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
     this.themeState = the;
@@ -146,10 +178,17 @@ class MyTextFieldState extends State<MyTextField>
   @override
   void initState() {
     super.initState();
+    this.firstWidth = widget.width;
     this.initColor();
-    for(Function f in widget.listenerList){
+    for (Function f in widget.listenerList) {
       this.addListener(f);
     }
+    this.lengthAnimation.initAnimation(
+        this.firstWidth, this.firstWidth, this.sizeChangeDura, this, () {
+      setState(() {});
+    });
+    this.lengthAnimation.beginAnimation();
+
     this.underlineWidthAnimation.initAnimation(
         widget.ulDefaultWidth, widget.ulFocusedWidth, sizeChangeDura, this, () {
       setState(() {});
@@ -169,17 +208,21 @@ class MyTextFieldState extends State<MyTextField>
 
     this._inputcontroller.addListener(() {
       if (this._inputcontroller.text.isEmpty) {
-        if(widget.autoChangeState){
+        if (widget.autoChangeState) {
           this.setThemeState(ComponentThemeState.normal);
+        }
+        if(widget.onEmpty != null){
+          widget.onEmpty();
         }
         this.suffixSizeAnimation.reverseAnimation();
         this.isCorrect = false;
       } else {
-        if (this.themeState == ComponentThemeState.normal && widget.autoChangeState) {
+        if (this.themeState == ComponentThemeState.normal &&
+            widget.autoChangeState) {
           this.suffixSizeAnimation.beginAnimation();
         }
         if (FormatChecker.check(widget.inputType, this._inputcontroller.text)) {
-          if(widget.autoChangeState){
+          if (widget.autoChangeState) {
             this.setThemeState(ComponentThemeState.correct);
             this.isCorrect = true;
           }
@@ -188,7 +231,7 @@ class MyTextFieldState extends State<MyTextField>
             widget.onCorrect();
           }
         } else {
-          if(widget.autoChangeState){
+          if (widget.autoChangeState) {
             this.setThemeState(ComponentThemeState.error);
             this.isCorrect = false;
           }
@@ -199,7 +242,6 @@ class MyTextFieldState extends State<MyTextField>
       }
     });
   }
-
   void initColor() {
     this.colorAnimation.initAnimation(
         widget.theme.getReactColor(this.reactState),
@@ -224,70 +266,76 @@ class MyTextFieldState extends State<MyTextField>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: widget.width,
-        margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
-        child: TextField(
-          inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
-          textInputAction: widget.keyboardAction,
-          keyboardType: widget.keyboardType,
-          focusNode: this._focusNode,
-          controller: this._inputcontroller,
-          style: TextStyle(fontSize: 18),
-          autofocus: widget.isAutoFocus,
-          cursorColor: colorAnimation.getValue(),
-          cursorWidth: 2,
-          maxLength: widget.maxlength,
+    return Visibility(
+      visible: this.lengthAnimation.getValue() == 0? false : true,
+      child:Transform.translate(
+          offset: Offset(this.calculatePosition(), 0),
+          child: Container(
+              width: this.lengthAnimation.getValue(),
+              margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
+              child: TextField(
+                inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
+                textInputAction: widget.keyboardAction,
+                keyboardType: widget.keyboardType,
+                focusNode: this._focusNode,
+                controller: this._inputcontroller,
+                style: TextStyle(fontSize: 18),
+                autofocus: widget.isAutoFocus,
+                cursorColor: colorAnimation.getValue(),
+                cursorWidth: 2,
+                maxLength: widget.maxlength,
+                onEditingComplete: () {
+                  if (widget.next != null) {
+                    FocusScope.of(context).requestFocus(widget.next);
+                  }
+                },
+                decoration: new InputDecoration(
+                  //下划线的设置
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: colorAnimation.getValue(),
+                        width: this.underlineWidthAnimation.getValue()),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: colorAnimation.getValue(),
+                        width: this.underlineWidthAnimation.getValue()),
+                  ),
+                  disabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: colorAnimation.getValue(),
+                          width: this.underlineWidthAnimation.getValue())),
+                  errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: colorAnimation.getValue(),
+                          width: this.underlineWidthAnimation.getValue())),
+                  focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: colorAnimation.getValue(),
+                          width: this.underlineWidthAnimation.getValue())),
 
-          decoration: new InputDecoration(
-            //下划线的设置
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: colorAnimation.getValue(),
-                  width: this.underlineWidthAnimation.getValue()),
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: colorAnimation.getValue(),
-                  width: this.underlineWidthAnimation.getValue()),
-            ),
-            disabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: colorAnimation.getValue(),
-                    width: this.underlineWidthAnimation.getValue())),
-            errorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: colorAnimation.getValue(),
-                    width: this.underlineWidthAnimation.getValue())),
-            focusedErrorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: colorAnimation.getValue(),
-                    width: this.underlineWidthAnimation.getValue())),
+                  //文本框基本属性
+                  hintText: widget.placeholder,
+                  contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  isDense: true,
+                  helperText: this.isCorrect ? "" : widget.helpText,
+                  errorText: this.isCorrect ||
+                      (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                      ? null
+                      : widget.errorText,
+                  suffixIcon: Transform.translate(
+                      offset: Offset(10, 5),
+                      child: Icon(
+                          this.isCorrect
+                              ? FontAwesomeIcons.checkCircle
+                              : FontAwesomeIcons.timesCircle,
+                          color: this.colorAnimation.getValue(),
+                          size: this.suffixSizeAnimation.getValue())),
+                ),
+                obscureText: widget.inputType == InputFieldType.password,
+              )))
+    );
 
-            //文本框基本属性
-            hintText: widget.placeholder,
-            contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
-            isDense: true,
-            helperText: this.isCorrect ? "" : widget.helpText,
-            errorText: this.isCorrect ||
-                    (!this.isCorrect && this._inputcontroller.text.isEmpty)
-                ? null
-                : widget.errorText,
-
-            // icon: Icon(widget.myIcon,color: Constants.FOCUSED_COLOR,size: 20,),
-            //icon: Icon(Icons.phone),
-            suffixIcon: Transform.translate(
-                offset: Offset(10, 5),
-                //padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
-                child: Icon(
-                    this.isCorrect
-                        ? FontAwesomeIcons.checkCircle
-                        : FontAwesomeIcons.timesCircle,
-                    color: this.colorAnimation.getValue(),
-                    size: this.suffixSizeAnimation.getValue())),
-          ),
-          obscureText: widget.inputType == InputFieldType.password,
-        ));
   }
 
   String getInput() {
@@ -298,12 +346,21 @@ class MyTextFieldState extends State<MyTextField>
     return this._inputcontroller.text == "";
   }
 
-  void addListener(Function f) {
-    this._inputcontroller.addListener(f);
-
+  double calculatePosition() {
+    if (widget.sizeChangeMode == 0)
+      return 0;
+    else if (widget.sizeChangeMode == 1) {
+      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      return -(gap / 2);
+    } else if (widget.sizeChangeMode == 2) {
+      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      return gap / 2;
+    }
   }
 
-
+  void addListener(Function f) {
+    this._inputcontroller.addListener(f);
+  }
 
   @override
   void setReactState(ComponentReactState rea) {
@@ -337,7 +394,7 @@ class MyTextFieldState extends State<MyTextField>
   }
 
   @override
-  void setThemeState(ComponentThemeState the,{bool force = false}) {
+  void setThemeState(ComponentThemeState the, {bool force = false}) {
     if (the == this.themeState) return;
 
     if (this.reactState == ComponentReactState.focused) {
@@ -351,7 +408,7 @@ class MyTextFieldState extends State<MyTextField>
       this.colorAnimation.beginAnimation();
       this.themeState = the;
     } else {
-      if(force){
+      if (force) {
         this.colorAnimation.initAnimation(
             widget.theme.getThemeColor(this.themeState),
             widget.theme.getThemeColor(the),
@@ -366,4 +423,4 @@ class MyTextFieldState extends State<MyTextField>
   }
 }
 
-enum InputFieldType { email, password, text,verifyCode }
+enum InputFieldType { email, password, text, verifyCode }

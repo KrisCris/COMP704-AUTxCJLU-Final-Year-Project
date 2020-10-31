@@ -15,7 +15,6 @@ import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -27,10 +26,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return MaterialApp(home: FirstPage(), routes: <String, WidgetBuilder>{
-      "login": (context) => Login(),
-      "register": (context) => Register(),
-    });
+    return MaterialApp(
+        home: FirstPage(),
+        routes: <String, WidgetBuilder>{
+          "login": (context) => Login(),
+          "register": (context) => Register(),
+        },
+    );
   }
 }
 
@@ -67,7 +69,7 @@ class FirstPage extends StatelessWidget {
                 sizeChangeMode: 2,
                 theme: MyTheme.blueStyle,
                 isBold: true,
-                tapFunc: (){
+                tapFunc: () {
                   Navigator.pushNamed(context, "register");
                 }),
             SizedBox(height: 20),

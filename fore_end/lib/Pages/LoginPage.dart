@@ -81,7 +81,6 @@ class Login extends StatelessWidget {
 
     this.passwordField = MyTextField(
       placeholder: "Password",
-      keyboardAction: TextInputAction.go,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
