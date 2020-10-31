@@ -8,13 +8,13 @@ parameters:
     type: string
     required: true
     description: Email
-    defalut: 'root@root.com'
+    default: 'root@root.com'
   - in: formData
     name: password
     type: string
     required: true
     description: Password
-    default: 'root'
+    default: 'rootroot'
 responses:
   1:
     description: Successful Login
