@@ -87,8 +87,6 @@ def send_register_code():
         if gap > 60 * 5:
             u.code = auth_code
             u.last_code_sent = func.get_current_time()
-            # Update
-            User.add(u)
         elif gap < 60:
             return func.reply_json(-5, msg='Wait for 60s!')
         else:
@@ -98,6 +96,22 @@ def send_register_code():
     if status == 1:
         User.add(u)
     return func.reply_json(status)
+
+
+
+
+
+@user.route('/is_new_email', methods=['GET'])
+@swag_from('docs/user/is_new_email.yml')
+def is_new_email():
+    email = request.values.get('email')
+    u = User.query.filter(User.email == email).first()
+    if u is None:
+        return func.reply_json(1)
+    if u.group != 0:
+        return func.reply_json(-3)
+    else:
+        return func.reply_json(1)
 
 
 @user.route('/check_code', methods=['POST'])
@@ -118,6 +132,13 @@ def check_code():
             return func.reply_json(1)
         else:
             return func.reply_json(-4)
+
+
+# @user.route('cancel_account', method=['POST'])
+# @swag_from('docs/user/cancel_account.yml')
+# def cancel_account():
+#     email = request.form.get('email')
+
 
 
 @user.route('/modify_password', methods=['POST'])
@@ -153,6 +174,7 @@ def retrieve_password():
 
 def send_reset_pw_code():
     pass
+
 
 @user.route('/require_login')
 def require_login():
