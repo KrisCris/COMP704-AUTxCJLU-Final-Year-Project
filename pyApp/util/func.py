@@ -15,13 +15,13 @@ from util.constants import REPLY_CODES, DEBUG
 from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
 
 
-def reply_json(code, data=None):
+def reply_json(code, msg=None, data=None):
     if data is None:
         data = []
     if code in REPLY_CODES:
         return jsonify({
             'code': code,
-            'msg': REPLY_CODES[code],
+            'msg': REPLY_CODES[code] if msg is None else msg,
             'data': data
         })
     return jsonify({

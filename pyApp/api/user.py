@@ -90,7 +90,7 @@ def send_register_code():
             # Update
             User.add(u)
         elif gap < 60:
-            return func.reply_json(-5, 'Wait for 60s!')
+            return func.reply_json(-5, msg='Wait for 60s!')
         else:
             # Resend code
             auth_code = u.auth_code
