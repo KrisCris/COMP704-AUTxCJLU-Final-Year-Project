@@ -1,10 +1,5 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
-import 'package:fore_end/Mycomponents/textButton.dart';
-import 'MyTool/MyTheme.dart';
-import 'MyTool/req.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
