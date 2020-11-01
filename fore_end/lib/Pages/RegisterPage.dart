@@ -16,6 +16,8 @@ import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 void main() {
   runApp(Register());
 }
@@ -114,22 +116,23 @@ class Register extends StatelessWidget {
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "re-enter the password",
       maxlength: 30,
-      onCorrect: (){
-        if(this.confirmPasswordTextField.getInput() == this.passwordTextField.getInput()){
+      onCorrect: () {
+        if (this.confirmPasswordTextField.getInput() ==
+            this.passwordTextField.getInput()) {
           //correct
           this.repasswordDone = true;
           this.confirmPasswordTextField.setCorrect();
-          if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+          if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
             this.nextButton.setDisable(false);
           }
-        }else{
+        } else {
           this.repasswordDone = false;
           this.confirmPasswordTextField.setError();
           this.nextButton.setDisable(true);
           this.confirmPasswordTextField.setErrorText("two password different");
         }
       },
-      onError: (){
+      onError: () {
         this.repasswordDone = false;
         this.confirmPasswordTextField.setError();
         this.nextButton.setDisable(true);
@@ -147,19 +150,20 @@ class Register extends StatelessWidget {
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
-      onCorrect: (){
+      onCorrect: () {
         this.passwordDone = true;
-        if(this.confirmPasswordTextField.getInput() != this.passwordTextField.getInput()
-        && !this.confirmPasswordTextField.isEmpty()) {
+        if (this.confirmPasswordTextField.getInput() !=
+                this.passwordTextField.getInput() &&
+            !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
           this.nextButton.setDisable(true);
         }
-        if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+        if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
           this.nextButton.setDisable(false);
         }
       },
-      onError: (){
+      onError: () {
         this.passwordDone = false;
         this.nextButton.setDisable(true);
       },
@@ -175,17 +179,17 @@ class Register extends StatelessWidget {
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "please input your nick name",
       maxlength: 30,
-      onCorrect: (){
+      onCorrect: () {
         this.nickNameDone = true;
-        if(this.passwordDone && this.nickNameDone && this.repasswordDone){
+        if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
           this.nextButton.setDisable(false);
         }
       },
-      onError: (){
+      onError: () {
         this.nickNameDone = false;
         this.nextButton.setDisable(true);
       },
-      onEmpty: (){
+      onEmpty: () {
         this.nickNameDone = false;
         this.nextButton.setDisable(true);
       },
@@ -218,22 +222,67 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () {
+      Fluttertoast.showToast(
+          msg: "Sending",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black87,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
       this.verified = false;
       this.emailWhenClickButton = this.emailTextField.getInput();
-      verifyButton.fontsize = 20;
-      verifyButton.setDisable(true);
-      verifyButton.setWidth(0.2);
-      verifyTextField.setWidth(0.45);
-      if (this.counter.isStop()) {
-        this.counter.start();
-      }
       http.post(Constants.REQUEST_URL + "/user/send_code",
           body: {"email": this.emailWhenClickButton}).then((value) {
         var res = jsonDecode(value.body);
-        if (res['code'] == -5) {
-          EasyLoading.showError("Email send failed",
-              duration: Duration(milliseconds: 2000));
+        switch (res['code']) {
+          case 1:
+            verifyButton.fontsize = 20;
+            verifyButton.setDisable(true);
+            verifyButton.setWidth(0.2);
+            verifyTextField.setWidth(0.45);
+            if (this.counter.isStop()) {
+              this.counter.start();
+            }
+            print(res['code']);
+            break;
+          case -3:
+            Fluttertoast.cancel();
+            Fluttertoast.showToast(
+                msg: res['msg'],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                backgroundColor: Color(0xFFFF6060),
+                timeInSecForIosWeb: 1,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+            // EasyLoading.showError(
+            //     res['msg'],
+            //     duration: Duration(microseconds: 200000));
+            print(res['code']);
+            print(res['msg']);
+            break;
+          case -5:
+            Fluttertoast.cancel();
+            Fluttertoast.showToast(
+                msg: res['msg'],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                backgroundColor: Color(0xFFFF6060),
+                timeInSecForIosWeb: 1,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+            // EasyLoading.showError(
+            //     res['msg'],
+            //     duration: Duration(milliseconds: 2000));
+            print(res['code']);
+            print(res['msg']);
+            break;
         }
+        if (res['code'] == -5) {}
       });
     };
 
@@ -267,20 +316,17 @@ class Register extends StatelessWidget {
       } else if (this.step == 1) {
         this.nextButton.setDisable(true);
         EasyLoading.showToast("Waiting for register...");
-        http.post(
-            Constants.REQUEST_URL + "/user/signup",
-            body: {
-              "email": this.emailWhenClickButton,
-              "password":this.passwordTextField.getInput(),
-              "nickname":this.nicknameTextField.getInput()
-            }
-        ).then((value) {
+        http.post(Constants.REQUEST_URL + "/user/signup", body: {
+          "email": this.emailWhenClickButton,
+          "password": this.passwordTextField.getInput(),
+          "nickname": this.nicknameTextField.getInput()
+        }).then((value) {
           var res = jsonDecode(value.body);
           print(res.toString());
           if (res['code'] == 1) {
-              EasyLoading.showSuccess("Register success!",
-                  duration:Duration(milliseconds: 500));
-              Navigator.pop(context);
+            EasyLoading.showSuccess("Register success!",
+                duration: Duration(milliseconds: 500));
+            Navigator.pop(context);
           }
         });
       }
