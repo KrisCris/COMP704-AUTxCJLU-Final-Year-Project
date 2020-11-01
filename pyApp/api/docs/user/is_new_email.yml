@@ -1,16 +1,16 @@
-Send register code
+Check whether an amail is used
 ---
 tags:
   - USER
 parameters:
-  - in: formData
+  - in: query
     name: email
     type: string
     required: true
     description: Email
 responses:
   1:
-    description: Successful Sent Email
+    description: Haven't been used
     schema:
       properties:
         code:
@@ -25,32 +25,17 @@ responses:
           type: array
           example: []
   -3:
-    description: User Already Exists
+    description: Already used
     schema:
       properties:
         code:
           type: number
           description: return code
-          example: -3
+          example: -4
         msg:
           type: string
           description: return info
-          example: 'user already exists'
-        data:
-          type: array
-          example: []
-  -5:
-    description: Email Sending Failed
-    schema:
-      properties:
-        code:
-          type: number
-          description: return code
-          example: -5
-        msg:
-          type: string
-          description: return info
-          example: 'email sending failed'
+          example: 'User already exists'
         data:
           type: array
           example: []
