@@ -23,7 +23,10 @@ environment:
 dependencies:
   keyboard_avoider: ^0.1.2
   font_awesome_flutter: 8.10.0
-  http: ^0.12.0
+  dio: ^3.0.10
+  path_provider: ^1.6.22
+  cookie_jar: ^1.0.0
+  dio_cookie_manager: ^1.0.0
   flutter_easyloading: ^2.0.0
   fluttertoast: ^7.1.1
   flutter:
