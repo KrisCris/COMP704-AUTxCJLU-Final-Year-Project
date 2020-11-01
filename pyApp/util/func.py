@@ -101,13 +101,7 @@ def get_time_gap(old):
     return int(time.time()) - old
 
 
-def login_required(func):
-    """
-    判断是否登陆
-    :param func: 函数
-    :return:
-    """
-
+def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
         token = ''
@@ -125,6 +119,26 @@ def login_required(func):
         user = users[0]
         if user.token != token:
             return redirect('/user/require_login')
+        return func(*args, **kwargs)
+
+    return inner
+
+
+def require_code_check(func):
+    @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
+    def inner(*args, **kwargs):
+        email = request.form['email'] if request.method == 'POST' else request.values.get('email')
+        from db.User import User, getUserByEmail
+        user = getUserByEmail(email)
+
+        if user is None:
+            pass
+        elif user.code_check != 1:
+            return redirect('/user/require_code_check')
+        else:
+            user.code_check = 0
+            User.add(user)
+
         return func(*args, **kwargs)
 
     return inner
