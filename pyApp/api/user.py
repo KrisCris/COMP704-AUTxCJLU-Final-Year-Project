@@ -29,7 +29,7 @@ def login():
 
 
 @user.route('/logout', methods=['POST'])
-@func.login_required
+@func.require_login
 @swag_from('docs/user/logout.yml')
 def logout():
     email = request.form.get('email').lower()
@@ -42,18 +42,19 @@ def logout():
 
 
 @user.route('/signup', methods=['POST'])
+@func.require_code_check
 @swag_from('docs/user/signup.yml')
 def signup():
     email = request.form.get('email').lower()
     nickname = request.form.get('nickname')
     password = generate_password_hash(request.form.get('password'))
 
-    u = User.query.filter(User.email == email).first()
+    u = getUserByEmail(email)
     if u is None:
         return func.reply_json(-2)
     else:
-        if u.code_check != 1:
-            return func.reply_json(-4)
+        # if u.code_check != 1:
+        #     return func.reply_json(-4)
         if func.get_time_gap(u.last_code_sent) > 60 * 10:
             return func.reply_json(-6)
         if u.group != 0:
@@ -62,21 +63,22 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
-            u.code_check = 0
+            # u.code_check = 0
 
             User.add(u)
     return func.reply_json(1)
 
 
-@user.route('/send_code', methods=['POST'])
+@user.route('/send_register_code', methods=['POST'])
 @swag_from('docs/user/send_register_code.yml')
 def send_register_code():
     func.remove_temp_account()
+
     email = request.form.get('email').lower()
+    u = getUserByEmail(email)
 
     auth_code = func.gen_auth_code()
 
-    u = User.query.filter(User.email == email).first()
     if u is None:
         u = User(email=email, auth_code=func.gen_auth_code())
     else:
@@ -85,19 +87,31 @@ def send_register_code():
         gap = func.get_time_gap(u.last_code_sent)
         # Code expired (5 minutes)
         if gap > 60 * 5:
-            u.code = auth_code
+            u.auth_code = auth_code
             u.last_code_sent = func.get_current_time()
-            # Update
-            User.add(u)
         elif gap < 60:
-            return func.reply_json(-5, 'Wait for 60s!')
+            return func.reply_json(-5, msg='Wait for 60s!')
         else:
             # Resend code
             auth_code = u.auth_code
     status = func.send_verification_code(email, auth_code)
     if status == 1:
+        u.code_check = 0
         User.add(u)
     return func.reply_json(status)
+
+
+@user.route('/is_new_email', methods=['GET'])
+@swag_from('docs/user/is_new_email.yml')
+def is_new_email():
+    email = request.values.get('email')
+    u = getUserByEmail(email)
+    if u is None:
+        return func.reply_json(1)
+    if u.group != 0:
+        return func.reply_json(-3)
+    else:
+        return func.reply_json(1)
 
 
 @user.route('/check_code', methods=['POST'])
@@ -105,14 +119,14 @@ def send_register_code():
 def check_code():
     auth_code = request.form.get('auth_code')
     email = request.form.get('email').lower()
-    u = User.query.filter(User.email == email).first()
+    u = getUserByEmail(email)
 
     if u is None:
         return func.reply_json(-4)
     else:
         if func.get_time_gap(u.last_code_sent) > 60 * 5:
             return func.reply_json(-6)
-        if auth_code == auth_code.upper():
+        if u.auth_code == auth_code.upper():
             u.code_check = 1
             User.add(u)
             return func.reply_json(1)
@@ -120,8 +134,26 @@ def check_code():
             return func.reply_json(-4)
 
 
+@user.route('/cancel_account', methods=['POST'])
+@func.require_login
+@func.require_code_check
+@swag_from('docs/user/cancel_account.yml')
+def cancel_account():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    auth_status = func.auth_user(email, password)
+
+    if type(auth_status) != User:
+        return func.reply_json(auth_status)
+    else:
+        u = auth_status
+        User.delete(u)
+        return func.reply_json(1)
+
+
 @user.route('/modify_password', methods=['POST'])
-@func.login_required
+@func.require_login
+@func.require_code_check
 @swag_from('docs/user/modify_password.yml')
 def modify_password():
     email = request.form.get('email')
@@ -133,14 +165,14 @@ def modify_password():
     else:
         u = auth_status
         u.password = new_password
-        u.code_check = 0
         u.token = func.genToken(email)
         User.add(u)
         return func.reply_json(1)
 
 
 @user.route('retrieve_password', methods=['POST'])
-# @swag_from('docs/user/modify/retrieve_password')
+@func.require_code_check
+# @swag_from('docs/user/modify/retrieve_password.yml')
 def retrieve_password():
     email = request.form.get('email')
     password = request.form.get('new_password')
@@ -151,9 +183,39 @@ def retrieve_password():
         pass
 
 
-def send_reset_pw_code():
-    pass
+@user.route('send_security_code', methods=['POST'])
+@swag_from('docs/user/send_security_code.yml')
+def send_security_code():
+    email = request.form.get('email')
+    u = getUserByEmail(email)
+
+    auth_code = func.gen_auth_code()
+
+    if u is None or u.group != 1:
+        return func.reply_json(-2, msg='Wrong email')
+    else:
+        gap = func.get_time_gap(u.last_code_sent)
+        # Code expired (5 minutes)
+        if gap > 60 * 5:
+            u.auth_code = auth_code
+            u.last_code_sent = func.get_current_time()
+        elif gap < 60:
+            return func.reply_json(-5, msg='Wait for 60s!')
+        else:
+            # Resend code
+            auth_code = u.auth_code
+    status = func.send_verification_code(email, auth_code)
+    if status == 1:
+        u.code_check = 0
+        User.add(u)
+    return func.reply_json(status)
+
 
 @user.route('/require_login')
 def require_login():
     return func.reply_json(-1)
+
+
+@user.route('/require_code_check')
+def require_code_check():
+    return func.reply_json(-4)
