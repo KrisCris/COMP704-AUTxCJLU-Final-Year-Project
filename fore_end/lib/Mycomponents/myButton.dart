@@ -107,7 +107,9 @@ String text;
     this.state = MyButtonState(this.firstReactState,this.firstThemeState);
     return this.state;
   }
-
+  bool isMonted(){
+    return this.state.mounted;
+  }
   void setDisable(bool d){
     if(d){
       this.state.setReactState(ComponentReactState.disabled);
@@ -209,7 +211,12 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
         offset: Offset(this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
         child: GestureDetector(
             onDoubleTap: (){
-              widget.doubleTapFunc();
+              if(widget.doubleTapFunc != null){
+                widget.doubleTapFunc();
+              }else if(widget.tapFunc !=null){
+                this.flashAnimation.beginAnimation();
+                widget.tapFunc();
+              }
             },
             onTapDown: (TapDownDetails tpd) {
               if (this.reactState == ComponentReactState.disabled) {
@@ -226,7 +233,9 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
 
               this.isTap = false;
               this.flashAnimation.reverseAnimation();
-              widget.tapFunc();
+              if(widget.tapFunc != null){
+                widget.tapFunc();
+              }
             },
             onTapCancel: () {
               if (this.reactState == ComponentReactState.disabled) return;

@@ -1,20 +1,20 @@
-import 'dart:convert';
+
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/formatChecker.dart';
+import 'package:fore_end/MyTool/req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-import 'package:http/http.dart' as http;
+
 
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -55,7 +55,7 @@ class Register extends StatelessWidget {
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       maxlength: null,
-      onCorrect: () {
+      onCorrect: () async {
         String emailVal = this.emailTextField.getInput();
         if (emailVal != this.emailWhenClickButton) {
           this.verifyTextField.setError();
@@ -64,11 +64,15 @@ class Register extends StatelessWidget {
           return;
         }
 
+        if(this.verified)return;
+
         String codeVal = this.verifyTextField.getInput();
-        http.post(Constants.REQUEST_URL + "/user/check_code",
-            body: {"email": emailVal, "auth_code": codeVal}).then((value) {
-          var res = jsonDecode(value.body);
-          if (res['code'] == -4) {
+        try{
+          Response res = await Requests.checkVerifyCode({
+            "email": emailVal,
+            "auth_code": codeVal
+          });
+          if (res.data['code'] == -4) {
             EasyLoading.showError("Verify failed",
                 duration: Duration(milliseconds: 2000));
             this.nextButton.setDisable(true);
@@ -79,7 +83,10 @@ class Register extends StatelessWidget {
             this.verifyTextField.setCorrect();
             this.verified = true;
           }
-        });
+        }on DioError catch(e){
+          print("Exception when check verify code\n");
+          print(e.toString());
+        }
         if (!this.counter.isStop()) return;
         this.verifyButton.setDisable(false);
       },
@@ -221,7 +228,7 @@ class Register extends StatelessWidget {
         tapFunc: () {},
         isBold: true);
 
-    verifyButton.tapFunc = () {
+    verifyButton.tapFunc = () async {
       Fluttertoast.showToast(
           msg: "Sending",
           toastLength: Toast.LENGTH_SHORT,
@@ -233,10 +240,11 @@ class Register extends StatelessWidget {
       );
       this.verified = false;
       this.emailWhenClickButton = this.emailTextField.getInput();
-      http.post(Constants.REQUEST_URL + "/user/send_code",
-          body: {"email": this.emailWhenClickButton}).then((value) {
-        var res = jsonDecode(value.body);
-        switch (res['code']) {
+      try{
+        Response res = await Requests.sendRegisterEmail({
+          "email": this.emailWhenClickButton
+        });
+        switch(res.data['code']){
           case 1:
             verifyButton.fontsize = 20;
             verifyButton.setDisable(true);
@@ -245,49 +253,45 @@ class Register extends StatelessWidget {
             if (this.counter.isStop()) {
               this.counter.start();
             }
-            print(res['code']);
+            print(res.data['code']);
             break;
           case -3:
             Fluttertoast.cancel();
             Fluttertoast.showToast(
-                msg: res['msg'],
+                msg: res.data['msg'],
                 toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
+                gravity: ToastGravity.BOTTOM,
                 backgroundColor: Color(0xFFFF6060),
                 timeInSecForIosWeb: 1,
                 textColor: Colors.white,
                 fontSize: 16.0
             );
-            // EasyLoading.showError(
-            //     res['msg'],
-            //     duration: Duration(microseconds: 200000));
-            print(res['code']);
-            print(res['msg']);
+            print(res.data['code']);
+            print(res.data['msg']);
             break;
           case -5:
             Fluttertoast.cancel();
             Fluttertoast.showToast(
-                msg: res['msg'],
+                msg: res.data['msg'],
                 toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
+                gravity: ToastGravity.BOTTOM,
                 backgroundColor: Color(0xFFFF6060),
                 timeInSecForIosWeb: 1,
                 textColor: Colors.white,
                 fontSize: 16.0
             );
-            // EasyLoading.showError(
-            //     res['msg'],
-            //     duration: Duration(milliseconds: 2000));
-            print(res['code']);
-            print(res['msg']);
+            print(res.data['code']);
+            print(res.data['msg']);
             break;
         }
-        if (res['code'] == -5) {}
-      });
+      } on DioError catch(e){
+        print("Exception when sending email:\n");
+        print(e.toString());
+      }
     };
 
     this.counter.calling = () {
-      if (verifyButton == null) return;
+      if (!verifyButton.isMonted()) return;
       verifyButton.text = this.counter.getRemain().toString();
       verifyButton.refresh();
       if (this.counter.isStop()) {
@@ -307,7 +311,7 @@ class Register extends StatelessWidget {
       theme: MyTheme.blueStyle,
     );
 
-    nextButton.tapFunc = () {
+    nextButton.tapFunc = () async {
       if (this.step == 0) {
         this.scrollCtl.animateTo(ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 800), curve: Curves.ease);
@@ -316,19 +320,21 @@ class Register extends StatelessWidget {
       } else if (this.step == 1) {
         this.nextButton.setDisable(true);
         EasyLoading.showToast("Waiting for register...");
-        http.post(Constants.REQUEST_URL + "/user/signup", body: {
-          "email": this.emailWhenClickButton,
-          "password": this.passwordTextField.getInput(),
-          "nickname": this.nicknameTextField.getInput()
-        }).then((value) {
-          var res = jsonDecode(value.body);
-          print(res.toString());
-          if (res['code'] == 1) {
+        try{
+          Response res = await Requests.signUp({
+            "email": this.emailWhenClickButton,
+            "password": this.passwordTextField.getInput(),
+            "nickname": this.nicknameTextField.getInput()
+          });
+          if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Register success!",
                 duration: Duration(milliseconds: 500));
             Navigator.pop(context);
           }
-        });
+        } on DioError catch(e){
+          print("Exception when sign up\n");
+          print(e.toString());
+        }
       }
     };
 

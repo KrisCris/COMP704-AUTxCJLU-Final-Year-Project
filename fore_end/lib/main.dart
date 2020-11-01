@@ -11,6 +11,7 @@ import 'package:fore_end/Mycomponents/textButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 import 'MyTool/MyTheme.dart';
+import 'MyTool/req.dart';
 import 'MyTool/screenTool.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
 class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FormatChecker.check(InputFieldType.email, "zzwyxl@163.com");
+    var cookie =  Requests.getCookies();
+    print(cookie.toString());
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,
