@@ -1,16 +1,16 @@
-import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
-import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   MyButton backButton;
@@ -43,22 +43,30 @@ class Login extends StatelessWidget {
       theme: MyTheme.blueStyle,
       firstReactState: ComponentReactState.disabled,
       width: ScreenTool.partOfScreenWidth(0.20),
-      tapFunc: () {
+      tapFunc: () async {
         EasyLoading.show(status: "Logining...");
         this.nextButton.setDisable(true);
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
-        http.post(Constants.REQUEST_URL + "/user/login",
-            body: {"email": emailVal, "password": passwordVal}).then((value) {
-          var res = jsonDecode(value.body);
-          if (res['code'] == -2) {
+        try{
+          Response res = await Requests.login({
+            "email": emailVal,
+            "password": passwordVal
+          });
+          if (res.data['code'] == -2) {
             EasyLoading.showError("Email or password wrong",
                 duration: Duration(milliseconds: 2000));
-          } else if (res['code'] == 1) {
+          } else if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Login Success",
                 duration: Duration(milliseconds: 2000));
+            Requests.saveCookies({
+              "token":res.data['data']['token']
+            });
           }
-        });
+        }on DioError catch(e){
+          print("Exception when login\n");
+          print(e.toString());
+        }
       },
     );
     this.emailField = MyTextField(

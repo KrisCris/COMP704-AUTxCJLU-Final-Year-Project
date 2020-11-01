@@ -1,4 +1,4 @@
-Send register code
+Cancel Account
 ---
 tags:
   - USER
@@ -8,9 +8,19 @@ parameters:
     type: string
     required: true
     description: Email
+  - in: formData
+    name: password
+    type: string
+    required: true
+    description: Password
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: Token
 responses:
   1:
-    description: Successful Sent Email
+    description: Successful Login
     schema:
       properties:
         code:
@@ -24,33 +34,48 @@ responses:
         data:
           type: array
           example: []
-  -3:
-    description: User Already Exists
+  -2:
+    description: Wrong Username or Password
     schema:
       properties:
         code:
           type: number
           description: return code
-          example: -3
+          example: -2
         msg:
           type: string
           description: return info
-          example: 'user already exists'
+          example: 'Wrong email or password'
         data:
           type: array
           example: []
-  -5:
-    description: Email Sending Failed
+  -4:
+    description: Require Code Check
     schema:
       properties:
         code:
           type: number
           description: return code
-          example: -5
+          example: -4
         msg:
           type: string
           description: return info
-          example: 'email sending failed'
+          example: 'Require Code Check'
+        data:
+          type: array
+          example: []
+  -1:
+    description: Wrong Username or Password
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -1
+        msg:
+          type: string
+          description: return info
+          example: 'login required'
         data:
           type: array
           example: []
