@@ -15,7 +15,7 @@ class MyTextField extends StatefulWidget {
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   String errorText;
   final FocusNode next;
-  final String helpText;
+  String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
   final int maxlength; //长度
@@ -128,7 +128,11 @@ class MyTextField extends StatefulWidget {
     this.setThemeState(ComponentThemeState.error, force: true);
     this.st.suffixSizeAnimation.beginAnimation();
   }
-
+  void setNormal(){
+    this.st.isCorrect = false;
+    this.setThemeState(ComponentThemeState.normal, force: true);
+    this.st.suffixSizeAnimation.reverseAnimation();
+  }
   void setCorrect() {
     this.st.isCorrect = true;
     this.setThemeState(ComponentThemeState.correct, force: true);
@@ -136,10 +140,15 @@ class MyTextField extends StatefulWidget {
   }
 
   void setErrorText(String txt) {
-    this.errorText = txt;
-    this.st.setState(() {});
+    this.st.setState(() {
+      this.errorText = txt;
+    });
   }
-
+  void setHelpText(String txt){
+    this.st.setState(() {
+      this.helpText = txt;
+    });
+  }
   void setThemeState(ComponentThemeState the, {bool force = false}) {
     this.st.setThemeState(the, force: force);
   }
