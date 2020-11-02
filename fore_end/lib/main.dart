@@ -1,11 +1,8 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
-import 'package:fore_end/Mycomponents/textButton.dart';
-import 'MyTool/MyTheme.dart';
-import 'MyTool/req.dart';
+import 'package:fore_end/Pages/CoverPage.dart';
 import 'Pages/LoginPage.dart';
+import 'Pages/MainPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
 
@@ -21,11 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     this.context = context;
     return MaterialApp(
-        home: Welcome(),
+        home: CoverPage(),
         routes: <String, WidgetBuilder>{
           "login": (context) => Login(),
           "register": (context) => Register(),
-          "welcome":(context)=>Welcome()
+          "welcome":(context) => Welcome(),
+          "main":(context)=>MainPage(),
         },
     );
   }

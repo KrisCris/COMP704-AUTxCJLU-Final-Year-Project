@@ -9,8 +9,6 @@ import 'package:fore_end/Mycomponents/textButton.dart';
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var cookie =  Requests.getCookies();
-    print(cookie.toString());
     return new BackGround(
         sigmaX: 15,
         sigmaY: 15,
