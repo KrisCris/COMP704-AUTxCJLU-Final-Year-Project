@@ -26,7 +26,11 @@ class Req {
     dio.options.receiveTimeout = receiveOut;
 
   }
-  static initCookieJar() async {
+  static void saveCookies(Map cookies) async {
+    List<Cookie> ck = List<Cookie>();
+    cookies.forEach((key, value){
+      ck.add(new Cookie(key,value));
+    });
     if(_cookieJar == null){
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath  = appDocDir.path;
@@ -34,18 +38,17 @@ class Req {
       _cookieJar = new PersistCookieJar(dir: appDocPath);
       Req.instance.interceptors.add(CookieManager(_cookieJar));
     }
-  }
-  static void saveCookies(Map cookies) {
-    List<Cookie> ck = List<Cookie>();
-    cookies.forEach((key, value){
-      ck.add(new Cookie(key,value));
-    });
-    initCookieJar();
     _cookieJar.saveFromResponse(Uri.parse(baseUrl), ck);
   }
 
-  static Map<String,String> getCookies(){
-   initCookieJar();
+  static Future<Map<String,String>> getCookies() async{
+    if(_cookieJar == null){
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath  = appDocDir.path;
+    print('获取的文件系统目录 appDocPath： ' + appDocPath);
+    _cookieJar = new PersistCookieJar(dir: appDocPath);
+    Req.instance.interceptors.add(CookieManager(_cookieJar));
+    }
     List<Cookie> cookies = _cookieJar.loadForRequest(Uri.parse(baseUrl));
     Map<String,String> res = Map<String,String>();
     for(Cookie k in cookies){
@@ -66,7 +69,7 @@ class Requests{
   static void saveCookies(Map cookies){
     Req.saveCookies(cookies);
   }
-  static Map<String,String> getCookies(){
+  static Future<Map<String,String>> getCookies() async {
     return Req.getCookies();
   }
   static Future<Response> sendRegisterEmail(data) async {
