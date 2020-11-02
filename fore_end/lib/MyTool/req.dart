@@ -26,7 +26,11 @@ class Req {
     dio.options.receiveTimeout = receiveOut;
 
   }
-  static initCookieJar() async {
+  static void saveCookies(Map cookies) async {
+    List<Cookie> ck = List<Cookie>();
+    cookies.forEach((key, value){
+      ck.add(new Cookie(key,value));
+    });
     if(_cookieJar == null){
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath  = appDocDir.path;
@@ -34,18 +38,17 @@ class Req {
       _cookieJar = new PersistCookieJar(dir: appDocPath);
       Req.instance.interceptors.add(CookieManager(_cookieJar));
     }
-  }
-  static void saveCookies(Map cookies) {
-    List<Cookie> ck = List<Cookie>();
-    cookies.forEach((key, value){
-      ck.add(new Cookie(key,value));
-    });
-    initCookieJar();
     _cookieJar.saveFromResponse(Uri.parse(baseUrl), ck);
   }
 
-  static Map<String,String> getCookies(){
-   initCookieJar();
+  static Future<Map<String,String>> getCookies() async{
+    if(_cookieJar == null){
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath  = appDocDir.path;
+    print('获取的文件系统目录 appDocPath： ' + appDocPath);
+    _cookieJar = new PersistCookieJar(dir: appDocPath);
+    Req.instance.interceptors.add(CookieManager(_cookieJar));
+    }
     List<Cookie> cookies = _cookieJar.loadForRequest(Uri.parse(baseUrl));
     Map<String,String> res = Map<String,String>();
     for(Cookie k in cookies){
@@ -66,13 +69,13 @@ class Requests{
   static void saveCookies(Map cookies){
     Req.saveCookies(cookies);
   }
-  static Map<String,String> getCookies(){
+  static Future<Map<String,String>> getCookies() async {
     return Req.getCookies();
   }
   static Future<Response> sendRegisterEmail(data) async {
       Dio dio = Req.instance;
       FormData dt = FormData.fromMap(data);
-      Response res = await dio.post("/user/send_code",data: dt);
+      Response res = await dio.post("/user/send_register_code",data: dt);
       return res;
   }
   static Future<Response> checkVerifyCode(data) async {
@@ -92,6 +95,16 @@ class Requests{
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/login",data: dt);
+    return res;
+  }
+
+  static Future<Response> checkEmailRepeat(Map data) async {
+    Dio dio = Req.instance;
+    String urlPara = "";
+    data.forEach((key, value) {
+      urlPara+=key+"="+value+"&";
+    });
+    Response res = await dio.get("/user/is_new_email?"+urlPara);
     return res;
   }
 }
