@@ -60,12 +60,12 @@ class CoverState extends State<CoverPage> {
           if (snapShot.hasData) {
             Map<String,String> token = snapShot.data;
             if(token.isEmpty){
-              Future.delayed(Duration(milliseconds: 1000),(){
+              Future.delayed(Duration(milliseconds: 1500),(){
                 Navigator.pushNamed(context, "welcome");
               });
               return this.getPage("welcome to here!");
             }else{
-              Future.delayed(Duration(milliseconds: 1000),(){
+              Future.delayed(Duration(milliseconds: 1500),(){
                 Navigator.pushNamed(context, "main");
               });
               return this.getPage("Auto login...");
