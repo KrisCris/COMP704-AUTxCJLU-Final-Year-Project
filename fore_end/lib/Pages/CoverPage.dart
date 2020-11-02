@@ -32,15 +32,17 @@ class CoverState extends State<CoverPage> {
                   SizedBox(height: 10),
                   Text("Take a Picture of your food!",
                       textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           decoration: TextDecoration.none,
-                          fontSize: 25,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           fontFamily: "Futura",
                           color: Colors.black)),
                   SizedBox(height: 30),
                   Text(text,
                       textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           decoration: TextDecoration.none,
                           fontSize: 13,
@@ -60,12 +62,12 @@ class CoverState extends State<CoverPage> {
           if (snapShot.hasData) {
             Map<String,String> token = snapShot.data;
             if(token.isEmpty){
-              Future.delayed(Duration(milliseconds: 1500),(){
+              Future.delayed(Duration(milliseconds: 2500),(){
                 Navigator.pushNamed(context, "welcome");
               });
               return this.getPage("welcome to here!");
             }else{
-              Future.delayed(Duration(milliseconds: 1500),(){
+              Future.delayed(Duration(milliseconds: 2500),(){
                 Navigator.pushNamed(context, "main");
               });
               return this.getPage("Auto login...");
