@@ -75,7 +75,7 @@ class Requests{
   static Future<Response> sendRegisterEmail(data) async {
       Dio dio = Req.instance;
       FormData dt = FormData.fromMap(data);
-      Response res = await dio.post("/user/send_code",data: dt);
+      Response res = await dio.post("/user/send_register_code",data: dt);
       return res;
   }
   static Future<Response> checkVerifyCode(data) async {
@@ -95,6 +95,16 @@ class Requests{
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/login",data: dt);
+    return res;
+  }
+
+  static Future<Response> checkEmailRepeat(Map data) async {
+    Dio dio = Req.instance;
+    String urlPara = "";
+    data.forEach((key, value) {
+      urlPara+=key+"="+value+"&";
+    });
+    Response res = await dio.get("/user/is_new_email?"+urlPara);
     return res;
   }
 }

@@ -97,17 +97,30 @@ class Register extends StatelessWidget {
       next: this.verifyTextField.getFocusNode(),
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
+      autoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "Please input correct email!",
       maxlength: 30,
-      onCorrect: () {
+      onCorrect: () async {
         if (!this.counter.isStop()) return;
-        this.verifyButton.setDisable(false);
+        Response res = await Requests.checkEmailRepeat({
+          "email":this.emailTextField.getInput()
+        });
+        if(res.data['code'] == 1){
+          this.verifyButton.setDisable(false);
+          this.emailTextField.setCorrect();
+        }else{
+          this.verifyButton.setDisable(true);
+          this.emailTextField.setErrorText("This Email has already been registered");
+          this.emailTextField.setError();
+        }
       },
       onError: () {
+        this.emailTextField.setErrorText("please input correct email format");
+        this.emailTextField.setError();
         this.verifyButton.setDisable(true);
         this.nextButton.setDisable(true);
       },
@@ -229,61 +242,28 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () async {
-      Fluttertoast.showToast(
-          msg: "Sending",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black87,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
+      // Fluttertoast.showToast(
+      //     msg: "Sending",
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     backgroundColor: Colors.black87,
+      //     timeInSecForIosWeb: 1,
+      //     textColor: Colors.white,
+      //     fontSize: 16.0
+      // );
       this.verified = false;
       this.emailWhenClickButton = this.emailTextField.getInput();
       try{
+        verifyButton.fontsize = 20;
+        verifyButton.setDisable(true);
+        verifyButton.setWidth(0.2);
+        verifyTextField.setWidth(0.45);
+        if (this.counter.isStop()) {
+          this.counter.start();
+        }
         Response res = await Requests.sendRegisterEmail({
           "email": this.emailWhenClickButton
         });
-        switch(res.data['code']){
-          case 1:
-            verifyButton.fontsize = 20;
-            verifyButton.setDisable(true);
-            verifyButton.setWidth(0.2);
-            verifyTextField.setWidth(0.45);
-            if (this.counter.isStop()) {
-              this.counter.start();
-            }
-            print(res.data['code']);
-            break;
-          case -3:
-            Fluttertoast.cancel();
-            Fluttertoast.showToast(
-                msg: res.data['msg'],
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                backgroundColor: Color(0xFFFF6060),
-                timeInSecForIosWeb: 1,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            print(res.data['code']);
-            print(res.data['msg']);
-            break;
-          case -5:
-            Fluttertoast.cancel();
-            Fluttertoast.showToast(
-                msg: res.data['msg'],
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                backgroundColor: Color(0xFFFF6060),
-                timeInSecForIosWeb: 1,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            print(res.data['code']);
-            print(res.data['msg']);
-            break;
-        }
       } on DioError catch(e){
         print("Exception when sending email:\n");
         print(e.toString());
@@ -332,6 +312,7 @@ class Register extends StatelessWidget {
             Navigator.pop(context);
           }
         } on DioError catch(e){
+          this.nextButton.setDisable(false);
           print("Exception when sign up\n");
           print(e.toString());
         }
