@@ -15,13 +15,13 @@ from util.constants import REPLY_CODES, DEBUG
 from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
 
 
-def reply_json(code, data=None):
+def reply_json(code, msg=None, data=None):
     if data is None:
         data = []
     if code in REPLY_CODES:
         return jsonify({
             'code': code,
-            'msg': REPLY_CODES[code],
+            'msg': REPLY_CODES[code] if msg is None else msg,
             'data': data
         })
     return jsonify({
@@ -101,13 +101,7 @@ def get_time_gap(old):
     return int(time.time()) - old
 
 
-def login_required(func):
-    """
-    判断是否登陆
-    :param func: 函数
-    :return:
-    """
-
+def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
         token = ''
@@ -125,6 +119,28 @@ def login_required(func):
         user = users[0]
         if user.token != token:
             return redirect('/user/require_login')
+        return func(*args, **kwargs)
+
+    return inner
+
+
+def require_code_check(func):
+    @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
+    def inner(*args, **kwargs):
+        email = request.form['email'] if request.method == 'POST' else request.values.get('email')
+        from db.User import User, getUserByEmail
+        user = getUserByEmail(email)
+
+        if user is None:
+            pass
+        elif user.code_check != 1:
+            return redirect('/user/require_code_check')
+        elif get_time_gap(user.last_code_sent) > 60 * 10:
+            return redirect('/user/require_code)check')
+        else:
+            user.code_check = 0
+            User.add(user)
+
         return func(*args, **kwargs)
 
     return inner

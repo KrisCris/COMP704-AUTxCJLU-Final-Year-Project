@@ -1,4 +1,4 @@
-Send register code
+Send security code
 ---
 tags:
   - USER
@@ -24,8 +24,8 @@ responses:
         data:
           type: array
           example: []
-  -3:
-    description: User Already Exists
+  -2:
+    description: Wrong email or password
     schema:
       properties:
         code:
@@ -35,7 +35,7 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'user already exists'
+          example: 'Wrong Email or password'
         data:
           type: array
           example: []
