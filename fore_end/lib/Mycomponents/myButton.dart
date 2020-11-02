@@ -132,7 +132,9 @@ String text;
   void refresh(){
     this.state.refresh();
   }
-
+  bool isMounted(){
+    return this.state.mounted;
+  }
   bool isEnable(){
     return this.state.reactState != ComponentReactState.disabled;
   }
@@ -211,6 +213,8 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
         offset: Offset(this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
         child: GestureDetector(
             onDoubleTap: (){
+              if(this.reactState == ComponentReactState.disabled)return;
+
               if(widget.doubleTapFunc != null){
                 widget.doubleTapFunc();
               }else if(widget.tapFunc !=null){

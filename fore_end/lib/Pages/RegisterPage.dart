@@ -106,6 +106,8 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () async {
         if (!this.counter.isStop()) return;
+        this.emailTextField.setNormal();
+        this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
           "email":this.emailTextField.getInput()
         });
@@ -216,7 +218,7 @@ class Register extends StatelessWidget {
     );
 
     this.emailTextField.addListener(() {
-      if (this.emailWhenClickButton == null) return;
+      if (this.emailWhenClickButton.isEmpty) return;
       if (this.emailTextField.getInput() != this.emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
@@ -242,15 +244,6 @@ class Register extends StatelessWidget {
         isBold: true);
 
     verifyButton.tapFunc = () async {
-      // Fluttertoast.showToast(
-      //     msg: "Sending",
-      //     toastLength: Toast.LENGTH_SHORT,
-      //     gravity: ToastGravity.BOTTOM,
-      //     backgroundColor: Colors.black87,
-      //     timeInSecForIosWeb: 1,
-      //     textColor: Colors.white,
-      //     fontSize: 16.0
-      // );
       this.verified = false;
       this.emailWhenClickButton = this.emailTextField.getInput();
       try{
