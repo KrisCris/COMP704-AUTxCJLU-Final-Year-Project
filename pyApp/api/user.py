@@ -33,7 +33,6 @@ def login():
 @swag_from('docs/user/logout.yml')
 def logout():
     email = request.form.get('email').lower()
-
     u = getUserByEmail(email)
     u.token = func.genToken(email)
     User.add(u)
@@ -203,13 +202,3 @@ def send_security_code():
         u.code_check = 0
         User.add(u)
     return func.reply_json(status)
-
-
-@user.route('/require_login')
-def require_login():
-    return func.reply_json(-1)
-
-
-@user.route('/require_code_check')
-def require_code_check():
-    return func.reply_json(-4)
