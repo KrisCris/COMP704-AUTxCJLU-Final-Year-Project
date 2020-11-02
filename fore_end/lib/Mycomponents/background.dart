@@ -28,22 +28,22 @@ class BackGround extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterEasyLoading(
         child: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(this.backgroundImage),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: ClipRRect(
-        // make sure we apply clip it properly
-        child: BackdropFilter(
-            //背景滤镜
-            filter: ImageFilter.blur(sigmaX: this.sigmaX, sigmaY: this.sigmaY),
-            child: Container(
-                alignment: this.alignment,
-                color: this.color.withOpacity(this.opacity),
-                child: this.child)),
-      ),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(this.backgroundImage),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: ClipRRect(
+            // make sure we apply clip it properly
+            child: BackdropFilter(
+                //背景滤镜
+                filter: ImageFilter.blur(sigmaX: this.sigmaX, sigmaY: this.sigmaY),
+                child: Container(
+                    alignment: this.alignment,
+                    color: this.color.withOpacity(this.opacity),
+                    child: this.child)),
+          ),
     ));
   }
 }
