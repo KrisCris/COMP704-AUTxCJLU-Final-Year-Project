@@ -25,9 +25,8 @@ ENV = 'development'
 
 # CODE
 REPLY_CODES = {
-    -6: 'Code expired',
     -5: 'Email sending failed',
-    -4: 'Wrong verification code',
+    -4: 'Need redo verification code check',
     -3: 'User already exists',
     -2: 'Wrong email or password',
     -1: 'Login required',
