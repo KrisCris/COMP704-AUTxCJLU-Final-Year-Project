@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    this._preCacheAllImage();
     return MaterialApp(
         home: CoverPage(),
         routes: <String, WidgetBuilder>{
@@ -26,5 +27,10 @@ class MyApp extends StatelessWidget {
           "main":(context)=>MainPage(),
         },
     );
+  }
+
+
+  void _preCacheAllImage(){
+    precacheImage(AssetImage("image/fruit-main.jpg"),context);
   }
 }

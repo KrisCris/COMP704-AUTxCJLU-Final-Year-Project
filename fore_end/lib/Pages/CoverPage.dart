@@ -29,7 +29,7 @@ class CoverState extends State<CoverPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(FontAwesomeIcons.lemon, color: Colors.black, size: 50),
-                  SizedBox(height: 10),
+                  SizedBox(height: 30),
                   Text("Take a Picture of your food!",
                       textDirection: TextDirection.ltr,
                       textAlign: TextAlign.center,
@@ -39,7 +39,7 @@ class CoverState extends State<CoverPage> {
                           fontWeight: FontWeight.bold,
                           fontFamily: "Futura",
                           color: Colors.black)),
-                  SizedBox(height: 30),
+                  SizedBox(height: 50),
                   Text(text,
                       textDirection: TextDirection.ltr,
                       textAlign: TextAlign.center,
@@ -73,6 +73,7 @@ class CoverState extends State<CoverPage> {
               return this.getPage("Auto login...");
             }
           } else {
+            print("no token");
             return this.getPage("Checking login state...");
           }
         });
