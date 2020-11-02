@@ -135,6 +135,8 @@ def require_code_check(func):
             pass
         elif user.code_check != 1:
             return redirect('/user/require_code_check')
+        elif get_time_gap(user.last_code_sent) > 60 * 10:
+            return redirect('/user/require_code)check')
         else:
             user.code_check = 0
             User.add(user)
