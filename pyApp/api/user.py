@@ -55,8 +55,8 @@ def signup():
     else:
         # if u.code_check != 1:
         #     return func.reply_json(-4)
-        if func.get_time_gap(u.last_code_sent) > 60 * 10:
-            return func.reply_json(-6)
+        # if func.get_time_gap(u.last_code_sent) > 60 * 10:
+        #     return func.reply_json(-6)
         if u.group != 0:
             return func.reply_json(-3)
         else:
@@ -122,7 +122,7 @@ def check_code():
         return func.reply_json(-4)
     else:
         if func.get_time_gap(u.last_code_sent) > 60 * 5:
-            return func.reply_json(-6)
+            return func.reply_json(-4)
         if u.auth_code == auth_code.upper():
             u.code_check = 1
             User.add(u)
