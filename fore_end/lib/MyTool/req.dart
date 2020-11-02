@@ -24,7 +24,6 @@ class Req {
     dio.options.baseUrl = baseUrl;
     dio.options.connectTimeout = connectOut;
     dio.options.receiveTimeout = receiveOut;
-
   }
   static void saveCookies(Map cookies) async {
     List<Cookie> ck = List<Cookie>();
@@ -45,7 +44,6 @@ class Req {
     if(_cookieJar == null){
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath  = appDocDir.path;
-    print('获取的文件系统目录 appDocPath： ' + appDocPath);
     _cookieJar = new PersistCookieJar(dir: appDocPath);
     Req.instance.interceptors.add(CookieManager(_cookieJar));
     }
@@ -100,11 +98,23 @@ class Requests{
 
   static Future<Response> checkEmailRepeat(Map data) async {
     Dio dio = Req.instance;
-    String urlPara = "";
+    String urlPara = _readUrlPara(data);
+    Response res = await dio.get("/user/is_new_email"+urlPara);
+    return res;
+  }
+
+  static Future<Response> logout(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/user/logout",data:dt);
+    return res;
+  }
+
+  static String _readUrlPara(Map data){
+    String urlPara = "?";
     data.forEach((key, value) {
       urlPara+=key+"="+value+"&";
     });
-    Response res = await dio.get("/user/is_new_email?"+urlPara);
-    return res;
+    return urlPara;
   }
 }
