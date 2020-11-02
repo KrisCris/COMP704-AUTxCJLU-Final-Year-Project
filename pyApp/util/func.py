@@ -5,7 +5,7 @@ import string
 import time
 import uuid
 
-from flask import request, jsonify, redirect
+from flask import request, jsonify
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -107,18 +107,22 @@ def require_login(func):
         token = ''
         if request.method == 'POST':
             if 'token' not in request.form.keys():
-                return redirect('/user/require_login')
+                return reply_json(-1)
+                # return redirect('/user/require_login')
         else:
             if not request.values.has_key('token'):
-                return redirect('/user/require_login')
+                return reply_json(-1)
+                # return redirect('/user/require_login')
         token = request.form['token'] if request.method == 'POST' else request.values.get('token')
         from db.User import User
         users = User.query.filter(User.token == token).all()
         if len(users) != 1:
-            return redirect('/user/require_login')
+            return reply_json(-1)
+            # return redirect('/user/require_login')
         user = users[0]
         if user.token != token:
-            return redirect('/user/require_login')
+            return reply_json(-1)
+            # return redirect('/user/require_login')
         return func(*args, **kwargs)
 
     return inner
@@ -134,9 +138,11 @@ def require_code_check(func):
         if user is None:
             pass
         elif user.code_check != 1:
-            return redirect('/user/require_code_check')
+            return reply_json(-4)
+            # return redirect('/user/require_code_check')
         elif get_time_gap(user.last_code_sent) > 60 * 10:
-            return redirect('/user/require_code)check')
+            return reply_json(-4)
+            # return redirect('/user/require_code_check')
         else:
             user.code_check = 0
             User.add(user)
