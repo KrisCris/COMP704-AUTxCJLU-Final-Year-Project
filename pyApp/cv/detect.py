@@ -10,21 +10,23 @@ import torch.backends.cudnn as cudnn
 from numpy import random
 
 from models.experimental import attempt_load
-from utils.datasets import LoadStreams, LoadImages
-from utils.general import (
+from cv.utils.datasets import LoadStreams, LoadImages
+from cv.utils.general import (
     check_img_size, non_max_suppression, apply_classifier, scale_coords,
     xyxy2xywh, plot_one_box, strip_optimizer, set_logging)
-from utils.torch_utils import select_device, load_classifier, time_synchronized
+from cv.utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
 def detect(save_img=False):
-    out, source, weights, view_img, save_txt, imgsz = \
-        opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
+    out, source, weights, view_img, save_txt, imgsz, device, augment, save_conf, conf_thres, iou_thres, classes, agnostic_nms = \
+        'cv/inference/output', 'cv/inference/images', 'cv/weights/yolov5s.pt', None, \
+        None, 640, 'cpu', 'store_true', 'store_true', 0.25, 0.45, None, 'store_true'
+    # opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
     webcam = source.isnumeric() or source.startswith(('rtsp://', 'rtmp://', 'http://')) or source.endswith('.txt')
 
     # Initialize
     set_logging()
-    device = select_device(opt.device)
+    device = select_device(device)
     if os.path.exists(out):
         shutil.rmtree(out)  # delete output folder
     os.makedirs(out)  # make new output folder
@@ -70,10 +72,10 @@ def detect(save_img=False):
 
         # Inference
         t1 = time_synchronized()
-        pred = model(img, augment=opt.augment)[0]
+        pred = model(img, augment=augment)[0]
 
         # Apply NMS
-        pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres, classes=opt.classes, agnostic=opt.agnostic_nms)
+        pred = non_max_suppression(pred, conf_thres, iou_thres, classes=classes, agnostic=agnostic_nms)
         t2 = time_synchronized()
 
         # Apply Classifier
@@ -104,7 +106,7 @@ def detect(save_img=False):
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                        line = (cls, conf, *xywh) if opt.save_conf else (cls, *xywh)  # label format
+                        line = (cls, conf, *xywh) if save_conf else (cls, *xywh)  # label format
                         with open(txt_path + '.txt', 'a') as f:
                             f.write(('%g ' * len(line) + '\n') % line)
 
@@ -146,31 +148,33 @@ def detect(save_img=False):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    # parser.add_argument('--weights', nargs='+', type=str, default='weights/yolov5s.pt', help='model.pt path(s)')
-    parser.add_argument('--weights', nargs='+', type=str, default='weights/yolov5s.pt',
-                        help='model.pt path(s)')
-    parser.add_argument('--source', type=str, default='inference/images',
-                        help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--output', type=str, default='inference/output', help='output folder')  # output folder
-    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
-    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
-    parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--view-img', action='store_true', help='display results')
-    parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
-    parser.add_argument('--save-conf', action='store_true', help='output confidences in --save-txt labels')
-    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
-    parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
-    parser.add_argument('--augment', action='store_true', help='augmented inference')
-    parser.add_argument('--update', action='store_true', help='update all models')
-    opt = parser.parse_args()
-    print(opt)
-
     with torch.no_grad():
-        if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov5s.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt']:
-                detect()
-                strip_optimizer(opt.weights)
-        else:
-            detect()
+        detect()
+    # parser = argparse.ArgumentParser()
+    # # parser.add_argument('--weights', nargs='+', type=str, default='weights/yolov5s.pt', help='model.pt path(s)')
+    # parser.add_argument('--weights', nargs='+', type=str, default='weights/yolov5s.pt',
+    #                     help='model.pt path(s)')
+    # parser.add_argument('--source', type=str, default='inference/images',
+    #                     help='source')  # file/folder, 0 for webcam
+    # parser.add_argument('--output', type=str, default='inference/output', help='output folder')  # output folder
+    # parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    # parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
+    # parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+    # parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    # parser.add_argument('--view-img', action='store_true', help='display results')
+    # parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
+    # parser.add_argument('--save-conf', action='store_true', help='output confidences in --save-txt labels')
+    # parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
+    # parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
+    # parser.add_argument('--augment', action='store_true', help='augmented inference')
+    # parser.add_argument('--update', action='store_true', help='update all models')
+    # opt = parser.parse_args()
+    # print(opt)
+    #
+    # with torch.no_grad():
+    #     if opt.update:  # update all models (to fix SourceChangeWarning)
+    #         for opt.weights in ['yolov5s.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt']:
+    #             detect()
+    #             strip_optimizer(opt.weights)
+    #     else:
+    #         detect()
