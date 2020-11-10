@@ -1,3 +1,5 @@
+import torch
+
 import util.func as func
 
 from flask import Blueprint, request
@@ -6,6 +8,8 @@ from werkzeug.security import generate_password_hash
 
 from db.User import User
 from db.User import getUserByEmail
+
+from cv.detect import detect
 
 user = Blueprint('user', __name__)
 
@@ -202,3 +206,12 @@ def send_security_code():
         u.code_check = 0
         User.add(u)
     return func.reply_json(status)
+
+
+
+@user.route('detect')
+def d():
+    with torch.no_grad():
+        detect()
+
+    return func.reply_json(1)
