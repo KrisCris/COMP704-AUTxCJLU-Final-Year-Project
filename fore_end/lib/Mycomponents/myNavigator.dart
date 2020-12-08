@@ -8,7 +8,7 @@ import 'package:fore_end/interface/Themeable.dart';
 class MyNavigator extends StatefulWidget {
   double width;
   double height;
-  int activateNum;
+  MyIconButton activateButton;
   List<MyIconButton> buttons = const <MyIconButton>[];
   SwitchPage switchPages;
   State<MyNavigator> state;
@@ -43,11 +43,14 @@ class MyNavigator extends StatefulWidget {
   SwitchPage getPages(){
     return this.switchPages;
   }
-
+  bool isActivate(MyIconButton bt){
+    return this.activateButton == bt;
+  }
   void activateButtonByObject(MyIconButton button){
     for(MyIconButton bt in this.buttons){
       if(bt == button){
         bt.setReactState(ComponentReactState.focused);
+        this.activateButton = bt;
       }else{
         bt.setReactState(ComponentReactState.unfocused);
       }
@@ -65,6 +68,12 @@ class MyNavigator extends StatefulWidget {
 }
 
 class MyNavigatorState extends State<MyNavigator> {
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body = Container(

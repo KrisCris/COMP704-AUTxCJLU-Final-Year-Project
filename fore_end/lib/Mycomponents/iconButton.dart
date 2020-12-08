@@ -109,13 +109,14 @@ class MyIconButtonState extends State<MyIconButton>
   Widget get buttonUI {
     return GestureDetector(
         onTap: (){
+          if(widget.onClick != null && !widget.navi.isActivate(widget)) {
+            widget.onClick();
+          }
           if(widget.navi != null){
             widget.navi.activateButtonByObject(widget);
             widget.navi.switchPageByObject(widget);
           }
-          if(widget.onClick != null) {
-            widget.onClick();
-          }
+
         },
         child: Container(
           width: widget.buttonRadius,

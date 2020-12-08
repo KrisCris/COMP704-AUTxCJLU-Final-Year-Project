@@ -36,14 +36,19 @@ class SwitchPage extends StatefulWidget {
 }
 
 class SwitchPageState extends State<SwitchPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView(
+    return ListView(
           physics: const NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           controller: widget.ctl,
-          children: widget.children),
+          children: widget.children
     );
   }
 }

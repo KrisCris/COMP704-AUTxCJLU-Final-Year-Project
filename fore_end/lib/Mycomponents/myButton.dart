@@ -173,7 +173,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
     super.initState();
     this.initBgColor();
     this.firstWidth = widget.width;
-    this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this,
+    this.fluctuateAnimation.initAnimation(null, null,widget.flashDura, this,
         () {
       setState(() {});
     });
