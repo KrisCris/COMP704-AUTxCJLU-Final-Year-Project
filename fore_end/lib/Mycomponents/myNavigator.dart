@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
@@ -11,7 +12,10 @@ class MyNavigator extends StatefulWidget {
   List<MyIconButton> buttons = const <MyIconButton>[];
   SwitchPage switchPages;
   State<MyNavigator> state;
-  MyNavigator({this.width, this.height, switchPages, List<MyIconButton> buttons, int activateNum=0}) {
+  MyNavigator({this.width, this.height,
+    List<Widget> switchPages, List<MyIconButton> buttons,
+    int activateNum=0}) {
+
     this.buttons = buttons;
     for(MyIconButton bt in this.buttons){
       bt.setParentNavigator(this);
@@ -21,21 +25,23 @@ class MyNavigator extends StatefulWidget {
     }else if(activateNum > this.buttons.length){
       activateNum = this.buttons.length;
     }
-    this.switchPages = switchPages;
-    this.switchPages.currentPage = activateNum;
 
+    this.switchPages = new SwitchPage(
+      children: switchPages,
+      initPosition: activateNum * ScreenTool.partOfScreenWidth(1),
+    );
     this.buttons[activateNum].addDelayInit((){
       this.activateButtonByObject(this.buttons[activateNum]);
     });
-    this.buttons[activateNum].addDelayInit((){
-      this.switchPageByObject(this.buttons[activateNum]);
-    });
   }
-
   @override
   State<StatefulWidget> createState() {
     this.state = new MyNavigatorState();
     return this.state;
+  }
+
+  SwitchPage getPages(){
+    return this.switchPages;
   }
 
   void activateButtonByObject(MyIconButton button){

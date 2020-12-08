@@ -48,11 +48,6 @@ class MainState extends State<MainPage>{
         ],
       ),
     );
-    SwitchPage bodyContent = new SwitchPage(children: [
-      addPlanPart,
-      takePhotoPart,
-      myDietPart
-    ]);
 
     MyIconButton myDietButton = MyIconButton(
       theme: MyTheme.blackAndWhite,
@@ -74,17 +69,24 @@ class MainState extends State<MainPage>{
       borderRadius: 10,
       buttonRadius: 70,
       fontSize: 13,);
+
     MyNavigator navigator = MyNavigator(
       buttons: [
         addPlanButton,
         takePhotoButton,
         myDietButton
       ],
-      switchPages:bodyContent,
+      switchPages:[
+        addPlanPart,
+        takePhotoPart,
+        myDietPart
+      ],
       width: ScreenTool.partOfScreenWidth(0.8),
       height: ScreenTool.partOfScreenHeight(0.08),
-      activateNum: 0,
+      activateNum: 2,
     );
+    SwitchPage bodyContent = navigator.getPages();
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
