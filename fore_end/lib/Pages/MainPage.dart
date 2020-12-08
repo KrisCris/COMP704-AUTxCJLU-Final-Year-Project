@@ -8,16 +8,16 @@ import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/Mycomponents/switchPage.dart';
+import 'package:fore_end/Pages/takePhotoPage.dart';
 
-class MainPage extends StatefulWidget{
+class MainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return new MainState();
   }
-
 }
 
-class MainState extends State<MainPage>{
+class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -30,15 +30,7 @@ class MainState extends State<MainPage>{
         ],
       ),
     );
-    Widget takePhotoPart = new Container(
-      width: ScreenTool.partOfScreenWidth(1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("takePhotoPart"),
-        ],
-      ),
-    );
+    TakePhotoPage takePhotoPart = new TakePhotoPage();
     Widget addPlanPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
@@ -54,33 +46,30 @@ class MainState extends State<MainPage>{
       icon: FontAwesomeIcons.utensils,
       text: "My Diet",
       buttonRadius: 70,
-      borderRadius: 10,);
-    MyIconButton takePhotoButton = MyIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.camera,
-      text: "Take Photo",
-      buttonRadius: 70,
       borderRadius: 10,
-      fontSize: 12,);
+    );
+    MyIconButton takePhotoButton = MyIconButton(
+        theme: MyTheme.blackAndWhite,
+        icon: FontAwesomeIcons.camera,
+        text: "Take Photo",
+        buttonRadius: 70,
+        borderRadius: 10,
+        fontSize: 12,
+        onClick: () {
+          takePhotoPart.getCamera();
+        });
     MyIconButton addPlanButton = MyIconButton(
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.folderPlus,
       text: "Add Plan",
       borderRadius: 10,
       buttonRadius: 70,
-      fontSize: 13,);
+      fontSize: 13,
+    );
 
     MyNavigator navigator = MyNavigator(
-      buttons: [
-        addPlanButton,
-        takePhotoButton,
-        myDietButton
-      ],
-      switchPages:[
-        addPlanPart,
-        takePhotoPart,
-        myDietPart
-      ],
+      buttons: [addPlanButton, takePhotoButton, myDietButton],
+      switchPages: [addPlanPart, takePhotoPart, myDietPart],
       width: ScreenTool.partOfScreenWidth(0.8),
       height: ScreenTool.partOfScreenHeight(0.08),
       activateNum: 2,
@@ -108,7 +97,9 @@ class MainState extends State<MainPage>{
                   color: Colors.white),
             ),
             SizedBox(width: 0.1),
-            SizedBox(width: 0.2,),
+            SizedBox(
+              width: 0.2,
+            ),
             MyTextField(
               placeholder: "Search Food",
               // keyboardAction: TextInputAction.next,
@@ -124,14 +115,9 @@ class MainState extends State<MainPage>{
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            bodyContent,
-            Expanded(child: SizedBox()),
-            navigator
-          ],
+          children: [Expanded(child: bodyContent), navigator],
         ),
       ),
     );
   }
-
 }
