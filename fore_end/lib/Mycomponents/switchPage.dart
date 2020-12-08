@@ -6,10 +6,11 @@ class SwitchPage extends StatefulWidget {
   SwitchPageState state;
   ScrollController ctl;
   int currentPage = 0;
-  SwitchPage({this.children, Key key}) : super(key: key) {
-    this.ctl = new ScrollController();
+  SwitchPage({this.children, double initPosition=0, Key key}) : super(key: key) {
+    this.ctl = new ScrollController(
+      initialScrollOffset: initPosition
+    );
   }
-
   @override
   State<StatefulWidget> createState() {
     this.state = new SwitchPageState();
