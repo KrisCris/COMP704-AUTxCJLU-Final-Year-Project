@@ -6,10 +6,9 @@ class SwitchPage extends StatefulWidget {
   SwitchPageState state;
   ScrollController ctl;
   int currentPage = 0;
-  SwitchPage({this.children, double initPosition=0, Key key}) : super(key: key) {
-    this.ctl = new ScrollController(
-      initialScrollOffset: initPosition
-    );
+  SwitchPage({this.children, double initPosition = 0, Key key})
+      : super(key: key) {
+    this.ctl = new ScrollController(initialScrollOffset: initPosition);
   }
   @override
   State<StatefulWidget> createState() {
@@ -22,13 +21,12 @@ class SwitchPage extends StatefulWidget {
   }
 
   void switchToPage(int i) {
-
-    if(i < 0 || i > this.children.length)return;
+    if (i < 0 || i > this.children.length) return;
 
     double dest = i * ScreenTool.partOfScreenWidth(1);
     double now = this.currentPage * ScreenTool.partOfScreenWidth(1);
     double bias = dest - now;
-    if(bias == 0)return;
+    if (bias == 0) return;
     this.currentPage = i;
     this.ctl.animateTo(dest,
         duration: Duration(milliseconds: 500), curve: Curves.ease);
@@ -36,7 +34,6 @@ class SwitchPage extends StatefulWidget {
 }
 
 class SwitchPageState extends State<SwitchPage> {
-
   @override
   void initState() {
     super.initState();
@@ -45,10 +42,9 @@ class SwitchPageState extends State<SwitchPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          controller: widget.ctl,
-          children: widget.children
-    );
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            controller: widget.ctl,
+            children: widget.children);
   }
 }
