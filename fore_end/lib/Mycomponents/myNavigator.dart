@@ -8,21 +8,29 @@ import 'package:fore_end/interface/Themeable.dart';
 class MyNavigator extends StatefulWidget {
   double width;
   double height;
+  double opacity;
+  double edgeWidth;
+  Color backgroundColor;
   MyIconButton activateButton;
   List<MyIconButton> buttons = const <MyIconButton>[];
   SwitchPage switchPages;
   State<MyNavigator> state;
-  MyNavigator({this.width, this.height,
-    List<Widget> switchPages, List<MyIconButton> buttons,
-    int activateNum=0}) {
-
+  MyNavigator(
+      {this.width,
+      this.height,
+        this.edgeWidth = 1,
+      this.opacity = 1,
+      this.backgroundColor = Colors.white,
+      List<Widget> switchPages,
+      List<MyIconButton> buttons,
+      int activateNum = 0}) {
     this.buttons = buttons;
-    for(MyIconButton bt in this.buttons){
+    for (MyIconButton bt in this.buttons) {
       bt.setParentNavigator(this);
     }
-    if(activateNum < 0){
+    if (activateNum < 0) {
       activateNum = 0;
-    }else if(activateNum > this.buttons.length){
+    } else if (activateNum > this.buttons.length) {
       activateNum = this.buttons.length;
     }
 
@@ -30,7 +38,7 @@ class MyNavigator extends StatefulWidget {
       children: switchPages,
       initPosition: activateNum * ScreenTool.partOfScreenWidth(1),
     );
-    this.buttons[activateNum].addDelayInit((){
+    this.buttons[activateNum].addDelayInit(() {
       this.activateButtonByObject(this.buttons[activateNum]);
     });
   }
@@ -40,26 +48,29 @@ class MyNavigator extends StatefulWidget {
     return this.state;
   }
 
-  SwitchPage getPages(){
+  SwitchPage getPages() {
     return this.switchPages;
   }
-  bool isActivate(MyIconButton bt){
+
+  bool isActivate(MyIconButton bt) {
     return this.activateButton == bt;
   }
-  void activateButtonByObject(MyIconButton button){
-    for(MyIconButton bt in this.buttons){
-      if(bt == button){
+
+  void activateButtonByObject(MyIconButton button) {
+    for (MyIconButton bt in this.buttons) {
+      if (bt == button) {
         bt.setReactState(ComponentReactState.focused);
         this.activateButton = bt;
-      }else{
+      } else {
         bt.setReactState(ComponentReactState.unfocused);
       }
     }
   }
-  void switchPageByObject(MyIconButton button){
-    if(this.switchPages == null)return;
-    for(int i=0;i<this.buttons.length;i++){
-      if(this.buttons[i] == button){
+
+  void switchPageByObject(MyIconButton button) {
+    if (this.switchPages == null) return;
+    for (int i = 0; i < this.buttons.length; i++) {
+      if (this.buttons[i] == button) {
         this.switchPages.switchToPage(i);
         return;
       }
@@ -68,9 +79,8 @@ class MyNavigator extends StatefulWidget {
 }
 
 class MyNavigatorState extends State<MyNavigator> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
@@ -82,9 +92,9 @@ class MyNavigatorState extends State<MyNavigator> {
       padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
       margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
       decoration: new BoxDecoration(
-        color: Colors.white,
+        color: widget.backgroundColor.withOpacity(widget.opacity),
         borderRadius: BorderRadius.all(Radius.circular(7.0)),
-        border: new Border.all(width: 1, color: Colors.black),
+        border: new Border.all(width: widget.edgeWidth, color: Colors.black),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

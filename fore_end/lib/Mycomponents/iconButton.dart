@@ -12,6 +12,7 @@ class MyIconButton extends StatefulWidget {
   double fontSize;
   double buttonRadius;
   double borderRadius;
+  double backgroundOpacity;
   String text;
   MyIconButtonState state;
   List<Function> delayInit = <Function>[];
@@ -26,6 +27,7 @@ class MyIconButton extends StatefulWidget {
       this.fontSize = 14,
       this.buttonRadius = 55,
       this.borderRadius = 1000,
+      this.backgroundOpacity = 1,
       this.onClick})
       : super() {}
   @override
@@ -34,12 +36,15 @@ class MyIconButton extends StatefulWidget {
         ComponentThemeState.normal, ComponentReactState.unfocused);
     return this.state;
   }
-  void addDelayInit(Function f){
+
+  void addDelayInit(Function f) {
     this.delayInit.add(f);
   }
-  void setParentNavigator(MyNavigator nv){
+
+  void setParentNavigator(MyNavigator nv) {
     this.navi = nv;
   }
+
   void setReactState(ComponentReactState rea) {
     if (this.state == null) {
       this.delayInit.add(() {
@@ -70,7 +75,7 @@ class MyIconButtonState extends State<MyIconButton>
   @override
   initState() {
     super.initState();
-    for(Function f in widget.delayInit){
+    for (Function f in widget.delayInit) {
       f();
     }
     this.backgroundColorAnimation.initAnimation(
@@ -108,15 +113,14 @@ class MyIconButtonState extends State<MyIconButton>
 
   Widget get buttonUI {
     return GestureDetector(
-        onTap: (){
-          if(widget.onClick != null && !widget.navi.isActivate(widget)) {
+        onTap: () {
+          if (widget.onClick != null && !widget.navi.isActivate(widget)) {
             widget.onClick();
           }
-          if(widget.navi != null){
+          if (widget.navi != null) {
             widget.navi.activateButtonByObject(widget);
             widget.navi.switchPageByObject(widget);
           }
-
         },
         child: Container(
           width: widget.buttonRadius,
@@ -125,11 +129,17 @@ class MyIconButtonState extends State<MyIconButton>
               borderRadius: BorderRadius.circular(widget.borderRadius),
               color: this.backgroundColorAnimation.getValue()),
           child: this.IconText,
-    ));
+        ));
   }
 
   Color getBackgroundColor() {
-    return widget.theme.getReactColor(this.reactState);
+    double opacity;
+    if (this.reactState == ComponentReactState.focused) {
+      opacity = 1.0;
+    } else if (this.reactState == ComponentReactState.unfocused) {
+      opacity = widget.backgroundOpacity;
+    }
+    return widget.theme.getReactColor(this.reactState).withOpacity(opacity);
   }
 
   Color getIconAndTextColor(ComponentReactState rea) {
@@ -141,9 +151,19 @@ class MyIconButtonState extends State<MyIconButton>
 
   @override
   void setReactState(ComponentReactState rea) {
+    if(this.reactState == rea)return;
+
+    double AfterOpacity;
+    if (rea == ComponentReactState.focused) {
+      AfterOpacity = 1.0;
+    } else if (rea == ComponentReactState.unfocused) {
+      AfterOpacity = widget.backgroundOpacity;
+    }
     this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(), widget.theme.getReactColor(rea), 200, this,
-        () {
+        this.getBackgroundColor(),
+        widget.theme.getReactColor(rea).withOpacity(AfterOpacity),
+        200,
+        this, () {
       setState(() {});
     });
     this.iconAndTextColorAnimation.initAnimation(
