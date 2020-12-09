@@ -11,17 +11,20 @@ import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/Pages/takePhotoPage.dart';
 
 class MainPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new MainState();
-  }
-}
+  bool photoPageOff = true;
+  Widget myDietPart;
+  TakePhotoPage takePhotoPart;
+  Widget addPlanPart;
+  MyIconButton myDietButton;
+  MyIconButton takePhotoButton;
+  MyIconButton addPlanButton;
+  MyNavigator navigator;
+  SwitchPage bodyContent;
+  AppBar appBar;
+  MainState state;
 
-class MainState extends State<MainPage> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    Widget myDietPart = new Container(
+  MainPage({Key key}) : super(key: key) {
+    this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -30,8 +33,8 @@ class MainState extends State<MainPage> {
         ],
       ),
     );
-    TakePhotoPage takePhotoPart = new TakePhotoPage();
-    Widget addPlanPart = new Container(
+    this.takePhotoPart = new TakePhotoPage();
+    this.addPlanPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,16 +43,20 @@ class MainState extends State<MainPage> {
         ],
       ),
     );
-
-    MyIconButton myDietButton = MyIconButton(
+    this.myDietButton = MyIconButton(
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
       text: "My Diet",
       buttonRadius: 70,
       borderRadius: 10,
+      onClick: () {
+        this.state.setState(() {
+          this.photoPageOff = true;
+        });
+      },
     );
-    MyIconButton takePhotoButton = MyIconButton(
+    this.takePhotoButton = MyIconButton(
         theme: MyTheme.blackAndWhite,
         icon: FontAwesomeIcons.camera,
         backgroundOpacity: 0.0,
@@ -59,28 +66,34 @@ class MainState extends State<MainPage> {
         fontSize: 12,
         onClick: () {
           takePhotoPart.getCamera();
+          this.state.setState(() {
+            this.photoPageOff = false;
+          });
         });
-    MyIconButton addPlanButton = MyIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.folderPlus,
-      backgroundOpacity: 0.0,
-      text: "Add Plan",
-      borderRadius: 10,
-      buttonRadius: 70,
-      fontSize: 13,
-    );
-
-    MyNavigator navigator = MyNavigator(
+    this.addPlanButton = MyIconButton(
+        theme: MyTheme.blackAndWhite,
+        icon: FontAwesomeIcons.folderPlus,
+        backgroundOpacity: 0.0,
+        text: "Add Plan",
+        borderRadius: 10,
+        buttonRadius: 70,
+        fontSize: 13,
+        onClick: () {
+          this.state.setState(() {
+            this.photoPageOff = true;
+          });
+        });
+    this.navigator = MyNavigator(
       buttons: [addPlanButton, takePhotoButton, myDietButton],
       switchPages: [addPlanPart, takePhotoPart, myDietPart],
       opacity: 0.25,
       edgeWidth: 0.5,
-      width: ScreenTool.partOfScreenWidth(0.8),
+      width: ScreenTool.partOfScreenWidth(0.7),
       height: ScreenTool.partOfScreenHeight(0.08),
       activateNum: 2,
     );
-    SwitchPage bodyContent = navigator.getPages();
-    AppBar appbar = AppBar(
+    this.bodyContent = navigator.getPages();
+    this.appBar = AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -115,35 +128,64 @@ class MainState extends State<MainPage> {
         ],
       ),
     );
-    // Column(
-    //   mainAxisAlignment: MainAxisAlignment.start,
-    //   children: [
-    //     Expanded(child: bodyContent),
-    //     navigator
-    //   ],
-    // );
+  }
+  @override
+  State<StatefulWidget> createState() {
+    this.state = new MainState();
+    return this.state;
+  }
+}
+
+class MainState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar,
+      appBar: widget.appBar,
       body: Container(
-        alignment: Alignment.center,
-        child: Stack(
-          children: [
-            bodyContent,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(child: SizedBox()),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    navigator
-                  ],
-                )
-              ],
-            )
-          ],
-        )
-      ),
+          alignment: Alignment.center,
+          child: Stack(
+            children: [
+              widget.bodyContent,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(child: SizedBox()),
+                  Offstage(
+                      offstage: widget.photoPageOff,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MyIconButton(
+                              theme: MyTheme.blackAndWhite,
+                              icon: FontAwesomeIcons.image,
+                              backgroundOpacity: 0.25,
+                              text: "",
+                              borderRadius: 10,
+                              buttonRadius: 50,
+                              iconSize: 20,
+                              fontSize: 13,
+                            ),
+                            MyIconButton(
+                              theme: MyTheme.blackAndWhite,
+                              icon: FontAwesomeIcons.image,
+                              backgroundOpacity: 0.25,
+                              text: "",
+                              borderRadius: 10,
+                              buttonRadius: 50,
+                              iconSize: 20,
+                              fontSize: 13,
+                            )
+                          ])),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.navigator,
+                    ],
+                  )
+                ],
+              )
+            ],
+          )),
     );
   }
 }

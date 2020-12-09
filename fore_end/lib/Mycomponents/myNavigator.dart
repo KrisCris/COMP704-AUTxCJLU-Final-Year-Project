@@ -38,6 +38,7 @@ class MyNavigator extends StatefulWidget {
       children: switchPages,
       initPosition: activateNum * ScreenTool.partOfScreenWidth(1),
     );
+    this.switchPages.currentPage = activateNum;
     this.buttons[activateNum].addDelayInit(() {
       this.activateButtonByObject(this.buttons[activateNum]);
     });
