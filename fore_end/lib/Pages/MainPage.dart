@@ -140,52 +140,59 @@ class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar,
       body: Container(
           alignment: Alignment.center,
-          child: Stack(
+          height: ScreenTool.partOfScreenHeight(1),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              widget.bodyContent,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(child: SizedBox()),
-                  Offstage(
-                      offstage: widget.photoPageOff,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MyIconButton(
-                              theme: MyTheme.blackAndWhite,
-                              icon: FontAwesomeIcons.image,
-                              backgroundOpacity: 0.25,
-                              text: "",
-                              borderRadius: 10,
-                              buttonRadius: 50,
-                              iconSize: 20,
-                              fontSize: 13,
-                            ),
-                            MyIconButton(
-                              theme: MyTheme.blackAndWhite,
-                              icon: FontAwesomeIcons.image,
-                              backgroundOpacity: 0.25,
-                              text: "",
-                              borderRadius: 10,
-                              buttonRadius: 50,
-                              iconSize: 20,
-                              fontSize: 13,
-                            )
-                          ])),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+              widget.appBar,
+              Expanded(
+                  child: Stack(
                     children: [
-                      widget.navigator,
+                      widget.bodyContent,
+                      Column(
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Offstage(
+                            offstage: widget.photoPageOff,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                this.getAlbumButton(),
+                                this.getPhotoButton()
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              widget.navigator
+                            ],
+                          )
+                        ],
+                      )
                     ],
-                  )
-                ],
-              )
+              ))
             ],
           )),
+    );
+  }
+
+  Widget getPhotoButton(){
+    return new MyIconButton(
+        theme: MyTheme.blackAndWhite,
+        icon: FontAwesomeIcons.camera,
+        iconSize: 40,
+        backgroundOpacity: 0,
+    );
+  }
+  Widget getAlbumButton(){
+    return new MyIconButton(
+      theme: MyTheme.blackAndWhite,
+      icon: FontAwesomeIcons.image,
+      iconSize: 40,
+      backgroundOpacity: 0,
     );
   }
 }
