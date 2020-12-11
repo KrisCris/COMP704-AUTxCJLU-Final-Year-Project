@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
+import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -89,9 +90,7 @@ class MainPage extends StatefulWidget {
         children: [
           CircleAvatar(
             radius: 25.0,
-            backgroundImage: AssetImage(
-              user.getAvatar(),
-            ),
+            backgroundImage: user.getAvatar()
           ),
           Text(
             user.userName,
