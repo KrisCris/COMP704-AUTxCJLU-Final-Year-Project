@@ -14,8 +14,6 @@ import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-
-
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
