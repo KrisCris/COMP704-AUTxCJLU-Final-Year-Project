@@ -155,10 +155,10 @@ class FluctuateTweenAnimation implements MyAnimation<double>{
   @override
   void initAnimation(Object waveHigh, Object loop, int duration, TickerProvider tk,VoidCallback listener) {
     if(waveHigh == null){
-      waveHigh = 7;
+      waveHigh = 7.0;
     }
     if(loop == null){
-      loop = 2;
+      loop = 2.0;
     }
     this.tween = new FluctuateTween(waveHigh: waveHigh, loop: loop);
     this.ctl = new AnimationController(

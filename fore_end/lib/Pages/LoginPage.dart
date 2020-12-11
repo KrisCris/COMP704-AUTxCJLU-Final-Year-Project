@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
+import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/req.dart';
+import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
@@ -150,14 +151,16 @@ class Login extends StatelessWidget {
       } else if (res.data['code'] == 1) {
         EasyLoading.showSuccess("Login Success",
             duration: Duration(milliseconds: 2000));
-        Requests.saveCookies({
-          "token":res.data['data']['token']
-        });
-        //从远端获取用户信息
-        String username="";
-        String avatar="image/avatar.png";
+        print("\n\n");
+        print("User info incomplete when call login() in LoginPage.dart");
+        print("\n\n");
+        User u = new User(
+          token: res.data['data']['token'],
+          email: email,
+        );
+        u.save();
         Navigator.push(context, new MaterialPageRoute(builder: (context){
-          return new MainPage(user:new User(username: username,avatar: avatar));
+          return new MainPage(user:u);
         }));
 
       }
