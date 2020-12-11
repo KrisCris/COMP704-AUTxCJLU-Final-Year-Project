@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class Login extends StatelessWidget {
@@ -48,26 +50,7 @@ class Login extends StatelessWidget {
         this.nextButton.setDisable(true);
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
-        try{
-          Response res = await Requests.login({
-            "email": emailVal,
-            "password": passwordVal
-          });
-          if (res.data['code'] == -2) {
-            EasyLoading.showError("Email or password wrong",
-                duration: Duration(milliseconds: 2000));
-          } else if (res.data['code'] == 1) {
-            EasyLoading.showSuccess("Login Success",
-                duration: Duration(milliseconds: 2000));
-            Requests.saveCookies({
-              "token":res.data['data']['token']
-            });
-            
-          }
-        }on DioError catch(e){
-          print("Exception when login\n");
-          print(e.toString());
-        }
+        this.login(emailVal, passwordVal, context);
       },
     );
     this.emailField = MyTextField(
@@ -153,5 +136,34 @@ class Login extends StatelessWidget {
       this.nextButton,
       //this.nextButton,
     ]));
+  }
+
+  void login(String email, String pass, BuildContext context) async{
+    try{
+      Response res = await Requests.login({
+        "email": email,
+        "password": pass
+      });
+      if (res.data['code'] == -2) {
+        EasyLoading.showError("Email or password wrong",
+            duration: Duration(milliseconds: 2000));
+      } else if (res.data['code'] == 1) {
+        EasyLoading.showSuccess("Login Success",
+            duration: Duration(milliseconds: 2000));
+        Requests.saveCookies({
+          "token":res.data['data']['token']
+        });
+        //从远端获取用户信息
+        String username="";
+        String avatar="image/avatar.png";
+        Navigator.push(context, new MaterialPageRoute(builder: (context){
+          return new MainPage(user:new User(username: username,avatar: avatar));
+        }));
+
+      }
+    }on DioError catch(e){
+      print("Exception when login\n");
+      print(e.toString());
+    }
   }
 }

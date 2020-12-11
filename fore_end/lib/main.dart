@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
+import 'MyTool/User.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
 import 'Pages/RegisterPage.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-        home: MainPage(),
+        home: MainPage(user: new User(username:"Test User")),
         routes: <String, WidgetBuilder>{
           "login": (context) => Login(),
           "register": (context) => Register(),

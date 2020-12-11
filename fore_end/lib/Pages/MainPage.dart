@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
@@ -22,7 +23,7 @@ class MainPage extends StatefulWidget {
   SwitchPage bodyContent;
   AppBar appBar;
   MainState state;
-  MainPage({Key key}) : super(key: key) {
+  MainPage({@required User user, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
@@ -89,11 +90,11 @@ class MainPage extends StatefulWidget {
           CircleAvatar(
             radius: 25.0,
             backgroundImage: AssetImage(
-              "image/avatar.png",
+              user.getAvatar(),
             ),
           ),
           Text(
-            "Username",
+            user.userName,
             textDirection: TextDirection.ltr,
             style: TextStyle(
                 decoration: TextDecoration.none,
