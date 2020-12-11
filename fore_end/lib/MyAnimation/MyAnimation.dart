@@ -145,6 +145,7 @@ class ColorTweenAnimation implements MyAnimation<Color>{
 class FluctuateTweenAnimation implements MyAnimation<double>{
   FluctuateTween tween;
   bool isFinish;
+  bool isLoop;
   @override
   Animation animation;
 
@@ -152,8 +153,14 @@ class FluctuateTweenAnimation implements MyAnimation<double>{
   AnimationController ctl;
 
   @override
-  void initAnimation(Object tweenStart, Object tweenEnd, int duration, TickerProvider tk,VoidCallback listener) {
-    this.tween = new FluctuateTween(waveHigh: 7, loop: 2);
+  void initAnimation(Object waveHigh, Object loop, int duration, TickerProvider tk,VoidCallback listener) {
+    if(waveHigh == null){
+      waveHigh = 7;
+    }
+    if(loop == null){
+      loop = 2;
+    }
+    this.tween = new FluctuateTween(waveHigh: waveHigh, loop: loop);
     this.ctl = new AnimationController(
         duration: Duration(milliseconds: duration), vsync: tk
     );

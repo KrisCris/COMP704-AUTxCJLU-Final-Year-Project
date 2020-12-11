@@ -55,7 +55,7 @@ class MyTheme {
   );
   static final MyTheme blackAndWhite = MyTheme._privateConstructor(
     unfocusedColor: Colors.white,
-    focusedColor: Color(0xFFEEEEEE),
+    focusedColor: Colors.black,
     disabledColor: Color(0xFFB5B5B5),
     errorColor: Colors.black,
     warningColor: Colors.black,
@@ -63,5 +63,16 @@ class MyTheme {
     correctColor: Colors.black,
     textColorDark: Colors.black,
     textColorLight: Colors.white,
+  );
+  static final MyTheme WhiteAndBlack = MyTheme._privateConstructor(
+    unfocusedColor: Color(0xFFEEEEEE),
+    focusedColor: Colors.white,
+    disabledColor: Color(0xFFB5B5B5),
+    errorColor: Colors.white,
+    warningColor: Colors.white,
+    normalColor: Colors.white,
+    correctColor: Colors.white,
+    textColorDark: Colors.white,
+    textColorLight: Colors.black,
   );
 }

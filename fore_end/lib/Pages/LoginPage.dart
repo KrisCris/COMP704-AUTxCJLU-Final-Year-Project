@@ -62,6 +62,7 @@ class Login extends StatelessWidget {
             Requests.saveCookies({
               "token":res.data['data']['token']
             });
+            
           }
         }on DioError catch(e){
           print("Exception when login\n");
