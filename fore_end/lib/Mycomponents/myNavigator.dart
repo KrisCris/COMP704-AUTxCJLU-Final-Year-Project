@@ -67,7 +67,9 @@ class MyNavigator extends StatefulWidget {
       }
     }
   }
-
+  int getActivatePageNo(){
+    return this.switchPages.currentPage;
+  }
   void switchPageByObject(MyIconButton button) {
     if (this.switchPages == null) return;
     for (int i = 0; i < this.buttons.length; i++) {
