@@ -22,7 +22,6 @@ class MainPage extends StatefulWidget {
   SwitchPage bodyContent;
   AppBar appBar;
   MainState state;
-
   MainPage({Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -83,16 +82,6 @@ class MainPage extends StatefulWidget {
             this.photoPageOff = true;
           });
         });
-    this.navigator = MyNavigator(
-      buttons: [addPlanButton, takePhotoButton, myDietButton],
-      switchPages: [addPlanPart, takePhotoPart, myDietPart],
-      opacity: 0.25,
-      edgeWidth: 0.5,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      height: ScreenTool.partOfScreenHeight(0.08),
-      activateNum: 2,
-    );
-    this.bodyContent = navigator.getPages();
     this.appBar = AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,6 +128,7 @@ class MainPage extends StatefulWidget {
 class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
+    this.resetNavigator();
     return Scaffold(
       body: Container(
           alignment: Alignment.center,
@@ -167,7 +157,7 @@ class MainState extends State<MainPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              widget.navigator
+                                widget.navigator
                             ],
                           )
                         ],
@@ -194,5 +184,22 @@ class MainState extends State<MainPage> {
       iconSize: 40,
       backgroundOpacity: 0,
     );
+  }
+
+  void resetNavigator(){
+    int activateNum = 2;
+    if(widget.navigator != null){
+      activateNum = widget.navigator.getActivatePageNo();
+    }
+    widget.navigator = MyNavigator(
+      buttons: [widget.addPlanButton, widget.takePhotoButton, widget.myDietButton],
+      switchPages: [widget.addPlanPart, widget.takePhotoPart, widget.myDietPart],
+      opacity: 0.25,
+      edgeWidth: 0.5,
+      width: ScreenTool.partOfScreenWidth(0.7),
+      height: ScreenTool.partOfScreenHeight(0.08),
+      activateNum: activateNum,
+    );
+    widget.bodyContent = widget.navigator.getPages();
   }
 }
