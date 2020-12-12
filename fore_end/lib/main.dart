@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
+import 'MyTool/User.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
 import 'Pages/RegisterPage.dart';
@@ -19,18 +19,16 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-        home: CoverPage(),
-        routes: <String, WidgetBuilder>{
-          "login": (context) => Login(),
-          "register": (context) => Register(),
-          "welcome":(context) => Welcome(),
-          "main":(context)=>MainPage(),
-        },
+      home: MainPage(user:User()),
+      routes: <String, WidgetBuilder>{
+        "login": (context) => Login(),
+        "register": (context) => Register(),
+        "welcome": (context) => Welcome(),
+      },
     );
   }
 
-
-  void _preCacheAllImage(){
-    precacheImage(AssetImage("image/fruit-main.jpg"),context);
+  void _preCacheAllImage() {
+    precacheImage(AssetImage("image/fruit-main.jpg"), context);
   }
 }

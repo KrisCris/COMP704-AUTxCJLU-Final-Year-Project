@@ -27,10 +27,10 @@ class MyButton extends StatefulWidget {
   Function doubleTapFunc;
 
   ///Text displayed on button
-String text;
+  String text;
 
   ///Text font size
- double fontsize;
+  double fontsize;
 
   ///whether text is bold or not
   final bool isBold;
@@ -51,19 +51,25 @@ String text;
 
   ///when length change, button fix at center(0),left(1) or right(2)
   int sizeChangeMode;
+
   /// the opacity that flash animation start at
   double startOpac;
+
   ///the opacity that flash animation end at
   double endOpac;
+
   ///the color of flash cover
   Color flashColor;
 
   ///fluctuate duration
   int flucDura;
+
   ///color change duration
   int colorDura;
+
   ///duration of flash animation, use millionSecond
   int flashDura;
+
   ///duration of length change animation
   int lengthDura;
 
@@ -73,28 +79,28 @@ String text;
 
   MyButton(
       {this.text,
-        @required this.theme,
-      this.fontsize = 18,
-        this.sizeChangeMode=0,
+      @required this.theme,
+      this.fontsize = 18.0,
+      this.sizeChangeMode = 0,
       this.isBold = false,
-      this.radius = 30,
-      this.width = 120,
-      this.height = 40,
-        this.leftMargin = 0,
-        this.rightMargin = 0,
-        this.topMargin = 0,
-        this.bottomMargin = 0,
-      this.startOpac = 0,
+      this.radius = 30.0,
+      this.width = 120.0,
+      this.height = 40.0,
+      this.leftMargin = 0.0,
+      this.rightMargin = 0.0,
+      this.topMargin = 0.0,
+      this.bottomMargin = 0.0,
+      this.startOpac = 0.0,
       this.endOpac = 0.5,
       this.flashDura = 200,
       this.flucDura = 200,
       this.colorDura = 200,
-        this.lengthDura = 200,
+      this.lengthDura = 200,
       this.flashColor = Colors.white,
       this.tapFunc = null,
       this.doubleTapFunc = null,
-        this.firstThemeState = ComponentThemeState.normal,
-        this.firstReactState = ComponentReactState.able,
+      this.firstThemeState = ComponentThemeState.normal,
+      this.firstReactState = ComponentReactState.able,
       Key key})
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
@@ -104,50 +110,61 @@ String text;
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = MyButtonState(this.firstReactState,this.firstThemeState);
+    this.state = MyButtonState(this.firstReactState, this.firstThemeState);
     return this.state;
   }
-  bool isMonted(){
+
+  bool isMonted() {
     return this.state.mounted;
   }
-  void setDisable(bool d){
-    if(d){
+
+  void setDisable(bool d) {
+    if (d) {
       this.state.setReactState(ComponentReactState.disabled);
-    }else{
+    } else {
       this.state.setReactState(ComponentReactState.able);
     }
   }
-  void setWidth(double len){
+
+  void setWidth(double len) {
     double newWidth = ScreenTool.partOfScreenWidth(len);
-    this.state.lengthAnimation.initAnimation(this.width,
-          newWidth, this.lengthDura, this.state,
-            () { this.state.setState(() {});});
+    this
+        .state
+        .lengthAnimation
+        .initAnimation(this.width, newWidth, this.lengthDura, this.state, () {
+      this.state.setState(() {});
+    });
     this.state.lengthAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         this.width = newWidth;
       }
     });
     this.state.lengthAnimation.beginAnimation();
   }
-  void refresh(){
+
+  void refresh() {
     this.state.refresh();
   }
-  bool isMounted(){
+
+  bool isMounted() {
     return this.state.mounted;
   }
-  bool isEnable(){
+
+  bool isEnable() {
     return this.state.reactState != ComponentReactState.disabled;
   }
 
-  ComponentThemeState getThemeState(){
+  ComponentThemeState getThemeState() {
     return this.state.themeState;
   }
-  ComponentReactState getReactState(){
+
+  ComponentReactState getReactState() {
     return this.state.reactState;
   }
 }
 
-class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Themeable {
+class MyButtonState extends State<MyButton>
+    with TickerProviderStateMixin, Themeable {
   TweenAnimation flashAnimation = new TweenAnimation();
   TweenAnimation lengthAnimation = new TweenAnimation();
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
@@ -155,19 +172,20 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   bool isTap = false;
   double firstWidth;
 
-  MyButtonState(ComponentReactState rea, ComponentThemeState the):super(){
+  MyButtonState(ComponentReactState rea, ComponentThemeState the) : super() {
     this.reactState = rea;
     this.themeState = the;
   }
-  void initBgColor(){
+  void initBgColor() {
     //as button, only disabled state need set color
-    if(reactState == ComponentReactState.disabled){
+    if (reactState == ComponentReactState.disabled) {
       widget.bgColor = widget.theme.getReactColor(reactState);
-    }else{
+    } else {
       //if not disabled state, just get the theme color
       widget.bgColor = widget.theme.getThemeColor(this.themeState);
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -177,8 +195,11 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
         () {
       setState(() {});
     });
-    this.lengthAnimation.initAnimation(widget.width, widget.width,
-        widget.lengthDura, this,  () {setState(() {});});
+    this
+        .lengthAnimation
+        .initAnimation(widget.width, widget.width, widget.lengthDura, this, () {
+      setState(() {});
+    });
 
     this.colorAnimation.initAnimation(
         widget.bgColor, widget.bgColor, widget.colorDura, this, () {
@@ -210,14 +231,15 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-        offset: Offset(this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
+        offset: Offset(
+            this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
         child: GestureDetector(
-            onDoubleTap: (){
-              if(this.reactState == ComponentReactState.disabled)return;
+            onDoubleTap: () {
+              if (this.reactState == ComponentReactState.disabled) return;
 
-              if(widget.doubleTapFunc != null){
+              if (widget.doubleTapFunc != null) {
                 widget.doubleTapFunc();
-              }else if(widget.tapFunc !=null){
+              } else if (widget.tapFunc != null) {
                 this.flashAnimation.beginAnimation();
                 widget.tapFunc();
               }
@@ -237,7 +259,7 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
 
               this.isTap = false;
               this.flashAnimation.reverseAnimation();
-              if(widget.tapFunc != null){
+              if (widget.tapFunc != null) {
                 widget.tapFunc();
               }
             },
@@ -253,25 +275,21 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   Widget get buttonUI {
     return Stack(
         alignment: Alignment.center,
-        children: <Widget>[
-      this.buttonShape,
-      this.buttonCover
-    ]);
+        children: <Widget>[this.buttonShape, this.buttonCover]);
   }
+
   Widget get buttonShape {
     return Container(
       width: this.lengthAnimation.getValue(),
       height: widget.height,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.radius),
-          color: this.colorAnimation.getValue()
-      ),
+          color: this.colorAnimation.getValue()),
       margin: EdgeInsets.only(
           left: widget.leftMargin,
           right: widget.rightMargin,
           top: widget.topMargin,
-          bottom: widget.bottomMargin
-      ),
+          bottom: widget.bottomMargin),
       child: Center(
         child: Text(
           widget.text,
@@ -280,12 +298,12 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
               fontSize: widget.fontsize,
               color: widget.textColor,
               decoration: TextDecoration.none,
-              fontWeight:
-              widget.isBold ? FontWeight.bold : FontWeight.normal),
+              fontWeight: widget.isBold ? FontWeight.bold : FontWeight.normal),
         ),
       ),
     );
   }
+
   Widget get buttonCover {
     return Opacity(
       opacity: this.flashAnimation.getValue(),
@@ -296,48 +314,51 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
             left: widget.leftMargin,
             right: widget.rightMargin,
             top: widget.topMargin,
-            bottom: widget.bottomMargin
-        ),
+            bottom: widget.bottomMargin),
         decoration: new BoxDecoration(
           color: widget.flashColor,
           borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
-
         ),
       ),
     );
   }
 
-  double calculatePosition(){
-    if(widget.sizeChangeMode == 0)return 0;
-    else if(widget.sizeChangeMode == 1){
+  double calculatePosition() {
+    if (widget.sizeChangeMode == 0)
+      return 0;
+    else if (widget.sizeChangeMode == 1) {
       double gap = this.firstWidth - this.lengthAnimation.getValue();
-      return -(gap/2);
-    }else if(widget.sizeChangeMode == 2){
+      return -(gap / 2);
+    } else if (widget.sizeChangeMode == 2) {
       double gap = this.firstWidth - this.lengthAnimation.getValue();
-      return gap/2;
+      return gap / 2;
     }
   }
+
   @override
   void setReactState(ComponentReactState rea) {
     //do nothing when state not change
-    if(this.reactState == rea)return;
+    if (this.reactState == rea) return;
     Color newColor = null;
     //as a button, only disable state should tackle
-    if(this.reactState == ComponentReactState.disabled){
-    //from disable to able
+    if (this.reactState == ComponentReactState.disabled) {
+      //from disable to able
       newColor = widget.theme.getThemeColor(this.themeState);
-    }else if(rea == ComponentReactState.disabled){
-    //from able to disable
+    } else if (rea == ComponentReactState.disabled) {
+      //from able to disable
       newColor = widget.theme.getReactColor(rea);
     }
     //update state
     this.reactState = rea;
 
     //update color animation
-    this.colorAnimation.initAnimation(widget.bgColor, newColor, widget.colorDura,
-        this, () {setState((){});});
+    this
+        .colorAnimation
+        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
+      setState(() {});
+    });
     this.colorAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         widget.bgColor = newColor;
       }
     });
@@ -347,25 +368,27 @@ class MyButtonState extends State<MyButton> with TickerProviderStateMixin, Theme
   @override
   void setThemeState(ComponentThemeState the) {
     //do nothing when state not change
-    if(this.themeState == the)return;
+    if (this.themeState == the) return;
     //update the state
     this.themeState = the;
     //if button disabled, don't update color animation
-    if(this.reactState == ComponentReactState.disabled)return;
+    if (this.reactState == ComponentReactState.disabled) return;
     //update color animation
     Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(widget.bgColor, newColor, widget.colorDura,
-        this, () {setState((){});});
+    this
+        .colorAnimation
+        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
+      setState(() {});
+    });
     this.colorAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         widget.bgColor = newColor;
       }
     });
     this.colorAnimation.beginAnimation();
   }
 
-  void refresh(){
-    if(this.mounted)
-      this.setState(() {});
+  void refresh() {
+    if (this.mounted) this.setState(() {});
   }
 }
