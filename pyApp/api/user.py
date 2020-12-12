@@ -29,7 +29,7 @@ def login():
         token = func.genToken(email)
         u.token = token
         User.add(u)
-        return func.reply_json(1, data={'token': token})
+        return func.reply_json(1, data={'uid': u.id, 'token': token})
 
 
 @user.route('/logout', methods=['POST'])
@@ -66,8 +66,6 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
-            # u.code_check = 0
-
             User.add(u)
     return func.reply_json(1)
 
