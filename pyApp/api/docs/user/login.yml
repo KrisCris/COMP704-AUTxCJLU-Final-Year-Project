@@ -32,7 +32,7 @@ responses:
           type: array
           items:
             type: object
-            example: {"token":"6368f616-26df-5ad8-9603-56b6917c9559"}
+            example: {"uid":1, "token":"6368f616-26df-5ad8-9603-56b6917c9559"}
   -2:
     description: Wrong Username or Password
     schema:
