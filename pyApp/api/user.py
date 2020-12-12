@@ -207,6 +207,7 @@ def send_security_code():
 
 @user.route('get_basic_info', methods=['POST'])
 @func.require_login
+@swag_from('docs/user/get_basic_info.yml')
 def get_basic_info():
     uid = request.form.get('uid')
     u = User.getUserByID(uid)
