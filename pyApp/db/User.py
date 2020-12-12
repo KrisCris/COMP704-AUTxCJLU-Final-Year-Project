@@ -2,10 +2,6 @@ from db.db import db
 from util.func import get_current_time
 
 
-def getUserByEmail(email):
-    return User.query.filter(User.email == email).first()
-
-
 class User(db.Model):
     __tablename__ = 'user'
 
@@ -15,7 +11,7 @@ class User(db.Model):
     password = db.Column(db.VARCHAR(255))
     group = db.Column(db.INTEGER, comment='user group, 0=unactivated, 1=normal user')
     token = db.Column(db.VARCHAR(40), server_default=db.text("''"), comment='unique string that auth auto login')
-    avatar = db.Column(db.VARCHAR(255), server_default=db.text("'/new_api/static/default.jpg'"))
+    avatar = db.Column(db.VARCHAR(255), server_default=db.text("'static/user/avatar/default.png'"))
     gender = db.Column(db.INTEGER, comment='male=1, female=2, others=0')
     age = db.Column(db.INTEGER)
     auth_code = db.Column(db.VARCHAR(20), comment='verification code')
@@ -42,3 +38,11 @@ class User(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def getUserByID(id):
+        return User.query.get(id)
+
+    @staticmethod
+    def getUserByEmail(email):
+        return User.query.filter(User.email == email).first()
