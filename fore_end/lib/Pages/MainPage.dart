@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -10,7 +9,10 @@ import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/Mycomponents/switchPage.dart';
+import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/takePhotoPage.dart';
+
+import 'LoginPage.dart';
 
 class MainPage extends StatefulWidget {
   bool photoPageOff = true;
@@ -90,8 +92,7 @@ class MainPage extends StatefulWidget {
       width: 50,
       height: 50,
       child: ClipRRect(
-        child: this.user.getAvatar(
-            double.infinity, double.infinity),
+        child: this.user.getAvatar(double.infinity, double.infinity),
         borderRadius: BorderRadius.circular(2),
       ),
       decoration: BoxDecoration(boxShadow: [
@@ -100,7 +101,7 @@ class MainPage extends StatefulWidget {
             offset: Offset(3.0, 10.0), //阴影xy轴偏移量
             blurRadius: 20.0, //阴影模糊程度
             spreadRadius: 2.0 //阴影扩散程度,
-        )
+            )
       ]),
     );
   }
@@ -133,8 +134,7 @@ class MainState extends State<MainPage> {
                         children: [
                           GestureDetector(
                               onTap: Scaffold.of(ctx).openDrawer,
-                              child: widget.userAvatarContainer
-                          ),
+                              child: widget.userAvatarContainer),
                           Text(
                             widget.user.userName,
                             textDirection: TextDirection.ltr,
@@ -214,14 +214,112 @@ class MainState extends State<MainPage> {
   }
 
   Drawer getDrawer() {
-    ListTile logOut = ListTile(
-      leading: Icon(FontAwesomeIcons.signOutAlt),
-      title: Text("Log out"),
+    Widget header = DrawerHeader(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: MemoryImage(
+                widget.user.getAvatarBin(),
+              ),
+              fit: BoxFit.cover)),
     );
-    List<Widget> drawerItems = [logOut];
+
+    Widget info = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ListTile(
+          leading: widget.user.genderIcon(),
+          title: Text(widget.user.userName,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: "Futura",
+                  color: Colors.black)),
+          subtitle: Text("No." + widget.user.uid.toString(),
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: Colors.black26)),
+        ),
+        ListTile(
+          leading: Icon(
+            FontAwesomeIcons.drumstickBite,
+            color: Colors.brown,
+            size: 30,
+          ),
+          title: Text(widget.user.planType,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: "Futura",
+                  color: Colors.black)),
+          subtitle: Text("PLAN",
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: Colors.black26)),
+        )
+      ],
+    );
+    Widget userSetting = ListTile(
+      leading: Icon(
+        FontAwesomeIcons.userCog,
+        color: Colors.blue,
+        size: 30,
+      ),
+      title: Text("Setting",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+    Widget logOut = ListTile(
+      onTap: (){
+        widget.user.logOut();
+        Navigator.pushAndRemoveUntil(context,
+            new MaterialPageRoute(builder: (ctx){return Welcome();}),
+                (route) => false);
+      },
+      leading: Icon(
+        FontAwesomeIcons.signOutAlt,
+        color: Colors.deepOrange,
+        size: 35,
+      ),
+      title: Text("Log out",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+    List<Widget> drawerItems = [
+      userSetting,
+      Divider(
+        color: Colors.black26,
+      ),
+      logOut,
+      Divider(
+        color: Colors.black26,
+      ),
+    ];
     return Drawer(
-      child: ListView(
-        children: drawerItems,
+      child: Column(
+        children: [
+          header,
+          info,
+          Divider(),
+          Expanded(
+            child: ListView(
+              children: drawerItems,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'User.dart';
@@ -21,7 +22,16 @@ class LocalDataManager {
     _pre.setString("userName", u.userName);
     _pre.setString("avatar", u.getRemoteAvatar());
   }
-
+  static void deleteUser() async{
+    await _init();
+    _pre.remove("token");
+    _pre.remove("uid");
+    _pre.remove("gender");
+    _pre.remove("age");
+    _pre.remove("email");
+    _pre.remove("userName");
+    _pre.remove("avatar");
+  }
   static Future<User> readUser() async {
     await _init();
     User u = new User(
