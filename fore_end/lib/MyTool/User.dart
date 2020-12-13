@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
@@ -54,8 +55,16 @@ class User{
   String getLocalAvatar(){
     return _avatar_local;
   }
-  MemoryImage getAvatar(){
-    return MemoryImage(base64Decode(this._avatar_remote));
+  Image getAvatar(double width, double height){
+    return Image.memory(
+      base64Decode(this._avatar_remote),
+      width: width,
+      height:height,
+      fit: BoxFit.cover,
+    );
+  }
+  Uint8List getAvatarBin(){
+    return base64Decode(this._avatar_remote);
   }
 
   set token(String value) {

@@ -22,8 +22,9 @@ class MainPage extends StatefulWidget {
   MyIconButton addPlanButton;
   MyNavigator navigator;
   SwitchPage bodyContent;
-  AppBar appBar;
   MainState state;
+  User user;
+  Container userAvatarContainer;
   MainPage({@required User user, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -84,38 +85,23 @@ class MainPage extends StatefulWidget {
             this.photoPageOff = true;
           });
         });
-    this.appBar = AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CircleAvatar(
-            radius: 25.0,
-            backgroundImage: user.getAvatar()
-          ),
-          Text(
-            user.userName,
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 20,
-                fontFamily: "Futura",
-                color: Colors.white),
-          ),
-          SizedBox(width: 0.1),
-          SizedBox(
-            width: 0.2,
-          ),
-          MyTextField(
-            placeholder: "Search Food",
-            // keyboardAction: TextInputAction.next,
-            theme: MyTheme.WhiteAndBlack,
-            inputType: InputFieldType.text,
-            width: ScreenTool.partOfScreenWidth(0.4),
-            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-          )
-        ],
+    this.user = user;
+    this.userAvatarContainer = Container(
+      width: 50,
+      height: 50,
+      child: ClipRRect(
+        child: this.user.getAvatar(
+            double.infinity, double.infinity),
+        borderRadius: BorderRadius.circular(2),
       ),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: Color(0xAA424242),
+            offset: Offset(3.0, 10.0), //阴影xy轴偏移量
+            blurRadius: 20.0, //阴影模糊程度
+            spreadRadius: 2.0 //阴影扩散程度,
+        )
+      ]),
     );
   }
   @override
@@ -129,55 +115,96 @@ class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     this.resetNavigator();
+
     return Scaffold(
-      body: Container(
-          alignment: Alignment.center,
-          height: ScreenTool.partOfScreenHeight(1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              widget.appBar,
-              Expanded(
-                  child: Stack(
-                    children: [
-                      widget.bodyContent,
-                      Column(
+        drawer: this.getDrawer(),
+        body: Builder(
+          builder: (BuildContext ctx) {
+            return Container(
+                alignment: Alignment.center,
+                height: ScreenTool.partOfScreenHeight(1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AppBar(
+                      automaticallyImplyLeading: false,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: SizedBox()),
-                          Offstage(
-                            offstage: widget.photoPageOff,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                this.getAlbumButton(),
-                                this.getPhotoButton()
-                              ],
-                            ),
+                          GestureDetector(
+                              onTap: Scaffold.of(ctx).openDrawer,
+                              child: widget.userAvatarContainer
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                                widget.navigator
-                            ],
+                          Text(
+                            widget.user.userName,
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontSize: 20,
+                                fontFamily: "Futura",
+                                color: Colors.black),
+                          ),
+                          SizedBox(width: 0.1),
+                          SizedBox(
+                            width: 0.2,
+                          ),
+                          MyTextField(
+                            placeholder: "Search Food",
+                            // keyboardAction: TextInputAction.next,
+                            theme: MyTheme.WhiteAndBlack,
+                            inputType: InputFieldType.text,
+                            width: ScreenTool.partOfScreenWidth(0.4),
+                            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+                            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
                           )
                         ],
-                      )
-                    ],
-              ))
-            ],
-          )),
+                      ),
+                    ),
+                    Expanded(
+                        child: Stack(
+                      children: [
+                        widget.bodyContent,
+                        Column(
+                          children: [
+                            Expanded(child: SizedBox()),
+                            Offstage(
+                              offstage: widget.photoPageOff,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  this.getAlbumButton(),
+                                  this.getPhotoButton()
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [widget.navigator],
+                            )
+                          ],
+                        )
+                      ],
+                    ))
+                  ],
+                ));
+          },
+        ));
+  }
+
+  void openDrawer() {
+    Scaffold.of(context).openDrawer();
+  }
+
+  Widget getPhotoButton() {
+    return new MyIconButton(
+      theme: MyTheme.blackAndWhite,
+      icon: FontAwesomeIcons.camera,
+      iconSize: 40,
+      backgroundOpacity: 0,
     );
   }
 
-  Widget getPhotoButton(){
-    return new MyIconButton(
-        theme: MyTheme.blackAndWhite,
-        icon: FontAwesomeIcons.camera,
-        iconSize: 40,
-        backgroundOpacity: 0,
-    );
-  }
-  Widget getAlbumButton(){
+  Widget getAlbumButton() {
     return new MyIconButton(
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.image,
@@ -186,14 +213,35 @@ class MainState extends State<MainPage> {
     );
   }
 
-  void resetNavigator(){
+  Drawer getDrawer() {
+    ListTile logOut = ListTile(
+      leading: Icon(FontAwesomeIcons.signOutAlt),
+      title: Text("Log out"),
+    );
+    List<Widget> drawerItems = [logOut];
+    return Drawer(
+      child: ListView(
+        children: drawerItems,
+      ),
+    );
+  }
+
+  void resetNavigator() {
     int activateNum = 2;
-    if(widget.navigator != null){
+    if (widget.navigator != null) {
       activateNum = widget.navigator.getActivatePageNo();
     }
     widget.navigator = MyNavigator(
-      buttons: [widget.addPlanButton, widget.takePhotoButton, widget.myDietButton],
-      switchPages: [widget.addPlanPart, widget.takePhotoPart, widget.myDietPart],
+      buttons: [
+        widget.addPlanButton,
+        widget.takePhotoButton,
+        widget.myDietButton
+      ],
+      switchPages: [
+        widget.addPlanPart,
+        widget.takePhotoPart,
+        widget.myDietPart
+      ],
       opacity: 0.25,
       edgeWidth: 0.5,
       width: ScreenTool.partOfScreenWidth(0.7),
