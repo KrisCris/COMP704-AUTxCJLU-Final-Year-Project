@@ -1,3 +1,5 @@
+import torch
+
 import util.func as func
 
 from flask import Blueprint, request
@@ -5,7 +7,8 @@ from flasgger import swag_from
 from werkzeug.security import generate_password_hash
 
 from db.User import User
-from db.User import getUserByEmail
+
+from cv.detect import detect
 
 user = Blueprint('user', __name__)
 
@@ -25,7 +28,7 @@ def login():
         token = func.genToken(email)
         u.token = token
         User.add(u)
-        return func.reply_json(1, data={'token': token})
+        return func.reply_json(1, data={'uid': u.id, 'token': token})
 
 
 @user.route('/logout', methods=['POST'])
@@ -33,8 +36,7 @@ def login():
 @swag_from('docs/user/logout.yml')
 def logout():
     email = request.form.get('email').lower()
-
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
     u.token = func.genToken(email)
     User.add(u)
 
@@ -49,7 +51,7 @@ def signup():
     nickname = request.form.get('nickname')
     password = generate_password_hash(request.form.get('password'))
 
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
     if u is None:
         return func.reply_json(-2)
     else:
@@ -63,8 +65,6 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
-            # u.code_check = 0
-
             User.add(u)
     return func.reply_json(1)
 
@@ -75,7 +75,7 @@ def send_register_code():
     func.remove_temp_account()
 
     email = request.form.get('email').lower()
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
 
     if u is None:
         u = User(email=email, auth_code=func.gen_auth_code())
@@ -102,7 +102,7 @@ def send_register_code():
 @swag_from('docs/user/is_new_email.yml')
 def is_new_email():
     email = request.values.get('email')
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
     if u is None:
         return func.reply_json(1)
     if u.group != 0:
@@ -116,7 +116,7 @@ def is_new_email():
 def check_code():
     auth_code = request.form.get('auth_code')
     email = request.form.get('email').lower()
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
 
     if u is None:
         return func.reply_json(-4)
@@ -173,7 +173,7 @@ def modify_password():
 def retrieve_password():
     email = request.form.get('email')
     password = request.form.get('new_password')
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
     if u is None:
         func.reply_json(-2)
     else:
@@ -184,7 +184,7 @@ def retrieve_password():
 @swag_from('docs/user/send_security_code.yml')
 def send_security_code():
     email = request.form.get('email')
-    u = getUserByEmail(email)
+    u = User.getUserByEmail(email)
 
     if u is None or u.group != 1:
         return func.reply_json(-2, msg='Wrong email')
@@ -205,11 +205,28 @@ def send_security_code():
     return func.reply_json(status)
 
 
-@user.route('/require_login')
-def require_login():
-    return func.reply_json(-1)
+@user.route('get_basic_info', methods=['POST'])
+@func.require_login
+@swag_from('docs/user/get_basic_info.yml')
+def get_basic_info():
+    uid = request.form.get('uid')
+    u = User.getUserByID(uid)
+    import base64
+    with open(u.avatar, "rb") as avatar_file:
+        b2sAvatar = base64.b64encode(avatar_file.read()).decode('utf-8')
+    return func.reply_json(1, data={
+        'email': u.email,
+        'nickname': u.nickname,
+        'avatar': b2sAvatar,
+        'gender': u.gender,
+        'age': u.age,
+    })
 
 
-@user.route('/require_code_check')
-def require_code_check():
-    return func.reply_json(-4)
+# test
+@user.route('detect')
+def d():
+    with torch.no_grad():
+        detect()
+
+    return func.reply_json(1)
