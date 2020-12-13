@@ -5,6 +5,7 @@ import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/Mycomponents/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
@@ -213,7 +214,7 @@ class MainState extends State<MainPage> {
     );
   }
 
-  Drawer getDrawer() {
+  CustomDrawer getDrawer() {
     Widget header = DrawerHeader(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -308,7 +309,8 @@ class MainState extends State<MainPage> {
         color: Colors.black26,
       ),
     ];
-    return Drawer(
+    return CustomDrawer(
+      widthPercent: 0.7,
       child: Column(
         children: [
           header,

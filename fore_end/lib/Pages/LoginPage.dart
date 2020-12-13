@@ -166,9 +166,9 @@ class Login extends StatelessWidget {
             u.age = value.data['data']['age'];
             u.gender = value.data['data']['gender'];
             u.save();
-            Navigator.push(context, new MaterialPageRoute(builder: (context){
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
               return new MainPage(user:u);
-            }));
+            }),(ct)=>false);
           }else if(value.data['code'] == -1){
             EasyLoading.showError("Login token invalid",
                 duration: Duration(milliseconds: 2000));
