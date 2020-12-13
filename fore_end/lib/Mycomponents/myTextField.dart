@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/formatChecker.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
@@ -84,18 +85,21 @@ class MyTextField extends StatefulWidget {
   FocusNode getFocusNode() {
     return this.st._focusNode;
   }
-  void setWidth(double len){
+
+  void setWidth(double len) {
     double newWidth = ScreenTool.partOfScreenWidth(len);
-    this.st.lengthAnimation.initAnimation(this.width,
-        newWidth, this.st.sizeChangeDura, this.st,
-            () { this.st.setState(() {});});
+    this.st.lengthAnimation.initAnimation(
+        this.width, newWidth, this.st.sizeChangeDura, this.st, () {
+      this.st.setState(() {});
+    });
     this.st.lengthAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         this.width = newWidth;
       }
     });
     this.st.lengthAnimation.beginAnimation();
   }
+
   bool isEmpty() {
     return this.st.isEmpty();
   }
@@ -128,11 +132,13 @@ class MyTextField extends StatefulWidget {
     this.setThemeState(ComponentThemeState.error, force: true);
     this.st.suffixSizeAnimation.beginAnimation();
   }
-  void setNormal(){
+
+  void setNormal() {
     this.st.isCorrect = false;
     this.setThemeState(ComponentThemeState.normal, force: true);
     this.st.suffixSizeAnimation.reverseAnimation();
   }
+
   void setCorrect() {
     this.st.isCorrect = true;
     this.setThemeState(ComponentThemeState.correct, force: true);
@@ -144,11 +150,13 @@ class MyTextField extends StatefulWidget {
       this.errorText = txt;
     });
   }
-  void setHelpText(String txt){
+
+  void setHelpText(String txt) {
     this.st.setState(() {
       this.helpText = txt;
     });
   }
+
   void setThemeState(ComponentThemeState the, {bool force = false}) {
     this.st.setThemeState(the, force: force);
   }
@@ -178,6 +186,9 @@ class MyTextFieldState extends State<MyTextField>
   int colorChangeDura = 350;
   int sizeChangeDura = 200;
   double firstWidth;
+  MyCounter continuousInputChecker;
+  bool isInputing = false;
+  String prev = "";
 
   MyTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
     this.themeState = the;
@@ -210,47 +221,65 @@ class MyTextFieldState extends State<MyTextField>
     this._focusNode.addListener(() {
       if (this._focusNode.hasFocus) {
         this.setReactState(ComponentReactState.focused);
+        this.continuousInputChecker = new MyCounter(
+            times: 1,
+            callWhenStart: false,
+            duration: 700,
+            calling: () {
+              this.isInputing = false;
+              if (this._inputcontroller.text.isEmpty) {
+                if (widget.autoChangeState) {
+                  this.setThemeState(ComponentThemeState.normal);
+                }
+                if (widget.onEmpty != null) {
+                  widget.onEmpty();
+                }
+                this.suffixSizeAnimation.reverseAnimation();
+                this.isCorrect = false;
+              } else {
+                if (this.themeState == ComponentThemeState.normal &&
+                    widget.autoChangeState) {
+                  this.suffixSizeAnimation.beginAnimation();
+                }
+                if (FormatChecker.check(
+                    widget.inputType, this._inputcontroller.text)) {
+                  if (widget.autoChangeState) {
+                    this.setThemeState(ComponentThemeState.correct);
+                    this.isCorrect = true;
+                  }
+
+                  if (widget.onCorrect != null) {
+                    widget.onCorrect();
+                  }
+                } else {
+                  if (widget.autoChangeState) {
+                    this.setThemeState(ComponentThemeState.error);
+                    this.isCorrect = false;
+                  }
+                  if (widget.onError != null) {
+                    widget.onError();
+                  }
+                }
+              }
+            });
       } else {
         this.setReactState(ComponentReactState.unfocused);
+        this.continuousInputChecker.stop();
       }
     });
 
     this._inputcontroller.addListener(() {
-      if (this._inputcontroller.text.isEmpty) {
-        if (widget.autoChangeState) {
-          this.setThemeState(ComponentThemeState.normal);
-        }
-        if(widget.onEmpty != null){
-          widget.onEmpty();
-        }
-        this.suffixSizeAnimation.reverseAnimation();
-        this.isCorrect = false;
-      } else {
-        if (this.themeState == ComponentThemeState.normal &&
-            widget.autoChangeState) {
-          this.suffixSizeAnimation.beginAnimation();
-        }
-        if (FormatChecker.check(widget.inputType, this._inputcontroller.text)) {
-          if (widget.autoChangeState) {
-            this.setThemeState(ComponentThemeState.correct);
-            this.isCorrect = true;
-          }
-
-          if (widget.onCorrect != null) {
-            widget.onCorrect();
-          }
-        } else {
-          if (widget.autoChangeState) {
-            this.setThemeState(ComponentThemeState.error);
-            this.isCorrect = false;
-          }
-          if (widget.onError != null) {
-            widget.onError();
-          }
-        }
+      if (this.prev == this._inputcontroller.text) return;
+      this.prev = this._inputcontroller.text;
+      this.isInputing = true;
+      if (this.continuousInputChecker != null) {
+        this.continuousInputChecker.reset();
       }
+      this.setThemeState(ComponentThemeState.normal);
+      this.suffixSizeAnimation.reverse();
     });
   }
+
   void initColor() {
     this.colorAnimation.initAnimation(
         widget.theme.getReactColor(this.reactState),
@@ -265,6 +294,7 @@ class MyTextFieldState extends State<MyTextField>
   @override
   void dispose() {
     // TODO: implement dispose
+    this.continuousInputChecker.stop();
     this.colorAnimation.dispose();
     this.suffixSizeAnimation.dispose();
     this.underlineWidthAnimation.dispose();
@@ -276,75 +306,76 @@ class MyTextFieldState extends State<MyTextField>
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: this.lengthAnimation.getValue() == 0? false : true,
-      child:Transform.translate(
-          offset: Offset(this.calculatePosition(), 0),
-          child: Container(
-              width: this.lengthAnimation.getValue(),
-              margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: TextField(
-                inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
-                textInputAction: widget.keyboardAction,
-                keyboardType: widget.keyboardType,
-                focusNode: this._focusNode,
-                controller: this._inputcontroller,
-                style: TextStyle(fontSize: 18),
-                autofocus: widget.isAutoFocus,
-                cursorColor: colorAnimation.getValue(),
-                cursorWidth: 2,
-                maxLength: widget.maxlength,
-                onEditingComplete: () {
-                  if (widget.next != null) {
-                    FocusScope.of(context).requestFocus(widget.next);
-                  }
-                },
-                decoration: new InputDecoration(
-                  //下划线的设置
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: colorAnimation.getValue(),
-                        width: this.underlineWidthAnimation.getValue()),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: colorAnimation.getValue(),
-                        width: this.underlineWidthAnimation.getValue()),
-                  ),
-                  disabledBorder: UnderlineInputBorder(
+        visible: this.lengthAnimation.getValue() == 0 ? false : true,
+        child: Transform.translate(
+            offset: Offset(this.calculatePosition(), 0),
+            child: Container(
+                width: this.lengthAnimation.getValue(),
+                margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
+                child: TextField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(' '))
+                  ],
+                  textInputAction: widget.keyboardAction,
+                  keyboardType: widget.keyboardType,
+                  focusNode: this._focusNode,
+                  controller: this._inputcontroller,
+                  style: TextStyle(fontSize: 18),
+                  autofocus: widget.isAutoFocus,
+                  cursorColor: colorAnimation.getValue(),
+                  cursorWidth: 2,
+                  maxLength: widget.maxlength,
+                  onEditingComplete: () {
+                    if (widget.next != null) {
+                      FocusScope.of(context).requestFocus(widget.next);
+                    }
+                  },
+                  decoration: new InputDecoration(
+                    //下划线的设置
+                    focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: colorAnimation.getValue(),
-                          width: this.underlineWidthAnimation.getValue())),
-                  errorBorder: UnderlineInputBorder(
+                          width: this.underlineWidthAnimation.getValue()),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: colorAnimation.getValue(),
-                          width: this.underlineWidthAnimation.getValue())),
-                  focusedErrorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: colorAnimation.getValue(),
-                          width: this.underlineWidthAnimation.getValue())),
+                          width: this.underlineWidthAnimation.getValue()),
+                    ),
+                    disabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: colorAnimation.getValue(),
+                            width: this.underlineWidthAnimation.getValue())),
+                    errorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: colorAnimation.getValue(),
+                            width: this.underlineWidthAnimation.getValue())),
+                    focusedErrorBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: colorAnimation.getValue(),
+                            width: this.underlineWidthAnimation.getValue())),
 
-                  //文本框基本属性
-                  hintText: widget.placeholder,
-                  contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  isDense: true,
-                  helperText: this.isCorrect ? "" : widget.helpText,
-                  errorText: this.isCorrect ||
-                      (!this.isCorrect && this._inputcontroller.text.isEmpty)
-                      ? null
-                      : widget.errorText,
-                  suffixIcon: Transform.translate(
-                      offset: Offset(10, 5),
-                      child: Icon(
-                          this.isCorrect
-                              ? FontAwesomeIcons.checkCircle
-                              : FontAwesomeIcons.timesCircle,
-                          color: this.colorAnimation.getValue(),
-                          size: this.suffixSizeAnimation.getValue())),
-                ),
-                obscureText: widget.inputType == InputFieldType.password,
-              )))
-    );
-
+                    //文本框基本属性
+                    hintText: widget.placeholder,
+                    contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    isDense: true,
+                    helperText: this.isCorrect ? "" : widget.helpText,
+                    errorText: this.isCorrect ||
+                            (!this.isCorrect &&
+                                this._inputcontroller.text.isEmpty)
+                        ? null
+                        : widget.errorText,
+                    suffixIcon: Transform.translate(
+                        offset: Offset(10, 5),
+                        child: Icon(
+                            this.isCorrect
+                                ? FontAwesomeIcons.checkCircle
+                                : FontAwesomeIcons.timesCircle,
+                            color: this.colorAnimation.getValue(),
+                            size: this.suffixSizeAnimation.getValue())),
+                  ),
+                  obscureText: widget.inputType == InputFieldType.password,
+                ))));
   }
 
   String getInput() {

@@ -106,7 +106,6 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () async {
         if (!this.counter.isStop()) return;
-        this.emailTextField.setNormal();
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
           "email":this.emailTextField.getInput()
