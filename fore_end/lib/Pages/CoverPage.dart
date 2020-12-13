@@ -69,10 +69,11 @@ class CoverState extends State<CoverPage> {
               });
               return this.getPage("welcome to here!");
             }else if(resCode == 1){
-              Future.delayed(Duration(milliseconds: 2500),(){
-                Navigator.push(context, new MaterialPageRoute(builder: (context){
-                  return new MainPage(user: this.savedUser);
-                }));
+              Future.delayed(Duration(milliseconds: 1500),(){
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context){return new MainPage(user: this.savedUser);}),
+                    (route){return route==null;}
+                );
               });
               return this.getPage("Auto login...");
             } else {
@@ -90,7 +91,21 @@ class CoverState extends State<CoverPage> {
     if(this.savedUser.token == null){
       return 0;
     }else{
-      return 1;
+      Response res = await Requests.getBasicInfo({
+        'uid':this.savedUser.uid,
+        'token':this.savedUser.token
+      });
+      if(res.data['code'] == 1){
+        this.savedUser.age = res.data['data']['age'];
+        this.savedUser.gender = res.data['data']['gender'];
+        this.savedUser.userName = res.data['data']['nickname'];
+        this.savedUser.avatar_remote = res.data['data']['avatar'];
+        this.savedUser.email = res.data['data']['email'];
+        this.savedUser.save();
+        return 1;
+      }else if(res.data['code'] == -1){
+        return 0;
+      }
     }
   }
 }
