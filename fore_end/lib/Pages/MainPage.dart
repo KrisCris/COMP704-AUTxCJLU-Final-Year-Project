@@ -327,20 +327,21 @@ class MainState extends State<MainPage> {
   }
 
   void resetNavigator() {
-    int activateNum = 2;
+    int activateNum = 0;
     if (widget.navigator != null) {
       activateNum = widget.navigator.getActivatePageNo();
     }
     widget.navigator = MyNavigator(
       buttons: [
+        widget.myDietButton,
         widget.addPlanButton,
         widget.takePhotoButton,
-        widget.myDietButton
+
       ],
       switchPages: [
+        widget.myDietPart,
         widget.addPlanPart,
         widget.takePhotoPart,
-        widget.myDietPart
       ],
       opacity: 0.25,
       edgeWidth: 0.5,
