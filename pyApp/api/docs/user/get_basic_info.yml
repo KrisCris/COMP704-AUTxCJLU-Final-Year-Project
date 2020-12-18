@@ -1,23 +1,21 @@
-Login
+Get Basic User Info
 ---
 tags:
   - USER
 parameters:
   - in: formData
-    name: email
+    name: uid
     type: string
     required: true
-    description: Email
-    default: 'root@root.com'
+    description: User ID
   - in: formData
-    name: password
+    name: token
     type: string
     required: true
-    description: Password
-    default: 'rootroot'
+    description: Token
 responses:
   1:
-    description: Successful Login
+    description: Successfully retrieved data
     schema:
       properties:
         code:
@@ -32,23 +30,28 @@ responses:
           type: array
           items:
             type: object
-            example: {"uid":1, "token":"6368f616-26df-5ad8-9603-56b6917c9559"}
-  -2:
+            example: {
+              "email": "root@root.com",
+              "nickname":"ROOT",
+              "avatar":"b64String",
+              "gender":1,
+              "age": 18
+            }
+  -1:
     description: Wrong Username or Password
     schema:
       properties:
         code:
           type: number
           description: return code
-          example: -2
+          example: -1
         msg:
           type: string
           description: return info
-          example: 'wrong email or password'
+          example: 'login required'
         data:
           type: array
           example: []
-
 
 
 
