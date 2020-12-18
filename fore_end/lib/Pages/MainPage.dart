@@ -8,6 +8,7 @@ import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/Mycomponents/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
@@ -28,7 +29,8 @@ class MainPage extends StatefulWidget {
   Widget bodyContent;
   MainState state;
   User user;
-  Widget userAvatarContainer;
+  CustomAppBar appBar;
+
   MainPage({@required User user, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -50,21 +52,22 @@ class MainPage extends StatefulWidget {
       ),
     );
     this.myDietButton = MyIconButton(
-      theme: MyTheme.blackAndWhite,
+      theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
       text: "My Diet",
       buttonRadius: 70,
       borderRadius: 10,
       onClick: () {
-        this.state.reverseTransparency();
-        this.state.setState(() {
-          this.photoPageOff = true;
-        });
+        this.appBar.reverseTransparency();
+        this.navigator.reverseOpacity();
+        // this.state.setState(() {
+        //   this.photoPageOff = true;
+        // });
       },
     );
     this.takePhotoButton = MyIconButton(
-        theme: MyTheme.blackAndWhite,
+        theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.camera,
         backgroundOpacity: 0.0,
         text: "Take Photo",
@@ -72,13 +75,14 @@ class MainPage extends StatefulWidget {
         borderRadius: 10,
         fontSize: 12,
         onClick: () {
-          this.state.startTransparency();
-          this.state.setState(() {
-            this.photoPageOff = false;
-          });
+          this.appBar.startTransparency();
+          this.navigator.beginOpacity();
+          // this.state.setState(() {
+          //   this.photoPageOff = false;
+          // });
         });
     this.addPlanButton = MyIconButton(
-        theme: MyTheme.blackAndWhite,
+        theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
         text: "Add Plan",
@@ -86,10 +90,11 @@ class MainPage extends StatefulWidget {
         buttonRadius: 70,
         fontSize: 13,
         onClick: () {
-          this.state.reverseTransparency();
-          this.state.setState(() {
-            this.photoPageOff = true;
-          });
+          this.appBar.reverseTransparency();
+          // this.state.setState(() {
+          //   this.photoPageOff = true;
+          // });
+          this.navigator.reverseOpacity();
         });
     this.user = user;
   }
@@ -101,21 +106,16 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> with TickerProviderStateMixin {
-  TweenAnimation headerTransparency;
+
   @override
   void initState() {
-    widget.userAvatarContainer = this.getCircleAvatar(size: 45);
-    this.headerTransparency = new TweenAnimation();
-    this.headerTransparency.initAnimation(1.0, 0.0, 500, this,
-            () {setState(() {}); });
-    // TODO: implement initState
+    widget.appBar = this.getAppBar();
+    this.setNavigator();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    this.resetNavigator();
-
     return Scaffold(
         drawer: this.getDrawer(),
         body: Builder(
@@ -128,7 +128,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                     widget.bodyContent,
                     Column(
                       children: [
-                        this.getAppBar(ctx),
+                        widget.appBar,
                         Expanded(child: SizedBox()),
                         this.getTakePhotoButton(),
                         Row(
@@ -144,60 +144,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         ));
   }
 
-  void openDrawer(BuildContext ctx) {
-    Scaffold.of(ctx).openDrawer();
-  }
-  void startTransparency(){
-    this.headerTransparency.beginAnimation();
-  }
-  void reverseTransparency(){
-    this.headerTransparency.reverse();
-  }
-
-  Widget getAppBar(BuildContext ctx) {
-    return Opacity(
-        opacity:this.headerTransparency.getValue(),
-        child:Container(
-          width: ScreenTool.partOfScreenWidth(0.85),
-          height: 70,
-          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              color: Color(0xFF0091EA),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 12, //阴影范围
-                  spreadRadius: 3, //阴影浓度
-                  color: Color(0x33000000), //阴影颜色
-                ),
-              ]),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 15,
-              ),
-              GestureDetector(
-                onTap: () {
-                  if(this.headerTransparency.getValue() == 0)return;
-                  this.openDrawer(ctx);
-                },
-                child: widget.userAvatarContainer,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                widget.user.userName,
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 20,
-                    fontFamily: "Futura",
-                    color: Colors.black),
-              ),
-            ],
-          ),
-        )
+  Widget getAppBar() {
+    return CustomAppBar(
+      userAvatarContainer: this.getCircleAvatar(size: 45),
+      username: widget.user.userName,
     );
   }
   Widget getTakePhotoButton(){
@@ -374,7 +324,37 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  void resetNavigator() {
+  Widget getNavigator(TabController ctl){
+    return MyNavigator(
+      buttons: [
+        widget.myDietButton,
+        widget.addPlanButton,
+        widget.takePhotoButton,
+      ],
+      controller: ctl,
+      opacity: 0.25,
+      edgeWidth: 0.5,
+      width: ScreenTool.partOfScreenWidth(0.7),
+      height: ScreenTool.partOfScreenHeight(0.08),
+    );
+  }
+  Widget getBodyContent(TabController ctl){
+    return TabBarView(
+        controller: ctl,
+        children: [
+          widget.myDietPart,
+          widget.addPlanPart,
+          widget.takePhotoPart
+        ]
+    );
+  }
+  TabController getTabController(){
+    if (widget.navigator != null) {
+      return widget.navigator.getController();
+    }
+    return TabController(length: 3, vsync: this);
+  }
+  void setNavigator() {
     List<MyIconButton> buttons = [
       widget.myDietButton,
       widget.addPlanButton,
@@ -384,7 +364,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     if (widget.navigator != null) {
       ctl = widget.navigator.getController();
     }
-    widget.navigator = MyNavigator(
+    widget.navigator = new MyNavigator(
       buttons: buttons,
       controller: ctl,
       opacity: 0.25,
@@ -392,7 +372,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       width: ScreenTool.partOfScreenWidth(0.7),
       height: ScreenTool.partOfScreenHeight(0.08),
     );
-    widget.bodyContent = TabBarView(controller: ctl, children: [
+    widget.bodyContent = TabBarView(
+        physics:new NeverScrollableScrollPhysics(),
+        controller: ctl,
+        children: [
       widget.myDietPart,
       widget.addPlanPart,
       widget.takePhotoPart
