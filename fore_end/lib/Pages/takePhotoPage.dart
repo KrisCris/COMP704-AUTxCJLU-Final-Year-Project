@@ -48,11 +48,13 @@ class TakePhotoState extends State<TakePhotoPage>
   @override
   void dispose() {
     this._ctl.dispose();
+    this.loadingCameraAnimation.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    this.getCamera();
     return FutureBuilder(
         future: this._initDone,
         builder: (context, snapShot) {
@@ -115,17 +117,22 @@ class TakePhotoState extends State<TakePhotoPage>
   }
 
   void getCamera() async {
-    if(widget.camera != null)return;
-
-    final cameras = await availableCameras();
-    if (cameras.length <= 0) {
-      this._hasCamera = false;
-      return;
+    List<CameraDescription> cameras;
+    if(widget.camera == null){
+      cameras = await availableCameras();
+      if (cameras.length <= 0) {
+        this._hasCamera = false;
+        return;
+      }
+      this._hasCamera = true;
+      widget.camera = cameras[0];
     }
-    this._hasCamera = true;
-    widget.camera = cameras[0];
-    this._ctl = new CameraController(widget.camera, ResolutionPreset.high,enableAudio: false);
-    this._initDone = this._ctl.initialize();
+    if(this._ctl == null){
+      this._ctl = new CameraController(widget.camera, ResolutionPreset.high,enableAudio: false);
+    }
+    if(!this._ctl.value.isInitialized){
+      this._initDone = this._ctl.initialize();
+    }
   }
 
   Widget noCameraWidget() {

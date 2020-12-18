@@ -20,8 +20,7 @@ class MyIconButton extends StatefulWidget {
   MyNavigator navi;
 
   MyIconButton(
-      {
-        @required this.theme,
+      {@required this.theme,
       @required this.icon,
       this.text = "",
       this.iconSize = 20,
@@ -100,17 +99,16 @@ class MyIconButtonState extends State<MyIconButton>
             color: this.iconAndTextColorAnimation.getValue(),
             size: widget.iconSize),
         Offstage(
-          offstage: widget.text == "" || widget.text == null,
-          child: Text(
-            widget.text,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: widget.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Futura",
-                color: this.iconAndTextColorAnimation.getValue()),
-          )
-        )
+            offstage: widget.text == "" || widget.text == null,
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: widget.fontSize,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: this.iconAndTextColorAnimation.getValue()),
+            ))
       ],
     );
   }
@@ -119,10 +117,10 @@ class MyIconButtonState extends State<MyIconButton>
     return GestureDetector(
         onTap: () {
           if (widget.onClick != null) {
-            if(widget.navi == null){
+            if (widget.navi == null) {
               widget.onClick();
-            }else {
-              if(!widget.navi.isActivate(widget)){
+            } else {
+              if (!widget.navi.isActivate(widget)) {
                 widget.onClick();
               }
             }
@@ -161,7 +159,7 @@ class MyIconButtonState extends State<MyIconButton>
 
   @override
   void setReactState(ComponentReactState rea) {
-    if(this.reactState == rea)return;
+    if (this.reactState == rea) return;
 
     double AfterOpacity;
     if (rea == ComponentReactState.focused) {

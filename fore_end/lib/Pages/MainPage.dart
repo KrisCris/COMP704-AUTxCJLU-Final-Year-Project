@@ -10,8 +10,6 @@ import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
-import 'package:fore_end/Mycomponents/myTextField.dart';
-import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/takePhotoPage.dart';
 
@@ -26,7 +24,7 @@ class MainPage extends StatefulWidget {
   MyIconButton takePhotoButton;
   MyIconButton addPlanButton;
   MyNavigator navigator;
-  SwitchPage bodyContent;
+  Widget bodyContent;
   MainState state;
   User user;
   Widget userAvatarContainer;
@@ -72,7 +70,6 @@ class MainPage extends StatefulWidget {
         borderRadius: 10,
         fontSize: 12,
         onClick: () {
-          takePhotoPart.getCamera();
           this.state.setState(() {
             this.photoPageOff = false;
           });
@@ -99,14 +96,14 @@ class MainPage extends StatefulWidget {
   }
 }
 
-class MainState extends State<MainPage> {
-
+class MainState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
-    widget.userAvatarContainer = this.getCircleAvatar();
+    widget.userAvatarContainer = this.getCircleAvatar(size: 45);
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     this.resetNavigator();
@@ -118,37 +115,23 @@ class MainState extends State<MainPage> {
             return Container(
                 alignment: Alignment.center,
                 height: ScreenTool.partOfScreenHeight(1),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Stack(
                   children: [
-                    this.getAppBar(ctx),
-                    Expanded(
-                        child: Stack(
+                    widget.bodyContent,
+                    Column(
                       children: [
-                        widget.bodyContent,
-                        Column(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            Offstage(
-                              offstage: widget.photoPageOff,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  this.getAlbumButton(),
-                                  this.getPhotoButton()
-                                ],
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [widget.navigator],
-                            )
-                          ],
+                        this.getAppBar(ctx),
+                        Expanded(child: SizedBox()),
+                        this.getTakePhotoButton(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [widget.navigator],
                         )
                       ],
-                    ))
+                    )
                   ],
                 ));
+
           },
         ));
   }
@@ -157,31 +140,35 @@ class MainState extends State<MainPage> {
     Scaffold.of(ctx).openDrawer();
   }
 
-  Widget getAppBar(BuildContext ctx){
+  Widget getAppBar(BuildContext ctx) {
     return Container(
       width: ScreenTool.partOfScreenWidth(0.85),
       height: 70,
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        color: Color(0xFF0091EA),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 12, //阴影范围
-            spreadRadius: 3, //阴影浓度
-            color: Color(0x33000000), //阴影颜色
-          ),
-        ]
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: Color(0xFF0091EA),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 12, //阴影范围
+              spreadRadius: 3, //阴影浓度
+              color: Color(0x33000000), //阴影颜色
+            ),
+          ]),
       child: Row(
         children: [
-          SizedBox(width: 15,),
+          SizedBox(
+            width: 15,
+          ),
           GestureDetector(
-            onTap: (){this.openDrawer(ctx);},
-            child: this.getCircleAvatar(size: 50),
-          )
-          ,
-          SizedBox(width: 10,),
+            onTap: () {
+              this.openDrawer(ctx);
+            },
+            child: widget.userAvatarContainer,
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Text(
             widget.user.userName,
             textDirection: TextDirection.ltr,
@@ -194,36 +181,15 @@ class MainState extends State<MainPage> {
         ],
       ),
     );
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  }
+  Widget getTakePhotoButton(){
+    return Offstage(
+      offstage: widget.photoPageOff,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GestureDetector(
-              onTap: Scaffold.of(ctx).openDrawer,
-              child: widget.userAvatarContainer),
-          Text(
-            widget.user.userName,
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 20,
-                fontFamily: "Futura",
-                color: Colors.black),
-          ),
-          SizedBox(width: 0.1),
-          SizedBox(
-            width: 0.2,
-          ),
-          MyTextField(
-            placeholder: "Search Food",
-            // keyboardAction: TextInputAction.next,
-            theme: MyTheme.WhiteAndBlack,
-            inputType: InputFieldType.text,
-            width: ScreenTool.partOfScreenWidth(0.4),
-            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-          )
+          this.getAlbumButton(),
+          this.getPhotoButton()
         ],
       ),
     );
@@ -247,28 +213,37 @@ class MainState extends State<MainPage> {
   }
 
   CustomDrawer getDrawer() {
-
     Widget info = this.getDrawerHeader();
     Widget userSetting = this.getUserSetting();
     Widget aboutUs = this.getAboutUs();
     Widget logOut = this.getLogOut();
 
     List<Widget> drawerItems = [
-      SizedBox(height: ScreenTool.partOfScreenHeight(0.05),),
+      SizedBox(
+        height: ScreenTool.partOfScreenHeight(0.05),
+      ),
       info,
-      SizedBox(height: 70,),
+      SizedBox(
+        height: 70,
+      ),
       userSetting,
-      SizedBox(height: 30,),
+      SizedBox(
+        height: 30,
+      ),
       aboutUs,
       Expanded(child: SizedBox()),
       Row(
         children: [
           Expanded(child: SizedBox()),
           logOut,
-          SizedBox(width: 15,)
+          SizedBox(
+            width: 15,
+          )
         ],
       ),
-      SizedBox(height: 15,),
+      SizedBox(
+        height: 15,
+      ),
     ];
     return CustomDrawer(
       widthPercent: 1,
@@ -278,33 +253,36 @@ class MainState extends State<MainPage> {
     );
   }
 
-  Widget getCircleAvatar({double size=60}){
+  Widget getCircleAvatar({double size = 60}) {
     return Container(
-      width: size,
-      height: size,
-      decoration: new BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-              image: MemoryImage(widget.user.getAvatarBin()),
-            fit: BoxFit.cover
-          ),
-        boxShadow:[
-          BoxShadow(
-            blurRadius: 10, //阴影范围
-            spreadRadius: 1, //阴影浓度
-            color: Color(0x33000000), //阴影颜色
-          ),
-        ]
-      )
-      // child: , //增加文字等
-    );
+        width: size,
+        height: size,
+        decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+                image: MemoryImage(widget.user.getAvatarBin()),
+                fit: BoxFit.cover),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 10, //阴影范围
+                spreadRadius: 1, //阴影浓度
+                color: Color(0x33000000), //阴影颜色
+              ),
+            ])
+        // child: , //增加文字等
+        );
   }
-  Widget getDrawerHeader(){
+
+  Widget getDrawerHeader() {
     return Row(
       children: [
-        SizedBox(width: 15,),
+        SizedBox(
+          width: 15,
+        ),
         this.getCircleAvatar(),
-        SizedBox(width: 20,),
+        SizedBox(
+          width: 20,
+        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -331,11 +309,14 @@ class MainState extends State<MainPage> {
           backgroundOpacity: 0,
           iconSize: 30,
         ),
-        SizedBox(width: 15,)
+        SizedBox(
+          width: 15,
+        )
       ],
     );
   }
-  Widget getUserSetting(){
+
+  Widget getUserSetting() {
     return ListTile(
       title: Text("SETTINGS",
           style: TextStyle(
@@ -346,7 +327,8 @@ class MainState extends State<MainPage> {
               color: Colors.black)),
     );
   }
-  Widget getAboutUs(){
+
+  Widget getAboutUs() {
     return ListTile(
       title: Text("ABOUT US",
           style: TextStyle(
@@ -357,43 +339,45 @@ class MainState extends State<MainPage> {
               color: Colors.black)),
     );
   }
-  Widget getLogOut(){
+
+  Widget getLogOut() {
     return MyIconButton(
       icon: FontAwesomeIcons.signOutAlt,
       theme: MyTheme.blackAndWhite,
       backgroundOpacity: 0,
       iconSize: 30,
-      onClick: (){
+      onClick: () {
         widget.user.logOut();
         Navigator.pushAndRemoveUntil(context,
-          new MaterialPageRoute(builder: (ctx){return Welcome();}),
-              (route) => false);
-        },
+            new MaterialPageRoute(builder: (ctx) {
+          return Welcome();
+        }), (route) => false);
+      },
     );
   }
+
   void resetNavigator() {
-    int activateNum = 0;
+    List<MyIconButton> buttons = [
+      widget.myDietButton,
+      widget.addPlanButton,
+      widget.takePhotoButton,
+    ];
+    TabController ctl = TabController(length: buttons.length, vsync: this);
     if (widget.navigator != null) {
-      activateNum = widget.navigator.getActivatePageNo();
+      ctl = widget.navigator.getController();
     }
     widget.navigator = MyNavigator(
-      buttons: [
-        widget.myDietButton,
-        widget.addPlanButton,
-        widget.takePhotoButton,
-
-      ],
-      switchPages: [
-        widget.myDietPart,
-        widget.addPlanPart,
-        widget.takePhotoPart,
-      ],
+      buttons: buttons,
+      controller: ctl,
       opacity: 0.25,
       edgeWidth: 0.5,
       width: ScreenTool.partOfScreenWidth(0.7),
       height: ScreenTool.partOfScreenHeight(0.08),
-      activateNum: activateNum,
     );
-    widget.bodyContent = widget.navigator.getPages();
+    widget.bodyContent = TabBarView(controller: ctl, children: [
+      widget.myDietPart,
+      widget.addPlanPart,
+      widget.takePhotoPart
+    ]);
   }
 }
