@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -56,6 +57,7 @@ class MainPage extends StatefulWidget {
       buttonRadius: 70,
       borderRadius: 10,
       onClick: () {
+        this.state.reverseTransparency();
         this.state.setState(() {
           this.photoPageOff = true;
         });
@@ -70,6 +72,7 @@ class MainPage extends StatefulWidget {
         borderRadius: 10,
         fontSize: 12,
         onClick: () {
+          this.state.startTransparency();
           this.state.setState(() {
             this.photoPageOff = false;
           });
@@ -83,6 +86,7 @@ class MainPage extends StatefulWidget {
         buttonRadius: 70,
         fontSize: 13,
         onClick: () {
+          this.state.reverseTransparency();
           this.state.setState(() {
             this.photoPageOff = true;
           });
@@ -97,9 +101,13 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> with TickerProviderStateMixin {
+  TweenAnimation headerTransparency;
   @override
   void initState() {
     widget.userAvatarContainer = this.getCircleAvatar(size: 45);
+    this.headerTransparency = new TweenAnimation();
+    this.headerTransparency.initAnimation(1.0, 0.0, 500, this,
+            () {setState(() {}); });
     // TODO: implement initState
     super.initState();
   }
@@ -139,47 +147,57 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   void openDrawer(BuildContext ctx) {
     Scaffold.of(ctx).openDrawer();
   }
+  void startTransparency(){
+    this.headerTransparency.beginAnimation();
+  }
+  void reverseTransparency(){
+    this.headerTransparency.reverse();
+  }
 
   Widget getAppBar(BuildContext ctx) {
-    return Container(
-      width: ScreenTool.partOfScreenWidth(0.85),
-      height: 70,
-      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: Color(0xFF0091EA),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 12, //阴影范围
-              spreadRadius: 3, //阴影浓度
-              color: Color(0x33000000), //阴影颜色
-            ),
-          ]),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 15,
+    return Opacity(
+        opacity:this.headerTransparency.getValue(),
+        child:Container(
+          width: ScreenTool.partOfScreenWidth(0.85),
+          height: 70,
+          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              color: Color(0xFF0091EA),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 12, //阴影范围
+                  spreadRadius: 3, //阴影浓度
+                  color: Color(0x33000000), //阴影颜色
+                ),
+              ]),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 15,
+              ),
+              GestureDetector(
+                onTap: () {
+                  if(this.headerTransparency.getValue() == 0)return;
+                  this.openDrawer(ctx);
+                },
+                child: widget.userAvatarContainer,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                widget.user.userName,
+                textDirection: TextDirection.ltr,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 20,
+                    fontFamily: "Futura",
+                    color: Colors.black),
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              this.openDrawer(ctx);
-            },
-            child: widget.userAvatarContainer,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            widget.user.userName,
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 20,
-                fontFamily: "Futura",
-                color: Colors.black),
-          ),
-        ],
-      ),
+        )
     );
   }
   Widget getTakePhotoButton(){
