@@ -1,13 +1,10 @@
 import torch
-
-import util.func as func
-
 from flask import Blueprint, request
 from flasgger import swag_from
 from werkzeug.security import generate_password_hash
 
 from db.User import User
-
+import util.user as func
 from cv.detect import detect
 
 user = Blueprint('user', __name__)
@@ -20,7 +17,7 @@ def login():
     password = request.form.get('password')
 
     # return user when true
-    auth_status = func.auth_user(email, password)
+    auth_status = func.auth_user(password=password, email=email)
     if type(auth_status) != User:
         return func.reply_json(auth_status)
     else:
@@ -35,9 +32,9 @@ def login():
 @func.require_login
 @swag_from('docs/user/logout.yml')
 def logout():
-    email = request.form.get('email').lower()
-    u = User.getUserByEmail(email)
-    u.token = func.genToken(email)
+    uid = request.form.get('uid')
+    u = User.getUserByID(uid)
+    u.token = func.genToken(key=uid)
     User.add(u)
 
     return func.reply_json(1)
@@ -53,12 +50,8 @@ def signup():
 
     u = User.getUserByEmail(email)
     if u is None:
-        return func.reply_json(-2)
+        return func.reply_json(-6)
     else:
-        # if u.code_check != 1:
-        #     return func.reply_json(-4)
-        # if func.get_time_gap(u.last_code_sent) > 60 * 10:
-        #     return func.reply_json(-6)
         if u.group != 0:
             return func.reply_json(-3)
         else:
@@ -88,7 +81,7 @@ def send_register_code():
             u.auth_code = func.gen_auth_code()
             u.last_code_sent = func.get_current_time()
         elif gap < 60:
-            return func.reply_json(-5, msg='Wait for 60s!')
+            return func.reply_json(-7)
         else:
             pass
     status = func.send_verification_code(email, u.auth_code)
@@ -115,11 +108,15 @@ def is_new_email():
 @swag_from('docs/user/check_code.yml')
 def check_code():
     auth_code = request.form.get('auth_code')
-    email = request.form.get('email').lower()
-    u = User.getUserByEmail(email)
+    if 'uid' in request.form.keys():
+        uid = request.form.get('uid')
+        u = User.getUserByID(uid)
+    else:
+        email = request.form.get('email').lower()
+        u = User.getUserByEmail(email)
 
     if u is None:
-        return func.reply_json(-4)
+        return func.reply_json(-6)
     else:
         if func.get_time_gap(u.last_code_sent) > 60 * 5:
             return func.reply_json(-4)
@@ -128,7 +125,7 @@ def check_code():
             User.add(u)
             return func.reply_json(1)
         else:
-            return func.reply_json(-4)
+            return func.reply_json(-2)
 
 
 @user.route('/cancel_account', methods=['POST'])
@@ -136,9 +133,9 @@ def check_code():
 @func.require_code_check
 @swag_from('docs/user/cancel_account.yml')
 def cancel_account():
-    email = request.form.get('email')
+    uid = request.form.get('uid')
     password = request.form.get('password')
-    auth_status = func.auth_user(email, password)
+    auth_status = func.auth_user(password=password, uid=uid)
 
     if type(auth_status) != User:
         return func.reply_json(auth_status)
@@ -153,16 +150,16 @@ def cancel_account():
 @func.require_code_check
 @swag_from('docs/user/modify_password.yml')
 def modify_password():
-    email = request.form.get('email')
+    uid = request.form.get('uid')
     password = request.form.get('password')
     new_password = generate_password_hash(request.form.get('new_password'))
-    auth_status = func.auth_user(email, password)
+    auth_status = func.auth_user(password=password, uid=uid)
     if type(auth_status) != User:
         return func.reply_json(auth_status)
     else:
         u = auth_status
         u.password = new_password
-        u.token = func.genToken(email)
+        u.token = func.genToken(uid)
         User.add(u)
         return func.reply_json(1)
 
@@ -175,7 +172,7 @@ def retrieve_password():
     password = request.form.get('new_password')
     u = User.getUserByEmail(email)
     if u is None:
-        func.reply_json(-2)
+        func.reply_json(-6)
     else:
         pass
 
@@ -187,7 +184,7 @@ def send_security_code():
     u = User.getUserByEmail(email)
 
     if u is None or u.group != 1:
-        return func.reply_json(-2, msg='Wrong email')
+        return func.reply_json(-6)
     else:
         gap = func.get_time_gap(u.last_code_sent)
         # Code expired (5 minutes)
@@ -195,7 +192,7 @@ def send_security_code():
             u.auth_code = func.gen_auth_code()
             u.last_code_sent = func.get_current_time()
         elif gap < 60:
-            return func.reply_json(-5, msg='Wait for 60s!')
+            return func.reply_json(-7)
         else:
             pass
     status = func.send_verification_code(email, u.auth_code)
@@ -223,10 +220,16 @@ def get_basic_info():
     })
 
 
+@user.route('modify_basic_info', methods=['POST'])
+@func.require_login
+def modify_basic_info():
+    uid = request.form.getlist()
+
+
+
 # test
 @user.route('detect')
 def d():
     with torch.no_grad():
         detect()
-
     return func.reply_json(1)

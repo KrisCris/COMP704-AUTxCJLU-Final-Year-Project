@@ -27,7 +27,7 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'success'
+          example: 'Success'
         data:
           type: array
           items:
@@ -44,7 +44,22 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'wrong email or password'
+          example: 'Wrong'
+        data:
+          type: array
+          example: []
+  -6:
+    description: User not exist
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -6
+        msg:
+          type: string
+          description: return info
+          example: 'Not Exist'
         data:
           type: array
           example: []

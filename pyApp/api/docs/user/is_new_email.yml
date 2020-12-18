@@ -35,7 +35,7 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'User already exists'
+          example: 'Already Exist'
         data:
           type: array
           example: []
