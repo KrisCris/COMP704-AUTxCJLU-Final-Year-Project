@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +29,7 @@ class MainPage extends StatefulWidget {
   SwitchPage bodyContent;
   MainState state;
   User user;
-  Container userAvatarContainer;
+  Widget userAvatarContainer;
   MainPage({@required User user, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -89,22 +91,6 @@ class MainPage extends StatefulWidget {
           });
         });
     this.user = user;
-    this.userAvatarContainer = Container(
-      width: 50,
-      height: 50,
-      child: ClipRRect(
-        child: this.user.getAvatar(double.infinity, double.infinity),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: Color(0xAA424242),
-            offset: Offset(3.0, 10.0), //阴影xy轴偏移量
-            blurRadius: 20.0, //阴影模糊程度
-            spreadRadius: 2.0 //阴影扩散程度,
-            )
-      ]),
-    );
   }
   @override
   State<StatefulWidget> createState() {
@@ -114,6 +100,13 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> {
+
+  @override
+  void initState() {
+    widget.userAvatarContainer = this.getCircleAvatar();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     this.resetNavigator();
@@ -128,39 +121,7 @@ class MainState extends State<MainPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    AppBar(
-                      automaticallyImplyLeading: false,
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                              onTap: Scaffold.of(ctx).openDrawer,
-                              child: widget.userAvatarContainer),
-                          Text(
-                            widget.user.userName,
-                            textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                                decoration: TextDecoration.none,
-                                fontSize: 20,
-                                fontFamily: "Futura",
-                                color: Colors.black),
-                          ),
-                          SizedBox(width: 0.1),
-                          SizedBox(
-                            width: 0.2,
-                          ),
-                          MyTextField(
-                            placeholder: "Search Food",
-                            // keyboardAction: TextInputAction.next,
-                            theme: MyTheme.WhiteAndBlack,
-                            inputType: InputFieldType.text,
-                            width: ScreenTool.partOfScreenWidth(0.4),
-                            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-                            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-                          )
-                        ],
-                      ),
-                    ),
+                    this.getAppBar(ctx),
                     Expanded(
                         child: Stack(
                       children: [
@@ -192,10 +153,81 @@ class MainState extends State<MainPage> {
         ));
   }
 
-  void openDrawer() {
-    Scaffold.of(context).openDrawer();
+  void openDrawer(BuildContext ctx) {
+    Scaffold.of(ctx).openDrawer();
   }
 
+  Widget getAppBar(BuildContext ctx){
+    return Container(
+      width: ScreenTool.partOfScreenWidth(0.85),
+      height: 70,
+      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        color: Color(0xFF0091EA),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 12, //阴影范围
+            spreadRadius: 3, //阴影浓度
+            color: Color(0x33000000), //阴影颜色
+          ),
+        ]
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 15,),
+          GestureDetector(
+            onTap: (){this.openDrawer(ctx);},
+            child: this.getCircleAvatar(size: 50),
+          )
+          ,
+          SizedBox(width: 10,),
+          Text(
+            widget.user.userName,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: 20,
+                fontFamily: "Futura",
+                color: Colors.black),
+          ),
+        ],
+      ),
+    );
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+              onTap: Scaffold.of(ctx).openDrawer,
+              child: widget.userAvatarContainer),
+          Text(
+            widget.user.userName,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: 20,
+                fontFamily: "Futura",
+                color: Colors.black),
+          ),
+          SizedBox(width: 0.1),
+          SizedBox(
+            width: 0.2,
+          ),
+          MyTextField(
+            placeholder: "Search Food",
+            // keyboardAction: TextInputAction.next,
+            theme: MyTheme.WhiteAndBlack,
+            inputType: InputFieldType.text,
+            width: ScreenTool.partOfScreenWidth(0.4),
+            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
+            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
+          )
+        ],
+      ),
+    );
+  }
   Widget getPhotoButton() {
     return new MyIconButton(
       theme: MyTheme.blackAndWhite,
@@ -215,117 +247,130 @@ class MainState extends State<MainPage> {
   }
 
   CustomDrawer getDrawer() {
-    Widget header = DrawerHeader(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: MemoryImage(
-                widget.user.getAvatarBin(),
-              ),
-              fit: BoxFit.cover)),
-    );
 
-    Widget info = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ListTile(
-          leading: widget.user.genderIcon(),
-          title: Text(widget.user.userName,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: "Futura",
-                  color: Colors.black)),
-          subtitle: Text("No." + widget.user.uid.toString(),
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black26)),
-        ),
-        ListTile(
-          leading: Icon(
-            FontAwesomeIcons.drumstickBite,
-            color: Colors.brown,
-            size: 30,
-          ),
-          title: Text(widget.user.planType,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: "Futura",
-                  color: Colors.black)),
-          subtitle: Text("PLAN",
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black26)),
-        )
-      ],
-    );
-    Widget userSetting = ListTile(
-      leading: Icon(
-        FontAwesomeIcons.userCog,
-        color: Colors.blue,
-        size: 30,
-      ),
-      title: Text("Setting",
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: Colors.black)),
-    );
-    Widget logOut = ListTile(
-      onTap: (){
-        widget.user.logOut();
-        Navigator.pushAndRemoveUntil(context,
-            new MaterialPageRoute(builder: (ctx){return Welcome();}),
-                (route) => false);
-      },
-      leading: Icon(
-        FontAwesomeIcons.signOutAlt,
-        color: Colors.deepOrange,
-        size: 35,
-      ),
-      title: Text("Log out",
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: Colors.black)),
-    );
+    Widget info = this.getDrawerHeader();
+    Widget userSetting = this.getUserSetting();
+    Widget aboutUs = this.getAboutUs();
+    Widget logOut = this.getLogOut();
+
     List<Widget> drawerItems = [
+      SizedBox(height: ScreenTool.partOfScreenHeight(0.05),),
+      info,
+      SizedBox(height: 70,),
       userSetting,
-      Divider(
-        color: Colors.black26,
+      SizedBox(height: 30,),
+      aboutUs,
+      Expanded(child: SizedBox()),
+      Row(
+        children: [
+          Expanded(child: SizedBox()),
+          logOut,
+          SizedBox(width: 15,)
+        ],
       ),
-      logOut,
-      Divider(
-        color: Colors.black26,
-      ),
+      SizedBox(height: 15,),
     ];
     return CustomDrawer(
-      widthPercent: 0.7,
+      widthPercent: 1,
       child: Column(
-        children: [
-          header,
-          info,
-          Divider(),
-          Expanded(
-            child: ListView(
-              children: drawerItems,
-            ),
-          ),
-        ],
+        children: drawerItems,
       ),
     );
   }
 
+  Widget getCircleAvatar({double size=60}){
+    return Container(
+      width: size,
+      height: size,
+      decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+              image: MemoryImage(widget.user.getAvatarBin()),
+            fit: BoxFit.cover
+          ),
+        boxShadow:[
+          BoxShadow(
+            blurRadius: 10, //阴影范围
+            spreadRadius: 1, //阴影浓度
+            color: Color(0x33000000), //阴影颜色
+          ),
+        ]
+      )
+      // child: , //增加文字等
+    );
+  }
+  Widget getDrawerHeader(){
+    return Row(
+      children: [
+        SizedBox(width: 15,),
+        this.getCircleAvatar(),
+        SizedBox(width: 20,),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.user.userName,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black)),
+            Text("Registered For xxx Days",
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black38)),
+          ],
+        ),
+        Expanded(child: SizedBox()),
+        MyIconButton(
+          icon: FontAwesomeIcons.times,
+          theme: MyTheme.blackAndWhite,
+          backgroundOpacity: 0,
+          iconSize: 30,
+        ),
+        SizedBox(width: 15,)
+      ],
+    );
+  }
+  Widget getUserSetting(){
+    return ListTile(
+      title: Text("SETTINGS",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+  }
+  Widget getAboutUs(){
+    return ListTile(
+      title: Text("ABOUT US",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+  }
+  Widget getLogOut(){
+    return MyIconButton(
+      icon: FontAwesomeIcons.signOutAlt,
+      theme: MyTheme.blackAndWhite,
+      backgroundOpacity: 0,
+      iconSize: 30,
+      onClick: (){
+        widget.user.logOut();
+        Navigator.pushAndRemoveUntil(context,
+          new MaterialPageRoute(builder: (ctx){return Welcome();}),
+              (route) => false);
+        },
+    );
+  }
   void resetNavigator() {
     int activateNum = 0;
     if (widget.navigator != null) {
