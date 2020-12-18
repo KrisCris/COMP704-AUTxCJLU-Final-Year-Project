@@ -15,7 +15,23 @@ from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
 
 from util.func import reply_json, get_time_gap,get_current_time
 
-
+'''
+  -1:
+    description: Login Required
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -1
+        msg:
+          type: string
+          description: return info
+          example: 'login required'
+        data:
+          type: array
+          example: []
+'''
 def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
@@ -39,18 +55,80 @@ def require_login(func):
     return inner
 
 
+'''
+  -4:
+    description: Code Expired
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -4
+        msg:
+          type: string
+          description: return info
+          example: 'Expired'
+        data:
+          type: array
+          example: []
+  -6:
+    description: User Not Exist
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -6
+        msg:
+          type: string
+          description: return info
+          example: 'Not Exist'
+        data:
+          type: array
+          example: []
+  -8:
+    description: Code Check Required
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -8
+        msg:
+          type: string
+          description: return info
+          example: 'Code Check Required'
+        data:
+          type: array
+          example: []
+'''
 def require_code_check(func):
     @functools.wraps(func)
     def inner(*args, **kwargs):
-        email = request.form['email'] if request.method == 'POST' else request.values.get('email')
+        if request.method == 'POST':
+            if 'email' in request.form.keys():
+                email = request.form['email']
+            else:
+                uid = request.form['uid']
+        else:
+            if 'email' in request.values.keys():
+                email = request.values.get('email')
+            else:
+                uid = request.values.get('uid')
+
         from db.User import User
-        user = User.getUserByEmail(email)
+        if email is None and uid is None:
+            print("error in require code check")
+        elif email is None:
+            user = User.getUserByID(uid)
+        else:
+            user = User.getUserByEmail(email)
 
         if user is None:
             return reply_json(-6)
         elif user.code_check != 1:
             return reply_json(-8)
-        elif get_time_gap(user.last_code_sent) > 60 * 15:
+        elif get_time_gap(user.last_code_sent) > 60 * 30:
             return reply_json(-4)
         else:
             user.code_check = 0
@@ -63,7 +141,7 @@ def require_code_check(func):
 
 def remove_temp_account():
     from db.User import User
-    unavailable_time = get_current_time() - 3600
+    unavailable_time = get_current_time() - 43200
     users = User.query.filter(User.group == 0, User.last_code_sent < unavailable_time).all()
     for user in users:
         User.delete(user)
@@ -96,9 +174,9 @@ def gen_auth_code():
     return s
 
 
-def genToken(email):
+def genToken(key):
     time_uuid = uuid.uuid1()
-    return uuid.uuid5(time_uuid, email)
+    return uuid.uuid5(time_uuid, key)
 
 
 def __send_email(receivers: list, content: str, subject: str):
