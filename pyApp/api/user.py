@@ -222,9 +222,19 @@ def get_basic_info():
 
 @user.route('modify_basic_info', methods=['POST'])
 @func.require_login
+@swag_from('docs/user/modify_basic_info.yml')
 def modify_basic_info():
-    uid = request.form.getlist()
+    uid = request.form.get('uid')
+    nickname = request.form.get('nickname')
+    gender = request.form.get('gender')
+    age = request.form.get('age')
 
+    u = User.getUserByID(uid)
+    u.nickname = nickname
+    u.gender = gender
+    u.age = age
+    u.add()
+    return func.reply_json(1)
 
 
 # test

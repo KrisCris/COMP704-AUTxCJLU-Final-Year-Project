@@ -35,19 +35,22 @@ from util.func import reply_json, get_time_gap,get_current_time
 def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
-        token = ''
         if request.method == 'POST':
             if 'token' not in request.form.keys():
                 return reply_json(-1)
+            else:
+                token = request.form['token']
+                uid = request.form['uid']
         else:
             if not request.values.has_key('token'):
                 return reply_json(-1)
-        token = request.form['token'] if request.method == 'POST' else request.values.get('token')
+            else:
+                token = request.values.get('token')
+                uid = request.values.get('uid')
         from db.User import User
-        users = User.query.filter(User.token == token).all()
-        if len(users) != 1:
+        user = User.query.filter(User.token == token).filter(User.id == uid).first()
+        if user is None:
             return reply_json(-1)
-        user = users[0]
         if user.token != token:
             return reply_json(-1)
         return func(*args, **kwargs)
