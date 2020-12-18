@@ -5,11 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/formatChecker.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/FormatChecker.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyTextField extends StatefulWidget {
+class CustomTextField extends StatefulWidget {
   final MyTheme theme;
 
   // final iconString;  //这里是放图表的，暂时用不到
@@ -34,12 +34,12 @@ class MyTextField extends StatefulWidget {
   List<Function> listenerList;
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
-  MyTextFieldState st;
+  CustomTextFieldState st;
 
   ///when length change, button fix at center(0),left(1) or right(2)
   int sizeChangeMode;
 
-  MyTextField({
+  CustomTextField({
     this.placeholder,
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
@@ -62,7 +62,7 @@ class MyTextField extends StatefulWidget {
     this.autoChangeState = true,
     Key key,
   }) : super(key: key) {
-    this.st = new MyTextFieldState(this.firstThemeState, this.firstReactState);
+    this.st = new CustomTextFieldState(this.firstThemeState, this.firstReactState);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
@@ -172,7 +172,7 @@ class MyTextField extends StatefulWidget {
   }
 }
 
-class MyTextFieldState extends State<MyTextField>
+class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, Themeable {
   TextEditingController _inputcontroller = TextEditingController();
   ColorTweenAnimation colorAnimation = ColorTweenAnimation();
@@ -190,7 +190,7 @@ class MyTextFieldState extends State<MyTextField>
   bool isInputing = false;
   String prev = "";
 
-  MyTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
+  CustomTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
     this.themeState = the;
     this.reactState = rea;
   }

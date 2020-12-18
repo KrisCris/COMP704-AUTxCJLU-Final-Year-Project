@@ -1,31 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
-import 'package:fore_end/Mycomponents/iconButton.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/CustomIconButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyNavigator extends StatefulWidget {
+class CustomNavigator extends StatefulWidget {
   double width;
   double height;
   double opacity;
   double edgeWidth;
   Color backgroundColor;
-  MyIconButton activateButton;
-  List<MyIconButton> buttons = const <MyIconButton>[];
+  CustomIconButton activateButton;
+  List<CustomIconButton> buttons = const <CustomIconButton>[];
   TabController controller;
-  MyNavigatorState state;
-  MyNavigator(
+  CustomNavigatorState state;
+  CustomNavigator(
       {this.width,
       this.height,
       this.edgeWidth = 1,
       this.opacity = 1,
       this.backgroundColor = Colors.white,
       this.controller,
-      List<MyIconButton> buttons,
+      List<CustomIconButton> buttons,
       }) {
     this.buttons = buttons;
-    for (MyIconButton bt in this.buttons) {
+    for (CustomIconButton bt in this.buttons) {
       bt.setParentNavigator(this);
     }
     this.buttons[0].addDelayInit(() {
@@ -34,11 +34,11 @@ class MyNavigator extends StatefulWidget {
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = new MyNavigatorState();
+    this.state = new CustomNavigatorState();
     return this.state;
   }
 
-  bool isActivate(MyIconButton bt) {
+  bool isActivate(CustomIconButton bt) {
     return this.activateButton == bt;
   }
   void activateButtonByIndex(int i){
@@ -52,8 +52,8 @@ class MyNavigator extends StatefulWidget {
     }
   }
 
-  void activateButtonByObject(MyIconButton button) {
-    for (MyIconButton bt in this.buttons) {
+  void activateButtonByObject(CustomIconButton button) {
+    for (CustomIconButton bt in this.buttons) {
       if (bt == button) {
         bt.setReactState(ComponentReactState.focused);
         this.activateButton = bt;
@@ -71,7 +71,7 @@ class MyNavigator extends StatefulWidget {
     return this.controller;
   }
 
-  void switchPageByObject(MyIconButton button) {
+  void switchPageByObject(CustomIconButton button) {
     for (int i = 0; i < this.buttons.length; i++) {
       if (this.buttons[i] == button) {
         this.controller.animateTo(i);
@@ -88,7 +88,7 @@ class MyNavigator extends StatefulWidget {
   }
 }
 
-class MyNavigatorState extends State<MyNavigator> with TickerProviderStateMixin{
+class CustomNavigatorState extends State<CustomNavigator> with TickerProviderStateMixin{
   TweenAnimation backgroundOpacity;
   TweenAnimation shadowSize;
   TweenAnimation shadowDense;

@@ -7,13 +7,13 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/CustomDrawer.dart';
-import 'package:fore_end/Mycomponents/iconButton.dart';
-import 'package:fore_end/Mycomponents/myNavigator.dart';
+import 'package:fore_end/Mycomponents/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/CustomNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
-import 'package:fore_end/Pages/takePhotoPage.dart';
+import 'package:fore_end/Pages/TakePhotoPage.dart';
 
 import 'LoginPage.dart';
 
@@ -22,10 +22,10 @@ class MainPage extends StatefulWidget {
   Widget myDietPart;
   TakePhotoPage takePhotoPart;
   Widget addPlanPart;
-  MyIconButton myDietButton;
-  MyIconButton takePhotoButton;
-  MyIconButton addPlanButton;
-  MyNavigator navigator;
+  CustomIconButton myDietButton;
+  CustomIconButton takePhotoButton;
+  CustomIconButton addPlanButton;
+  CustomNavigator navigator;
   Widget bodyContent;
   MainState state;
   User user;
@@ -51,7 +51,7 @@ class MainPage extends StatefulWidget {
         ],
       ),
     );
-    this.myDietButton = MyIconButton(
+    this.myDietButton = CustomIconButton(
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
@@ -66,7 +66,7 @@ class MainPage extends StatefulWidget {
         // });
       },
     );
-    this.takePhotoButton = MyIconButton(
+    this.takePhotoButton = CustomIconButton(
         theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.camera,
         backgroundOpacity: 0.0,
@@ -81,7 +81,7 @@ class MainPage extends StatefulWidget {
           //   this.photoPageOff = false;
           // });
         });
-    this.addPlanButton = MyIconButton(
+    this.addPlanButton = CustomIconButton(
         theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
@@ -163,7 +163,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
   Widget getPhotoButton() {
-    return new MyIconButton(
+    return new CustomIconButton(
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.camera,
       iconSize: 40,
@@ -172,7 +172,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget getAlbumButton() {
-    return new MyIconButton(
+    return new CustomIconButton(
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.image,
       iconSize: 40,
@@ -271,7 +271,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           ],
         ),
         Expanded(child: SizedBox()),
-        MyIconButton(
+        CustomIconButton(
           icon: FontAwesomeIcons.times,
           theme: MyTheme.blackAndWhite,
           backgroundOpacity: 0,
@@ -309,7 +309,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget getLogOut() {
-    return MyIconButton(
+    return CustomIconButton(
       icon: FontAwesomeIcons.signOutAlt,
       theme: MyTheme.blackAndWhite,
       backgroundOpacity: 0,
@@ -325,7 +325,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget getNavigator(TabController ctl){
-    return MyNavigator(
+    return CustomNavigator(
       buttons: [
         widget.myDietButton,
         widget.addPlanButton,
@@ -355,7 +355,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return TabController(length: 3, vsync: this);
   }
   void setNavigator() {
-    List<MyIconButton> buttons = [
+    List<CustomIconButton> buttons = [
       widget.myDietButton,
       widget.addPlanButton,
       widget.takePhotoButton,
@@ -364,7 +364,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     if (widget.navigator != null) {
       ctl = widget.navigator.getController();
     }
-    widget.navigator = new MyNavigator(
+    widget.navigator = new CustomNavigator(
       buttons: buttons,
       controller: ctl,
       opacity: 0.25,

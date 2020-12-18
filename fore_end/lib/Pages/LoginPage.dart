@@ -8,24 +8,24 @@ import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
-import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
-import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/Background.dart';
+import 'package:fore_end/Mycomponents/CustomButton.dart';
+import 'package:fore_end/Mycomponents/CustomTextField.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class Login extends StatelessWidget {
-  MyButton backButton;
-  MyButton nextButton;
-  MyTextField emailField;
-  MyTextField passwordField;
+  CustomButton backButton;
+  CustomButton nextButton;
+  CustomTextField emailField;
+  CustomTextField passwordField;
   bool emailIsInput = false;
   bool passwordIsInput = false;
 
   @override
   Widget build(BuildContext context) {
-    this.backButton = MyButton(
+    this.backButton = CustomButton(
       text: "Back",
       isBold: true,
       leftMargin: 20,
@@ -38,7 +38,7 @@ class Login extends StatelessWidget {
       },
     );
 
-    this.nextButton = MyButton(
+    this.nextButton = CustomButton(
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -54,7 +54,7 @@ class Login extends StatelessWidget {
         this.login(emailVal, passwordVal, context);
       },
     );
-    this.emailField = MyTextField(
+    this.emailField = CustomTextField(
       placeholder: "Email address",
       // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
@@ -72,7 +72,7 @@ class Login extends StatelessWidget {
       },
     );
 
-    this.passwordField = MyTextField(
+    this.passwordField = CustomTextField(
       placeholder: "Password",
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.password,

@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/Mycomponents/myNavigator.dart';
+import 'package:fore_end/Mycomponents/CustomNavigator.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyIconButton extends StatefulWidget {
+class CustomIconButton extends StatefulWidget {
   MyTheme theme;
   IconData icon;
   double iconSize;
@@ -14,12 +14,12 @@ class MyIconButton extends StatefulWidget {
   double borderRadius;
   double backgroundOpacity;
   String text;
-  MyIconButtonState state;
+  CustomIconButtonState state;
   List<Function> delayInit = <Function>[];
   Function onClick;
-  MyNavigator navi;
+  CustomNavigator navi;
 
-  MyIconButton(
+  CustomIconButton(
       {@required this.theme,
       @required this.icon,
       this.text = "",
@@ -32,7 +32,7 @@ class MyIconButton extends StatefulWidget {
       : super() {}
   @override
   State<StatefulWidget> createState() {
-    this.state = new MyIconButtonState(
+    this.state = new CustomIconButtonState(
         ComponentThemeState.normal, ComponentReactState.unfocused);
     return this.state;
   }
@@ -41,7 +41,7 @@ class MyIconButton extends StatefulWidget {
     this.delayInit.add(f);
   }
 
-  void setParentNavigator(MyNavigator nv) {
+  void setParentNavigator(CustomNavigator nv) {
     this.navi = nv;
   }
 
@@ -56,12 +56,12 @@ class MyIconButton extends StatefulWidget {
   }
 }
 
-class MyIconButtonState extends State<MyIconButton>
+class CustomIconButtonState extends State<CustomIconButton>
     with Themeable, TickerProviderStateMixin {
   ColorTweenAnimation backgroundColorAnimation = new ColorTweenAnimation();
   ColorTweenAnimation iconAndTextColorAnimation = new ColorTweenAnimation();
 
-  MyIconButtonState(ComponentThemeState the, ComponentReactState rea)
+  CustomIconButtonState(ComponentThemeState the, ComponentReactState rea)
       : super() {
     this.themeState = the;
     this.reactState = rea;

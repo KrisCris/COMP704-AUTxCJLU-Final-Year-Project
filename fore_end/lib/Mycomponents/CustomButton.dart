@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyButton extends StatefulWidget {
+class CustomButton extends StatefulWidget {
   final MyTheme theme;
 
   ///The radius of border
@@ -73,11 +73,11 @@ class MyButton extends StatefulWidget {
   ///duration of length change animation
   int lengthDura;
 
-  MyButtonState state;
+  CustomButtonState state;
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
 
-  MyButton(
+  CustomButton(
       {this.text,
       @required this.theme,
       this.fontsize = 18.0,
@@ -110,7 +110,7 @@ class MyButton extends StatefulWidget {
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = MyButtonState(this.firstReactState, this.firstThemeState);
+    this.state = CustomButtonState(this.firstReactState, this.firstThemeState);
     return this.state;
   }
 
@@ -163,7 +163,7 @@ class MyButton extends StatefulWidget {
   }
 }
 
-class MyButtonState extends State<MyButton>
+class CustomButtonState extends State<CustomButton>
     with TickerProviderStateMixin, Themeable {
   TweenAnimation flashAnimation = new TweenAnimation();
   TweenAnimation lengthAnimation = new TweenAnimation();
@@ -172,7 +172,7 @@ class MyButtonState extends State<MyButton>
   bool isTap = false;
   double firstWidth;
 
-  MyButtonState(ComponentReactState rea, ComponentThemeState the) : super() {
+  CustomButtonState(ComponentReactState rea, ComponentThemeState the) : super() {
     this.reactState = rea;
     this.themeState = the;
   }
