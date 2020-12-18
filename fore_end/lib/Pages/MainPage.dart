@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
 import 'package:fore_end/Mycomponents/myNavigator.dart';
+import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
 import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/Pages/takePhotoPage.dart';
@@ -22,6 +23,9 @@ class MainPage extends StatefulWidget {
   SwitchPage bodyContent;
   AppBar appBar;
   MainState state;
+  String userName="Username";
+  MySearchBarDelegate searchBarDelegate;
+
   MainPage({Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -136,7 +140,43 @@ class MainState extends State<MainPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              widget.appBar,
+              // widget.appBar,
+              AppBar(
+                  title: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: AssetImage(
+                          "image/avatar.png",
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        this.widget.userName,
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 20,
+                            fontFamily: "Futura",
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
+
+                    actions:<Widget>[
+                    IconButton(
+                        icon:Icon(Icons.search),
+                        onPressed: (){
+                          showSearch(context:context,delegate: this.widget.searchBarDelegate);
+                        }
+                    ),
+                  ]
+
+
+              ),
+
+
               Expanded(
                   child: Stack(
                     children: [
