@@ -152,15 +152,6 @@ class MainState extends State<MainPage> {
                           SizedBox(
                             width: 0.2,
                           ),
-                          MyTextField(
-                            placeholder: "Search Food",
-                            // keyboardAction: TextInputAction.next,
-                            theme: MyTheme.WhiteAndBlack,
-                            inputType: InputFieldType.text,
-                            width: ScreenTool.partOfScreenWidth(0.4),
-                            ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-                            ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-                          )
                         ],
                       ),
 
@@ -168,7 +159,8 @@ class MainState extends State<MainPage> {
                           IconButton(
                               icon:Icon(Icons.search),
                               onPressed: (){
-                                showSearch(context:context,delegate: this.widget.searchBarDelegate);
+                                showSearch(context:context,delegate: MySearchBarDelegate());
+                                //this.widget.searchBarDelegate);
                               }
                           ),
                         ]
