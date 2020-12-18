@@ -128,20 +128,13 @@ class MainState extends State<MainPage> {
                 alignment: Alignment.center,
                 height: ScreenTool.partOfScreenHeight(1),
                 child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                      automaticallyImplyLeading: false,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     AppBar(
+
+                        automaticallyImplyLeading: false,
                       title: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                    actions:<Widget>[
-                    IconButton(
-                        icon:Icon(Icons.search),
-                        onPressed: (){
-                          showSearch(context:context,delegate: this.widget.searchBarDelegate);
-                        }
-                    ),
-                  ]
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           GestureDetector(
                               onTap: Scaffold.of(ctx).openDrawer,
@@ -170,6 +163,15 @@ class MainState extends State<MainPage> {
                           )
                         ],
                       ),
+
+                        actions:<Widget>[
+                          IconButton(
+                              icon:Icon(Icons.search),
+                              onPressed: (){
+                                showSearch(context:context,delegate: this.widget.searchBarDelegate);
+                              }
+                          ),
+                        ]
                     ),
                     Expanded(
                         child: Stack(
@@ -290,11 +292,12 @@ class MainState extends State<MainPage> {
               color: Colors.black)),
     );
     Widget logOut = ListTile(
-      onTap: (){
+      onTap: () {
         widget.user.logOut();
         Navigator.pushAndRemoveUntil(context,
-            new MaterialPageRoute(builder: (ctx){return Welcome();}),
-                (route) => false);
+            new MaterialPageRoute(builder: (ctx) {
+          return Welcome();
+        }), (route) => false);
       },
       leading: Icon(
         FontAwesomeIcons.signOutAlt,
@@ -346,7 +349,6 @@ class MainState extends State<MainPage> {
         widget.myDietButton,
         widget.addPlanButton,
         widget.takePhotoButton,
-
       ],
       switchPages: [
         widget.myDietPart,
