@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
+import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/req.dart';
+import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
 import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class Login extends StatelessWidget {
@@ -48,26 +51,7 @@ class Login extends StatelessWidget {
         this.nextButton.setDisable(true);
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
-        try{
-          Response res = await Requests.login({
-            "email": emailVal,
-            "password": passwordVal
-          });
-          if (res.data['code'] == -2) {
-            EasyLoading.showError("Email or password wrong",
-                duration: Duration(milliseconds: 2000));
-          } else if (res.data['code'] == 1) {
-            EasyLoading.showSuccess("Login Success",
-                duration: Duration(milliseconds: 2000));
-            Requests.saveCookies({
-              "token":res.data['data']['token']
-            });
-            
-          }
-        }on DioError catch(e){
-          print("Exception when login\n");
-          print(e.toString());
-        }
+        this.login(emailVal, passwordVal, context);
       },
     );
     this.emailField = MyTextField(
@@ -153,5 +137,47 @@ class Login extends StatelessWidget {
       this.nextButton,
       //this.nextButton,
     ]));
+  }
+
+  void login(String email, String pass, BuildContext context) async{
+    try{
+      Response res = await Requests.login({
+        "email": email,
+        "password": pass
+      });
+      if (res.data['code'] == -2) {
+        EasyLoading.showError("Email or password wrong",
+            duration: Duration(milliseconds: 2000));
+        this.
+        passwordField.clearInput();
+      } else if (res.data['code'] == 1) {
+        User u = new User(
+          token: res.data['data']['token'],
+          uid:res.data['data']['uid'],
+          email: email,
+        );
+        Requests.getBasicInfo({
+          'uid':u.uid,
+          'token':u.token
+        }).then((value){
+          if(value.data['code'] == 1){
+            u.userName =value.data['data']['nickname'];
+            u.avatar_remote = value.data['data']['avatar'];
+            u.age = value.data['data']['age'];
+            u.gender = value.data['data']['gender'];
+            u.save();
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new MainPage(user:u);
+            }),(ct)=>false);
+          }else if(value.data['code'] == -1){
+            EasyLoading.showError("Login token invalid",
+                duration: Duration(milliseconds: 2000));
+          }
+        });
+      }
+    }on DioError catch(e){
+      print("Exception when login\n");
+      print(e.toString());
+    }
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/req.dart';
+import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/background.dart';
 import 'package:fore_end/Mycomponents/myButton.dart';
@@ -104,7 +104,6 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () async {
         if (!this.counter.isStop()) return;
-        this.emailTextField.setNormal();
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
           "email":this.emailTextField.getInput()

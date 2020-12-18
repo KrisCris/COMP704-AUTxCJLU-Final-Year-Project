@@ -1,5 +1,6 @@
 # Miscellaneous
 pyApp/cv/inference/output
+pyApp/cv/inference/images
 *.class
 *.log
 *.pyc
