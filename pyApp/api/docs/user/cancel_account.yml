@@ -4,10 +4,10 @@ tags:
   - USER
 parameters:
   - in: formData
-    name: email
+    name: uid
     type: string
     required: true
-    description: Email
+    description: User ID
   - in: formData
     name: password
     type: string
@@ -20,7 +20,7 @@ parameters:
     description: Token
 responses:
   1:
-    description: Successful Login
+    description: Successful
     schema:
       properties:
         code:
@@ -49,23 +49,8 @@ responses:
         data:
           type: array
           example: []
-  -4:
-    description: Require Code Check
-    schema:
-      properties:
-        code:
-          type: number
-          description: return code
-          example: -4
-        msg:
-          type: string
-          description: return info
-          example: 'Require Code Check'
-        data:
-          type: array
-          example: []
   -1:
-    description: Wrong Username or Password
+    description: Login Required
     schema:
       properties:
         code:
@@ -76,6 +61,51 @@ responses:
           type: string
           description: return info
           example: 'login required'
+        data:
+          type: array
+          example: []
+  -4:
+    description: Code Expired
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -4
+        msg:
+          type: string
+          description: return info
+          example: 'Expired'
+        data:
+          type: array
+          example: []
+  -6:
+    description: User Not Exist
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -6
+        msg:
+          type: string
+          description: return info
+          example: 'Not Exist'
+        data:
+          type: array
+          example: []
+  -8:
+    description: Code Check Required
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -8
+        msg:
+          type: string
+          description: return info
+          example: 'Code Check Required'
         data:
           type: array
           example: []

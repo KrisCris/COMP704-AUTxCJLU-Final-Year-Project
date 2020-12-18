@@ -1,11 +1,11 @@
-Get Basic User Info
+Modify Basic Info (gender, age, nickname)
 ---
 tags:
   - USER
 parameters:
   - in: formData
     name: uid
-    type: string
+    type: integer
     required: true
     description: User ID
   - in: formData
@@ -13,9 +13,24 @@ parameters:
     type: string
     required: true
     description: Token
+  - in: formData
+    name: age
+    type: integer
+    required: true
+    description: age
+  - in: formData
+    name: gender
+    type: integer
+    required: true
+    description: gender code
+  - in: formData
+    name: nickname
+    type: string
+    required: true
+    description: nickname
 responses:
   1:
-    description: Successfully retrieved data
+    description: Successfully Changed Password (Require re-login)
     schema:
       properties:
         code:
@@ -28,15 +43,7 @@ responses:
           example: 'success'
         data:
           type: array
-          items:
-            type: object
-            example: {
-              "email": "root@root.com",
-              "nickname":"ROOT",
-              "avatar":"b64String",
-              "gender":1,
-              "age": 18
-            }
+          example: []
   -1:
     description: Login Required
     schema:
@@ -52,6 +59,3 @@ responses:
         data:
           type: array
           example: []
-
-
-

@@ -30,7 +30,7 @@ responses:
           type: array
           example: []
   -1:
-    description: Wrong Username or Password
+    description: Login Required
     schema:
       properties:
         code:
