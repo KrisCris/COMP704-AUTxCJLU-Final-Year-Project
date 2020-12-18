@@ -5,7 +5,7 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyTextButton extends StatefulWidget {
+class CustomTextButton extends StatefulWidget {
   MyTheme theme;
   String text;
   double fontsize;
@@ -17,7 +17,7 @@ class MyTextButton extends StatefulWidget {
 
 
 
-  MyTextButton(this.text,
+  CustomTextButton(this.text,
       {this.fontsize = 16,
       this.tapUpFunc,
         @required this.theme,
@@ -31,11 +31,11 @@ class MyTextButton extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return new MyTextButtonState();
+    return new CustomTextButtonState();
   }
 }
 
-class MyTextButtonState extends State<MyTextButton>
+class CustomTextButtonState extends State<CustomTextButton>
     with TickerProviderStateMixin, Themeable {
   ColorTweenAnimation animation = new ColorTweenAnimation();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
