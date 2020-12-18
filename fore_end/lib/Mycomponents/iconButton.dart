@@ -20,7 +20,8 @@ class MyIconButton extends StatefulWidget {
   MyNavigator navi;
 
   MyIconButton(
-      {@required this.theme,
+      {
+        @required this.theme,
       @required this.icon,
       this.text = "",
       this.iconSize = 20,
@@ -98,14 +99,17 @@ class MyIconButtonState extends State<MyIconButton>
         Icon(widget.icon,
             color: this.iconAndTextColorAnimation.getValue(),
             size: widget.iconSize),
-        Text(
-          widget.text,
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: widget.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: this.iconAndTextColorAnimation.getValue()),
+        Offstage(
+          offstage: widget.text == "" || widget.text == null,
+          child: Text(
+            widget.text,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: widget.fontSize,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Futura",
+                color: this.iconAndTextColorAnimation.getValue()),
+          )
         )
       ],
     );

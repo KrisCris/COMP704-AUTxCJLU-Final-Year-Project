@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class CustomDrawer extends StatefulWidget {
     this.widthPercent,
     this.onOpen,
     this.onClose
-  })  : assert(widthPercent < 1.0 && widthPercent > 0.0),
+  })  : assert(widthPercent <= 1.0 && widthPercent > 0.0),
         super(key: key);
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
@@ -62,13 +64,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
       namesRoute: true,
       explicitChildNodes: true,
       label: label,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.expand(width: _width),
-        child: Material(
-          elevation: widget.elevation,
-          child: widget.child,
-        ),
+      child: Stack(
+       children: [
+         BackdropFilter(
+           filter: ImageFilter.blur(sigmaX:5.0,sigmaY:5.0),
+           child:  Opacity(
+             opacity: 0.75,
+             child: ConstrainedBox(
+               constraints: BoxConstraints.expand(width: _width),
+               child: Material(
+                 elevation: widget.elevation,
+               ),
+             ),
+           ),
+         ),
+         widget.child,
+       ],
       ),
+
     );
   }
 }
