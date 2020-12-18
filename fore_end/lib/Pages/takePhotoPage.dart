@@ -23,7 +23,7 @@ class TakePhotoPage extends StatefulWidget {
 }
 
 class TakePhotoState extends State<TakePhotoPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
 
   CameraController _ctl;
   Future<void> _initDone;
@@ -54,6 +54,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     this.getCamera();
     return FutureBuilder(
         future: this._initDone,
@@ -212,4 +213,7 @@ class TakePhotoState extends State<TakePhotoPage>
     );
     return content;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
