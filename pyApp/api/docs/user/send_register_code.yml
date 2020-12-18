@@ -35,7 +35,7 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'user already exists'
+          example: 'Already Exist'
         data:
           type: array
           example: []
@@ -50,10 +50,25 @@ responses:
         msg:
           type: string
           description: return info
-          example: 'email sending failed'
+          example: 'Operation Failed'
         data:
           type: array
           example: []
+  -7:
+    description: Wait
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -7
+        msg:
+          type: string
+          description: return info
+          example: 'Too Often'
+        data:
+          type: array
+          example: [ ]
 
 
 
