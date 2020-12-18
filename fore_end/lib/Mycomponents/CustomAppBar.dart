@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 
 class CustomAppBar extends StatefulWidget{
   Widget userAvatarContainer;

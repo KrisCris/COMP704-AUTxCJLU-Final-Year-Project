@@ -8,10 +8,10 @@ import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
-import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
-import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/Background.dart';
+import 'package:fore_end/Mycomponents/CustomButton.dart';
+import 'package:fore_end/Mycomponents/CustomTextField.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
@@ -23,14 +23,14 @@ void main() {
 }
 
 class Register extends StatelessWidget {
-  MyTextField emailTextField;
-  MyTextField verifyTextField;
-  MyTextField nicknameTextField;
-  MyTextField passwordTextField;
-  MyTextField confirmPasswordTextField;
-  MyButton verifyButton;
+  CustomTextField emailTextField;
+  CustomTextField verifyTextField;
+  CustomTextField nicknameTextField;
+  CustomTextField passwordTextField;
+  CustomTextField confirmPasswordTextField;
+  CustomButton verifyButton;
   MyCounter counter;
-  MyButton nextButton;
+  CustomButton nextButton;
   String emailWhenClickButton = "";
   ScrollController scrollCtl;
   bool verified = false;
@@ -45,7 +45,7 @@ class Register extends StatelessWidget {
     this.counter = new MyCounter(times: 60, duration: 1000);
     this.scrollCtl = new ScrollController();
 
-    this.verifyTextField = MyTextField(
+    this.verifyTextField = CustomTextField(
       placeholder: 'Verify Code',
       autoChangeState: false,
       inputType: InputFieldType.verifyCode,
@@ -92,7 +92,7 @@ class Register extends StatelessWidget {
       },
     );
 
-    this.emailTextField = MyTextField(
+    this.emailTextField = CustomTextField(
       placeholder: 'Email',
       next: this.verifyTextField.getFocusNode(),
       inputType: InputFieldType.email,
@@ -127,7 +127,7 @@ class Register extends StatelessWidget {
       },
     );
 
-    this.confirmPasswordTextField = MyTextField(
+    this.confirmPasswordTextField = CustomTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
       theme: MyTheme.blueStyle,
@@ -161,7 +161,7 @@ class Register extends StatelessWidget {
       },
     );
 
-    this.passwordTextField = MyTextField(
+    this.passwordTextField = CustomTextField(
       placeholder: 'password',
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
@@ -190,7 +190,7 @@ class Register extends StatelessWidget {
       },
     );
 
-    this.nicknameTextField = MyTextField(
+    this.nicknameTextField = CustomTextField(
       placeholder: 'Nick name',
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
@@ -230,7 +230,7 @@ class Register extends StatelessWidget {
       }
     });
 
-    this.verifyButton = MyButton(
+    this.verifyButton = CustomButton(
         text: "Acquire verify code",
         fontsize: 20,
         width: 0.7,
@@ -273,7 +273,7 @@ class Register extends StatelessWidget {
       }
     };
 
-    this.nextButton = MyButton(
+    this.nextButton = CustomButton(
       firstReactState: ComponentReactState.disabled,
       text: "Next",
       isBold: true,
@@ -410,7 +410,7 @@ class Register extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      MyButton(
+                      CustomButton(
                         text: "Back",
                         isBold: true,
                         leftMargin: 20,

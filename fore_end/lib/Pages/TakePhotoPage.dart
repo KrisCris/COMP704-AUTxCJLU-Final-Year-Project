@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 
 class TakePhotoPage extends StatefulWidget {
   TakePhotoState state;
