@@ -96,6 +96,12 @@ class Requests{
     return res;
   }
 
+  static Future<Response> getBasicInfo(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/user/get_basic_info",data: dt);
+    return res;
+  }
   static Future<Response> checkEmailRepeat(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);

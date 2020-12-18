@@ -148,21 +148,32 @@ class Login extends StatelessWidget {
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));
+        this.
+        passwordField.clearInput();
       } else if (res.data['code'] == 1) {
-        EasyLoading.showSuccess("Login Success",
-            duration: Duration(milliseconds: 2000));
-        print("\n\n");
-        print("User info incomplete when call login() in LoginPage.dart");
-        print("\n\n");
         User u = new User(
           token: res.data['data']['token'],
+          uid:res.data['data']['uid'],
           email: email,
         );
-        u.save();
-        Navigator.push(context, new MaterialPageRoute(builder: (context){
-          return new MainPage(user:u);
-        }));
-
+        Requests.getBasicInfo({
+          'uid':u.uid,
+          'token':u.token
+        }).then((value){
+          if(value.data['code'] == 1){
+            u.userName =value.data['data']['nickname'];
+            u.avatar_remote = value.data['data']['avatar'];
+            u.age = value.data['data']['age'];
+            u.gender = value.data['data']['gender'];
+            u.save();
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new MainPage(user:u);
+            }),(ct)=>false);
+          }else if(value.data['code'] == -1){
+            EasyLoading.showError("Login token invalid",
+                duration: Duration(milliseconds: 2000));
+          }
+        });
       }
     }on DioError catch(e){
       print("Exception when login\n");
