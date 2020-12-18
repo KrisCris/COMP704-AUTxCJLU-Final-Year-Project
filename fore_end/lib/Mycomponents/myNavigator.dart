@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/screenTool.dart';
 import 'package:fore_end/Mycomponents/iconButton.dart';
-import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class MyNavigator extends StatefulWidget {
@@ -13,34 +12,23 @@ class MyNavigator extends StatefulWidget {
   Color backgroundColor;
   MyIconButton activateButton;
   List<MyIconButton> buttons = const <MyIconButton>[];
-  SwitchPage switchPages;
-  State<MyNavigator> state;
+  TabController controller;
+  MyNavigatorState state;
   MyNavigator(
       {this.width,
       this.height,
-        this.edgeWidth = 1,
+      this.edgeWidth = 1,
       this.opacity = 1,
       this.backgroundColor = Colors.white,
-      List<Widget> switchPages,
+      this.controller,
       List<MyIconButton> buttons,
-      int activateNum = 0}) {
+      }) {
     this.buttons = buttons;
     for (MyIconButton bt in this.buttons) {
       bt.setParentNavigator(this);
     }
-    if (activateNum < 0) {
-      activateNum = 0;
-    } else if (activateNum > this.buttons.length) {
-      activateNum = this.buttons.length;
-    }
-
-    this.switchPages = new SwitchPage(
-      children: switchPages,
-      initPosition: activateNum * ScreenTool.partOfScreenWidth(1),
-    );
-    this.switchPages.currentPage = activateNum;
-    this.buttons[activateNum].addDelayInit(() {
-      this.activateButtonByObject(this.buttons[activateNum]);
+    this.buttons[0].addDelayInit(() {
+      this.activateButtonByIndex(0);
     });
   }
   @override
@@ -49,12 +37,18 @@ class MyNavigator extends StatefulWidget {
     return this.state;
   }
 
-  SwitchPage getPages() {
-    return this.switchPages;
-  }
-
   bool isActivate(MyIconButton bt) {
     return this.activateButton == bt;
+  }
+  void activateButtonByIndex(int i){
+    for(int j=0;j<this.buttons.length;j++){
+      if(j == i){
+        this.buttons[i].setReactState(ComponentReactState.focused);
+        this.activateButton = this.buttons[i];
+      }else{
+        this.buttons[j].setReactState(ComponentReactState.unfocused);
+      }
+    }
   }
 
   void activateButtonByObject(MyIconButton button) {
@@ -67,14 +61,19 @@ class MyNavigator extends StatefulWidget {
       }
     }
   }
-  int getActivatePageNo(){
-    return this.switchPages.currentPage;
+
+  int getActivatePageNo() {
+    return this.controller.index;
   }
+
+  TabController getController() {
+    return this.controller;
+  }
+
   void switchPageByObject(MyIconButton button) {
-    if (this.switchPages == null) return;
     for (int i = 0; i < this.buttons.length; i++) {
       if (this.buttons[i] == button) {
-        this.switchPages.switchToPage(i);
+        this.controller.animateTo(i);
         return;
       }
     }
