@@ -67,7 +67,7 @@ class TakePhotoState extends State<TakePhotoPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    this.getCamera();
+    //this.getCamera();
     return FutureBuilder(
         future: this._initDone,
         builder: (context, snapShot) {
