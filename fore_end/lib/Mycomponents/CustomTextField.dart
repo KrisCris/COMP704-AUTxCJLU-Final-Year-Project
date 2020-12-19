@@ -264,7 +264,11 @@ class CustomTextFieldState extends State<CustomTextField>
             });
       } else {
         this.setReactState(ComponentReactState.unfocused);
-        this.continuousInputChecker.stop();
+        if(!this.continuousInputChecker.isStop()){
+          this.continuousInputChecker.stop();
+          this.continuousInputChecker.call();
+        }
+
       }
     });
 
