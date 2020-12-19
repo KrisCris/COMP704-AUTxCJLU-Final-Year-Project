@@ -77,14 +77,14 @@ def send_register_code():
             return func.reply_json(-3)
         gap = func.get_time_gap(u.last_code_sent)
         # Code expired (5 minutes)
-        if gap > 60 * 5:
+        if gap > 60 * 2:
             u.auth_code = func.gen_auth_code()
-            u.last_code_sent = func.get_current_time()
         elif gap < 60:
             return func.reply_json(-7)
         else:
             pass
     status = func.send_verification_code(email, u.auth_code)
+    u.last_code_sent = func.get_current_time()
     if status == 1:
         u.code_check = 0
         User.add(u)
@@ -118,7 +118,9 @@ def check_code():
     if u is None:
         return func.reply_json(-6)
     else:
-        if func.get_time_gap(u.last_code_sent) > 60 * 5:
+        if func.get_time_gap(u.last_code_sent) > 60 * 10:
+            import time
+            print(time.localtime(u.last_code_sent))
             return func.reply_json(-4)
         if u.auth_code == auth_code.upper():
             u.code_check = 1
