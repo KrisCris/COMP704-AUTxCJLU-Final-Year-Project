@@ -18,22 +18,26 @@ class CustomIconButton extends StatefulWidget {
   List<Function> delayInit = <Function>[];
   Function onClick;
   CustomNavigator navi;
-
+  List<BoxShadow> shadows;
   CustomIconButton(
       {@required this.theme,
       @required this.icon,
       this.text = "",
       this.iconSize = 20,
-      this.fontSize = 14,
+      this.fontSize = 12,
       this.buttonRadius = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
+        this.shadows,
       this.onClick})
       : super() {}
   @override
   State<StatefulWidget> createState() {
     this.state = new CustomIconButtonState(
-        ComponentThemeState.normal, ComponentReactState.unfocused);
+        ComponentThemeState.normal,
+        ComponentReactState.unfocused,
+        this.shadows
+    );
     return this.state;
   }
 
@@ -60,11 +64,12 @@ class CustomIconButtonState extends State<CustomIconButton>
     with Themeable, TickerProviderStateMixin {
   ColorTweenAnimation backgroundColorAnimation = new ColorTweenAnimation();
   ColorTweenAnimation iconAndTextColorAnimation = new ColorTweenAnimation();
-
-  CustomIconButtonState(ComponentThemeState the, ComponentReactState rea)
+  List<BoxShadow> shadow;
+  CustomIconButtonState(ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
       : super() {
     this.themeState = the;
     this.reactState = rea;
+    this.shadow = shadow;
   }
 
   @override
@@ -135,7 +140,9 @@ class CustomIconButtonState extends State<CustomIconButton>
           height: widget.buttonRadius,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              color: this.backgroundColorAnimation.getValue()),
+              color: this.backgroundColorAnimation.getValue(),
+              boxShadow: this.shadow
+          ),
           child: this.IconText,
         ));
   }

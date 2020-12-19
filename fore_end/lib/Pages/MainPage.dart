@@ -18,7 +18,6 @@ import 'package:fore_end/Pages/TakePhotoPage.dart';
 import 'LoginPage.dart';
 
 class MainPage extends StatefulWidget {
-  bool photoPageOff = true;
   Widget myDietPart;
   TakePhotoPage takePhotoPart;
   Widget addPlanPart;
@@ -56,7 +55,7 @@ class MainPage extends StatefulWidget {
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
       text: "My Diet",
-      buttonRadius: 70,
+      buttonRadius: 65,
       borderRadius: 10,
       onClick: () {
         this.appBar.reverseTransparency();
@@ -71,7 +70,7 @@ class MainPage extends StatefulWidget {
         icon: FontAwesomeIcons.camera,
         backgroundOpacity: 0.0,
         text: "Take Photo",
-        buttonRadius: 70,
+        buttonRadius: 65,
         borderRadius: 10,
         fontSize: 12,
         onClick: () {
@@ -87,8 +86,8 @@ class MainPage extends StatefulWidget {
         backgroundOpacity: 0.0,
         text: "Add Plan",
         borderRadius: 10,
-        buttonRadius: 70,
-        fontSize: 13,
+        buttonRadius: 65,
+        fontSize: 12,
         onClick: () {
           this.appBar.reverseTransparency();
           // this.state.setState(() {
@@ -130,7 +129,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       children: [
                         widget.appBar,
                         Expanded(child: SizedBox()),
-                        this.getTakePhotoButton(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [widget.navigator],
@@ -148,35 +146,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomAppBar(
       userAvatarContainer: this.getCircleAvatar(size: 45),
       username: widget.user.userName,
-    );
-  }
-  Widget getTakePhotoButton(){
-    return Offstage(
-      offstage: widget.photoPageOff,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          this.getAlbumButton(),
-          this.getPhotoButton()
-        ],
-      ),
-    );
-  }
-  Widget getPhotoButton() {
-    return new CustomIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.camera,
-      iconSize: 40,
-      backgroundOpacity: 0,
-    );
-  }
-
-  Widget getAlbumButton() {
-    return new CustomIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.image,
-      iconSize: 40,
-      backgroundOpacity: 0,
     );
   }
 
