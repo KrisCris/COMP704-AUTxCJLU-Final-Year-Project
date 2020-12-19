@@ -17,6 +17,7 @@ class CustomIconButton extends StatefulWidget {
   CustomIconButtonState state;
   List<Function> delayInit = <Function>[];
   Function onClick;
+  Function navigatorCallback;
   CustomNavigator navi;
   List<BoxShadow> shadows;
   CustomIconButton(
@@ -29,7 +30,8 @@ class CustomIconButton extends StatefulWidget {
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
         this.shadows,
-      this.onClick})
+      this.onClick,
+      this.navigatorCallback})
       : super() {}
   @override
   State<StatefulWidget> createState() {

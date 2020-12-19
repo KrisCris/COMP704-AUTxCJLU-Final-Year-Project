@@ -94,6 +94,9 @@ class CustomNavigatorState extends State<CustomNavigator> with TickerProviderSta
   TweenAnimation shadowDense;
   TweenAnimation lengthChange;
   TweenAnimation positionChange;
+  bool changing;
+  bool changeDone;
+
   @override
   void initState() {
     this.backgroundOpacity = new TweenAnimation();
@@ -109,6 +112,23 @@ class CustomNavigatorState extends State<CustomNavigator> with TickerProviderSta
     this.lengthChange.initAnimation(
         widget.width, widget.width*0.9, 300, this,() {setState(() {});});
     this.positionChange.initAnimation(0.0, -65.0, 300, this, (){setState(() {});});
+
+    this.changing = false;
+    this.changeDone = false;
+
+    widget.controller.addListener((){
+      if(widget.controller.indexIsChanging){
+        this.changing = true;
+      }else {
+        if (this.changing == true) {
+          this.changing = false;
+          print("page animate done, now "+ widget.controller.index.toString());
+          //do the function
+          if(widget.activateButton.navigatorCallback != null)
+            widget.activateButton.navigatorCallback();
+        }
+      }
+    });
     super.initState();
   }
 

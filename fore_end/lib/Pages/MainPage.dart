@@ -60,9 +60,6 @@ class MainPage extends StatefulWidget {
       onClick: () {
         this.appBar.reverseTransparency();
         this.navigator.reverseOpacity();
-        // this.state.setState(() {
-        //   this.photoPageOff = true;
-        // });
       },
     );
     this.takePhotoButton = CustomIconButton(
@@ -76,10 +73,10 @@ class MainPage extends StatefulWidget {
         onClick: () {
           this.appBar.startTransparency();
           this.navigator.beginOpacity();
-          // this.state.setState(() {
-          //   this.photoPageOff = false;
-          // });
-        });
+        },
+        navigatorCallback: (){
+          this.takePhotoPart.getCamera();
+        },);
     this.addPlanButton = CustomIconButton(
         theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
@@ -90,9 +87,6 @@ class MainPage extends StatefulWidget {
         fontSize: 12,
         onClick: () {
           this.appBar.reverseTransparency();
-          // this.state.setState(() {
-          //   this.photoPageOff = true;
-          // });
           this.navigator.reverseOpacity();
         });
     this.user = user;
