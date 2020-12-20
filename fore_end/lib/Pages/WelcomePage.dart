@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/Mycomponents/Background.dart';
 import 'package:fore_end/Mycomponents/CustomButton.dart';
 import 'package:fore_end/Mycomponents/CustomTextButton.dart';
@@ -58,18 +57,12 @@ class Welcome extends StatelessWidget {
         tapFunc: () {
           Navigator.pushNamed(context, "register");
         });
-    return new WillPopScope(
-      onWillPop: ()async{
-        return false;
-      },
-      child: BackGround(
+    return  BackGround(
           sigmaX: 15.0,
           sigmaY: 15.0,
           backgroundImage: "image/fruit-main.jpg",
           color: Colors.white,
           opacity: 0.79,
-          child: col),
-    );
-
+          child: col);
   }
 }

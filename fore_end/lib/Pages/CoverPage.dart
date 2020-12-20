@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
+import 'package:fore_end/Pages/WelcomePage.dart';
 
 import 'MainPage.dart';
 
@@ -65,7 +66,10 @@ class CoverState extends State<CoverPage> {
             int resCode = snapShot.data;
             if(resCode == 0){
               Future.delayed(Duration(milliseconds: 2500),(){
-                Navigator.pushNamed(context, "welcome");
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context){return new Welcome();}),
+                        (route){return route==null;}
+                );
               });
               return this.getPage("welcome to here!");
             }else if(resCode == 1){

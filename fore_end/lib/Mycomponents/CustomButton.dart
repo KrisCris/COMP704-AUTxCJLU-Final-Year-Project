@@ -94,7 +94,7 @@ class CustomButton extends StatefulWidget {
       this.startOpac = 0.0,
       this.endOpac = 0.5,
       this.flashDura = 200,
-      this.flucDura = 200,
+      this.flucDura = 150,
       this.colorDura = 200,
       this.lengthDura = 200,
       this.flashColor = CalculatableColor.white,
@@ -168,12 +168,14 @@ class CustomButtonState extends State<CustomButton>
     with TickerProviderStateMixin, Themeable {
   TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
   TweenAnimation<double> lengthAnimation = new TweenAnimation<double>();
-  FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
-  TweenAnimation<CalculatableColor> colorAnimation = new TweenAnimation<CalculatableColor>();
+  TweenAnimation<double> fluctuateAnimation = new TweenAnimation<double>();
+  TweenAnimation<CalculatableColor> colorAnimation =
+      new TweenAnimation<CalculatableColor>();
   bool isTap = false;
   double firstWidth;
 
-  CustomButtonState(ComponentReactState rea, ComponentThemeState the) : super() {
+  CustomButtonState(ComponentReactState rea, ComponentThemeState the)
+      : super() {
     this.reactState = rea;
     this.themeState = the;
   }
@@ -192,24 +194,34 @@ class CustomButtonState extends State<CustomButton>
     super.initState();
     this.initBgColor();
     this.firstWidth = widget.width;
-    this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this,
-        () {setState(() {});});
-    this.lengthAnimation.initAnimation(
-        widget.width, widget.width, widget.lengthDura, this,
-            () {setState(() {});});
+    this.fluctuateAnimation.initAnimation(0.0, 5.0, (widget.flucDura/4).round(), this,null);
+    this.lengthAnimation.initAnimation(widget.width, widget.width, widget.lengthDura, this,null);
+    this.flashAnimation.initAnimation(widget.startOpac, widget.endOpac, widget.flashDura, this,null);
 
     this.colorAnimation.initAnimation(
-        widget.bgColor, widget.bgColor,
-        widget.colorDura, this, () {setState(() {});});
-
-    this.flashAnimation.initAnimation(
-        widget.startOpac, widget.endOpac, widget.flashDura,
-        this, () {setState(() {});});
-
+        widget.bgColor, widget.bgColor, widget.colorDura, this, () {
+      setState(() {});
+    });
     this.flashAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (!isTap) {
           this.flashAnimation.reverseAnimation();
+        }
+      }
+    });
+    this.fluctuateAnimation.addStatusListener((status) {
+      if(status == AnimationStatus.completed) {
+        this.fluctuateAnimation.reverseAnimation();
+      }else if(status == AnimationStatus.dismissed){
+        double newEnd = 5.0;
+        if(this.fluctuateAnimation.completeTime % 2 == 1){
+          newEnd = -5.0;
+        }
+        this.fluctuateAnimation.setNewEnd(newEnd);
+        if(this.fluctuateAnimation.completeTime < 4){
+          this.fluctuateAnimation.beginAnimation();
+        }else{
+          this.fluctuateAnimation.completeTime = 0;
         }
       }
     });
@@ -226,46 +238,54 @@ class CustomButtonState extends State<CustomButton>
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-        offset: Offset(
-            this.fluctuateAnimation.getValue() + this.calculatePosition(), 0),
-        child: GestureDetector(
-            onDoubleTap: () {
-              if (this.reactState == ComponentReactState.disabled) return;
+    GestureDetector gesture = GestureDetector(
+        onDoubleTap: () {
+          if (this.reactState == ComponentReactState.disabled) return;
 
-              if (widget.doubleTapFunc != null) {
-                widget.doubleTapFunc();
-              } else if (widget.tapFunc != null) {
-                this.flashAnimation.beginAnimation();
-                widget.tapFunc();
-              }
-            },
-            onTapDown: (TapDownDetails tpd) {
-              if (this.reactState == ComponentReactState.disabled) {
-                this.fluctuateAnimation.forward();
-              } else {
-                this.isTap = true;
-                this.flashAnimation.beginAnimation();
-              }
-            },
-            onTapUp: (TapUpDetails tpu) {
-              if (this.reactState == ComponentReactState.disabled) {
-                return;
-              }
+          if (widget.doubleTapFunc != null) {
+            widget.doubleTapFunc();
+          } else if (widget.tapFunc != null) {
+            this.flashAnimation.beginAnimation();
+            widget.tapFunc();
+          }
+        },
+        onTapDown: (TapDownDetails tpd) {
+          if (this.reactState == ComponentReactState.disabled) {
+            this.fluctuateAnimation.forward();
+          } else {
+            this.isTap = true;
+            this.flashAnimation.beginAnimation();
+          }
+        },
+        onTapUp: (TapUpDetails tpu) {
+          if (this.reactState == ComponentReactState.disabled) {
+            return;
+          }
 
-              this.isTap = false;
-              this.flashAnimation.reverseAnimation();
-              if (widget.tapFunc != null) {
-                widget.tapFunc();
-              }
-            },
-            onTapCancel: () {
-              if (this.reactState == ComponentReactState.disabled) return;
+          this.isTap = false;
+          this.flashAnimation.reverseAnimation();
+          if (widget.tapFunc != null) {
+            widget.tapFunc();
+          }
+        },
+        onTapCancel: () {
+          if (this.reactState == ComponentReactState.disabled) return;
 
-              this.isTap = false;
-              this.flashAnimation.reverseAnimation();
-            },
-            child: this.buttonUI));
+          this.isTap = false;
+          this.flashAnimation.reverseAnimation();
+        },
+        child: this.buttonUI);
+    AnimatedBuilder offset = AnimatedBuilder(
+        animation: this.fluctuateAnimation.ctl,
+        child: gesture,
+        builder: (BuildContext context, Widget child) {
+          return Transform.translate(
+              offset: Offset(
+                  this.fluctuateAnimation.getValue() + this.calculatePosition(),
+                  0),
+              child: child);
+        });
+    return offset;
   }
 
   Widget get buttonUI {
@@ -275,48 +295,65 @@ class CustomButtonState extends State<CustomButton>
   }
 
   Widget get buttonShape {
-    return Container(
-      width: this.lengthAnimation.getValue(),
-      height: widget.height,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.radius),
-          color: this.colorAnimation.getValue()),
-      margin: EdgeInsets.only(
-          left: widget.leftMargin,
-          right: widget.rightMargin,
-          top: widget.topMargin,
-          bottom: widget.bottomMargin),
-      child: Center(
-        child: Text(
-          widget.text,
-          textDirection: TextDirection.ltr,
-          style: TextStyle(
-              fontSize: widget.fontsize,
-              color: widget.textColor,
-              decoration: TextDecoration.none,
-              fontWeight: widget.isBold ? FontWeight.bold : FontWeight.normal),
+    return AnimatedBuilder(
+        animation: this.lengthAnimation.ctl,
+        child: Center(
+          child: Text(
+            widget.text,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+                fontSize: widget.fontsize,
+                color: widget.textColor,
+                decoration: TextDecoration.none,
+                fontWeight:
+                    widget.isBold ? FontWeight.bold : FontWeight.normal),
+          ),
         ),
-      ),
-    );
+        builder: (BuildContext context, Widget child) {
+          return Container(
+            width: this.lengthAnimation.getValue(),
+            height: widget.height,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(widget.radius),
+                color: this.colorAnimation.getValue()),
+            margin: EdgeInsets.only(
+                left: widget.leftMargin,
+                right: widget.rightMargin,
+                top: widget.topMargin,
+                bottom: widget.bottomMargin),
+            child: child,
+          );
+        });
   }
 
   Widget get buttonCover {
-    return Opacity(
-      opacity: this.flashAnimation.getValue(),
-      child: Container(
-        width: this.lengthAnimation.getValue(),
-        height: widget.height,
-        margin: EdgeInsets.only(
-            left: widget.leftMargin,
-            right: widget.rightMargin,
-            top: widget.topMargin,
-            bottom: widget.bottomMargin),
-        decoration: new BoxDecoration(
-          color: widget.flashColor,
-          borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
-        ),
-      ),
-    );
+    AnimatedBuilder container = AnimatedBuilder(
+        animation: this.lengthAnimation.ctl,
+        builder: (BuildContext context, Widget child) {
+          return Container(
+            width: this.lengthAnimation.getValue(),
+            height: widget.height,
+            margin: EdgeInsets.only(
+                left: widget.leftMargin,
+                right: widget.rightMargin,
+                top: widget.topMargin,
+                bottom: widget.bottomMargin),
+            decoration: new BoxDecoration(
+              color: widget.flashColor,
+              borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
+            ),
+          );
+        });
+    AnimatedBuilder opacity = AnimatedBuilder(
+        animation: this.flashAnimation.ctl,
+        child: container,
+        builder: (BuildContext context, Widget child) {
+          return Opacity(
+            opacity: this.flashAnimation.getValue(),
+            child: child,
+          );
+        });
+    return opacity;
   }
 
   double calculatePosition() {
@@ -349,9 +386,11 @@ class CustomButtonState extends State<CustomButton>
     this.reactState = rea;
 
     //update color animation
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor,
-        widget.colorDura, this, () {setState(() {});});
+    this
+        .colorAnimation
+        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
+      setState(() {});
+    });
 
     this.colorAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -371,9 +410,11 @@ class CustomButtonState extends State<CustomButton>
     if (this.reactState == ComponentReactState.disabled) return;
     //update color animation
     Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor,
-        widget.colorDura, this, () {setState(() {});});
+    this
+        .colorAnimation
+        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
+      setState(() {});
+    });
 
     this.colorAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {

@@ -54,7 +54,7 @@ class MyCounter {
   void setDuration(int d){
     this.duration = d;
   }
-  void call(){
+  void callCounterFunc(){
     this.calling();
   }
   int getRemain(){

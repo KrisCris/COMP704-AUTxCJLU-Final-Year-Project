@@ -59,6 +59,7 @@ class Login extends StatelessWidget {
       // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
+
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
@@ -130,13 +131,15 @@ class Login extends StatelessWidget {
 
   Widget get bottomUI {
     return Container(
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      this.backButton,
-      Expanded(child: Text("")),
-      this.nextButton,
-      //this.nextButton,
-    ]));
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              this.backButton,
+              Expanded(child: Text("")),
+              this.nextButton,
+            ]
+        )
+    );
   }
 
   void login(String email, String pass, BuildContext context) async{
