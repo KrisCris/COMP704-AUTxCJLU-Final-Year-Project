@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class MyTheme {
@@ -35,11 +36,11 @@ class MyTheme {
     this.lightTextColor = textColorLight;
   }
 
-  Color getThemeColor(ComponentThemeState the){
-    return this.themeMap[the];
+  CalculatableColor getThemeColor(ComponentThemeState the){
+    return CalculatableColor.transform( this.themeMap[the]);
   }
-  Color getReactColor(ComponentReactState rea){
-    return this.reactMap[rea];
+  CalculatableColor getReactColor(ComponentReactState rea){
+    return CalculatableColor.transform(this.reactMap[rea]) ;
   }
 
   static final MyTheme blueStyle = MyTheme._privateConstructor(

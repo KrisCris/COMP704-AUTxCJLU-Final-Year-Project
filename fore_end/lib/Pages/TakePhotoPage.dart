@@ -38,7 +38,7 @@ class TakePhotoState extends State<TakePhotoPage>
   Future<void> _initDone;
   bool _hasCamera = true;
   List<String> picQueue;
-  TweenAnimation loadingCameraAnimation = new TweenAnimation();
+  TweenAnimation<double> loadingCameraAnimation = new TweenAnimation<double>();
   String _path;
 
   @override

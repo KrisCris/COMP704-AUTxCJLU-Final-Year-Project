@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/FormatChecker.dart';
@@ -175,10 +176,10 @@ class CustomTextField extends StatefulWidget {
 class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, Themeable {
   TextEditingController _inputcontroller = TextEditingController();
-  ColorTweenAnimation colorAnimation = ColorTweenAnimation();
-  TweenAnimation suffixSizeAnimation = TweenAnimation();
-  TweenAnimation underlineWidthAnimation = TweenAnimation();
-  TweenAnimation lengthAnimation = TweenAnimation();
+  TweenAnimation<CalculatableColor> colorAnimation = TweenAnimation<CalculatableColor>();
+  TweenAnimation<double> suffixSizeAnimation = TweenAnimation<double>();
+  TweenAnimation<double> underlineWidthAnimation = TweenAnimation<double>();
+  TweenAnimation<double> lengthAnimation = TweenAnimation<double>();
 
   FocusNode _focusNode = FocusNode();
   Color errorColors = Colors.blue;

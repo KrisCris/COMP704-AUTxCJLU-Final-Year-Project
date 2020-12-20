@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
@@ -13,10 +14,10 @@ class CustomButton extends StatefulWidget {
   final double radius;
 
   ///The background color of button
-  Color bgColor;
+  CalculatableColor bgColor;
 
   ///The text color of button
-  Color textColor;
+  CalculatableColor textColor;
 
   ///Function to be executed when button being
   ///clicked
@@ -59,7 +60,7 @@ class CustomButton extends StatefulWidget {
   double endOpac;
 
   ///the color of flash cover
-  Color flashColor;
+  CalculatableColor flashColor;
 
   ///fluctuate duration
   int flucDura;
@@ -96,7 +97,7 @@ class CustomButton extends StatefulWidget {
       this.flucDura = 200,
       this.colorDura = 200,
       this.lengthDura = 200,
-      this.flashColor = Colors.white,
+      this.flashColor = CalculatableColor.white,
       this.tapFunc = null,
       this.doubleTapFunc = null,
       this.firstThemeState = ComponentThemeState.normal,
@@ -105,7 +106,7 @@ class CustomButton extends StatefulWidget {
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
-    this.textColor = this.theme.lightTextColor;
+    this.textColor = CalculatableColor.transform(this.theme.lightTextColor);
     // if (this.disabled) this.firstDisabled = true;
   }
   @override
@@ -165,10 +166,10 @@ class CustomButton extends StatefulWidget {
 
 class CustomButtonState extends State<CustomButton>
     with TickerProviderStateMixin, Themeable {
-  TweenAnimation flashAnimation = new TweenAnimation();
-  TweenAnimation lengthAnimation = new TweenAnimation();
+  TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
+  TweenAnimation<double> lengthAnimation = new TweenAnimation<double>();
   FluctuateTweenAnimation fluctuateAnimation = new FluctuateTweenAnimation();
-  ColorTweenAnimation colorAnimation = new ColorTweenAnimation();
+  TweenAnimation<CalculatableColor> colorAnimation = new TweenAnimation<CalculatableColor>();
   bool isTap = false;
   double firstWidth;
 
@@ -192,24 +193,19 @@ class CustomButtonState extends State<CustomButton>
     this.initBgColor();
     this.firstWidth = widget.width;
     this.fluctuateAnimation.initAnimation(null, null, widget.flashDura, this,
-        () {
-      setState(() {});
-    });
-    this
-        .lengthAnimation
-        .initAnimation(widget.width, widget.width, widget.lengthDura, this, () {
-      setState(() {});
-    });
+        () {setState(() {});});
+    this.lengthAnimation.initAnimation(
+        widget.width, widget.width, widget.lengthDura, this,
+            () {setState(() {});});
 
     this.colorAnimation.initAnimation(
-        widget.bgColor, widget.bgColor, widget.colorDura, this, () {
-      setState(() {});
-    });
+        widget.bgColor, widget.bgColor,
+        widget.colorDura, this, () {setState(() {});});
 
     this.flashAnimation.initAnimation(
-        widget.startOpac, widget.endOpac, widget.flashDura, this, () {
-      setState(() {});
-    });
+        widget.startOpac, widget.endOpac, widget.flashDura,
+        this, () {setState(() {});});
+
     this.flashAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (!isTap) {
@@ -348,15 +344,15 @@ class CustomButtonState extends State<CustomButton>
       //from able to disable
       newColor = widget.theme.getReactColor(rea);
     }
+
     //update state
     this.reactState = rea;
 
     //update color animation
-    this
-        .colorAnimation
-        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
-      setState(() {});
-    });
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor,
+        widget.colorDura, this, () {setState(() {});});
+
     this.colorAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         widget.bgColor = newColor;
@@ -375,11 +371,10 @@ class CustomButtonState extends State<CustomButton>
     if (this.reactState == ComponentReactState.disabled) return;
     //update color animation
     Color newColor = widget.theme.getThemeColor(this.themeState);
-    this
-        .colorAnimation
-        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
-      setState(() {});
-    });
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor,
+        widget.colorDura, this, () {setState(() {});});
+
     this.colorAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         widget.bgColor = newColor;
