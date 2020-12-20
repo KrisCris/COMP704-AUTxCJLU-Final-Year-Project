@@ -22,10 +22,10 @@ class CustomAppBar extends StatefulWidget{
 }
 
 class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixin{
-  TweenAnimation headerTransparency;
+  TweenAnimation<double> headerTransparency;
   @override
   void initState() {
-    this.headerTransparency = new TweenAnimation();
+    this.headerTransparency = new TweenAnimation<double>();
     this.headerTransparency.initAnimation(1.0, 0.0, 300, this,
             () {setState(() {}); });
     super.initState();

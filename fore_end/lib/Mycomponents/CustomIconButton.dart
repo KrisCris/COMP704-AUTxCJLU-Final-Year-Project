@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/Mycomponents/CustomNavigator.dart';
 import 'package:fore_end/interface/Themeable.dart';
@@ -64,8 +65,8 @@ class CustomIconButton extends StatefulWidget {
 
 class CustomIconButtonState extends State<CustomIconButton>
     with Themeable, TickerProviderStateMixin {
-  ColorTweenAnimation backgroundColorAnimation = new ColorTweenAnimation();
-  ColorTweenAnimation iconAndTextColorAnimation = new ColorTweenAnimation();
+  TweenAnimation<CalculatableColor> backgroundColorAnimation = TweenAnimation<CalculatableColor>();
+  TweenAnimation<CalculatableColor> iconAndTextColorAnimation = TweenAnimation<CalculatableColor>();
   List<BoxShadow> shadow;
   CustomIconButtonState(ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
       : super() {
@@ -149,7 +150,7 @@ class CustomIconButtonState extends State<CustomIconButton>
         ));
   }
 
-  Color getBackgroundColor() {
+  CalculatableColor getBackgroundColor() {
     double opacity;
     if (this.reactState == ComponentReactState.focused) {
       opacity = 1.0;
@@ -159,7 +160,7 @@ class CustomIconButtonState extends State<CustomIconButton>
     return widget.theme.getReactColor(this.reactState).withOpacity(opacity);
   }
 
-  Color getIconAndTextColor(ComponentReactState rea) {
+  CalculatableColor getIconAndTextColor(ComponentReactState rea) {
     if (rea == ComponentReactState.focused) {
       return widget.theme.getReactColor(ComponentReactState.unfocused);
     }

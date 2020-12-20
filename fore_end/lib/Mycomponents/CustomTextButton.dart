@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
@@ -37,14 +38,16 @@ class CustomTextButton extends StatefulWidget {
 
 class CustomTextButtonState extends State<CustomTextButton>
     with TickerProviderStateMixin, Themeable {
-  ColorTweenAnimation animation = new ColorTweenAnimation();
+  TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
 
   @override
   void initState() {
     super.initState();
 
-    this.animation.initAnimation(widget.textColor, widget.theme.getReactColor(ComponentReactState.focused),
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        widget.theme.getReactColor(ComponentReactState.focused),
         widget.colorChangeDura, this, () {setState(() {});});
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
@@ -108,7 +111,10 @@ class CustomTextButtonState extends State<CustomTextButton>
     if(this.reactState == ComponentReactState.disabled)return;
     //update color animation
     Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(widget.textColor, newColor, widget.colorChangeDura,
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        newColor,
+        widget.colorChangeDura,
         this, () {setState((){});});
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
