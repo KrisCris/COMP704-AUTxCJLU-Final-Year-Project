@@ -48,7 +48,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     this.animation.initAnimation(
         CalculatableColor.transform(widget.textColor),
         widget.theme.getReactColor(ComponentReactState.focused),
-        widget.colorChangeDura, this, () {setState(() {});});
+        widget.colorChangeDura, this, null);
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         if(!widget.isTap){
@@ -68,32 +68,36 @@ class CustomTextButtonState extends State<CustomTextButton>
   }
 
   Widget get TextBUttonUI {
-    return RichText(
-        text: TextSpan(
-            text: widget.text,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: widget.fontsize,
-                fontFamily: "Futura",
-                color: this.animation.getValue()),
-            recognizer: TapGestureRecognizer()
-            ..onTapUp = (TapUpDetails tpd) {
-              widget.isTap = false;
-              print("tapUp");
-              this.animation.reverseAnimation();
-              widget.tapUpFunc();
-            }
-            ..onTapDown = (TapDownDetails details) {
-              widget.isTap = true;
-              print("tapDown");
-              this.animation.beginAnimation();
-            }
-            ..onTapCancel= (){
-              widget.isTap = false;
-              print("tapCancel");
-              this.animation.reverseAnimation();
-            }
-        ));
+    return AnimatedBuilder(
+        animation: this.animation.ctl,
+        builder: (BuildContext context, Widget child){
+          return RichText(
+              text: TextSpan(
+                  text: widget.text,
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontSize: widget.fontsize,
+                      fontFamily: "Futura",
+                      color: this.animation.getValue()),
+                  recognizer: TapGestureRecognizer()
+                    ..onTapUp = (TapUpDetails tpd) {
+                      widget.isTap = false;
+                      print("tapUp");
+                      this.animation.reverseAnimation();
+                      widget.tapUpFunc();
+                    }
+                    ..onTapDown = (TapDownDetails details) {
+                      widget.isTap = true;
+                      print("tapDown");
+                      this.animation.beginAnimation();
+                    }
+                    ..onTapCancel= (){
+                      widget.isTap = false;
+                      print("tapCancel");
+                      this.animation.reverseAnimation();
+                    }
+              ));
+        });
   }
 
   @override

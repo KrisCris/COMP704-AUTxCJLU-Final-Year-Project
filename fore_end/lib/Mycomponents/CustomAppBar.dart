@@ -32,50 +32,56 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
   }
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-        opacity:this.headerTransparency.getValue(),
-        child:Container(
-          width: ScreenTool.partOfScreenWidth(0.85),
-          height: 70,
-          margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              color: Color(0xFF0091EA),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 12, //阴影范围
-                  spreadRadius: 3, //阴影浓度
-                  color: Color(0x33000000), //阴影颜色
-                ),
-              ]),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 15,
-              ),
-              GestureDetector(
-                onTap: () {
-                  if(this.headerTransparency.getValue() == 0)return;
-                  this.openDrawer(context);
-                },
-                child: widget.userAvatarContainer,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                widget.username,
-                textDirection: TextDirection.ltr,
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 20,
-                    fontFamily: "Futura",
-                    color: Colors.black),
-              ),
-            ],
+    Container container = Container(
+      width: ScreenTool.partOfScreenWidth(0.85),
+      height: 70,
+      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: Color(0xFF0091EA),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 12, //阴影范围
+              spreadRadius: 3, //阴影浓度
+              color: Color(0x33000000), //阴影颜色
+            ),
+          ]),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 15,
           ),
-        )
+          GestureDetector(
+            onTap: () {
+              if(this.headerTransparency.getValue() == 0)return;
+              this.openDrawer(context);
+            },
+            child: widget.userAvatarContainer,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            widget.username,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: 20,
+                fontFamily: "Futura",
+                color: Colors.black),
+          ),
+        ],
+      ),
     );
+    return AnimatedBuilder(
+        animation: this.headerTransparency.ctl,
+        child: container,
+        builder: (BuildContext context, Widget child){
+          return Opacity(
+              opacity:this.headerTransparency.getValue(),
+              child:child
+          );
+        });
   }
   void startTransparency(){
     this.headerTransparency.beginAnimation();

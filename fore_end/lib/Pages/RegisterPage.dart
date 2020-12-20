@@ -31,6 +31,7 @@ class Register extends StatelessWidget {
   CustomButton verifyButton;
   MyCounter counter;
   CustomButton nextButton;
+  CustomButton backButton;
   String emailWhenClickButton = "";
   ScrollController scrollCtl;
   bool verified = false;
@@ -241,7 +242,18 @@ class Register extends StatelessWidget {
         sizeChangeMode: 2,
         tapFunc: () {},
         isBold: true);
-
+    this.backButton = CustomButton(
+      text: "Back",
+      isBold: true,
+      leftMargin: 20,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.20),
+      theme: MyTheme.blueStyle,
+      firstThemeState: ComponentThemeState.error,
+      tapFunc: () {
+        Navigator.pop(context);
+      },
+    );
     verifyButton.tapFunc = () async {
       this.verified = false;
       this.emailWhenClickButton = this.emailTextField.getInput();
@@ -410,18 +422,7 @@ class Register extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      CustomButton(
-                        text: "Back",
-                        isBold: true,
-                        leftMargin: 20,
-                        bottomMargin: 20,
-                        width: ScreenTool.partOfScreenWidth(0.20),
-                        theme: MyTheme.blueStyle,
-                        firstThemeState: ComponentThemeState.error,
-                        tapFunc: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                      this.backButton,
                       Expanded(child: Text("")),
                       this.nextButton
                     ]),

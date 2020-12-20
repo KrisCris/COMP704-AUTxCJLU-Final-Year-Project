@@ -30,17 +30,14 @@ class CustomIconButton extends StatefulWidget {
       this.buttonRadius = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
-        this.shadows,
+      this.shadows,
       this.onClick,
       this.navigatorCallback})
       : super() {}
   @override
   State<StatefulWidget> createState() {
-    this.state = new CustomIconButtonState(
-        ComponentThemeState.normal,
-        ComponentReactState.unfocused,
-        this.shadows
-    );
+    this.state = new CustomIconButtonState(ComponentThemeState.normal,
+        ComponentReactState.unfocused, this.shadows);
     return this.state;
   }
 
@@ -65,10 +62,13 @@ class CustomIconButton extends StatefulWidget {
 
 class CustomIconButtonState extends State<CustomIconButton>
     with Themeable, TickerProviderStateMixin {
-  TweenAnimation<CalculatableColor> backgroundColorAnimation = TweenAnimation<CalculatableColor>();
-  TweenAnimation<CalculatableColor> iconAndTextColorAnimation = TweenAnimation<CalculatableColor>();
+  TweenAnimation<CalculatableColor> backgroundColorAnimation =
+      TweenAnimation<CalculatableColor>();
+  TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
+      TweenAnimation<CalculatableColor>();
   List<BoxShadow> shadow;
-  CustomIconButtonState(ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
+  CustomIconButtonState(
+      ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
       : super() {
     this.themeState = the;
     this.reactState = rea;
@@ -103,20 +103,28 @@ class CustomIconButtonState extends State<CustomIconButton>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(widget.icon,
-            color: this.iconAndTextColorAnimation.getValue(),
-            size: widget.iconSize),
+        AnimatedBuilder(
+            animation: this.iconAndTextColorAnimation.ctl,
+            builder: (BuildContext context, Widget child) {
+              return Icon(widget.icon,
+                  color: this.iconAndTextColorAnimation.getValue(),
+                  size: widget.iconSize);
+            }),
         Offstage(
             offstage: widget.text == "" || widget.text == null,
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: widget.fontSize,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: this.iconAndTextColorAnimation.getValue()),
-            ))
+            child: AnimatedBuilder(
+                animation: this.iconAndTextColorAnimation.ctl,
+                builder: (BuildContext context, Widget child) {
+                  return Text(
+                    widget.text,
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontSize: widget.fontSize,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Futura",
+                        color: this.iconAndTextColorAnimation.getValue()),
+                  );
+                }))
       ],
     );
   }
@@ -138,15 +146,20 @@ class CustomIconButtonState extends State<CustomIconButton>
             widget.navi.switchPageByObject(widget);
           }
         },
-        child: Container(
-          width: widget.buttonRadius,
-          height: widget.buttonRadius,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              color: this.backgroundColorAnimation.getValue(),
-              boxShadow: this.shadow
-          ),
+        child: AnimatedBuilder(
+          animation: this.backgroundColorAnimation.ctl,
           child: this.IconText,
+          builder: (BuildContext context, Widget child) {
+            return Container(
+              width: widget.buttonRadius,
+              height: widget.buttonRadius,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  color: this.backgroundColorAnimation.getValue(),
+                  boxShadow: this.shadow),
+              child: child,
+            );
+          },
         ));
   }
 
