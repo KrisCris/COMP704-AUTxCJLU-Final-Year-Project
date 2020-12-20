@@ -151,29 +151,19 @@ class Login extends StatelessWidget {
         this.
         passwordField.clearInput();
       } else if (res.data['code'] == 1) {
-        User u = new User(
-          token: res.data['data']['token'],
-          uid:res.data['data']['uid'],
-          email: email,
-        );
-        Requests.getBasicInfo({
-          'uid':u.uid,
-          'token':u.token
-        }).then((value){
-          if(value.data['code'] == 1){
-            u.userName =value.data['data']['nickname'];
-            u.avatar_remote = value.data['data']['avatar'];
-            u.age = value.data['data']['age'];
-            u.gender = value.data['data']['gender'];
-            u.save();
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-              return new MainPage(user:u);
-            }),(ct)=>false);
-          }else if(value.data['code'] == -1){
-            EasyLoading.showError("Login token invalid",
-                duration: Duration(milliseconds: 2000));
-          }
-        });
+        User u = User.getInstance();
+        u.token = res.data['data']['token'];
+        u.uid = res.data['data']['uid'];
+        u.email = email;
+        int code = await u.synchronize();
+        if(code == 1){
+          Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+            return new MainPage(user:u);
+          }),(ct)=>false);
+        }else{
+          EasyLoading.showError("Login token invalid",
+              duration: Duration(milliseconds: 2000));
+        }
       }
     }on DioError catch(e){
       print("Exception when login\n");
