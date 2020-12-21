@@ -212,11 +212,11 @@ def get_basic_info():
     u = User.getUserByID(uid)
     import base64
     with open(u.avatar, "rb") as avatar_file:
-        b2sAvatar = base64.b64encode(avatar_file.read()).decode('utf-8')
+        b2s_avatar = base64.b64encode(avatar_file.read()).decode('utf-8')
     return func.reply_json(1, data={
         'email': u.email,
         'nickname': u.nickname,
-        'avatar': b2sAvatar,
+        'avatar': b2s_avatar,
         'gender': u.gender,
         'age': u.age,
     })
