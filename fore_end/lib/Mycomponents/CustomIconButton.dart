@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/Mycomponents/myNavigator.dart';
+import 'package:fore_end/Mycomponents/CustomNavigator.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyIconButton extends StatefulWidget {
+class CustomIconButton extends StatefulWidget {
   MyTheme theme;
   IconData icon;
   double iconSize;
@@ -14,26 +15,29 @@ class MyIconButton extends StatefulWidget {
   double borderRadius;
   double backgroundOpacity;
   String text;
-  MyIconButtonState state;
+  CustomIconButtonState state;
   List<Function> delayInit = <Function>[];
   Function onClick;
-  MyNavigator navi;
-
-  MyIconButton(
+  Function navigatorCallback;
+  CustomNavigator navi;
+  List<BoxShadow> shadows;
+  CustomIconButton(
       {@required this.theme,
       @required this.icon,
       this.text = "",
       this.iconSize = 20,
-      this.fontSize = 14,
+      this.fontSize = 12,
       this.buttonRadius = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
-      this.onClick})
+      this.shadows,
+      this.onClick,
+      this.navigatorCallback})
       : super() {}
   @override
   State<StatefulWidget> createState() {
-    this.state = new MyIconButtonState(
-        ComponentThemeState.normal, ComponentReactState.unfocused);
+    this.state = new CustomIconButtonState(ComponentThemeState.normal,
+        ComponentReactState.unfocused, this.shadows);
     return this.state;
   }
 
@@ -41,7 +45,7 @@ class MyIconButton extends StatefulWidget {
     this.delayInit.add(f);
   }
 
-  void setParentNavigator(MyNavigator nv) {
+  void setParentNavigator(CustomNavigator nv) {
     this.navi = nv;
   }
 
@@ -56,15 +60,19 @@ class MyIconButton extends StatefulWidget {
   }
 }
 
-class MyIconButtonState extends State<MyIconButton>
+class CustomIconButtonState extends State<CustomIconButton>
     with Themeable, TickerProviderStateMixin {
-  ColorTweenAnimation backgroundColorAnimation = new ColorTweenAnimation();
-  ColorTweenAnimation iconAndTextColorAnimation = new ColorTweenAnimation();
-
-  MyIconButtonState(ComponentThemeState the, ComponentReactState rea)
+  TweenAnimation<CalculatableColor> backgroundColorAnimation =
+      TweenAnimation<CalculatableColor>();
+  TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
+      TweenAnimation<CalculatableColor>();
+  List<BoxShadow> shadow;
+  CustomIconButtonState(
+      ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
       : super() {
     this.themeState = the;
     this.reactState = rea;
+    this.shadow = shadow;
   }
 
   @override
@@ -95,18 +103,28 @@ class MyIconButtonState extends State<MyIconButton>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(widget.icon,
-            color: this.iconAndTextColorAnimation.getValue(),
-            size: widget.iconSize),
-        Text(
-          widget.text,
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: widget.fontSize,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: this.iconAndTextColorAnimation.getValue()),
-        )
+        AnimatedBuilder(
+            animation: this.iconAndTextColorAnimation.ctl,
+            builder: (BuildContext context, Widget child) {
+              return Icon(widget.icon,
+                  color: this.iconAndTextColorAnimation.getValue(),
+                  size: widget.iconSize);
+            }),
+        Offstage(
+            offstage: widget.text == "" || widget.text == null,
+            child: AnimatedBuilder(
+                animation: this.iconAndTextColorAnimation.ctl,
+                builder: (BuildContext context, Widget child) {
+                  return Text(
+                    widget.text,
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontSize: widget.fontSize,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Futura",
+                        color: this.iconAndTextColorAnimation.getValue()),
+                  );
+                }))
       ],
     );
   }
@@ -115,10 +133,10 @@ class MyIconButtonState extends State<MyIconButton>
     return GestureDetector(
         onTap: () {
           if (widget.onClick != null) {
-            if(widget.navi == null){
+            if (widget.navi == null) {
               widget.onClick();
-            }else {
-              if(!widget.navi.isActivate(widget)){
+            } else {
+              if (!widget.navi.isActivate(widget)) {
                 widget.onClick();
               }
             }
@@ -128,17 +146,24 @@ class MyIconButtonState extends State<MyIconButton>
             widget.navi.switchPageByObject(widget);
           }
         },
-        child: Container(
-          width: widget.buttonRadius,
-          height: widget.buttonRadius,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              color: this.backgroundColorAnimation.getValue()),
+        child: AnimatedBuilder(
+          animation: this.backgroundColorAnimation.ctl,
           child: this.IconText,
+          builder: (BuildContext context, Widget child) {
+            return Container(
+              width: widget.buttonRadius,
+              height: widget.buttonRadius,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  color: this.backgroundColorAnimation.getValue(),
+                  boxShadow: this.shadow),
+              child: child,
+            );
+          },
         ));
   }
 
-  Color getBackgroundColor() {
+  CalculatableColor getBackgroundColor() {
     double opacity;
     if (this.reactState == ComponentReactState.focused) {
       opacity = 1.0;
@@ -148,7 +173,7 @@ class MyIconButtonState extends State<MyIconButton>
     return widget.theme.getReactColor(this.reactState).withOpacity(opacity);
   }
 
-  Color getIconAndTextColor(ComponentReactState rea) {
+  CalculatableColor getIconAndTextColor(ComponentReactState rea) {
     if (rea == ComponentReactState.focused) {
       return widget.theme.getReactColor(ComponentReactState.unfocused);
     }
@@ -157,7 +182,7 @@ class MyIconButtonState extends State<MyIconButton>
 
   @override
   void setReactState(ComponentReactState rea) {
-    if(this.reactState == rea)return;
+    if (this.reactState == rea) return;
 
     double AfterOpacity;
     if (rea == ComponentReactState.focused) {

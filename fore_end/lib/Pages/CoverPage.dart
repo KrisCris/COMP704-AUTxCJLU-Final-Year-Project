@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
+import 'package:fore_end/Pages/WelcomePage.dart';
 
 import 'MainPage.dart';
 
@@ -65,13 +66,16 @@ class CoverState extends State<CoverPage> {
             int resCode = snapShot.data;
             if(resCode == 0){
               Future.delayed(Duration(milliseconds: 2500),(){
-                Navigator.pushNamed(context, "welcome");
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context){return new Welcome();}),
+                        (route){return route==null;}
+                );
               });
               return this.getPage("welcome to here!");
             }else if(resCode == 1){
               Future.delayed(Duration(milliseconds: 1500),(){
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){return new MainPage(user: this.savedUser);}),
+                    MaterialPageRoute(builder: (context){return new MainPage(user: User.getInstance());}),
                     (route){return route==null;}
                 );
               });
@@ -86,26 +90,12 @@ class CoverState extends State<CoverPage> {
   }
 
   Future<int> attemptLogin() async {
-    this.savedUser = await LocalDataManager.readUser();
-
-    if(this.savedUser.token == null){
+    await LocalDataManager.init();
+    User u = User.getInstance();
+    if(u.token == null){
       return 0;
     }else{
-      Response res = await Requests.getBasicInfo({
-        'uid':this.savedUser.uid,
-        'token':this.savedUser.token
-      });
-      if(res.data['code'] == 1){
-        this.savedUser.age = res.data['data']['age'];
-        this.savedUser.gender = res.data['data']['gender'];
-        this.savedUser.userName = res.data['data']['nickname'];
-        this.savedUser.avatar_remote = res.data['data']['avatar'];
-        this.savedUser.email = res.data['data']['email'];
-        this.savedUser.save();
-        return 1;
-      }else if(res.data['code'] == -1){
-        return 0;
-      }
+      return u.synchronize();
     }
   }
 }

@@ -8,24 +8,24 @@ import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
-import 'package:fore_end/Mycomponents/background.dart';
-import 'package:fore_end/Mycomponents/myButton.dart';
-import 'package:fore_end/Mycomponents/myTextField.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/Background.dart';
+import 'package:fore_end/Mycomponents/CustomButton.dart';
+import 'package:fore_end/Mycomponents/CustomTextField.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class Login extends StatelessWidget {
-  MyButton backButton;
-  MyButton nextButton;
-  MyTextField emailField;
-  MyTextField passwordField;
+  CustomButton backButton;
+  CustomButton nextButton;
+  CustomTextField emailField;
+  CustomTextField passwordField;
   bool emailIsInput = false;
   bool passwordIsInput = false;
 
   @override
   Widget build(BuildContext context) {
-    this.backButton = MyButton(
+    this.backButton = CustomButton(
       text: "Back",
       isBold: true,
       leftMargin: 20,
@@ -38,7 +38,7 @@ class Login extends StatelessWidget {
       },
     );
 
-    this.nextButton = MyButton(
+    this.nextButton = CustomButton(
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -54,11 +54,12 @@ class Login extends StatelessWidget {
         this.login(emailVal, passwordVal, context);
       },
     );
-    this.emailField = MyTextField(
+    this.emailField = CustomTextField(
       placeholder: "Email address",
       // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
+
       width: ScreenTool.partOfScreenWidth(0.7),
       ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
       ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
@@ -72,7 +73,7 @@ class Login extends StatelessWidget {
       },
     );
 
-    this.passwordField = MyTextField(
+    this.passwordField = CustomTextField(
       placeholder: "Password",
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.password,
@@ -130,13 +131,15 @@ class Login extends StatelessWidget {
 
   Widget get bottomUI {
     return Container(
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      this.backButton,
-      Expanded(child: Text("")),
-      this.nextButton,
-      //this.nextButton,
-    ]));
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              this.backButton,
+              Expanded(child: Text("")),
+              this.nextButton,
+            ]
+        )
+    );
   }
 
   void login(String email, String pass, BuildContext context) async{
@@ -151,29 +154,19 @@ class Login extends StatelessWidget {
         this.
         passwordField.clearInput();
       } else if (res.data['code'] == 1) {
-        User u = new User(
-          token: res.data['data']['token'],
-          uid:res.data['data']['uid'],
-          email: email,
-        );
-        Requests.getBasicInfo({
-          'uid':u.uid,
-          'token':u.token
-        }).then((value){
-          if(value.data['code'] == 1){
-            u.userName =value.data['data']['nickname'];
-            u.avatar_remote = value.data['data']['avatar'];
-            u.age = value.data['data']['age'];
-            u.gender = value.data['data']['gender'];
-            u.save();
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-              return new MainPage(user:u);
-            }),(ct)=>false);
-          }else if(value.data['code'] == -1){
-            EasyLoading.showError("Login token invalid",
-                duration: Duration(milliseconds: 2000));
-          }
-        });
+        User u = User.getInstance();
+        u.token = res.data['data']['token'];
+        u.uid = res.data['data']['uid'];
+        u.email = email;
+        int code = await u.synchronize();
+        if(code == 1){
+          Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+            return new MainPage(user:u);
+          }),(ct)=>false);
+        }else{
+          EasyLoading.showError("Login token invalid",
+              duration: Duration(milliseconds: 2000));
+        }
       }
     }on DioError catch(e){
       print("Exception when login\n");

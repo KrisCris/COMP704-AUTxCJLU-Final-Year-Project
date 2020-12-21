@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class MyTextButton extends StatefulWidget {
+class CustomTextButton extends StatefulWidget {
   MyTheme theme;
   String text;
   double fontsize;
@@ -17,7 +18,7 @@ class MyTextButton extends StatefulWidget {
 
 
 
-  MyTextButton(this.text,
+  CustomTextButton(this.text,
       {this.fontsize = 16,
       this.tapUpFunc,
         @required this.theme,
@@ -31,21 +32,23 @@ class MyTextButton extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return new MyTextButtonState();
+    return new CustomTextButtonState();
   }
 }
 
-class MyTextButtonState extends State<MyTextButton>
+class CustomTextButtonState extends State<CustomTextButton>
     with TickerProviderStateMixin, Themeable {
-  ColorTweenAnimation animation = new ColorTweenAnimation();
+  TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
 
   @override
   void initState() {
     super.initState();
 
-    this.animation.initAnimation(widget.textColor, widget.theme.getReactColor(ComponentReactState.focused),
-        widget.colorChangeDura, this, () {setState(() {});});
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        widget.theme.getReactColor(ComponentReactState.focused),
+        widget.colorChangeDura, this, null);
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         if(!widget.isTap){
@@ -65,32 +68,36 @@ class MyTextButtonState extends State<MyTextButton>
   }
 
   Widget get TextBUttonUI {
-    return RichText(
-        text: TextSpan(
-            text: widget.text,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: widget.fontsize,
-                fontFamily: "Futura",
-                color: this.animation.getValue()),
-            recognizer: TapGestureRecognizer()
-            ..onTapUp = (TapUpDetails tpd) {
-              widget.isTap = false;
-              print("tapUp");
-              this.animation.reverseAnimation();
-              widget.tapUpFunc();
-            }
-            ..onTapDown = (TapDownDetails details) {
-              widget.isTap = true;
-              print("tapDown");
-              this.animation.beginAnimation();
-            }
-            ..onTapCancel= (){
-              widget.isTap = false;
-              print("tapCancel");
-              this.animation.reverseAnimation();
-            }
-        ));
+    return AnimatedBuilder(
+        animation: this.animation.ctl,
+        builder: (BuildContext context, Widget child){
+          return RichText(
+              text: TextSpan(
+                  text: widget.text,
+                  style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontSize: widget.fontsize,
+                      fontFamily: "Futura",
+                      color: this.animation.getValue()),
+                  recognizer: TapGestureRecognizer()
+                    ..onTapUp = (TapUpDetails tpd) {
+                      widget.isTap = false;
+                      print("tapUp");
+                      this.animation.reverseAnimation();
+                      widget.tapUpFunc();
+                    }
+                    ..onTapDown = (TapDownDetails details) {
+                      widget.isTap = true;
+                      print("tapDown");
+                      this.animation.beginAnimation();
+                    }
+                    ..onTapCancel= (){
+                      widget.isTap = false;
+                      print("tapCancel");
+                      this.animation.reverseAnimation();
+                    }
+              ));
+        });
   }
 
   @override
@@ -108,7 +115,10 @@ class MyTextButtonState extends State<MyTextButton>
     if(this.reactState == ComponentReactState.disabled)return;
     //update color animation
     Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(widget.textColor, newColor, widget.colorChangeDura,
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        newColor,
+        widget.colorChangeDura,
         this, () {setState((){});});
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){

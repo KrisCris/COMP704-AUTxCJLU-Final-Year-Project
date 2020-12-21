@@ -1,36 +1,37 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/screenTool.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/CustomDrawer.dart';
-import 'package:fore_end/Mycomponents/iconButton.dart';
-import 'package:fore_end/Mycomponents/myNavigator.dart';
+import 'package:fore_end/Mycomponents/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
-import 'package:fore_end/Mycomponents/myTextField.dart';
-import 'package:fore_end/Mycomponents/switchPage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
-import 'package:fore_end/Pages/takePhotoPage.dart';
+import 'package:fore_end/Pages/TakePhotoPage.dart';
 
 import 'LoginPage.dart';
 import 'SettingPage.dart';
 
 class MainPage extends StatefulWidget {
-  bool photoPageOff = true;
   Widget myDietPart;
   TakePhotoPage takePhotoPart;
   Widget addPlanPart;
-  MyIconButton myDietButton;
-  MyIconButton takePhotoButton;
-  MyIconButton addPlanButton;
-  MyNavigator navigator;
-  SwitchPage bodyContent;
+  CustomIconButton myDietButton;
+  CustomIconButton takePhotoButton;
+  CustomIconButton addPlanButton;
+  CustomNavigator navigator;
+  Widget bodyContent;
   MainState state;
   User user;
   MySearchBarDelegate searchBarDelegate;
-  Container userAvatarContainer;
+  CustomAppBar appBar;
   MainPage({@required User user, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -51,63 +52,46 @@ class MainPage extends StatefulWidget {
         ],
       ),
     );
-    this.myDietButton = MyIconButton(
-      theme: MyTheme.blackAndWhite,
+    this.myDietButton = CustomIconButton(
+      theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
       text: "My Diet",
-      buttonRadius: 70,
+      buttonRadius: 65,
       borderRadius: 10,
       onClick: () {
-        this.state.setState(() {
-          this.photoPageOff = true;
-        });
+        this.appBar.reverseTransparency();
+        this.navigator.reverseOpacity();
       },
     );
-    this.takePhotoButton = MyIconButton(
-        theme: MyTheme.blackAndWhite,
+    this.takePhotoButton = CustomIconButton(
+        theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.camera,
         backgroundOpacity: 0.0,
         text: "Take Photo",
-        buttonRadius: 70,
+        buttonRadius: 65,
         borderRadius: 10,
         fontSize: 12,
         onClick: () {
-          takePhotoPart.getCamera();
-          this.state.setState(() {
-            this.photoPageOff = false;
-          });
-        });
-    this.addPlanButton = MyIconButton(
-        theme: MyTheme.blackAndWhite,
+          this.appBar.startTransparency();
+          this.navigator.beginOpacity();
+        },
+        navigatorCallback: (){
+          this.takePhotoPart.getCamera();
+        },);
+    this.addPlanButton = CustomIconButton(
+        theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
         text: "Add Plan",
         borderRadius: 10,
-        buttonRadius: 70,
-        fontSize: 13,
+        buttonRadius: 65,
+        fontSize: 12,
         onClick: () {
-          this.state.setState(() {
-            this.photoPageOff = true;
-          });
+          this.appBar.reverseTransparency();
+          this.navigator.reverseOpacity();
         });
     this.user = user;
-    this.userAvatarContainer = Container(
-      width: 50,
-      height: 50,
-      child: ClipRRect(
-        child: this.user.getAvatar(double.infinity, double.infinity),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: Color(0xAA424242),
-            offset: Offset(3.0, 10.0), //阴影xy轴偏移量
-            blurRadius: 20.0, //阴影模糊程度
-            spreadRadius: 2.0 //阴影扩散程度,
-            )
-      ]),
-    );
   }
   @override
   State<StatefulWidget> createState() {
@@ -116,11 +100,17 @@ class MainPage extends StatefulWidget {
   }
 }
 
-class MainState extends State<MainPage> {
+class MainState extends State<MainPage> with TickerProviderStateMixin {
+
+  @override
+  void initState() {
+    widget.appBar = this.getAppBar();
+    this.setNavigator();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    this.resetNavigator();
-
     return Scaffold(
         drawer: this.getDrawer(),
         body: Builder(
@@ -128,240 +118,238 @@ class MainState extends State<MainPage> {
             return Container(
                 alignment: Alignment.center,
                 height: ScreenTool.partOfScreenHeight(1),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                child: Stack(
                   children: [
-                    AppBar(
-
-                        automaticallyImplyLeading: false,
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                              onTap: Scaffold.of(ctx).openDrawer,
-                              child: widget.userAvatarContainer),
-                          Text(
-                            widget.user.userName,
-                            textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                                decoration: TextDecoration.none,
-                                fontSize: 20,
-                                fontFamily: "Futura",
-                                color: Colors.black),
-                          ),
-                          SizedBox(width: 0.1),
-                          SizedBox(
-                            width: 0.2,
-                          ),
-                        ],
-                      ),
-
-                        actions:<Widget>[
-                          IconButton(
-                              icon:Icon(Icons.search),
-                              onPressed: (){
-                                showSearch(context:context,delegate: MySearchBarDelegate());
-                                //this.widget.searchBarDelegate);
-                              }
-                          ),
-                        ]
-                    ),
-                    Expanded(
-                        child: Stack(
+                    widget.bodyContent,
+                    Column(
                       children: [
-                        widget.bodyContent,
-                        Column(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            Offstage(
-                              offstage: widget.photoPageOff,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  this.getAlbumButton(),
-                                  this.getPhotoButton()
-                                ],
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [widget.navigator],
-                            )
-                          ],
+                        widget.appBar,
+                        Expanded(child: SizedBox()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [widget.navigator],
                         )
                       ],
-                    ))
+                    )
                   ],
                 ));
+
           },
         ));
   }
 
-  void openDrawer() {
-    Scaffold.of(context).openDrawer();
-  }
-
-  Widget getPhotoButton() {
-    return new MyIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.camera,
-      iconSize: 40,
-      backgroundOpacity: 0,
-    );
-  }
-
-  Widget getAlbumButton() {
-    return new MyIconButton(
-      theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.image,
-      iconSize: 40,
-      backgroundOpacity: 0,
+  Widget getAppBar() {
+    return CustomAppBar(
+      userAvatarContainer: this.getCircleAvatar(size: 45),
+      username: widget.user.userName,
     );
   }
 
   CustomDrawer getDrawer() {
-    Widget header = DrawerHeader(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: MemoryImage(
-                widget.user.getAvatarBin(),
-              ),
-              fit: BoxFit.cover)),
-    );
+    Widget info = this.getDrawerHeader();
+    Widget userSetting = this.getUserSetting();
+    Widget aboutUs = this.getAboutUs();
+    Widget logOut = this.getLogOut();
 
-    Widget info = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    List<Widget> drawerItems = [
+      SizedBox(
+        height: ScreenTool.partOfScreenHeight(0.05),
+      ),
+      info,
+      SizedBox(
+        height: 70,
+      ),
+      userSetting,
+      SizedBox(
+        height: 30,
+      ),
+      aboutUs,
+      Expanded(child: SizedBox()),
+      Row(
+        children: [
+          Expanded(child: SizedBox()),
+          logOut,
+          SizedBox(
+            width: 15,
+          )
+        ],
+      ),
+      SizedBox(
+        height: 15,
+      ),
+    ];
+    return CustomDrawer(
+      widthPercent: 1,
+      child: Column(
+        children: drawerItems,
+      ),
+    );
+  }
+
+  Widget getCircleAvatar({double size = 60}) {
+    return Container(
+        width: size,
+        height: size,
+        decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+                image: MemoryImage(widget.user.getAvatarBin()),
+                fit: BoxFit.cover),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 10, //阴影范围
+                spreadRadius: 1, //阴影浓度
+                color: Color(0x33000000), //阴影颜色
+              ),
+            ])
+        // child: , //增加文字等
+        );
+  }
+
+  Widget getDrawerHeader() {
+    return Row(
       children: [
-        ListTile(
-          leading: widget.user.genderIcon(),
-          title: Text(widget.user.userName,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: "Futura",
-                  color: Colors.black)),
-          subtitle: Text("No." + widget.user.uid.toString(),
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black26)),
+        SizedBox(
+          width: 15,
         ),
-        ListTile(
-          leading: Icon(
-            FontAwesomeIcons.drumstickBite,
-            color: Colors.brown,
-            size: 30,
-          ),
-          title: Text(widget.user.planType,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: "Futura",
-                  color: Colors.black)),
-          subtitle: Text("PLAN",
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black26)),
+        this.getCircleAvatar(),
+        SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.user.userName,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black)),
+            Text("Registered For xxx Days",
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black38)),
+          ],
+        ),
+        Expanded(child: SizedBox()),
+        CustomIconButton(
+          icon: FontAwesomeIcons.times,
+          theme: MyTheme.blackAndWhite,
+          backgroundOpacity: 0,
+          iconSize: 30,
+        ),
+        SizedBox(
+          width: 15,
         )
       ],
     );
+  }
 
-    Widget userSetting = ListTile(
+  Widget getUserSetting() {
+    return ListTile(
+      title: Text("SETTINGS",
       onTap: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
         }));
       },
-      leading: Icon(
-        FontAwesomeIcons.userCog,
-        color: Colors.blue,
-        size: 30,
-      ),
-      title: Text("Setting",
           style: TextStyle(
               decoration: TextDecoration.none,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
               fontFamily: "Futura",
               color: Colors.black)),
     );
+  }
 
-    Widget logOut = ListTile(
-      onTap: () {
+  Widget getAboutUs() {
+    return ListTile(
+      title: Text("ABOUT US",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+  }
+
+  Widget getLogOut() {
+    return CustomIconButton(
+      icon: FontAwesomeIcons.signOutAlt,
+      theme: MyTheme.blackAndWhite,
+      backgroundOpacity: 0,
+      iconSize: 30,
+      onClick: () {
         widget.user.logOut();
         Navigator.pushAndRemoveUntil(context,
             new MaterialPageRoute(builder: (ctx) {
           return Welcome();
         }), (route) => false);
       },
-      leading: Icon(
-        FontAwesomeIcons.signOutAlt,
-        color: Colors.deepOrange,
-        size: 35,
-      ),
-      title: Text("Log out",
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: Colors.black)),
-    );
-    List<Widget> drawerItems = [
-      userSetting,
-      Divider(
-        color: Colors.black26,
-      ),
-      logOut,
-      Divider(
-        color: Colors.black26,
-      ),
-    ];
-    return CustomDrawer(
-      widthPercent: 0.7,
-      child: Column(
-        children: [
-          header,
-          info,
-          Divider(),
-          Expanded(
-            child: ListView(
-              children: drawerItems,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
-  void resetNavigator() {
-    int activateNum = 0;
-    if (widget.navigator != null) {
-      activateNum = widget.navigator.getActivatePageNo();
-    }
-    widget.navigator = MyNavigator(
+  Widget getNavigator(TabController ctl){
+    return CustomNavigator(
       buttons: [
         widget.myDietButton,
         widget.addPlanButton,
         widget.takePhotoButton,
       ],
-      switchPages: [
-        widget.myDietPart,
-        widget.addPlanPart,
-        widget.takePhotoPart,
-      ],
+      controller: ctl,
       opacity: 0.25,
       edgeWidth: 0.5,
       width: ScreenTool.partOfScreenWidth(0.7),
       height: ScreenTool.partOfScreenHeight(0.08),
-      activateNum: activateNum,
     );
-    widget.bodyContent = widget.navigator.getPages();
+  }
+  Widget getBodyContent(TabController ctl){
+    return TabBarView(
+        controller: ctl,
+        children: [
+          widget.myDietPart,
+          widget.addPlanPart,
+          widget.takePhotoPart
+        ]
+    );
+  }
+  TabController getTabController(){
+    if (widget.navigator != null) {
+      return widget.navigator.getController();
+    }
+    return TabController(length: 3, vsync: this);
+  }
+  void setNavigator() {
+    List<CustomIconButton> buttons = [
+      widget.myDietButton,
+      widget.addPlanButton,
+      widget.takePhotoButton,
+    ];
+    TabController ctl = TabController(length: buttons.length, vsync: this);
+    if (widget.navigator != null) {
+      ctl = widget.navigator.getController();
+    }
+    widget.navigator = new CustomNavigator(
+      buttons: buttons,
+      controller: ctl,
+      opacity: 0.25,
+      edgeWidth: 0.5,
+      width: ScreenTool.partOfScreenWidth(0.7),
+      height: ScreenTool.partOfScreenHeight(0.08),
+    );
+    widget.bodyContent = TabBarView(
+        physics:new NeverScrollableScrollPhysics(),
+        controller: ctl,
+        children: [
+      widget.myDietPart,
+      widget.addPlanPart,
+      widget.takePhotoPart
+    ]);
   }
 }
