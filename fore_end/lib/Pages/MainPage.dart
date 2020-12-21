@@ -251,13 +251,13 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget getUserSetting() {
     return ListTile(
-      title: Text("SETTINGS",
       onTap: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
         }));
       },
+      title: Text("SETTINGS",
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
