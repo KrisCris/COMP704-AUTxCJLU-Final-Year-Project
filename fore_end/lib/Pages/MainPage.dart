@@ -15,6 +15,7 @@ import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/takePhotoPage.dart';
 
 import 'LoginPage.dart';
+import 'SettingPage.dart';
 
 class MainPage extends StatefulWidget {
   bool photoPageOff = true;
@@ -269,7 +270,14 @@ class MainState extends State<MainPage> {
         )
       ],
     );
+
     Widget userSetting = ListTile(
+      onTap: () {
+        //这里写setting pages的跳转
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return SettingPage();
+        }));
+      },
       leading: Icon(
         FontAwesomeIcons.userCog,
         color: Colors.blue,
@@ -283,6 +291,7 @@ class MainState extends State<MainPage> {
               fontFamily: "Futura",
               color: Colors.black)),
     );
+
     Widget logOut = ListTile(
       onTap: () {
         widget.user.logOut();

@@ -76,10 +76,37 @@ class MySearchBarDelegate extends SearchDelegate<String> {
     "zsk",
     "yyz",
     "hpc",
+    "yht",
+    "apple 苹果 5000 200",
+    "bread 面包",
+    "cake 蛋糕",
+    "dumpling 饺子",
+    "egg 鸡蛋",
+    "fig 无花果",
+    "grape 葡萄",
+    "ham 火腿",
+    "ice-cream 冰淇凌",
+    "jelly 果冻",
+    "ketchup 番茄酱",
+    "lettuce 莴苣",
+    "meat 肉",
+    "noodles 面条",
+    "onion 洋葱",
+    "pea 豌豆",
+    "QQSugar QQ糖",
+    "rice 米饭",
+    "sandwich 三明治",
+    "tomato 土豆",
+    "ufo？",
+    "veal 小牛肉",
+    "white gourd 冬瓜容",
+    "XO 人头马（洋酒）",
+    "yam 山芋",
+    "zombie",
 
   ];
 
   const recentSuggest = [
-    "推荐-zsk",
-    "推荐-2"
+    "推荐1-26个字母都可以比如apple",
+    "推荐2-开发人员比如zsk"
   ];
