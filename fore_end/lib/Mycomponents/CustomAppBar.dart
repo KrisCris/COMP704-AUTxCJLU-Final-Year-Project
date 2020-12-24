@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
 
 class CustomAppBar extends StatefulWidget{
   Widget userAvatarContainer;
@@ -70,6 +72,25 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 fontFamily: "Futura",
                 color: Colors.black),
           ),
+          SizedBox(
+            width: 70,
+
+          ),
+          InkWell(
+              onTap: (){
+                showSearch(context: context, delegate: MySearchBarDelegate());
+              },
+              child: Container(
+                width: 30,
+                height: 30,
+                child: Icon(
+                  FontAwesomeIcons.search,size: 25,
+
+                ),
+
+              )
+          )
+
         ],
       ),
     );
