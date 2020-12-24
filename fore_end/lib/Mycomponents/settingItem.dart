@@ -1,6 +1,7 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/User.dart';
 
 
 /// 个人信息设置页Item
@@ -13,6 +14,9 @@ class SettingItem extends StatelessWidget {
   final bool isRightImage; //是否显示右侧图片
   final String rightImageUri; //右侧图片地址
   final bool isRightText; //是否显示右侧文字
+  final Widget rightImage;
+  final bool isChange;
+  final Image image;
 
   const SettingItem({
     Key key,
@@ -24,6 +28,9 @@ class SettingItem extends StatelessWidget {
     this.rightImageUri = "",
     this.isRightText = true,
     this.onTap,
+    this.rightImage,
+    this.isChange=true,
+    this.image,
   }) : super(key: key);
 
   @override
@@ -68,15 +75,20 @@ class SettingItem extends StatelessWidget {
                                   )),
                               Visibility(
                                   visible: isRightImage,
-                                  child: CircleAvatar(
-                                    // backgroundImage: getBackgroundImage(rightImageUri),
-                                    child: Icon(FontAwesomeIcons.user),
-                                  ))
+                                  // child: CircleAvatar(
+                                  //   backgroundImage: this.image,
+                                  // )
+                                  //   child: this.image,
+                                      child: this.getImage(),
+
+                                  )
                             ]),
                           ),
 
-
-                          Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey,size: 20,),
+                          Visibility(
+                            visible: isChange,
+                            child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey,size: 20,),
+                          )
                         ]),
                   )
                 ],
@@ -86,11 +98,10 @@ class SettingItem extends StatelessWidget {
     );
   }
 
-  ImageProvider getBackgroundImage(String rightImageUri){
-    if(rightImageUri.contains("http")){
-      return NetworkImage(rightImageUri);
-    }else{
-      return AssetImage(rightImageUri);
-    }
+  Image getImage(){
+    User user=User.getInstance();
+
+    return user.getAvatar(40, 40);
   }
+
 }
