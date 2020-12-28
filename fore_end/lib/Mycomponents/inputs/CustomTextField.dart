@@ -23,10 +23,14 @@ class CustomTextField extends StatefulWidget {
   final int maxlength; //长度
   final IconData myIcon;
   final bool showIcon;
+  double bottomPadding;
   List<Function> doWhenCouldfocus;
   String errorText;
   String helpText;
+  TextAlign textAlign;
+  String defaultContent;
   bool autoChangeState;
+  bool disableSuffix;
   double width; //文本框的宽
   double ulDefaultWidth; //未点击的下划线厚度
   double ulFocusedWidth; //点击的厚度
@@ -52,24 +56,31 @@ class CustomTextField extends StatefulWidget {
     this.helpText = "",
     @required this.theme,
     this.width = 0.5,
-    ulFocusedWidth,
-    ulDefaultWidth,
+    this.bottomPadding=0,
+    this.ulFocusedWidth,
+    this.ulDefaultWidth,
+    this.defaultContent = "",
     this.firstReactState = ComponentReactState.unfocused,
     this.firstThemeState = ComponentThemeState.normal,
     this.myIcon = Icons.email_outlined,
     this.showIcon = false,
     this.maxlength,
+    this.textAlign=TextAlign.left,
     this.onCorrect,
     this.onError,
     this.onEmpty,
     this.next,
+    this.disableSuffix=false,
     this.sizeChangeMode = 0,
     this.autoChangeState = true,
     Key key,
   }) : super(key: key) {
-    this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
-    this.ulDefaultWidth = CustomTextField.WIDTH_TF_UNFOCUSED;
-
+    if (this.ulFocusedWidth == null) {
+      this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
+    }
+    if (this.ulDefaultWidth == null) {
+      this.ulDefaultWidth = CustomTextField.WIDTH_TF_UNFOCUSED;
+    }
     this.st = new CustomTextFieldState(
         this.firstThemeState, this.firstReactState, disabled);
     this.width = ScreenTool.partOfScreenWidth(this.width);
@@ -130,9 +141,11 @@ class CustomTextField extends StatefulWidget {
     else
       this.st.addListener(f);
   }
-  void addFunctionWhenCouldFocus(Function f){
+
+  void addFunctionWhenCouldFocus(Function f) {
     this.doWhenCouldfocus.add(f);
   }
+
   bool checkInput() {
     return FormatChecker.check(this.inputType, this.getInput());
   }
@@ -191,6 +204,13 @@ class CustomTextField extends StatefulWidget {
   }
 }
 
+
+
+
+
+
+
+
 class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, Themeable {
   TextEditingController _inputcontroller = TextEditingController();
@@ -224,6 +244,20 @@ class CustomTextFieldState extends State<CustomTextField>
   void initState() {
     super.initState();
     this.firstWidth = widget.width;
+    this._inputcontroller = TextEditingController.fromValue(
+        TextEditingValue(
+          text: widget.defaultContent,
+          selection: TextSelection.fromPosition(
+              TextPosition(
+              affinity: TextAffinity.downstream,
+              offset: widget.defaultContent.length)
+          )
+        )
+    );
+    this.prev = widget.defaultContent;
+    if(this.disabled){
+      this.reactState = ComponentReactState.disabled;
+    }
     this.initColor();
     for (Function f in widget.listenerList) {
       this.addListener(f);
@@ -236,14 +270,16 @@ class CustomTextFieldState extends State<CustomTextField>
         widget.ulDefaultWidth, widget.ulFocusedWidth, sizeChangeDura, this, () {
       setState(() {});
     });
-
-    this.suffixSizeAnimation.initAnimation(0.0, 25.0, sizeChangeDura, this, () {
+    double suffixValue = 25;
+    if(widget.disableSuffix)suffixValue = 0;
+    this.suffixSizeAnimation.initAnimation(0.0, suffixValue, sizeChangeDura, this, () {
       setState(() {});
     });
 
     this._focusNode.addListener(() {
-      if(this._focusNode.canRequestFocus){
-        if(widget.doWhenCouldfocus != null && widget.doWhenCouldfocus.isNotEmpty){
+      if (this._focusNode.canRequestFocus) {
+        if (widget.doWhenCouldfocus != null &&
+            widget.doWhenCouldfocus.isNotEmpty) {
           Function f = widget.doWhenCouldfocus.removeAt(0);
           f();
         }
@@ -372,6 +408,7 @@ class CustomTextFieldState extends State<CustomTextField>
       keyboardType: widget.keyboardType,
       focusNode: this._focusNode,
       controller: this._inputcontroller,
+      maxLines: 1,
       style: TextStyle(fontSize: 18),
       autofocus: widget.isAutoFocus,
       cursorColor: colorAnimation.getValue(),
@@ -382,6 +419,7 @@ class CustomTextFieldState extends State<CustomTextField>
           FocusScope.of(context).requestFocus(widget.next);
         }
       },
+      textAlign: widget.textAlign,
       decoration: new InputDecoration(
         //下划线的设置
         focusedBorder: UnderlineInputBorder(
@@ -389,31 +427,29 @@ class CustomTextFieldState extends State<CustomTextField>
               color: colorAnimation.getValue(),
               width: this.underlineWidthAnimation.getValue()),
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-              color: colorAnimation.getValue(),
-              width: this.underlineWidthAnimation.getValue()),
-        ),
+        // enabledBorder: UnderlineInputBorder(
+        //   borderSide: BorderSide(
+        //       color: colorAnimation.getValue(),
+        //       width: this.underlineWidthAnimation.getValue()),
+        // ),
         disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
-        errorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
-        focusedErrorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
+            borderSide: BorderSide.none,),
+        // errorBorder: UnderlineInputBorder(
+        //     borderSide: BorderSide(
+        //         color: colorAnimation.getValue(),
+        //         width: this.underlineWidthAnimation.getValue())),
+        // focusedErrorBorder: UnderlineInputBorder(
+        //     borderSide: BorderSide(
+        //         color: colorAnimation.getValue(),
+        //         width: this.underlineWidthAnimation.getValue())),
 
         //文本框基本属性
         hintText: widget.placeholder,
-        contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, 0),
+        contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, widget.bottomPadding),
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,
         errorText: this.isCorrect ||
-                (!this.isCorrect && this._inputcontroller.text.isEmpty)
+                (!this.isCorrect && this._inputcontroller.text.isEmpty) || this.disabled
             ? null
             : widget.errorText,
         suffixIcon: Transform.translate(
@@ -430,12 +466,12 @@ class CustomTextFieldState extends State<CustomTextField>
   }
 
   void setDisable(bool dis) {
-    setState(() {
-      this.disabled = dis;
-      if (this.disabled) {
-        this.setReactState(ComponentReactState.disabled);
-      }
-    });
+    this.disabled = dis;
+    if (this.disabled) {
+      this.setReactState(ComponentReactState.disabled);
+    } else {
+      this.setReactState(ComponentReactState.able);
+    }
   }
 
   double calculatePosition() {
@@ -459,6 +495,7 @@ class CustomTextFieldState extends State<CustomTextField>
     if (rea == this.reactState) return;
 
     if (rea == ComponentReactState.unfocused) {
+      //进入非聚焦状态，correct和error状态都不进行变化，只有normal状态进行变化
       if (this.themeState == ComponentThemeState.normal) {
         this.colorAnimation.initAnimation(
             widget.theme.getThemeColor(this.themeState),
@@ -469,23 +506,40 @@ class CustomTextFieldState extends State<CustomTextField>
         });
         this.underlineWidthAnimation.reverseAnimation();
       }
-    } else if(rea == ComponentReactState.disabled){
-      this.colorAnimation.initAnimation(
-          this.colorAnimation.getValue(),
-          widget.theme.getReactColor(rea),
-          colorChangeDura, this,
-              () {setState(() {});});
-      this.underlineWidthAnimation.reverse();
-      this.suffixSizeAnimation.reverse();
-    } else {
+    } else if (rea == ComponentReactState.focused) {
+      //进入聚焦状态，correct和error状态都不进行变化，只有normal状态进行变化
       if (this.themeState == ComponentThemeState.normal) {
         this.colorAnimation.initAnimation(
-            widget.theme.getReactColor(this.reactState),
             widget.theme.getThemeColor(this.themeState),
+            widget.theme.getReactColor(rea),
             colorChangeDura,
             this, () {
           setState(() {});
         });
+        this.underlineWidthAnimation.beginAnimation();
+      }
+    } else if (rea == ComponentReactState.disabled) {
+      //进入禁用状态，直接从当前颜色变化到disable状态
+      this.colorAnimation.initAnimation(this.colorAnimation.getValue(),
+          widget.theme.getReactColor(rea), colorChangeDura, this, () {
+        setState(() {});
+      });
+      //禁用状态下，下划线和尾部图标全部回缩
+      this.underlineWidthAnimation.reverse();
+      this.suffixSizeAnimation.reverse();
+    } else if (rea == ComponentReactState.able) {
+      //可用状态，从当前颜色回到theme控制的颜色
+      this.colorAnimation.initAnimation(
+          this.colorAnimation.getValue(),
+          widget.theme.getThemeColor(this.themeState),
+          colorChangeDura,
+          this, () {
+        setState(() {});
+      });
+      //可用状态下，若为correct或者error,则将下划线和尾部图片放大
+      if (this.themeState == ComponentThemeState.correct ||
+          this.themeState == ComponentThemeState.error) {
+        this.suffixSizeAnimation.beginAnimation();
         this.underlineWidthAnimation.beginAnimation();
       }
     }

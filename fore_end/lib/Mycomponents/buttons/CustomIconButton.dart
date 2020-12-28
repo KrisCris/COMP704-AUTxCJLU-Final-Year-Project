@@ -47,7 +47,10 @@ class CustomIconButton extends StatefulWidget {
     );
     return this.state;
   }
-
+  void changeIcon(IconData icon){
+    this.icon = icon;
+    this.state.setState(() {});
+  }
   void addDelayInit(Function f) {
     this.delayInit.add(f);
   }

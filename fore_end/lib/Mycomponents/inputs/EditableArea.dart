@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/settingItem.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class EditableArea extends StatefulWidget {
@@ -48,7 +49,6 @@ class EditableAreaState extends State<EditableArea>
   ComponentThemeState the;
 
   CustomIconButton editButton;
-  CustomIconButton confirmButton;
 
   EditableAreaState(ComponentReactState rea, ComponentThemeState the) {
     this.rea = rea;
@@ -86,17 +86,17 @@ class EditableAreaState extends State<EditableArea>
       SizedBox(height: 10),
       Row(
         children: [
+          SizedBox(width: 20),
           Expanded(
             child: Text(widget.title,
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 17,
                     color: widget.theme.getThemeColor(this.the),
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.bold)),
           ),
           this.getEditButton(context),
-          this.getConfirmButton(),
           SizedBox(width: 10)
         ],
       ),
@@ -112,28 +112,22 @@ class EditableAreaState extends State<EditableArea>
 
   CustomIconButton getEditButton(BuildContext context) {
     this.editButton = CustomIconButton(
-      disabled: this.editing,
+      disabled: false,
       theme: MyTheme.blueStyle,
       icon: FontAwesomeIcons.edit,
       backgroundOpacity: 0,
       iconSize: 25,
-      onClick:(){
+    );
+    this.editButton.onClick = (){
+      if(!this.editing){
+        this.editButton.changeIcon(FontAwesomeIcons.check);
         this.startEdit(context);
-      } ,
-    );
+      }else{
+        this.editButton.changeIcon(FontAwesomeIcons.edit);
+        this.endEdit();
+      }
+    };
     return this.editButton;
-  }
-
-  CustomIconButton getConfirmButton() {
-    this.confirmButton = CustomIconButton(
-      disabled: !this.editing,
-      theme: MyTheme.blueStyle,
-      icon: FontAwesomeIcons.clipboardCheck,
-      backgroundOpacity: 0,
-      iconSize: 25,
-      onClick: this.endEdit,
-    );
-    return this.confirmButton;
   }
 
   void disableAll({Function(CustomTextField) doOnFirstOne}) {
@@ -145,6 +139,12 @@ class EditableAreaState extends State<EditableArea>
           doOnFirstOne(wd);
         }
         (wd as CustomTextField).setDisable(true);
+      }else if(wd is SettingItem){
+        i++;
+        if(i == 1 && doOnFirstOne != null){
+          doOnFirstOne(wd.getInpuitField());
+        }
+        (wd as SettingItem).getInpuitField().setDisable(true);
       }
     }
   }
@@ -158,7 +158,12 @@ class EditableAreaState extends State<EditableArea>
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd);
         }
-
+      }else if(wd is SettingItem){
+        (wd as SettingItem).getInpuitField().setDisable(false);
+        i++;
+        if(i == 1 && doOnFirstOne != null){
+          doOnFirstOne(wd.getInpuitField());
+        }
       }
     }
   }
@@ -166,19 +171,15 @@ class EditableAreaState extends State<EditableArea>
   void startEdit(BuildContext context) {
     this.editing = true;
     this.enableAll(doOnFirstOne: (CustomTextField f){
-        f.addFunctionWhenCouldFocus((){
-          FocusScope.of(context).requestFocus(f.getFocusNode());
-        });
+        // f.addFunctionWhenCouldFocus((){
+        //   FocusScope.of(context).requestFocus(f.getFocusNode());
+        // });
     });
-    this.editButton.setDisabled(editing);
-    this.confirmButton.setDisabled(!editing);
   }
 
   void endEdit() {
     this.editing = false;
     this.disableAll();
-    this.editButton.setDisabled(editing);
-    this.confirmButton.setDisabled(!editing);
   }
 
   @override
