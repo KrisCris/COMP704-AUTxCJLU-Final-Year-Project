@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
@@ -17,12 +16,14 @@ class VerifyCodeInputer extends StatefulWidget{
   String repeatShowText;
   String checkWrongText;
   String placeHolder;
+  double width;
 
   VerifyCodeState state;
 
   VerifyCodeInputer({Key key, this.emailField, this.onCheckFailed,this.onCheckSuccess,
     this.firstShowText="Acquire Verify Code",this.repeatShowText="Acquire again",
-    this.checkWrongText="Wrong verify code",this.placeHolder="input verify code"}):super(key:key);
+    this.checkWrongText="Wrong verify code",this.placeHolder="input verify code",
+    this.width = 0.7}):super(key:key);
   @override
   State<StatefulWidget> createState() {
     this.state = new VerifyCodeState();
@@ -89,7 +90,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
     this.button = CustomButton(
         text: widget.firstShowText,
         fontsize: 20,
-        width: 0.7,
+        width: widget.width,
         height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
@@ -100,8 +101,8 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
           this.contentWhenClickButton = widget.emailField.getInput();
           this.button.fontsize = 20;
           this.button.setDisable(true);
-          this.button.setWidth(0.2);
-          this.textField.setWidth(0.45);
+          this.button.setWidth(0.3*widget.width);
+          this.textField.setWidth(0.65*widget.width);
           if (this.counter.isStop()) {
             this.counter.start();
           }

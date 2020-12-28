@@ -16,16 +16,16 @@ class CustomTextField extends StatefulWidget {
   static final double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
 
   final MyTheme theme;
-  // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
-  String errorText;
   final FocusNode next;
-  String helpText;
   final InputFieldType inputType;
   final bool isAutoFocus;
   final int maxlength; //长度
   final IconData myIcon;
   final bool showIcon;
+  List<Function> doWhenCouldfocus;
+  String errorText;
+  String helpText;
   bool autoChangeState;
   double width; //文本框的宽
   double ulDefaultWidth; //未点击的下划线厚度
@@ -44,13 +44,14 @@ class CustomTextField extends StatefulWidget {
   int sizeChangeMode;
 
   CustomTextField({
+    bool disabled = false,
     this.placeholder,
     this.inputType = InputFieldType.text,
     this.isAutoFocus = false,
     this.errorText = "input error",
     this.helpText = "",
     @required this.theme,
-    this.width,
+    this.width = 0.5,
     ulFocusedWidth,
     ulDefaultWidth,
     this.firstReactState = ComponentReactState.unfocused,
@@ -69,7 +70,8 @@ class CustomTextField extends StatefulWidget {
     this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
     this.ulDefaultWidth = CustomTextField.WIDTH_TF_UNFOCUSED;
 
-    this.st = new CustomTextFieldState(this.firstThemeState, this.firstReactState);
+    this.st = new CustomTextFieldState(
+        this.firstThemeState, this.firstReactState, disabled);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
@@ -81,6 +83,7 @@ class CustomTextField extends StatefulWidget {
     }
 
     this.listenerList = List<Function>();
+    this.doWhenCouldfocus = List<Function>();
   }
 
   String getInput() {
@@ -127,7 +130,9 @@ class CustomTextField extends StatefulWidget {
     else
       this.st.addListener(f);
   }
-
+  void addFunctionWhenCouldFocus(Function f){
+    this.doWhenCouldfocus.add(f);
+  }
   bool checkInput() {
     return FormatChecker.check(this.inputType, this.getInput());
   }
@@ -162,9 +167,16 @@ class CustomTextField extends StatefulWidget {
     });
   }
 
-  void setDisable(bool dis){
-    this.st.setDisable(dis);
+  void setDisable(bool dis) {
+    if (this.st != null) {
+      if (this.st.mounted) {
+        this.st.setDisable(dis);
+      } else {
+        this.st.disabled = dis;
+      }
+    }
   }
+
   void setThemeState(ComponentThemeState the, {bool force = false}) {
     this.st.setThemeState(the, force: force);
   }
@@ -182,7 +194,8 @@ class CustomTextField extends StatefulWidget {
 class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, Themeable {
   TextEditingController _inputcontroller = TextEditingController();
-  TweenAnimation<CalculatableColor> colorAnimation = TweenAnimation<CalculatableColor>();
+  TweenAnimation<CalculatableColor> colorAnimation =
+      TweenAnimation<CalculatableColor>();
   TweenAnimation<double> suffixSizeAnimation = TweenAnimation<double>();
   TweenAnimation<double> underlineWidthAnimation = TweenAnimation<double>();
   TweenAnimation<double> lengthAnimation = TweenAnimation<double>();
@@ -199,9 +212,12 @@ class CustomTextFieldState extends State<CustomTextField>
   bool isInputing = false;
   String prev = "";
 
-  CustomTextFieldState(ComponentThemeState the, ComponentReactState rea) : super() {
+  CustomTextFieldState(
+      ComponentThemeState the, ComponentReactState rea, bool disabled)
+      : super() {
     this.themeState = the;
     this.reactState = rea;
+    this.disabled = disabled;
   }
 
   @override
@@ -213,7 +229,7 @@ class CustomTextFieldState extends State<CustomTextField>
       this.addListener(f);
     }
     this.lengthAnimation.initAnimation(
-        this.firstWidth, this.firstWidth, this.sizeChangeDura, this,null);
+        this.firstWidth, this.firstWidth, this.sizeChangeDura, this, null);
     this.lengthAnimation.beginAnimation();
 
     this.underlineWidthAnimation.initAnimation(
@@ -226,6 +242,12 @@ class CustomTextFieldState extends State<CustomTextField>
     });
 
     this._focusNode.addListener(() {
+      if(this._focusNode.canRequestFocus){
+        if(widget.doWhenCouldfocus != null && widget.doWhenCouldfocus.isNotEmpty){
+          Function f = widget.doWhenCouldfocus.removeAt(0);
+          f();
+        }
+      }
       if (this._focusNode.hasFocus) {
         this.setReactState(ComponentReactState.focused);
         this.continuousInputChecker = new MyCounter(
@@ -270,13 +292,13 @@ class CustomTextFieldState extends State<CustomTextField>
               }
             });
       } else {
-        if(!this.continuousInputChecker.isStop()){
+        if (this.continuousInputChecker != null &&
+            !this.continuousInputChecker.isStop()) {
           this.continuousInputChecker.stop();
           this.continuousInputChecker.callCounterFunc();
-        }else{
+        } else {
           this.setReactState(ComponentReactState.unfocused);
         }
-
       }
     });
 
@@ -305,7 +327,7 @@ class CustomTextFieldState extends State<CustomTextField>
 
   @override
   void dispose() {
-    if(this.continuousInputChecker != null){
+    if (this.continuousInputChecker != null) {
       this.continuousInputChecker.stop();
     }
     this.colorAnimation.dispose();
@@ -321,7 +343,7 @@ class CustomTextFieldState extends State<CustomTextField>
     Widget vis = AnimatedBuilder(
         animation: this.lengthAnimation.ctl,
         child: this.getInputField(),
-        builder: (BuildContext context, Widget child){
+        builder: (BuildContext context, Widget child) {
           return Visibility(
               visible: this.lengthAnimation.getValue() == 0 ? false : true,
               child: Transform.translate(
@@ -341,12 +363,11 @@ class CustomTextFieldState extends State<CustomTextField>
   bool isEmpty() {
     return this._inputcontroller.text == "";
   }
-  Widget getInputField(){
-   return TextField(
+
+  Widget getInputField() {
+    return TextField(
       enabled: !this.disabled,
-      inputFormatters: [
-        FilteringTextInputFormatter.deny(RegExp(' '))
-      ],
+      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
       textInputAction: widget.keyboardAction,
       keyboardType: widget.keyboardType,
       focusNode: this._focusNode,
@@ -392,8 +413,7 @@ class CustomTextFieldState extends State<CustomTextField>
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,
         errorText: this.isCorrect ||
-            (!this.isCorrect &&
-                this._inputcontroller.text.isEmpty)
+                (!this.isCorrect && this._inputcontroller.text.isEmpty)
             ? null
             : widget.errorText,
         suffixIcon: Transform.translate(
@@ -408,11 +428,16 @@ class CustomTextFieldState extends State<CustomTextField>
       obscureText: widget.inputType == InputFieldType.password,
     );
   }
-  void setDisable(bool dis){
+
+  void setDisable(bool dis) {
     setState(() {
-        this.disabled = dis;
+      this.disabled = dis;
+      if (this.disabled) {
+        this.setReactState(ComponentReactState.disabled);
+      }
     });
   }
+
   double calculatePosition() {
     if (widget.sizeChangeMode == 0)
       return 0;
@@ -444,6 +469,14 @@ class CustomTextFieldState extends State<CustomTextField>
         });
         this.underlineWidthAnimation.reverseAnimation();
       }
+    } else if(rea == ComponentReactState.disabled){
+      this.colorAnimation.initAnimation(
+          this.colorAnimation.getValue(),
+          widget.theme.getReactColor(rea),
+          colorChangeDura, this,
+              () {setState(() {});});
+      this.underlineWidthAnimation.reverse();
+      this.suffixSizeAnimation.reverse();
     } else {
       if (this.themeState == ComponentThemeState.normal) {
         this.colorAnimation.initAnimation(
@@ -492,37 +525,38 @@ class CustomTextFieldState extends State<CustomTextField>
 
 class FormatChecker {
   Map<InputFieldType, Function(String)> mapper;
-  factory FormatChecker() =>  _getInstance();
+  factory FormatChecker() => _getInstance();
   static FormatChecker get instance => _getInstance();
   static FormatChecker _instance;
-  FormatChecker._internal(){
+  FormatChecker._internal() {
     mapper = new Map<InputFieldType, Function(String)>();
     mapper.addAll({
-      InputFieldType.email : (String s){
-        String regexEmail = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
+      InputFieldType.email: (String s) {
+        String regexEmail =
+            "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
         if (s == null || s.isEmpty) return false;
-        return (new RegExp(regexEmail)).hasMatch(s);},
-
-      InputFieldType.text :(String s){return !s.isEmpty;},
-
-      InputFieldType.password : (String s){
+        return (new RegExp(regexEmail)).hasMatch(s);
+      },
+      InputFieldType.text: (String s) {
+        return !s.isEmpty;
+      },
+      InputFieldType.password: (String s) {
         return s.length > 6;
       },
-
-      InputFieldType.verifyCode:(String s){
-        return s.length==6;
+      InputFieldType.verifyCode: (String s) {
+        return s.length == 6;
       }
     });
   }
 
-  static FormatChecker _getInstance(){
+  static FormatChecker _getInstance() {
     if (_instance == null) {
       _instance = new FormatChecker._internal();
     }
     return _instance;
   }
 
-  static bool check(InputFieldType tp, String text){
+  static bool check(InputFieldType tp, String text) {
     return FormatChecker.instance.mapper[tp](text);
   }
 }

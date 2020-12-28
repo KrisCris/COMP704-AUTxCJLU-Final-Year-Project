@@ -22,6 +22,9 @@ class CustomIconButton extends StatefulWidget {
   Function navigatorCallback;
   CustomNavigator navi;
   List<BoxShadow> shadows;
+
+  bool _disabled;
+
   CustomIconButton(
       {@required this.theme,
       @required this.icon,
@@ -32,13 +35,16 @@ class CustomIconButton extends StatefulWidget {
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
       this.shadows,
-      this.onClick,
+      this.onClick, disabled = false,
       this.navigatorCallback})
-      : super() {}
+      : super() {this._disabled = disabled;}
   @override
   State<StatefulWidget> createState() {
-    this.state = new CustomIconButtonState(ComponentThemeState.normal,
-        ComponentReactState.unfocused, this.shadows);
+    this.state = new CustomIconButtonState(
+        ComponentThemeState.normal,
+        this._disabled? ComponentReactState.disabled: ComponentReactState.unfocused,
+        this.shadows
+    );
     return this.state;
   }
 
@@ -49,7 +55,9 @@ class CustomIconButton extends StatefulWidget {
   void setParentNavigator(CustomNavigator nv) {
     this.navi = nv;
   }
-
+  void setDisabled(bool dis){
+    this.state.setDisabled(dis);
+  }
   void setReactState(ComponentReactState rea) {
     if (this.state == null) {
       this.delayInit.add(() {
@@ -68,16 +76,21 @@ class CustomIconButtonState extends State<CustomIconButton>
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
       TweenAnimation<CalculatableColor>();
   List<BoxShadow> shadow;
+  bool disabled = false;
+
   CustomIconButtonState(
       ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
       : super() {
     this.themeState = the;
     this.reactState = rea;
     this.shadow = shadow;
+    if(rea == ComponentReactState.disabled)
+      this.disabled = true;
   }
 
   @override
   Widget build(BuildContext context) {
+    widget.state = this;
     return this.buttonUI;
   }
 
@@ -135,14 +148,16 @@ class CustomIconButtonState extends State<CustomIconButton>
         onTap: () {
           if (widget.onClick != null) {
             if (widget.navi == null) {
-              widget.onClick();
+              if(!this.disabled){
+                widget.onClick();
+              }
             } else {
               if (!widget.navi.isActivate(widget)) {
                 widget.onClick();
               }
             }
           }
-          if (widget.navi != null) {
+          if (widget.navi != null && !this.disabled) {
             widget.navi.activateButtonByObject(widget);
             widget.navi.switchPageByObject(widget);
           }
@@ -165,11 +180,9 @@ class CustomIconButtonState extends State<CustomIconButton>
   }
 
   CalculatableColor getBackgroundColor() {
-    double opacity;
+    double opacity = widget.backgroundOpacity;
     if (this.reactState == ComponentReactState.focused) {
       opacity = 1.0;
-    } else if (this.reactState == ComponentReactState.unfocused) {
-      opacity = widget.backgroundOpacity;
     }
     return widget.theme.getReactColor(this.reactState).withOpacity(opacity);
   }
@@ -177,19 +190,30 @@ class CustomIconButtonState extends State<CustomIconButton>
   CalculatableColor getIconAndTextColor(ComponentReactState rea) {
     if (rea == ComponentReactState.focused) {
       return widget.theme.getReactColor(ComponentReactState.unfocused);
+    }else if(rea == ComponentReactState.unfocused){
+      return widget.theme.getReactColor(ComponentReactState.focused);
+    }else{
+      return widget.theme.getReactColor(rea);
     }
-    return widget.theme.getReactColor(ComponentReactState.focused);
+
   }
 
+
+  void setDisabled(bool dis){
+    this.disabled = dis;
+    if(dis){
+      this.setReactState(ComponentReactState.disabled);
+    }else{
+      this.setReactState(ComponentReactState.able);
+    }
+  }
   @override
   void setReactState(ComponentReactState rea) {
     if (this.reactState == rea) return;
 
-    double AfterOpacity;
+    double AfterOpacity = widget.backgroundOpacity;
     if (rea == ComponentReactState.focused) {
       AfterOpacity = 1.0;
-    } else if (rea == ComponentReactState.unfocused) {
-      AfterOpacity = widget.backgroundOpacity;
     }
     this.backgroundColorAnimation.initAnimation(
         this.getBackgroundColor(),
@@ -209,7 +233,6 @@ class CustomIconButtonState extends State<CustomIconButton>
     this.iconAndTextColorAnimation.beginAnimation();
     this.reactState = rea;
   }
-
   @override
   void setThemeState(ComponentThemeState the) {}
 }
