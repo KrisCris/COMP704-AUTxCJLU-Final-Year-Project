@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/inputs/CustomTextField.dart';
 
 import 'SettingPage.dart';
 
