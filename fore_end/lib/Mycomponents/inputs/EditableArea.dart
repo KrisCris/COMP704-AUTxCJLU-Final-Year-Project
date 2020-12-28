@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/settingItem.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 class EditableArea extends StatefulWidget {
@@ -85,11 +86,12 @@ class EditableAreaState extends State<EditableArea>
       SizedBox(height: 10),
       Row(
         children: [
+          SizedBox(width: 20),
           Expanded(
             child: Text(widget.title,
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 17,
                     color: widget.theme.getThemeColor(this.the),
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.bold)),
@@ -137,6 +139,12 @@ class EditableAreaState extends State<EditableArea>
           doOnFirstOne(wd);
         }
         (wd as CustomTextField).setDisable(true);
+      }else if(wd is SettingItem){
+        i++;
+        if(i == 1 && doOnFirstOne != null){
+          doOnFirstOne(wd.getInpuitField());
+        }
+        (wd as SettingItem).getInpuitField().setDisable(true);
       }
     }
   }
@@ -150,7 +158,12 @@ class EditableAreaState extends State<EditableArea>
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd);
         }
-
+      }else if(wd is SettingItem){
+        (wd as SettingItem).getInpuitField().setDisable(false);
+        i++;
+        if(i == 1 && doOnFirstOne != null){
+          doOnFirstOne(wd.getInpuitField());
+        }
       }
     }
   }
