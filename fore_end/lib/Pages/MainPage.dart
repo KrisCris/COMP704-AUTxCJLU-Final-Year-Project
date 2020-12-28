@@ -1,22 +1,17 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/Constants.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/CustomAppBar.dart';
-import 'package:fore_end/Mycomponents/CustomDrawer.dart';
-import 'package:fore_end/Mycomponents/CustomIconButton.dart';
-import 'package:fore_end/Mycomponents/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
+import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
+import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
+import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
-
-import 'LoginPage.dart';
 import 'SettingPage.dart';
 
 class MainPage extends StatefulWidget {

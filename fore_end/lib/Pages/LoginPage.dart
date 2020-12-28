@@ -3,15 +3,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/Background.dart';
-import 'package:fore_end/Mycomponents/CustomButton.dart';
-import 'package:fore_end/Mycomponents/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
@@ -59,10 +57,7 @@ class Login extends StatelessWidget {
       // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
-
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       onCorrect: () {
         emailIsInput = true;
         if (passwordIsInput) this.nextButton.setDisable(false);
@@ -78,8 +73,6 @@ class Login extends StatelessWidget {
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       onCorrect: () {
         passwordIsInput = true;
         if (emailIsInput) this.nextButton.setDisable(false);
