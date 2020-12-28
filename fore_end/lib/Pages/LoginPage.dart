@@ -9,6 +9,7 @@ import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
@@ -67,7 +68,6 @@ class Login extends StatelessWidget {
         this.nextButton.setDisable(true);
       },
     );
-
     this.passwordField = CustomTextField(
       placeholder: "Password",
       theme: MyTheme.blueStyle,
