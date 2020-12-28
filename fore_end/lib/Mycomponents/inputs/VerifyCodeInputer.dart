@@ -10,24 +10,37 @@ import 'package:fore_end/interface/Themeable.dart';
 import 'CustomTextField.dart';
 
 class VerifyCodeInputer extends StatefulWidget{
-  CustomTextField emailField;
+  @required CustomTextField emailField;
   Function onCheckSuccess;
   Function onCheckFailed;
   String firstShowText;
   String repeatShowText;
   String checkWrongText;
   String placeHolder;
+
+  VerifyCodeState state;
+
   VerifyCodeInputer({Key key, this.emailField, this.onCheckFailed,this.onCheckSuccess,
     this.firstShowText="Acquire Verify Code",this.repeatShowText="Acquire again",
     this.checkWrongText="Wrong verify code",this.placeHolder="input verify code"}):super(key:key);
   @override
   State<StatefulWidget> createState() {
-      return new VerifyCodeState();
+    this.state = new VerifyCodeState();
+    return this.state;
+  }
+
+  void setButtonDisabled(bool dis){
+    this.state.button.setDisable(dis);
+  }
+  void setError(){
+    this.state.textField.setError();
+  }
+  void setCorrect(){
+    this.state.textField.setCorrect();
   }
 }
 
 class VerifyCodeState extends State<VerifyCodeInputer>{
-  String inputContent;
   String contentWhenClickButton;
   bool verified;
   CustomTextField textField;
@@ -35,7 +48,6 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   MyCounter counter;
   @override
   void initState() {
-    // TODO: implement initState
     this.counter = new MyCounter(times: 60, duration: 1000);
     this.counter.calling = () {
       if (!this.button.isMonted()) return;
@@ -58,18 +70,23 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
-        this.getInput(),
-        this.getButton()
+        Positioned(
+            left: 0,
+            child: this.getInput()
+        ),
+        Positioned(
+            child: this.getButton()
+        )
+
       ],
     );
   }
 
   Widget getButton(){
-    return CustomButton(
+    this.button = CustomButton(
         text: widget.firstShowText,
         fontsize: 20,
         width: 0.7,
@@ -84,23 +101,24 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
           this.button.fontsize = 20;
           this.button.setDisable(true);
           this.button.setWidth(0.2);
-          this.button.setWidth(0.45);
+          this.textField.setWidth(0.45);
           if (this.counter.isStop()) {
             this.counter.start();
           }
           this.sendEmail(this.contentWhenClickButton);
         },
         isBold: true);
+    return this.button;
   }
 
   Widget getInput(){
-    return CustomTextField(
-        placeholder: widget.placeHolder,
-        autoChangeState: false,
-        inputType: InputFieldType.verifyCode,
-        theme: MyTheme.blueStyle,
-        width: 0,
-        sizeChangeMode: 0,
+    this.textField = CustomTextField(
+      placeholder: widget.placeHolder,
+      autoChangeState: false,
+      inputType: InputFieldType.verifyCode,
+      theme: MyTheme.blueStyle,
+      width: 0,
+      sizeChangeMode: 0,
       onCorrect: () async {
         String emailVal = widget.emailField.getInput();
         if (emailVal != this.contentWhenClickButton) {
@@ -116,6 +134,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
         this.button.setDisable(false);
       },
     );
+    return this.textField;
   }
 
   Future<void> checkVerifyCode(String emailVal, String codeVal) async {

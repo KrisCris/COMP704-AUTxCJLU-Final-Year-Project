@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
@@ -22,12 +20,10 @@ void main() {
 
 class Register extends StatelessWidget {
   CustomTextField emailTextField;
-  CustomTextField verifyTextField;
+  VerifyCodeInputer verifyTextField;
   CustomTextField nicknameTextField;
   CustomTextField passwordTextField;
   CustomTextField confirmPasswordTextField;
-  CustomButton verifyButton;
-  // MyCounter counter;
   CustomButton nextButton;
   CustomButton backButton;
   String emailWhenClickButton = "";
@@ -90,7 +86,6 @@ class Register extends StatelessWidget {
 
     this.emailTextField = CustomTextField(
       placeholder: 'Email',
-      next: this.verifyTextField.getFocusNode(),
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
       autoChangeState: false,
@@ -105,10 +100,10 @@ class Register extends StatelessWidget {
           "email":this.emailTextField.getInput()
         });
         if(res.data['code'] == 1){
-          this.verifyButton.setDisable(false);
+          this.verifyTextField.setButtonDisabled(false);
           this.emailTextField.setCorrect();
         }else{
-          this.verifyButton.setDisable(true);
+          this.verifyTextField.setButtonDisabled(true);
           this.emailTextField.setErrorText("This Email has already been registered");
           this.emailTextField.setError();
         }
@@ -116,9 +111,14 @@ class Register extends StatelessWidget {
       onError: () {
         this.emailTextField.setErrorText("please input correct email format");
         this.emailTextField.setError();
-        this.verifyButton.setDisable(true);
+        this.verifyTextField.setButtonDisabled(true);
         this.nextButton.setDisable(true);
       },
+    );
+    this.verifyTextField = VerifyCodeInputer(
+      onCheckSuccess: (){ this.nextButton.setDisable(false);},
+      onCheckFailed: (){this.nextButton.setDisable(true);},
+      emailField: this.emailTextField,
     );
 
     this.confirmPasswordTextField = CustomTextField(
@@ -209,7 +209,6 @@ class Register extends StatelessWidget {
       if (this.emailTextField.getInput() != this.emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
-          this.verifyTextField.setErrorText("verify code invalid");
         }
         this.nextButton.setDisable(true);
       } else if (this.verified) {
@@ -335,10 +334,7 @@ class Register extends StatelessWidget {
                 Container(
                   width: ScreenTool.partOfScreenWidth(0.7),
                   height: ScreenTool.partOfScreenHeight(0.1),
-                  child: VerifyCodeInputer(
-                    onCheckSuccess: (){ this.nextButton.setDisable(false);},
-                    onCheckFailed: (){this.nextButton.setDisable(true);},
-                  )
+                  child: this.verifyTextField
                 ),
                 SizedBox(height: 20),
                 SizedBox(height: 1),
