@@ -6,13 +6,16 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/FormatChecker.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class CustomTextField extends StatefulWidget {
-  final MyTheme theme;
+enum InputFieldType { email, password, text, verifyCode }
 
+class CustomTextField extends StatefulWidget {
+  static final double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
+  static final double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
+
+  final MyTheme theme;
   // final iconString;  //这里是放图表的，暂时用不到
   final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
   String errorText;
@@ -48,21 +51,24 @@ class CustomTextField extends StatefulWidget {
     this.helpText = "",
     @required this.theme,
     this.width,
-    this.ulFocusedWidth,
-    this.ulDefaultWidth,
+    ulFocusedWidth,
+    ulDefaultWidth,
     this.firstReactState = ComponentReactState.unfocused,
     this.firstThemeState = ComponentThemeState.normal,
     this.myIcon = Icons.email_outlined,
     this.showIcon = false,
-    this.maxlength = null,
+    this.maxlength,
     this.onCorrect,
     this.onError,
     this.onEmpty,
-    this.next = null,
+    this.next,
     this.sizeChangeMode = 0,
     this.autoChangeState = true,
     Key key,
   }) : super(key: key) {
+    this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
+    this.ulDefaultWidth = CustomTextField.WIDTH_TF_UNFOCUSED;
+
     this.st = new CustomTextFieldState(this.firstThemeState, this.firstReactState);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
@@ -473,4 +479,39 @@ class CustomTextFieldState extends State<CustomTextField>
   }
 }
 
-enum InputFieldType { email, password, text, verifyCode }
+class FormatChecker {
+  Map<InputFieldType, Function(String)> mapper;
+  factory FormatChecker() =>  _getInstance();
+  static FormatChecker get instance => _getInstance();
+  static FormatChecker _instance;
+  FormatChecker._internal(){
+    mapper = new Map<InputFieldType, Function(String)>();
+    mapper.addAll({
+      InputFieldType.email : (String s){
+        String regexEmail = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
+        if (s == null || s.isEmpty) return false;
+        return (new RegExp(regexEmail)).hasMatch(s);},
+
+      InputFieldType.text :(String s){return !s.isEmpty;},
+
+      InputFieldType.password : (String s){
+        return s.length > 6;
+      },
+
+      InputFieldType.verifyCode:(String s){
+        return s.length==6;
+      }
+    });
+  }
+
+  static FormatChecker _getInstance(){
+    if (_instance == null) {
+      _instance = new FormatChecker._internal();
+    }
+    return _instance;
+  }
+
+  static bool check(InputFieldType tp, String text){
+    return FormatChecker.instance.mapper[tp](text);
+  }
+}
