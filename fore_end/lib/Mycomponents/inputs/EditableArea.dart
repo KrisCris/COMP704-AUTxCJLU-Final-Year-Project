@@ -48,7 +48,6 @@ class EditableAreaState extends State<EditableArea>
   ComponentThemeState the;
 
   CustomIconButton editButton;
-  CustomIconButton confirmButton;
 
   EditableAreaState(ComponentReactState rea, ComponentThemeState the) {
     this.rea = rea;
@@ -96,7 +95,6 @@ class EditableAreaState extends State<EditableArea>
                     fontWeight: FontWeight.bold)),
           ),
           this.getEditButton(context),
-          this.getConfirmButton(),
           SizedBox(width: 10)
         ],
       ),
@@ -112,28 +110,22 @@ class EditableAreaState extends State<EditableArea>
 
   CustomIconButton getEditButton(BuildContext context) {
     this.editButton = CustomIconButton(
-      disabled: this.editing,
+      disabled: false,
       theme: MyTheme.blueStyle,
       icon: FontAwesomeIcons.edit,
       backgroundOpacity: 0,
       iconSize: 25,
-      onClick:(){
+    );
+    this.editButton.onClick = (){
+      if(!this.editing){
+        this.editButton.changeIcon(FontAwesomeIcons.check);
         this.startEdit(context);
-      } ,
-    );
+      }else{
+        this.editButton.changeIcon(FontAwesomeIcons.edit);
+        this.endEdit();
+      }
+    };
     return this.editButton;
-  }
-
-  CustomIconButton getConfirmButton() {
-    this.confirmButton = CustomIconButton(
-      disabled: !this.editing,
-      theme: MyTheme.blueStyle,
-      icon: FontAwesomeIcons.clipboardCheck,
-      backgroundOpacity: 0,
-      iconSize: 25,
-      onClick: this.endEdit,
-    );
-    return this.confirmButton;
   }
 
   void disableAll({Function(CustomTextField) doOnFirstOne}) {
@@ -166,19 +158,15 @@ class EditableAreaState extends State<EditableArea>
   void startEdit(BuildContext context) {
     this.editing = true;
     this.enableAll(doOnFirstOne: (CustomTextField f){
-        f.addFunctionWhenCouldFocus((){
-          FocusScope.of(context).requestFocus(f.getFocusNode());
-        });
+        // f.addFunctionWhenCouldFocus((){
+        //   FocusScope.of(context).requestFocus(f.getFocusNode());
+        // });
     });
-    this.editButton.setDisabled(editing);
-    this.confirmButton.setDisabled(!editing);
   }
 
   void endEdit() {
     this.editing = false;
     this.disableAll();
-    this.editButton.setDisabled(editing);
-    this.confirmButton.setDisabled(!editing);
   }
 
   @override

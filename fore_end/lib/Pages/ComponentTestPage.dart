@@ -12,9 +12,9 @@ class ComponentTestPage extends StatelessWidget {
       opacity: 0.5,
       child:  EditableArea(theme:MyTheme.blueStyle,
           width: 0.8, height: 0.7, displayContent: [
-            CustomTextField(theme: MyTheme.blueStyle, placeholder: "A",),
-            CustomTextField(theme: MyTheme.blueStyle,placeholder: "B"),
-            CustomTextField(theme: MyTheme.blueStyle,placeholder: "C"),
+            CustomTextField(theme: MyTheme.blueStyle, placeholder: "A",ulDefaultWidth: 0,),
+            CustomTextField(theme: MyTheme.blueStyle,placeholder: "B",ulDefaultWidth: 0),
+            CustomTextField(theme: MyTheme.blueStyle,placeholder: "C",ulDefaultWidth: 0),
           ]),
     );
   }
