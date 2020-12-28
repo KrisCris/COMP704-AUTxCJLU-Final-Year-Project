@@ -30,7 +30,7 @@ class MyTheme {
       ComponentReactState.focused : focusedColor,
       ComponentReactState.unfocused:unfocusedColor,
       ComponentReactState.disabled : disabledColor,
-      ComponentReactState.able : null
+      ComponentReactState.able : focusedColor
     };
     this.darkTextColor = textColorDark;
     this.lightTextColor = textColorLight;

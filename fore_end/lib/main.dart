@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fore_end/Pages/ComponentTestPage.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'MyTool/User.dart';
 import 'Pages/LoginPage.dart';
