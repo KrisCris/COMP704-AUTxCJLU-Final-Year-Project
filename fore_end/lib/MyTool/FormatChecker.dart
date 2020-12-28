@@ -1,4 +1,6 @@
-import 'package:fore_end/Mycomponents/CustomTextField.dart';
+
+
+import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 
 class FormatChecker {
   Map<InputFieldType, Function(String)> mapper;

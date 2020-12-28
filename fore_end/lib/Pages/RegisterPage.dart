@@ -9,12 +9,11 @@ import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/Background.dart';
-import 'package:fore_end/Mycomponents/CustomButton.dart';
-import 'package:fore_end/Mycomponents/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(Register());

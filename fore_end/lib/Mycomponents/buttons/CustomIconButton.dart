@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/Mycomponents/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+
 import 'package:fore_end/interface/Themeable.dart';
 
 class CustomIconButton extends StatefulWidget {
