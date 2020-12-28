@@ -5,11 +5,9 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
 import 'package:fore_end/Pages/UpdateUsernamePage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:camera/camera.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'MainPage.dart';
 import 'UpdateAgePage.dart';
 import 'UpdateGenderPage.dart';
 

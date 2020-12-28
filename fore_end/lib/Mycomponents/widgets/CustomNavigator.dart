@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/CustomIconButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import '../buttons/CustomIconButton.dart';
 
 class CustomNavigator extends StatefulWidget {
   double width;
