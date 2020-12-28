@@ -1,6 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Picker_Tool.dart';
+import 'package:fore_end/MyTool/Req.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
 import 'package:fore_end/Pages/UpdateUsernamePage.dart';
@@ -12,125 +18,20 @@ import 'dart:typed_data';
 import 'MainPage.dart';
 import 'UpdateAgePage.dart';
 import 'UpdateGenderPage.dart';
+import 'UpdatePwdPage.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
 
   String username;
   String gender;
   String age;
   String email;
+  File _iamge;
+  String imageSource;
   User user= User.getInstance();
-
-
-
+  var genderData=['Male','Female'];
   bool visible = true;
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Setting Page"),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(height: 10,),
-
-          Container(
-            margin: EdgeInsets.all(20),
-            child: Text(
-              "Personal Information",
-              style: TextStyle(color: Colors.blue),
-
-            ),
-          ),
-
-          SettingItem(
-            leftIcon: Icon(FontAwesomeIcons.userCircle),
-            leftText: "Profile Photo",
-            isRightText: false,
-            isRightImage: true,
-            onTap: () async {
-              File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-              if(image == null){
-                print("没有成功获取相册里面的图片");
-              }else print("成功获取到了相册里面的图片");
-
-              if(image == null) return;
-              String bs64 = await this.pictureToBase64(image);
-              User.getInstance().avatar=bs64;
-            },
-          ),
-
-          SettingItem(
-            leftIcon: Icon(FontAwesomeIcons.envelope),
-            leftText: "Email",
-            rightText: this.user.email,
-            isChange: false,
-            onTap: (){
-            },
-          ),
-
-          SettingItem(
-            leftIcon: Icon(FontAwesomeIcons.user),
-            leftText: "Username",
-            rightText: this.user.userName,
-            onTap: (){
-              //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
-              print("用户名");
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return UpdateUserNamePage();
-              }));
-            },
-          ),
-
-          SettingItem(
-            leftIcon: Icon(FontAwesomeIcons.transgender),
-            leftText: "Gender",
-            rightText: this.getUserGender(this.user.gender),
-            onTap: (){
-              print("性别");
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return UpdateGenderPage();
-              }));
-            },
-          ),
-
-          SettingItem(
-            leftIcon: Icon(Icons.calendar_today),
-            leftText: "Age",
-            rightText: this.user.age.toString(),
-            onTap: (){
-              //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
-              print("年龄");
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return UpdateAgePage();
-              }));
-            },
-          ),
-
-          OutlineButton(
-            child: Text("Save changes"),
-            onPressed: () {
-              //把这个页面的信息保存一遍发给服务器，等ok了就可以返回主界面
-              User.getInstance().save();
-              print( User.getInstance().userName);
-              // print("保存成功，返回上一页");
-              // print(User.getInstance().avatar);
-
-            },
-          ),
-
-          OutlineButton(
-            child: Text("Cancel changes"),
-            onPressed: () {
-
-            },
-          ),
-
-        ],
-      )
-    );
-  }
+  PageState state;
 
   String getUserGender(int i){
     if(i==0){
@@ -140,17 +41,197 @@ class SettingPage extends StatelessWidget {
     }
   }
 
+  int setGender(String gender){
+    if(gender=="Male") return 0;
+    else return 1;
+  }
+
+
 
   Future<String> pictureToBase64(File f) async {
-    print("我pictureToBase64被调用了");
     Uint8List byteData = await f.readAsBytes();
-    print("转换为byteData有问题");
     String bs64 = base64Encode(byteData);
-    print("picture convert complete:\n"+bs64);
     return bs64;
   }
 
+  @override
+  State<StatefulWidget> createState() {
+    this.state=new PageState();
+    return this.state;
+  }
+
+  void refreshPage(){
+    this.state.setState(() {});
+  }
+
+
 }
 
+class PageState extends State<SettingPage>{
+  @override
+  Widget build(BuildContext context) {
+    //显示底部栏(隐藏顶部状态栏)
+//    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    //显示顶部栏(隐藏底部栏)
+//    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+    //隐藏底部栏和顶部状态栏
+    // SystemChrome.setEnabledSystemUIOverlays([]);
+    return Scaffold(
+
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          toolbarHeight: 0,
+        ),
 
 
+        body: ListView(
+            children: <Widget>[
+              Container(
+                // margin: EdgeInsets.all(20),
+                margin: EdgeInsets.fromLTRB(ScreenTool.partOfScreenWidth(20),20,10,10),
+                child: Text(
+                  "ACCOUNT INFO",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 35,
+                      fontFamily: "Futura",
+                  ),
+
+                ),
+              ),
+
+            SizedBox(height: 10,),
+
+            Container(
+              margin: EdgeInsets.all(20),
+              child: Text(
+                "Personal Information",
+                style: TextStyle(color: Colors.blue),
+
+              ),
+            ),
+
+            this.getAvatarItem(),
+
+            this.getGenderItem(context),
+
+
+
+
+            SettingItem(
+              leftIcon: Icon(FontAwesomeIcons.user),
+              leftText: "Username",
+              rightText: widget.user.userName,
+              onTap: (){
+                //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
+                print("用户名");
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                  return UpdateUserNamePage();
+                }));
+              },
+            ),
+
+
+
+            SettingItem(
+              leftIcon: Icon(Icons.calendar_today),
+              leftText: "Age",
+              rightText: widget.user.age.toString(),
+              onTap: (){
+                //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
+                print("年龄");
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                  return UpdateAgePage();
+                }));
+              },
+            ),
+
+            SizedBox(height: 10,),
+            Container(
+              margin: EdgeInsets.all(20),
+              child: Text(
+                "Account Information",
+                style: TextStyle(color: Colors.blue),
+
+              ),
+            ),
+
+            SettingItem(
+              leftIcon: Icon(FontAwesomeIcons.envelope),
+              leftText: "Email",
+              rightText: widget.user.email,
+              isChange: false,
+              onTap: (){
+              },
+            ),
+
+            SettingItem(
+              leftIcon: Icon(FontAwesomeIcons.key,size: 23,),
+              leftText: "Password",
+              rightText: "*******",
+              isChange: true,
+              onTap: (){
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                  return UpdatePwdPage();
+                }));
+              },
+            ),
+
+
+            OutlineButton(
+              child: Text("Cancel changes"),
+              onPressed: () {
+                print(widget.user.userName);
+
+              },
+            ),
+
+          ],
+        )
+    );
+  }
+  Widget getAvatarItem(){
+    SettingItem item = SettingItem(
+      leftIcon: Icon(FontAwesomeIcons.userCircle),
+      leftText: "Profile Photo",
+      isRightText: false,
+      isRightImage: true,
+    );
+    item.onTap =  () async {
+      File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      if(image == null){
+        return;
+      }else {
+        widget.imageSource = await widget.pictureToBase64(image);
+        User.getInstance().avatar=widget.imageSource;
+        User.getInstance().save();
+        item.refresh();
+      }
+    };
+    return item;
+  }
+
+  Widget getGenderItem(BuildContext context){
+    SettingItem genderItem=SettingItem(
+      leftIcon: Icon(FontAwesomeIcons.transgender),
+      leftText: "Gender",
+      rightText: widget.getUserGender(widget.user.gender),
+    );
+
+    genderItem.onTap= () {
+      int newGender;
+      JhPickerTool.showStringPicker(context, title: 'Gender',data: widget.genderData, clickCallBack: (int index,var item) {
+        newGender=widget.setGender(item);
+        print("newGender现在的值是"+newGender.toString());
+
+        User.getInstance().gender=newGender;
+        print("执行到1步了,User的性别是："+User.getInstance().gender.toString());
+        // genderItem.refresh();
+        print("执行到2步了");
+      });
+
+  };
+
+    return genderItem;
+}
+}

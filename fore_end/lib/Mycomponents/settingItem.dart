@@ -5,8 +5,8 @@ import 'package:fore_end/MyTool/User.dart';
 
 
 /// 个人信息设置页Item
-class SettingItem extends StatelessWidget {
-  final Function onTap; //点击事件
+class SettingItem extends StatefulWidget {
+
   final String leftText; //左侧显示文字
   final String rightText; //右侧显示文字
   final Widget leftIcon; //左侧图片
@@ -17,8 +17,9 @@ class SettingItem extends StatelessWidget {
   final Widget rightImage;
   final bool isChange;
   final Image image;
-
-  const SettingItem({
+  Function onTap;//点击事件
+  ItemState state;
+  SettingItem({
     Key key,
     this.leftText = "",
     this.leftIcon,
@@ -31,17 +32,30 @@ class SettingItem extends StatelessWidget {
     this.rightImage,
     this.isChange=true,
     this.image,
+    state,
   }) : super(key: key);
 
+  void refresh(){
+    this.state.setState(() {});
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    this.state=new ItemState();
+    return this.state;
+  }
+}
+
+class ItemState extends State<SettingItem>{
   @override
   Widget build(BuildContext context) {
     return  Container(
       width: double.infinity,
       height: 50,
       child:  Material(
-          //color:
+        //color:
           child: InkWell(
-            onTap: onTap,
+            onTap: widget.onTap,
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
               child: Row(
@@ -49,44 +63,44 @@ class SettingItem extends StatelessWidget {
                 children: <Widget>[
                   Row(
                       children: <Widget>[
-                        leftIcon,
+                        widget.leftIcon,
                         Container(
                           margin: EdgeInsets.only(left: 15),
                           child: Text(
-                            leftText,
+                            widget.leftText,
                             style: TextStyle(fontSize: 15.0, color: Colors.grey),
                           ),
                         )
                       ]),
                   //Visibility是控制子组件隐藏/可见的组件
                   Visibility(
-                    visible: isRight,
+                    visible: widget.isRight,
                     child: Row(
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.only(right: 10),
                             child: Row(children: <Widget>[
                               Visibility(
-                                  visible: isRightText,
+                                  visible: widget.isRightText,
                                   child: Text(
-                                    rightText,
+                                    widget.rightText,
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.grey),
                                   )),
                               Visibility(
-                                  visible: isRightImage,
-                                  // child: CircleAvatar(
-                                  //   backgroundImage: this.image,
-                                  // )
-                                  //   child: this.image,
-                                      child: this.getImage(),
+                                visible: widget.isRightImage,
+                                // child: CircleAvatar(
+                                //   backgroundImage: this.image,
+                                // )
+                                //   child: this.image,
+                                child: this.getImage(),
 
-                                  )
+                              )
                             ]),
                           ),
 
                           Visibility(
-                            visible: isChange,
+                            visible: widget.isChange,
                             child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey,size: 20,),
                           )
                         ]),
@@ -97,11 +111,8 @@ class SettingItem extends StatelessWidget {
           )),
     );
   }
-
   Image getImage(){
     User user=User.getInstance();
-
     return user.getAvatar(40, 40);
   }
-
 }
