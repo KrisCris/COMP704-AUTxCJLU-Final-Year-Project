@@ -51,8 +51,8 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
-      text: "My Diet",
       buttonRadius: 65,
+      iconSize: 25,
       borderRadius: 10,
       onClick: () {
         this.appBar.reverseTransparency();
@@ -63,9 +63,9 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
       backgroundOpacity: 0.0,
-      text: "Take Photo",
       buttonRadius: 65,
       borderRadius: 10,
+      iconSize: 25,
       fontSize: 12,
       onClick: () {
         this.appBar.startTransparency();
@@ -79,9 +79,9 @@ class MainPage extends StatefulWidget {
         theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
-        text: "Add Plan",
         borderRadius: 10,
         buttonRadius: 65,
+        iconSize: 25,
         fontSize: 12,
         onClick: () {
           this.appBar.reverseTransparency();
@@ -295,29 +295,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getNavigator(TabController ctl) {
-    return CustomNavigator(
-      buttons: [
-        widget.myDietButton,
-        widget.addPlanButton,
-        widget.takePhotoButton,
-      ],
-      controller: ctl,
-      opacity: 0.25,
-      edgeWidth: 0.5,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      height: ScreenTool.partOfScreenHeight(0.08),
-    );
-  }
-
-  Widget getBodyContent(TabController ctl) {
-    return TabBarView(controller: ctl, children: [
-      widget.myDietPart,
-      widget.addPlanPart,
-      widget.takePhotoPart
-    ]);
-  }
-
   TabController getTabController() {
     if (widget.navigator != null) {
       return widget.navigator.getController();
@@ -328,8 +305,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   void setNavigator() {
     List<CustomIconButton> buttons = [
       widget.myDietButton,
-      widget.addPlanButton,
       widget.takePhotoButton,
+      widget.addPlanButton,
     ];
     TabController ctl = TabController(length: buttons.length, vsync: this);
     if (widget.navigator != null) {
@@ -348,8 +325,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         controller: ctl,
         children: [
           widget.myDietPart,
+          widget.takePhotoPart,
           widget.addPlanPart,
-          widget.takePhotoPart
         ]);
   }
 }
