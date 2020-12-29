@@ -144,8 +144,7 @@ class Login extends StatelessWidget {
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));
-        this.
-        passwordField.clearInput();
+        this.passwordField.clearInput();
       } else if (res.data['code'] == 1) {
         User u = User.getInstance();
         u.token = res.data['data']['token'];
@@ -153,6 +152,7 @@ class Login extends StatelessWidget {
         u.email = email;
         int code = await u.synchronize();
         if(code == 1){
+          EasyLoading.dismiss();
           Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
             return new MainPage(user:u);
           }),(ct)=>false);
