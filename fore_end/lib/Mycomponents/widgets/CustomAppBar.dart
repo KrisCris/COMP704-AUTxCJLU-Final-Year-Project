@@ -40,11 +40,11 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: Color(0xFF0091EA),
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 12, //阴影范围
-              spreadRadius: 3, //阴影浓度
+              spreadRadius: 4, //阴影浓度
               color: Color(0x33000000), //阴影颜色
             ),
           ]),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
@@ -60,20 +60,21 @@ class MainPage extends StatefulWidget {
       },
     );
     this.takePhotoButton = CustomIconButton(
-        theme: MyTheme.blueAndWhite,
-        icon: FontAwesomeIcons.camera,
-        backgroundOpacity: 0.0,
-        text: "Take Photo",
-        buttonRadius: 65,
-        borderRadius: 10,
-        fontSize: 12,
-        onClick: () {
-          this.appBar.startTransparency();
-          this.navigator.beginOpacity();
-        },
-        navigatorCallback: (){
-          this.takePhotoPart.getCamera();
-        },);
+      theme: MyTheme.blueAndWhite,
+      icon: FontAwesomeIcons.camera,
+      backgroundOpacity: 0.0,
+      text: "Take Photo",
+      buttonRadius: 65,
+      borderRadius: 10,
+      fontSize: 12,
+      onClick: () {
+        this.appBar.startTransparency();
+        this.navigator.beginOpacity();
+      },
+      navigatorCallback: () {
+        this.takePhotoPart.getCamera();
+      },
+    );
     this.addPlanButton = CustomIconButton(
         theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.folderPlus,
@@ -96,7 +97,6 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> with TickerProviderStateMixin {
-
   @override
   void initState() {
     widget.appBar = this.getAppBar();
@@ -108,29 +108,34 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: this.getDrawer(),
-        body: Builder(
-          builder: (BuildContext ctx) {
-            return Container(
-                alignment: Alignment.center,
-                height: ScreenTool.partOfScreenHeight(1),
-                child: Stack(
-                  children: [
-                    widget.bodyContent,
-                    Column(
+        body: BackGround(
+            sigmaX: 2,
+            sigmaY: 2,
+            opacity: 0.39,
+            backgroundImage: "image/food.jpg",
+            color: Colors.white,
+            child: Builder(
+              builder: (BuildContext ctx) {
+                return Container(
+                    alignment: Alignment.center,
+                    height: ScreenTool.partOfScreenHeight(1),
+                    child: Stack(
                       children: [
-                        widget.appBar,
-                        Expanded(child: SizedBox()),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [widget.navigator],
+                        widget.bodyContent,
+                        Column(
+                          children: [
+                            widget.appBar,
+                            Expanded(child: SizedBox()),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [widget.navigator],
+                            )
+                          ],
                         )
                       ],
-                    )
-                  ],
-                ));
-
-          },
-        ));
+                    ));
+              },
+            )));
   }
 
   Widget getAppBar() {
@@ -290,7 +295,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getNavigator(TabController ctl){
+  Widget getNavigator(TabController ctl) {
     return CustomNavigator(
       buttons: [
         widget.myDietButton,
@@ -304,22 +309,22 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       height: ScreenTool.partOfScreenHeight(0.08),
     );
   }
-  Widget getBodyContent(TabController ctl){
-    return TabBarView(
-        controller: ctl,
-        children: [
-          widget.myDietPart,
-          widget.addPlanPart,
-          widget.takePhotoPart
-        ]
-    );
+
+  Widget getBodyContent(TabController ctl) {
+    return TabBarView(controller: ctl, children: [
+      widget.myDietPart,
+      widget.addPlanPart,
+      widget.takePhotoPart
+    ]);
   }
-  TabController getTabController(){
+
+  TabController getTabController() {
     if (widget.navigator != null) {
       return widget.navigator.getController();
     }
     return TabController(length: 3, vsync: this);
   }
+
   void setNavigator() {
     List<CustomIconButton> buttons = [
       widget.myDietButton,
@@ -339,12 +344,12 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       height: ScreenTool.partOfScreenHeight(0.08),
     );
     widget.bodyContent = TabBarView(
-        physics:new NeverScrollableScrollPhysics(),
+        physics: new NeverScrollableScrollPhysics(),
         controller: ctl,
         children: [
-      widget.myDietPart,
-      widget.addPlanPart,
-      widget.takePhotoPart
-    ]);
+          widget.myDietPart,
+          widget.addPlanPart,
+          widget.takePhotoPart
+        ]);
   }
 }

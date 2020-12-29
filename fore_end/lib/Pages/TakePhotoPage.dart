@@ -263,8 +263,8 @@ class TakePhotoState extends State<TakePhotoPage>
         )
       ],
       onClick: () async {
-        await _ctl.takePicture(this._path);
-        File pic = File(this._path);
+        XFile xf = await _ctl.takePicture();
+        File pic = File(xf.path);
         String bs64 = await this.pictureToBase64(pic);
         this.picQueue.add(bs64);
         pic.delete();
