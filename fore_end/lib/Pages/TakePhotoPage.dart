@@ -25,14 +25,13 @@ class TakePhotoPage extends StatefulWidget {
     return this.state;
   }
 
-  void getCamera(){
+  void getCamera() {
     this.state.getCamera();
   }
 }
 
 class TakePhotoState extends State<TakePhotoPage>
-    with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
-
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   CameraController _ctl;
   Future<void> _initDone;
   bool _hasCamera = true;
@@ -56,6 +55,7 @@ class TakePhotoState extends State<TakePhotoPage>
     });
     this.loadingCameraAnimation.beginAnimation();
   }
+
   @override
   void dispose() {
     this._ctl.dispose();
@@ -65,26 +65,23 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    //this.getCamera();
-    return FutureBuilder(
-        future: this._initDone,
-        builder: (context, snapShot) {
-          if (snapShot.connectionState == ConnectionState.done){
-            if(this._ctl.value.isInitialized){
-              return cameraWidget();
-            }else{
-              widget.waitingText="Camera Launch Failed, Please Check the Permission";
-              return waitingForCameraWidget();
-            }
-          }else if(!this._hasCamera){
-            return noCameraWidget();
-          }else{
-            widget.waitingText="Waiting For Camera Launching...";
-            return waitingForCameraWidget();
-          }
-        });
+    if(this._ctl == null){
+      widget.waitingText = "Waiting For Camera Launching...";
+      return waitingForCameraWidget();
+    }
+
+    if (this._ctl.value.isInitialized) {
+      return cameraWidget();
+    } else {
+      if (!this._hasCamera) {
+        return noCameraWidget();
+      } else {
+        widget.waitingText = "Waiting For Camera Launching...";
+        return waitingForCameraWidget();
+      }
+    }
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // App state changed before we got the chance to initialize.
@@ -130,7 +127,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   void getCamera() async {
     List<CameraDescription> cameras;
-    if(widget.camera == null){
+    if (widget.camera == null) {
       cameras = await availableCameras();
       if (cameras.length <= 0) {
         this._hasCamera = false;
@@ -139,14 +136,21 @@ class TakePhotoState extends State<TakePhotoPage>
       this._hasCamera = true;
       widget.camera = cameras[0];
     }
-    if(this._ctl == null){
-      this._ctl = new CameraController(widget.camera, ResolutionPreset.high,enableAudio: false);
+    if (this._ctl == null) {
+      this._ctl = new CameraController(widget.camera, ResolutionPreset.high,
+          enableAudio: false);
     }
-    if(this._path == null){
-      this._path = (await getTemporaryDirectory()).path +'${DateTime.now()}.png';
+    if (this._path == null) {
+      this._path =
+          (await getTemporaryDirectory()).path + '${DateTime.now()}.png';
     }
-    if(!this._ctl.value.isInitialized){
-      this._initDone = this._ctl.initialize();
+    if (!this._ctl.value.isInitialized) {
+      this._ctl.initialize().then((value){
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
     }
   }
 
@@ -182,6 +186,7 @@ class TakePhotoState extends State<TakePhotoPage>
       child: card,
     );
   }
+
   Widget waitingForCameraWidget() {
     double marginHor = ScreenTool.partOfScreenWidth(0.2);
     double marginTop = ScreenTool.partOfScreenHeight(0.25);
@@ -218,35 +223,21 @@ class TakePhotoState extends State<TakePhotoPage>
       width: ScreenTool.partOfScreenWidth(1),
       child: card,
     );
-    ;
   }
-  Widget cameraWidget(){
+
+  Widget cameraWidget() {
     Widget content = new Container(
-      width: ScreenTool.partOfScreenWidth(1),
-      child: Stack(
-        children:[
-          CameraPreview(this._ctl),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(child: SizedBox()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  this.getPhotoButton(),
-                  SizedBox(width: 10,),
-                  this.getAlbumButton(),
-                  SizedBox(width: 13,),
-                ],
-              ),
-              SizedBox(height: 15,)
-            ],
-          )
-        ]
-      ),
+      height: ScreenTool.partOfScreenHeight(1),
+      child: Column(children: [
+        AspectRatio(
+            aspectRatio: this._ctl.value.aspectRatio,
+            child:CameraPreview(this._ctl),
+        ),
+      ]),
     );
     return content;
   }
+
   Widget getPhotoButton() {
     return new CustomIconButton(
       theme: MyTheme.blackAndWhite,
@@ -263,12 +254,13 @@ class TakePhotoState extends State<TakePhotoPage>
         )
       ],
       onClick: () async {
-        XFile xf = await _ctl.takePicture();
-        File pic = File(xf.path);
+        await _ctl.takePicture(this._path);
+        File pic = File(this._path);
         String bs64 = await this.pictureToBase64(pic);
         this.picQueue.add(bs64);
         pic.delete();
-        Navigator.push(context, new MaterialPageRoute(builder: (BuildContext ctx){
+        Navigator.push(context,
+            new MaterialPageRoute(builder: (BuildContext ctx) {
           return TestPicturePage(bs64);
         }));
       },
@@ -292,7 +284,7 @@ class TakePhotoState extends State<TakePhotoPage>
       ],
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-        if(image == null)return;
+        if (image == null) return;
 
         String bs64 = await this.pictureToBase64(image);
         this.picQueue.add(bs64);
@@ -303,9 +295,10 @@ class TakePhotoState extends State<TakePhotoPage>
   Future<String> pictureToBase64(File f) async {
     Uint8List byteData = await f.readAsBytes();
     String bs64 = base64Encode(byteData);
-    print("picture convert complete:\n"+bs64);
+    print("picture convert complete:\n" + bs64);
     return bs64;
   }
+
   @override
   bool get wantKeepAlive => true;
 }
