@@ -12,7 +12,7 @@ import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
-import 'SettingPage.dart';
+import 'AccountPage.dart';
 
 class MainPage extends StatefulWidget {
   Widget myDietPart;
@@ -147,7 +147,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
 
   CustomDrawer getDrawer() {
     Widget info = this.getDrawerHeader();
-    Widget userSetting = this.getUserSetting();
+    Widget account = this.getAccount();
+    Widget setting = this.getSetting();
     Widget aboutUs = this.getAboutUs();
     Widget logOut = this.getLogOut();
 
@@ -159,7 +160,11 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       SizedBox(
         height: 70,
       ),
-      userSetting,
+      account,
+      SizedBox(
+        height: 70,
+      ),
+      setting,
       SizedBox(
         height: 30,
       ),
@@ -248,14 +253,26 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       ],
     );
   }
-
-  Widget getUserSetting() {
+  Widget getAccount() {
     return ListTile(
       onTap: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return SettingPage();
+          return AccountPage();
         }));
+      },
+      title: Text("ACCOUNTS",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+  }
+  Widget getSetting() {
+    return ListTile(
+      onTap: () {
       },
       title: Text("SETTINGS",
           style: TextStyle(

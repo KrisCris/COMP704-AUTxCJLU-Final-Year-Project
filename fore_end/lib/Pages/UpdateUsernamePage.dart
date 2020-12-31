@@ -7,7 +7,7 @@ import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 
-import 'SettingPage.dart';
+import 'AccountPage.dart';
 
 ///修改用户名
 class UpdateUserNamePage extends StatefulWidget {
@@ -68,7 +68,7 @@ class _UpdateUserNamePageState extends State<UpdateUserNamePage> {
 
 
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) {return SettingPage();},
+      builder: (context) {return AccountPage();},
       maintainState: false,
     ));
 
