@@ -3,10 +3,15 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 
 class CustomDrawer extends StatefulWidget {
   final double elevation;
-  final Widget child;
+  final List<Widget> children;
   final String semanticLabel;
   final double widthPercent;
   final Function onOpen;
@@ -14,7 +19,7 @@ class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
     Key key,
     this.elevation = 16.0,
-    this.child,
+    this.children,
     this.semanticLabel,
     this.widthPercent,
     this.onOpen,
@@ -59,6 +64,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
         label = widget.semanticLabel ?? MaterialLocalizations.of(context)?.drawerLabel;
     }
     final double _width = MediaQuery.of(context).size.width * widget.widthPercent;
+    Widget info = this.getDrawerHeader(context);
+    List<Widget> items = [
+      SizedBox(
+        height: ScreenTool.partOfScreenHeight(0.05),
+      ),
+      info,
+      SizedBox(
+        height: 70,
+      )
+    ];
+    items.addAll(widget.children);
+
     return Semantics(
       scopesRoute: true,
       namesRoute: true,
@@ -78,10 +95,78 @@ class _CustomDrawerState extends State<CustomDrawer> {
              ),
            ),
          ),
-         widget.child,
+         Column(
+           children: items
+         )
        ],
       ),
 
+    );
+  }
+
+  Widget getDrawerHeader(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 15,
+        ),
+        this.getCircleAvatar(),
+        SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(User.getInstance().userName,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black)),
+            Text("Registered For xxx Days",
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: "Futura",
+                    color: Colors.black38)),
+          ],
+        ),
+        Expanded(child: SizedBox()),
+        CustomIconButton(
+          icon: FontAwesomeIcons.times,
+          theme: MyTheme.blackAndWhite,
+          backgroundOpacity: 0,
+          iconSize: 30,
+          onClick: (){
+            Navigator.of(context).pop();
+          },
+        ),
+        SizedBox(
+          width: 15,
+        )
+      ],
+    );
+  }
+
+  Widget getCircleAvatar({double size = 60}) {
+    return Container(
+        width: size,
+        height: size,
+        decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+                image: MemoryImage(User.getInstance().getAvatarBin()),
+                fit: BoxFit.cover),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 10, //阴影范围
+                spreadRadius: 1, //阴影浓度
+                color: Color(0x33000000), //阴影颜色
+              ),
+            ])
+      // child: , //增加文字等
     );
   }
 }
