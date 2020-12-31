@@ -107,6 +107,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
         body: BackGround(
             sigmaX: 2,

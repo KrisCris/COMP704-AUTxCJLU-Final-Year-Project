@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
 
 class CustomAppBar extends StatefulWidget{
@@ -72,24 +73,21 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 fontFamily: "Futura",
                 color: Colors.black),
           ),
-          SizedBox(
-            width: 70,
-
-          ),
-          InkWell(
-              onTap: (){
-                showSearch(context: context, delegate: MySearchBarDelegate());
-              },
-              child: Container(
-                width: 30,
-                height: 30,
-                child: Icon(
-                  FontAwesomeIcons.search,size: 25,
-
-                ),
-
-              )
-          )
+          Expanded(child:SizedBox()),
+          ExpandInputField(width: 0.4),
+          SizedBox(width: 5)
+          // InkWell(
+          //     onTap: (){
+          //       showSearch(context: context, delegate: MySearchBarDelegate());
+          //     },
+          //     child: Container(
+          //       width: 30,
+          //       height: 30,
+          //       child: Icon(
+          //         FontAwesomeIcons.search,size: 25,
+          //       ),
+          //     )
+          // )
 
         ],
       ),
