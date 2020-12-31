@@ -1,31 +1,24 @@
-import 'package:dio/dio.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Picker_Tool.dart';
-import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
-import 'package:fore_end/Pages/UpdateUsernamePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'UpdateAgePage.dart';
-import 'UpdateGenderPage.dart';
 import 'UpdatePwdPage.dart';
 
-class SettingPage extends StatefulWidget {
+class AccountPage extends StatefulWidget {
   String username;
   String gender;
   String age;
   String email;
-  File _iamge;
   String imageSource;
   User user = User.getInstance();
   var genderData = ['Male', 'Female'];
@@ -64,7 +57,7 @@ class SettingPage extends StatefulWidget {
   }
 }
 
-class PageState extends State<SettingPage> {
+class PageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

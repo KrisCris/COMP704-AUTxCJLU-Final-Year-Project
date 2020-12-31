@@ -12,7 +12,7 @@ import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
-import 'SettingPage.dart';
+import 'AccountPage.dart';
 
 class MainPage extends StatefulWidget {
   Widget myDietPart;
@@ -107,7 +107,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: this.getDrawer(),
+        drawer: this.getDrawer(context),
         body: BackGround(
             sigmaX: 2,
             sigmaY: 2,
@@ -145,21 +145,18 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  CustomDrawer getDrawer() {
-    Widget info = this.getDrawerHeader();
-    Widget userSetting = this.getUserSetting();
+  CustomDrawer getDrawer(BuildContext context) {
+    Widget account = this.getAccount();
+    Widget setting = this.getSetting();
     Widget aboutUs = this.getAboutUs();
     Widget logOut = this.getLogOut();
 
     List<Widget> drawerItems = [
+      account,
       SizedBox(
-        height: ScreenTool.partOfScreenHeight(0.05),
+        height: 30,
       ),
-      info,
-      SizedBox(
-        height: 70,
-      ),
-      userSetting,
+      setting,
       SizedBox(
         height: 30,
       ),
@@ -180,9 +177,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     ];
     return CustomDrawer(
       widthPercent: 1,
-      child: Column(
-        children: drawerItems,
-      ),
+      children: drawerItems
     );
   }
 
@@ -206,56 +201,26 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         );
   }
 
-  Widget getDrawerHeader() {
-    return Row(
-      children: [
-        SizedBox(
-          width: 15,
-        ),
-        this.getCircleAvatar(),
-        SizedBox(
-          width: 20,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.user.userName,
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 25,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: "Futura",
-                    color: Colors.black)),
-            Text("Registered For xxx Days",
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: "Futura",
-                    color: Colors.black38)),
-          ],
-        ),
-        Expanded(child: SizedBox()),
-        CustomIconButton(
-          icon: FontAwesomeIcons.times,
-          theme: MyTheme.blackAndWhite,
-          backgroundOpacity: 0,
-          iconSize: 30,
-        ),
-        SizedBox(
-          width: 15,
-        )
-      ],
-    );
-  }
-
-  Widget getUserSetting() {
+  Widget getAccount() {
     return ListTile(
       onTap: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return SettingPage();
+          return AccountPage();
         }));
+      },
+      title: Text("ACCOUNTS",
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 35,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black)),
+    );
+  }
+  Widget getSetting() {
+    return ListTile(
+      onTap: () {
       },
       title: Text("SETTINGS",
           style: TextStyle(
@@ -266,7 +231,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               color: Colors.black)),
     );
   }
-
   Widget getAboutUs() {
     return ListTile(
       title: Text("ABOUT US",
@@ -278,7 +242,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               color: Colors.black)),
     );
   }
-
   Widget getLogOut() {
     return CustomIconButton(
       icon: FontAwesomeIcons.signOutAlt,
