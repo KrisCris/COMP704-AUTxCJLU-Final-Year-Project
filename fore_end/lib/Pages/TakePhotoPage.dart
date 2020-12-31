@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -65,7 +66,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   Widget build(BuildContext context) {
-    if(this._ctl == null){
+    if (this._ctl == null) {
       widget.waitingText = "Waiting For Camera Launching...";
       return waitingForCameraWidget();
     }
@@ -145,7 +146,7 @@ class TakePhotoState extends State<TakePhotoPage>
           (await getTemporaryDirectory()).path + '${DateTime.now()}.png';
     }
     if (!this._ctl.value.isInitialized) {
-      this._ctl.initialize().then((value){
+      this._ctl.initialize().then((value) {
         if (!mounted) {
           return;
         }
@@ -226,15 +227,49 @@ class TakePhotoState extends State<TakePhotoPage>
   }
 
   Widget cameraWidget() {
-    Widget content = new Container(
-      height: ScreenTool.partOfScreenHeight(1),
-      child: Column(children: [
-        AspectRatio(
-            aspectRatio: this._ctl.value.aspectRatio,
-            child:CameraPreview(this._ctl),
-        ),
-      ]),
-    );
+    Size deviceSize = ScreenTool.pixSize;
+    double deviceRatio = deviceSize.width/deviceSize.height;
+    double previewRatio = this._ctl.value.aspectRatio;
+    double scale = 1;
+    if(deviceRatio > previewRatio){
+        scale = deviceRatio/previewRatio;
+    }else{
+      scale = previewRatio/deviceRatio;
+    }
+    print(scale.toString());
+    Widget content = Stack(
+        children: [
+          Center(
+            child:Transform.scale(
+              scale: scale,
+              child: AspectRatio(
+                aspectRatio: this._ctl.value.aspectRatio,
+                child: CameraPreview(this._ctl),
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              SizedBox(height:ScreenTool.topPadding),
+              Row(
+                children: [
+                  Expanded(child: SizedBox()),
+                  this.getAlbumButton(),
+                  SizedBox(width: 10)
+                ],
+              ),
+              Expanded(child: SizedBox()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  this.getPhotoButton()
+                ],
+              ),
+              SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
+            ],
+          )
+        ],
+      );
     return content;
   }
 
