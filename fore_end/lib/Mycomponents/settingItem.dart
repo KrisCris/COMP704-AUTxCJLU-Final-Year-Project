@@ -19,6 +19,8 @@ class SettingItem extends StatefulWidget {
   final Image image;
   Function onTap;//点击事件
   ItemState state;
+
+
   SettingItem({
     Key key,
     this.leftText = "",
@@ -89,12 +91,7 @@ class ItemState extends State<SettingItem>{
                                   )),
                               Visibility(
                                 visible: widget.isRightImage,
-                                // child: CircleAvatar(
-                                //   backgroundImage: this.image,
-                                // )
-                                //   child: this.image,
                                 child: this.getImage(),
-
                               )
                             ]),
                           ),
@@ -114,5 +111,12 @@ class ItemState extends State<SettingItem>{
   Image getImage(){
     User user=User.getInstance();
     return user.getAvatar(40, 40);
+  }
+  String getUserGender(int i){
+    if(i==0){
+      return "Male";
+    }else{
+      return "Female";
+    }
   }
 }

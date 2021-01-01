@@ -115,6 +115,7 @@ class Register extends StatelessWidget {
         this.nextButton.setDisable(true);
       },
     );
+
     this.verifyTextField = VerifyCodeInputer(
       onCheckSuccess: (){ this.nextButton.setDisable(false);},
       onCheckFailed: (){this.nextButton.setDisable(true);},

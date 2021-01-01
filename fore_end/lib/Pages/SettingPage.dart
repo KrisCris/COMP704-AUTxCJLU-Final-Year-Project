@@ -70,11 +70,6 @@ class PageState extends State<SettingPage>{
   Widget build(BuildContext context) {
 
     return Scaffold(
-        //
-        // extendBodyBehindAppBar: true,
-        // appBar: AppBar(
-        //   toolbarHeight: 0,
-        // ),
         body: ListView(
             children: <Widget>[
               Container(
@@ -104,25 +99,21 @@ class PageState extends State<SettingPage>{
 
             this.getAvatarItem(),
 
+              SettingItem(
+                leftIcon: Icon(FontAwesomeIcons.user),
+                leftText: "Username",
+                rightText: widget.user.userName,
+                onTap: (){
+                  //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
+                  print("用户名");
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                    return UpdateUserNamePage();
+                  }));
+                },
+              ),
+
+
             this.getGenderItem(context),
-
-
-
-
-            SettingItem(
-              leftIcon: Icon(FontAwesomeIcons.user),
-              leftText: "Username",
-              rightText: widget.user.userName,
-              onTap: (){
-                //Dialog可以里面嵌套不同的widget，如果是输入框那么就可以满足需求了。
-                print("用户名");
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                  return UpdateUserNamePage();
-                }));
-              },
-            ),
-
-
 
             SettingItem(
               leftIcon: Icon(Icons.calendar_today),
@@ -214,11 +205,9 @@ class PageState extends State<SettingPage>{
       JhPickerTool.showStringPicker(context, title: 'Gender',data: widget.genderData, clickCallBack: (int index,var item) {
         newGender=widget.setGender(item);
         print("newGender现在的值是"+newGender.toString());
-
         User.getInstance().gender=newGender;
+        User.getInstance().save();
         print("执行到1步了,User的性别是："+User.getInstance().gender.toString());
-        // genderItem.refresh();
-        print("执行到2步了");
       });
 
   };
