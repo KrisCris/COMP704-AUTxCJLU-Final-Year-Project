@@ -15,7 +15,7 @@ class ExpandInputField extends StatefulWidget {
   Color foregroundColor;
 
   bool disabled;
-  Function disabledFunc;
+
 
   IconData suffix;
   String placeholer;
@@ -23,7 +23,6 @@ class ExpandInputField extends StatefulWidget {
       {@required double width = 0.7,
       this.placeholer,
         this.disabled = true,
-        this.disabledFunc,
       this.suffix = FontAwesomeIcons.search,
       double iconSize = 20,
       this.backgroundColor = Colors.white,
@@ -84,7 +83,6 @@ class ExpandInputFieldState extends State<ExpandInputField>
       bottomPadding: -15,
       disableSuffix: true,
       disabled: widget.disabled,
-      disabledFunc: widget.disabledFunc,
     );
     return this.textField;
   }

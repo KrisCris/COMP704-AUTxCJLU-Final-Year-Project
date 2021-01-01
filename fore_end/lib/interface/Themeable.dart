@@ -1,18 +1,28 @@
 
+import 'package:fore_end/MyTool/MyTheme.dart';
 
-abstract class Themeable{
+abstract class ThemeWidgetMixIn{
+  MyTheme theme;
+}
+
+abstract class ThemeStateMixIn{
   ComponentThemeState themeState;
-  ComponentReactState reactState;
 
-  void setThemeState(ComponentThemeState the);
-  void setReactState(ComponentReactState rea);
+  ///return the old theme state
+  ComponentThemeState setNormal(){return checkThemeChange(ComponentThemeState.normal);}
+  ComponentThemeState setCorrect(){return checkThemeChange(ComponentThemeState.correct);}
+  ComponentThemeState setWarning(){return checkThemeChange(ComponentThemeState.warning);}
+  ComponentThemeState setError(){return checkThemeChange(ComponentThemeState.error);}
+
+  ///return the old theme state
+  ComponentThemeState checkThemeChange(ComponentThemeState theme){
+    if(this.themeState == theme)return theme;
+    ComponentThemeState stt = this.themeState;
+    this.themeState = theme;
+    return stt;
+  }
 }
-enum ComponentThemeState{
-  warning,
-  error,
-  correct,
-  normal
-}
+
 enum ComponentReactState{
   focused,
   unfocused,
