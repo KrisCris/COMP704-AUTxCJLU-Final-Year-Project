@@ -1,14 +1,18 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/interface/Disable.dart';
+import 'package:fore_end/interface/Focusable.dart';
 
 import 'package:fore_end/interface/Themeable.dart';
 
-class CustomIconButton extends StatefulWidget {
-  MyTheme theme;
+class CustomIconButton extends StatefulWidget
+    with ThemeWidgetMixIn, DisableWidgetMixIn, FocusableWidgetMixIn{
   IconData icon;
   double iconSize;
   double fontSize;
@@ -23,10 +27,9 @@ class CustomIconButton extends StatefulWidget {
   CustomNavigator navi;
   List<BoxShadow> shadows;
 
-  bool _disabled;
-
   CustomIconButton(
-      {@required this.theme,
+      {
+        @required MyTheme theme,
       @required this.icon,
       this.text = "",
       this.iconSize = 20,
@@ -35,14 +38,19 @@ class CustomIconButton extends StatefulWidget {
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
       this.shadows,
-      this.onClick, disabled = false,
+      this.onClick,
+        bool disabled = false,
+        bool focus = false,
       this.navigatorCallback})
-      : super() {this._disabled = disabled;}
+      : super() {
+    this.theme = theme;
+    this.disabled = new ValueNotifier<bool>(disabled);
+    this.focus = new ValueNotifier<bool>(focus);
+  }
   @override
   State<StatefulWidget> createState() {
     this.state = new CustomIconButtonState(
         ComponentThemeState.normal,
-        this._disabled? ComponentReactState.disabled: ComponentReactState.unfocused,
         this.shadows
     );
     return this.state;
@@ -58,22 +66,11 @@ class CustomIconButton extends StatefulWidget {
   void setParentNavigator(CustomNavigator nv) {
     this.navi = nv;
   }
-  void setDisabled(bool dis){
-    this.state.setDisabled(dis);
-  }
-  void setReactState(ComponentReactState rea) {
-    if (this.state == null) {
-      this.delayInit.add(() {
-        this.state.setReactState(rea);
-      });
-    } else {
-      this.state.setReactState(rea);
-    }
-  }
+
 }
 
 class CustomIconButtonState extends State<CustomIconButton>
-    with Themeable, TickerProviderStateMixin {
+    with ThemeStateMixIn, TickerProviderStateMixin,DisableStateMixIn,FocusableStateMixIn {
   TweenAnimation<CalculatableColor> backgroundColorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
@@ -82,13 +79,10 @@ class CustomIconButtonState extends State<CustomIconButton>
   bool disabled = false;
 
   CustomIconButtonState(
-      ComponentThemeState the, ComponentReactState rea, List<BoxShadow> shadow)
+      ComponentThemeState the, List<BoxShadow> shadow)
       : super() {
     this.themeState = the;
-    this.reactState = rea;
     this.shadow = shadow;
-    if(rea == ComponentReactState.disabled)
-      this.disabled = true;
   }
 
   @override
@@ -100,16 +94,31 @@ class CustomIconButtonState extends State<CustomIconButton>
   @override
   initState() {
     super.initState();
+    widget.disabled.addListener(() {
+        if(widget.disabled.value){
+          this.setDisabled();
+        }else{
+          this.setEnabled();
+        }
+    });
+    widget.focus.addListener(() {
+      if(widget.focus.value){
+        this.setFocus();
+      }else{
+        this.setUnFocus();
+      }
+    });
     for (Function f in widget.delayInit) {
       f();
     }
     this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(), this.getBackgroundColor(), 150, this, () {
+        this.getBackgroundColor(widget.focus.value),
+        this.getBackgroundColor(widget.focus.value), 150, this, () {
       setState(() {});
     });
     this.iconAndTextColorAnimation.initAnimation(
-        this.getIconAndTextColor(this.reactState),
-        this.getIconAndTextColor(this.reactState),
+        this.getIconAndTextColor(widget.focus.value,null),
+        this.getIconAndTextColor(widget.focus.value,null),
         150,
         this, () {
       setState(() {});
@@ -182,60 +191,91 @@ class CustomIconButtonState extends State<CustomIconButton>
         ));
   }
 
-  CalculatableColor getBackgroundColor() {
+  CalculatableColor getBackgroundColor(bool isFocus) {
     double opacity = widget.backgroundOpacity;
-    if (this.reactState == ComponentReactState.focused) {
+    if (isFocus) {
       opacity = 1.0;
+      return widget.theme.getFocusedColor().withOpacity(opacity);
     }
-    return widget.theme.getReactColor(this.reactState).withOpacity(opacity);
+    return widget.theme.getThemeColor(this.themeState).withOpacity(opacity);
   }
 
-  CalculatableColor getIconAndTextColor(ComponentReactState rea) {
-    if (rea == ComponentReactState.focused) {
-      return widget.theme.getReactColor(ComponentReactState.unfocused);
-    }else if(rea == ComponentReactState.unfocused){
-      return widget.theme.getReactColor(ComponentReactState.focused);
+  CalculatableColor getIconAndTextColor(bool isFocus, bool isDisabled) {
+    // TODO: 处理focus和disable的关系
+    if (isFocus) {
+      return widget.theme.getThemeColor(this.themeState);
     }else{
-      return widget.theme.getReactColor(rea);
-    }
-
-  }
-
-
-  void setDisabled(bool dis){
-    this.disabled = dis;
-    if(dis){
-      this.setReactState(ComponentReactState.disabled);
-    }else{
-      this.setReactState(ComponentReactState.able);
+      return widget.theme.getFocusedColor();
     }
   }
+
   @override
-  void setReactState(ComponentReactState rea) {
-    if (this.reactState == rea) return;
+  ComponentThemeState setCorrect() {
+    // TODO: implement setCorrect
+  }
 
-    double AfterOpacity = widget.backgroundOpacity;
-    if (rea == ComponentReactState.focused) {
-      AfterOpacity = 1.0;
-    }
+  @override
+  ComponentThemeState setError() {
+    // TODO: implement setError
+  }
+
+  @override
+  ComponentThemeState setNormal() {
+    // TODO: implement setNormal
+  }
+
+  @override
+  ComponentThemeState setWarning() {
+    // TODO: implement setWarning
+  }
+
+  @override
+  void setEnabled() {
+    // TODO: implement setEnabled
+  }
+  void setDisabled(){
+    // TODO: implement setEnabled
+  }
+
+  @override
+  void setFocus() {
+    // TODO: implement setFocus
     this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(),
-        widget.theme.getReactColor(rea).withOpacity(AfterOpacity),
+        this.getBackgroundColor(false),
+        this.getBackgroundColor(true),
         200,
         this, () {
       setState(() {});
     });
     this.iconAndTextColorAnimation.initAnimation(
-        getIconAndTextColor(this.reactState),
-        getIconAndTextColor(rea),
+        getIconAndTextColor(false,null),
+        getIconAndTextColor(true,null),
         200,
         this, () {
       setState(() {});
     });
     this.backgroundColorAnimation.beginAnimation();
     this.iconAndTextColorAnimation.beginAnimation();
-    this.reactState = rea;
   }
+
   @override
-  void setThemeState(ComponentThemeState the) {}
+  void setUnFocus() {
+    // TODO: implement setUnFocus
+    this.backgroundColorAnimation.initAnimation(
+        this.getBackgroundColor(true),
+        this.getBackgroundColor(false),
+        200,
+        this, () {
+      setState(() {});
+    });
+    this.iconAndTextColorAnimation.initAnimation(
+        getIconAndTextColor(true,null),
+        getIconAndTextColor(false,null),
+        200,
+        this, () {
+      setState(() {});
+    });
+    this.backgroundColorAnimation.beginAnimation();
+    this.iconAndTextColorAnimation.beginAnimation();
+  }
 }

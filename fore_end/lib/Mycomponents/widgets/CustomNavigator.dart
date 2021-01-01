@@ -44,10 +44,10 @@ class CustomNavigator extends StatefulWidget {
   void activateButtonByIndex(int i) {
     for (int j = 0; j < this.buttons.length; j++) {
       if (j == i) {
-        this.buttons[i].setReactState(ComponentReactState.focused);
+        this.buttons[i].setFocus(true);
         this.activateButton = this.buttons[i];
       } else {
-        this.buttons[j].setReactState(ComponentReactState.unfocused);
+        this.buttons[j].setFocus(false);
       }
     }
   }
@@ -55,10 +55,10 @@ class CustomNavigator extends StatefulWidget {
   void activateButtonByObject(CustomIconButton button) {
     for (CustomIconButton bt in this.buttons) {
       if (bt == button) {
-        bt.setReactState(ComponentReactState.focused);
+        bt.setFocus(true);
         this.activateButton = bt;
       } else {
-        bt.setReactState(ComponentReactState.unfocused);
+        bt.setFocus(false);
       }
     }
   }

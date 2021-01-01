@@ -5,11 +5,10 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class CustomButton extends StatefulWidget {
-  final MyTheme theme;
-
+class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMixIn {
   ///The radius of border
   final double radius;
 
@@ -75,15 +74,15 @@ class CustomButton extends StatefulWidget {
   int lengthDura;
 
   CustomButtonState state;
-  ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
 
   CustomButton(
       {this.text,
-      @required this.theme,
+      @required MyTheme theme,
       this.fontsize = 18.0,
       this.sizeChangeMode = 0,
       this.isBold = false,
+        bool disabled = false,
       this.radius = 30.0,
       this.width = 120.0,
       this.height = 40.0,
@@ -101,30 +100,23 @@ class CustomButton extends StatefulWidget {
       this.tapFunc = null,
       this.doubleTapFunc = null,
       this.firstThemeState = ComponentThemeState.normal,
-      this.firstReactState = ComponentReactState.able,
       Key key})
       : super(key: key) {
+    this.theme = theme;
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
     this.textColor = CalculatableColor.transform(this.theme.lightTextColor);
+    this.disabled = ValueNotifier<bool>(disabled);
     // if (this.disabled) this.firstDisabled = true;
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = CustomButtonState(this.firstReactState, this.firstThemeState);
+    this.state = CustomButtonState(this.firstThemeState);
     return this.state;
   }
 
   bool isMonted() {
     return this.state.mounted;
-  }
-
-  void setDisable(bool d) {
-    if (d) {
-      this.state.setReactState(ComponentReactState.disabled);
-    } else {
-      this.state.setReactState(ComponentReactState.able);
-    }
   }
 
   void setWidth(double len) {
@@ -152,20 +144,12 @@ class CustomButton extends StatefulWidget {
   }
 
   bool isEnable() {
-    return this.state.reactState != ComponentReactState.disabled;
-  }
-
-  ComponentThemeState getThemeState() {
-    return this.state.themeState;
-  }
-
-  ComponentReactState getReactState() {
-    return this.state.reactState;
+    return !this.disabled.value;
   }
 }
 
 class CustomButtonState extends State<CustomButton>
-    with TickerProviderStateMixin, Themeable {
+    with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn {
   TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
   TweenAnimation<double> lengthAnimation = new TweenAnimation<double>();
   TweenAnimation<double> fluctuateAnimation = new TweenAnimation<double>();
@@ -174,15 +158,14 @@ class CustomButtonState extends State<CustomButton>
   bool isTap = false;
   double firstWidth;
 
-  CustomButtonState(ComponentReactState rea, ComponentThemeState the)
+  CustomButtonState(ComponentThemeState the)
       : super() {
-    this.reactState = rea;
     this.themeState = the;
   }
   void initBgColor() {
     //as button, only disabled state need set color
-    if (reactState == ComponentReactState.disabled) {
-      widget.bgColor = widget.theme.getReactColor(reactState);
+    if (widget.disabled.value) {
+      widget.bgColor = widget.theme.getDisabledColor();
     } else {
       //if not disabled state, just get the theme color
       widget.bgColor = widget.theme.getThemeColor(this.themeState);
@@ -193,14 +176,31 @@ class CustomButtonState extends State<CustomButton>
   void initState() {
     super.initState();
     this.initBgColor();
+    widget.disabled.addListener(() {
+      if(widget.disabled.value){
+        this.setDisabled();
+      }else{
+        this.setEnabled();
+      }
+    });
+
     this.firstWidth = widget.width;
-    this.fluctuateAnimation.initAnimation(0.0, 5.0, (widget.flucDura/4).round(), this,null);
-    this.lengthAnimation.initAnimation(widget.width, widget.width, widget.lengthDura, this,null);
-    this.flashAnimation.initAnimation(widget.startOpac, widget.endOpac, widget.flashDura, this,null);
+    this
+        .fluctuateAnimation
+        .initAnimation(0.0, 5.0, (widget.flucDura / 4).round(), this, null);
+    this.lengthAnimation.initAnimation(
+        widget.width, widget.width, widget.lengthDura, this, null);
+    this.flashAnimation.initAnimation(
+        widget.startOpac, widget.endOpac, widget.flashDura, this, null);
 
     this.colorAnimation.initAnimation(
         widget.bgColor, widget.bgColor, widget.colorDura, this, () {
       setState(() {});
+    });
+    this.colorAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.bgColor = widget.theme.getThemeColor(this.themeState);
+      }
     });
     this.flashAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -210,17 +210,17 @@ class CustomButtonState extends State<CustomButton>
       }
     });
     this.fluctuateAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed) {
+      if (status == AnimationStatus.completed) {
         this.fluctuateAnimation.reverseAnimation();
-      }else if(status == AnimationStatus.dismissed){
+      } else if (status == AnimationStatus.dismissed) {
         double newEnd = 5.0;
-        if(this.fluctuateAnimation.completeTime % 2 == 1){
+        if (this.fluctuateAnimation.completeTime % 2 == 1) {
           newEnd = -5.0;
         }
         this.fluctuateAnimation.setNewEnd(newEnd);
-        if(this.fluctuateAnimation.completeTime < 4){
+        if (this.fluctuateAnimation.completeTime < 4) {
           this.fluctuateAnimation.beginAnimation();
-        }else{
+        } else {
           this.fluctuateAnimation.completeTime = 0;
         }
       }
@@ -240,7 +240,7 @@ class CustomButtonState extends State<CustomButton>
   Widget build(BuildContext context) {
     GestureDetector gesture = GestureDetector(
         onDoubleTap: () {
-          if (this.reactState == ComponentReactState.disabled) return;
+          if (widget.disabled.value) return;
 
           if (widget.doubleTapFunc != null) {
             widget.doubleTapFunc();
@@ -250,7 +250,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapDown: (TapDownDetails tpd) {
-          if (this.reactState == ComponentReactState.disabled) {
+          if (widget.disabled.value) {
             this.fluctuateAnimation.forward();
           } else {
             this.isTap = true;
@@ -258,7 +258,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapUp: (TapUpDetails tpu) {
-          if (this.reactState == ComponentReactState.disabled) {
+          if (widget.disabled.value) {
             return;
           }
 
@@ -269,7 +269,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapCancel: () {
-          if (this.reactState == ComponentReactState.disabled) return;
+          if (widget.disabled.value) return;
 
           this.isTap = false;
           this.flashAnimation.reverseAnimation();
@@ -368,63 +368,71 @@ class CustomButtonState extends State<CustomButton>
     }
   }
 
-  @override
-  void setReactState(ComponentReactState rea) {
-    //do nothing when state not change
-    if (this.reactState == rea) return;
-    Color newColor = null;
-    //as a button, only disable state should tackle
-    if (this.reactState == ComponentReactState.disabled) {
-      //from disable to able
-      newColor = widget.theme.getThemeColor(this.themeState);
-    } else if (rea == ComponentReactState.disabled) {
-      //from able to disable
-      newColor = widget.theme.getReactColor(rea);
-    }
-
-    //update state
-    this.reactState = rea;
-
-    //update color animation
-    this
-        .colorAnimation
-        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
-      setState(() {});
-    });
-
-    this.colorAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.bgColor = newColor;
-      }
-    });
-    this.colorAnimation.beginAnimation();
-  }
-
-  @override
-  void setThemeState(ComponentThemeState the) {
-    //do nothing when state not change
-    if (this.themeState == the) return;
-    //update the state
-    this.themeState = the;
-    //if button disabled, don't update color animation
-    if (this.reactState == ComponentReactState.disabled) return;
-    //update color animation
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this
-        .colorAnimation
-        .initAnimation(widget.bgColor, newColor, widget.colorDura, this, () {
-      setState(() {});
-    });
-
-    this.colorAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.bgColor = newColor;
-      }
-    });
-    this.colorAnimation.beginAnimation();
-  }
-
   void refresh() {
     if (this.mounted) this.setState(() {});
+  }
+
+  @override
+  ComponentThemeState setCorrect() {
+    // TODO: implement setCorrect
+    ComponentThemeState stt = super.setCorrect();
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+    this.colorAnimation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setError() {
+    // TODO: implement setError
+    ComponentThemeState stt = super.setError();
+
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+    this.colorAnimation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setNormal() {
+    // TODO: implement setNormal
+    ComponentThemeState stt = super.setNormal();
+
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+    this.colorAnimation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setWarning() {
+    // TODO: implement setWarning
+    ComponentThemeState stt = super.setWarning();
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.colorAnimation.initAnimation(
+        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+    this.colorAnimation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  void setDisabled() {
+    this.colorAnimation.initAnimation(
+        widget.bgColor,
+        widget.theme.getDisabledColor(),
+        widget.colorDura, this, (){setState(() {});});
+    this.colorAnimation.beginAnimation();
+  }
+
+  @override
+  void setEnabled() {
+    this.colorAnimation.initAnimation(
+        widget.bgColor,
+        widget.theme.getThemeColor(this.themeState),
+        widget.colorDura, this,(){setState(() {});});
+    this.colorAnimation.beginAnimation();
   }
 }

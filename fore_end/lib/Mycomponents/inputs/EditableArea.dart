@@ -10,9 +10,8 @@ import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class EditableArea extends StatefulWidget {
+class EditableArea extends StatefulWidget with ThemeWidgetMixIn {
   List<Widget> displayContent;
-  MyTheme theme;
   double width;
   double height;
   double borderRadius;
@@ -20,13 +19,14 @@ class EditableArea extends StatefulWidget {
   EditableAreaState state;
   EditableArea(
       {Key key,
-      @required this.theme,
+      @required MyTheme theme,
       @required this.displayContent,
       this.width = 300,
       this.height = 500,
         this.borderRadius = 12,
       this.title = ""})
       : super(key: key) {
+    this.theme = theme;
     if (this.width <= 1) {
       this.width = ScreenTool.partOfScreenWidth(this.width);
     }
@@ -46,7 +46,7 @@ class EditableArea extends StatefulWidget {
 }
 
 class EditableAreaState extends State<EditableArea>
-    with TickerProviderStateMixin, Themeable {
+    with TickerProviderStateMixin, ThemeStateMixIn {
   bool editing;
   ComponentReactState rea;
   ComponentThemeState the;
@@ -141,13 +141,13 @@ class EditableAreaState extends State<EditableArea>
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd);
         }
-        (wd as CustomTextField).setDisable(true);
+        (wd as CustomTextField).setDisabled(true);
       }else if(wd is SettingItem){
         i++;
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd.getInpuitField());
         }
-        (wd as SettingItem).getInpuitField().setDisable(true);
+        (wd as SettingItem).getInpuitField().setDisabled(true);
       }
     }
   }
@@ -156,13 +156,13 @@ class EditableAreaState extends State<EditableArea>
     int i = 0;
     for (Widget wd in widget.displayContent) {
       if (wd is CustomTextField) {
-        (wd as CustomTextField).setDisable(false);
+        (wd as CustomTextField).setDisabled(false);
         i++;
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd);
         }
       }else if(wd is SettingItem){
-        (wd as SettingItem).getInpuitField().setDisable(false);
+        (wd as SettingItem).getInpuitField().setDisabled(false);
         i++;
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd.getInpuitField());
@@ -186,24 +186,11 @@ class EditableAreaState extends State<EditableArea>
   void startEdit(BuildContext context) {
     this.editing = true;
     this.enableAll(doOnFirstOne: (CustomTextField f){
-        // f.addFunctionWhenCouldFocus((){
-        //   FocusScope.of(context).requestFocus(f.getFocusNode());
-        // });
     });
   }
 
   void endEdit() {
     this.editing = false;
     this.disableAll();
-  }
-
-  @override
-  void setReactState(ComponentReactState rea) {
-    // TODO: implement setReactState
-  }
-
-  @override
-  void setThemeState(ComponentThemeState the) {
-    // TODO: implement setThemeState
   }
 }

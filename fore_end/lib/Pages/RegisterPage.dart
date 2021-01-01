@@ -112,12 +112,12 @@ class Register extends StatelessWidget {
         this.emailTextField.setErrorText("please input correct email format");
         this.emailTextField.setError();
         this.verifyTextField.setButtonDisabled(true);
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
     this.verifyTextField = VerifyCodeInputer(
-      onCheckSuccess: (){ this.nextButton.setDisable(false);},
-      onCheckFailed: (){this.nextButton.setDisable(true);},
+      onCheckSuccess: (){ this.nextButton.setDisabled(false);},
+      onCheckFailed: (){this.nextButton.setDisabled(true);},
       emailField: this.emailTextField,
     );
 
@@ -136,19 +136,19 @@ class Register extends StatelessWidget {
           this.repasswordDone = true;
           this.confirmPasswordTextField.setCorrect();
           if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-            this.nextButton.setDisable(false);
+            this.nextButton.setDisabled(false);
           }
         } else {
           this.repasswordDone = false;
           this.confirmPasswordTextField.setError();
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
           this.confirmPasswordTextField.setErrorText("two password different");
         }
       },
       onError: () {
         this.repasswordDone = false;
         this.confirmPasswordTextField.setError();
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         this.confirmPasswordTextField.setErrorText("two password different");
       },
     );
@@ -168,15 +168,15 @@ class Register extends StatelessWidget {
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
         }
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.passwordDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -191,16 +191,16 @@ class Register extends StatelessWidget {
       onCorrect: () {
         this.nickNameDone = true;
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
       onEmpty: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -210,10 +210,10 @@ class Register extends StatelessWidget {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
         }
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       } else if (this.verified) {
         this.verifyTextField.setCorrect();
-        this.nextButton.setDisable(false);
+        this.nextButton.setDisabled(false);
       }
     });
 
@@ -272,7 +272,7 @@ class Register extends StatelessWidget {
     // };
 
     this.nextButton = CustomButton(
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -286,9 +286,9 @@ class Register extends StatelessWidget {
         this.scrollCtl.animateTo(ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 800), curve: Curves.ease);
         this.step = 1;
-        nextButton.setDisable(true);
+        nextButton.setDisabled(true);
       } else if (this.step == 1) {
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
         try{
           Response res = await Requests.signUp({
@@ -302,7 +302,7 @@ class Register extends StatelessWidget {
             Navigator.pop(context);
           }
         } on DioError catch(e){
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
           print("Exception when sign up\n");
           print(e.toString());
         }
