@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,9 @@ class EditableArea extends StatefulWidget {
       this.height = ScreenTool.partOfScreenHeight(this.height);
     }
   }
-
+  List<String> getValue(){
+      return this.state.getAll();
+  }
   @override
   State<StatefulWidget> createState() {
     this.state = new EditableAreaState(
@@ -164,6 +167,18 @@ class EditableAreaState extends State<EditableArea>
         if(i == 1 && doOnFirstOne != null){
           doOnFirstOne(wd.getInpuitField());
         }
+      }
+    }
+  }
+
+  List<String> getAll(){
+    List<String> res = new List<String>();
+
+    for (Widget wd in widget.displayContent) {
+      if (wd is CustomTextField) {
+        res.add((wd as CustomTextField).getInput());
+      }else if(wd is SettingItem){
+        res.add((wd as SettingItem).getInpuitField().getInput());
       }
     }
   }
