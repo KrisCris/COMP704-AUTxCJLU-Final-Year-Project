@@ -12,46 +12,60 @@ import 'package:fore_end/interface/Themeable.dart';
 enum InputFieldType { email, password, text, verifyCode }
 
 class CustomTextField extends StatefulWidget {
+
   static final double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
   static final double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
-
-  final MyTheme theme;
-  final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
-  final FocusNode next;
-  final InputFieldType inputType;
-  final bool isAutoFocus;
-  final int maxlength; //长度
-  final IconData myIcon;
-  final bool showIcon;
   double bottomPadding;
-  List<Function> doWhenCouldfocus;
-  String errorText;
-  String helpText;
-  TextAlign textAlign;
-  String defaultContent;
-  bool autoChangeState;
-  bool disableSuffix;
   double width; //文本框的宽
   double ulDefaultWidth; //未点击的下划线厚度
   double ulFocusedWidth; //点击的厚度
+
+  final String placeholder; //第一行输入框内容  可以是用户名  这里可以自定义输入框数量的
+  String errorText;
+  String helpText;
+  String defaultContent;
+
+  final bool isAutoFocus;
+  final bool isAutoCheck;
+  final bool isAutoChangeState;
+  final bool disableSuffix;
+
+  final int maxlength; //长度
+  int sizeChangeMode;
+
   Function onCorrect;
   Function onError;
   Function onEmpty;
+  Function disabledFunc;
+  List<Function> listenerList;
+  List<Function> doWhenCouldfocus;
+
+  final FocusNode next;
+  FocusNode _focusNode = FocusNode();
+
+  final InputFieldType inputType;
   TextInputType keyboardType;
   TextInputAction keyboardAction;
-  List<Function> listenerList;
+
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
   CustomTextFieldState st;
+  TextAlign textAlign;
+
+  final MyTheme theme;
+  final IconData myIcon;
 
   ///when length change, button fix at center(0),left(1) or right(2)
-  int sizeChangeMode;
+
 
   CustomTextField({
     bool disabled = false,
     this.placeholder,
     this.inputType = InputFieldType.text,
+    this.isAutoCheck = true,
     this.isAutoFocus = false,
+    this.isAutoChangeState = true,
+    this.disableSuffix=false,
     this.errorText = "input error",
     this.helpText = "",
     @required this.theme,
@@ -63,16 +77,14 @@ class CustomTextField extends StatefulWidget {
     this.firstReactState = ComponentReactState.unfocused,
     this.firstThemeState = ComponentThemeState.normal,
     this.myIcon = Icons.email_outlined,
-    this.showIcon = false,
     this.maxlength,
     this.textAlign=TextAlign.left,
     this.onCorrect,
     this.onError,
     this.onEmpty,
+    this.disabledFunc,
     this.next,
-    this.disableSuffix=false,
     this.sizeChangeMode = 0,
-    this.autoChangeState = true,
     Key key,
   }) : super(key: key) {
     if (this.ulFocusedWidth == null) {
@@ -102,7 +114,7 @@ class CustomTextField extends StatefulWidget {
   }
 
   FocusNode getFocusNode() {
-    return this.st._focusNode;
+    return this._focusNode;
   }
 
   void setWidth(double len) {
@@ -118,7 +130,9 @@ class CustomTextField extends StatefulWidget {
     });
     this.st.lengthAnimation.beginAnimation();
   }
-
+  void focus(BuildContext context){
+    FocusScope.of(context).requestFocus(this._focusNode);
+  }
   bool isEmpty() {
     return this.st.isEmpty();
   }
@@ -144,10 +158,6 @@ class CustomTextField extends StatefulWidget {
 
   void addFunctionWhenCouldFocus(Function f) {
     this.doWhenCouldfocus.add(f);
-  }
-
-  bool checkInput() {
-    return FormatChecker.check(this.inputType, this.getInput());
   }
 
   void setError() {
@@ -221,7 +231,6 @@ class CustomTextFieldState extends State<CustomTextField>
   TweenAnimation<double> lengthAnimation = TweenAnimation<double>();
 
   TextField field;
-  FocusNode _focusNode = FocusNode();
   Color errorColors = Colors.blue;
   bool isCorrect = false;
   bool disabled = false;
@@ -276,15 +285,15 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
 
-    this._focusNode.addListener(() {
-      if (this._focusNode.canRequestFocus) {
+    widget._focusNode.addListener(() {
+      if (widget._focusNode.canRequestFocus) {
         if (widget.doWhenCouldfocus != null &&
             widget.doWhenCouldfocus.isNotEmpty) {
           Function f = widget.doWhenCouldfocus.removeAt(0);
           f();
         }
       }
-      if (this._focusNode.hasFocus) {
+      if (widget._focusNode.hasFocus) {
         this.setReactState(ComponentReactState.focused);
         this.continuousInputChecker = new MyCounter(
             times: 1,
@@ -293,7 +302,7 @@ class CustomTextFieldState extends State<CustomTextField>
             calling: () {
               this.isInputing = false;
               if (this._inputcontroller.text.isEmpty) {
-                if (widget.autoChangeState) {
+                if (widget.isAutoChangeState) {
                   this.setThemeState(ComponentThemeState.normal);
                 }
                 if (widget.onEmpty != null) {
@@ -303,12 +312,14 @@ class CustomTextFieldState extends State<CustomTextField>
                 this.isCorrect = false;
               } else {
                 if (this.themeState == ComponentThemeState.normal &&
-                    widget.autoChangeState) {
+                    widget.isAutoChangeState) {
                   this.suffixSizeAnimation.beginAnimation();
                 }
+                if(!widget.isAutoCheck) return;
+
                 if (FormatChecker.check(
                     widget.inputType, this._inputcontroller.text)) {
-                  if (widget.autoChangeState) {
+                  if (widget.isAutoChangeState) {
                     this.setThemeState(ComponentThemeState.correct);
                     this.isCorrect = true;
                   }
@@ -317,7 +328,7 @@ class CustomTextFieldState extends State<CustomTextField>
                     widget.onCorrect();
                   }
                 } else {
-                  if (widget.autoChangeState) {
+                  if (widget.isAutoChangeState) {
                     this.setThemeState(ComponentThemeState.error);
                     this.isCorrect = false;
                   }
@@ -370,7 +381,7 @@ class CustomTextFieldState extends State<CustomTextField>
     this.suffixSizeAnimation.dispose();
     this.underlineWidthAnimation.dispose();
     this._inputcontroller.dispose();
-    this._focusNode.dispose();
+    widget._focusNode.dispose();
     super.dispose();
   }
 
@@ -402,11 +413,11 @@ class CustomTextFieldState extends State<CustomTextField>
 
   Widget getInputField() {
     return TextField(
-      enabled: !this.disabled,
+      enabled: !this.judgeDisabled(),
       inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
       textInputAction: widget.keyboardAction,
       keyboardType: widget.keyboardType,
-      focusNode: this._focusNode,
+      focusNode: widget._focusNode,
       controller: this._inputcontroller,
       maxLines: 1,
       style: TextStyle(fontSize: 18),
@@ -489,7 +500,15 @@ class CustomTextFieldState extends State<CustomTextField>
   void addListener(Function f) {
     this._inputcontroller.addListener(f);
   }
+  bool judgeDisabled(){
+    if(widget.disabledFunc == null){
+      return this.disabled;
+    }
+    dynamic res = widget.disabledFunc();
+    if(!(res is bool))return this.disabled;
 
+    return res as bool;
+  }
   @override
   void setReactState(ComponentReactState rea) {
     if (rea == this.reactState) return;

@@ -115,7 +115,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   Widget getInput(){
     this.textField = CustomTextField(
       placeholder: widget.placeHolder,
-      autoChangeState: false,
+      isAutoChangeState: false,
       inputType: InputFieldType.verifyCode,
       theme: MyTheme.blueStyle,
       width: 0,
