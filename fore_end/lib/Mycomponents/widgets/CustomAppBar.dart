@@ -74,31 +74,23 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 color: Colors.black),
           ),
           Expanded(child:SizedBox()),
-          ExpandInputField(width: 0.4,foregroundColor: Colors.white,),
+          ExpandInputField(
+            width: 0.4,
+            foregroundColor: Colors.white,
+            disabledFunc: (){
+              return this.headerTransparency.getValue() == 0;
+            },
+            disabled: false),
           SizedBox(width: 5)
-          // InkWell(
-          //     onTap: (){
-          //       showSearch(context: context, delegate: MySearchBarDelegate());
-          //     },
-          //     child: Container(
-          //       width: 30,
-          //       height: 30,
-          //       child: Icon(
-          //         FontAwesomeIcons.search,size: 25,
-          //       ),
-          //     )
-          // )
-
         ],
       ),
     );
     return AnimatedBuilder(
         animation: this.headerTransparency.ctl,
-        child: container,
         builder: (BuildContext context, Widget child){
           return Opacity(
               opacity:this.headerTransparency.getValue(),
-              child:child
+              child:container
           );
         });
   }

@@ -9,14 +9,21 @@ import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 
 class ExpandInputField extends StatefulWidget {
   double width;
-  IconData suffix;
-  String placeholer;
   double iconSize;
+
   Color backgroundColor;
   Color foregroundColor;
+
+  bool disabled;
+  Function disabledFunc;
+
+  IconData suffix;
+  String placeholer;
   ExpandInputField(
       {@required double width = 0.7,
       this.placeholer,
+        this.disabled = true,
+        this.disabledFunc,
       this.suffix = FontAwesomeIcons.search,
       double iconSize = 20,
       this.backgroundColor = Colors.white,
@@ -42,7 +49,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
       setState(() {});
     });
     this.lengthAnimation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         this.textField.focus(context);
       }
     });
@@ -57,12 +64,9 @@ class ExpandInputFieldState extends State<ExpandInputField>
           color: widget.backgroundColor),
       child: Stack(
         children: [
-          Positioned(
-            bottom: -20,
-              child: this.createInput()
-          ),
+          Positioned(bottom: -25, left: 5, child: this.createInput()),
           this.createForeground(),
-          Positioned(right: 1, child: this.createSuffix()),
+          Positioned(right: 8, child: this.createSuffix()),
         ],
       ),
     );
@@ -71,11 +75,16 @@ class ExpandInputFieldState extends State<ExpandInputField>
   Widget createInput() {
     this.textField = CustomTextField(
       placeholder: widget.placeholer,
-      autoChangeState: false,
+      isAutoChangeState: false,
+      isAutoCheck: false,
       inputType: InputFieldType.verifyCode,
       theme: MyTheme.blueStyle,
-      width: widget.width - widget.iconSize*2,
+      width: widget.width - widget.iconSize*1.5,
       sizeChangeMode: 0,
+      bottomPadding: -15,
+      disableSuffix: true,
+      disabled: widget.disabled,
+      disabledFunc: widget.disabledFunc,
     );
     return this.textField;
   }
