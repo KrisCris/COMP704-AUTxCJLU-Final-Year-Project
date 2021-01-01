@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
 
 class CustomAppBar extends StatefulWidget{
@@ -40,11 +41,11 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: Color(0xFF0091EA),
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 12, //阴影范围
-              spreadRadius: 3, //阴影浓度
+              spreadRadius: 4, //阴影浓度
               color: Color(0x33000000), //阴影颜色
             ),
           ]),
@@ -72,35 +73,24 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 fontFamily: "Futura",
                 color: Colors.black),
           ),
-          SizedBox(
-            width: 70,
-
-          ),
-          InkWell(
-              onTap: (){
-                showSearch(context: context, delegate: MySearchBarDelegate());
-              },
-              child: Container(
-                width: 30,
-                height: 30,
-                child: Icon(
-                  FontAwesomeIcons.search,size: 25,
-
-                ),
-
-              )
-          )
-
+          Expanded(child:SizedBox()),
+          ExpandInputField(
+            width: 0.4,
+            foregroundColor: Colors.white,
+            disabledFunc: (){
+              return this.headerTransparency.getValue() == 0;
+            },
+            disabled: false),
+          SizedBox(width: 5)
         ],
       ),
     );
     return AnimatedBuilder(
         animation: this.headerTransparency.ctl,
-        child: container,
         builder: (BuildContext context, Widget child){
           return Opacity(
               opacity:this.headerTransparency.getValue(),
-              child:child
+              child:container
           );
         });
   }

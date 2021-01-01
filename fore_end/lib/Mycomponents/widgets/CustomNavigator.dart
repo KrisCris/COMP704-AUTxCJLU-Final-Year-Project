@@ -184,15 +184,15 @@ class CustomNavigatorState extends State<CustomNavigator>
     this.backgroundOpacity.beginAnimation();
     this.shadowSize.beginAnimation();
     this.shadowDense.beginAnimation();
-    this.positionChange.beginAnimation();
-    this.lengthChange.beginAnimation();
+    // this.positionChange.beginAnimation();
+    // this.lengthChange.beginAnimation();
   }
 
   void reverseOpacity() {
     this.backgroundOpacity.reverse();
     this.shadowSize.reverse();
     this.shadowDense.reverse();
-    this.positionChange.reverse();
-    this.lengthChange.reverse();
+    // this.positionChange.reverse();
+    // this.lengthChange.reverse();
   }
 }

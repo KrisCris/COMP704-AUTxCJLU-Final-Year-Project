@@ -12,6 +12,7 @@ import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
 
 class UpdatePwdPage extends StatefulWidget {
+import 'AccountPage.dart';
 
 
 
@@ -43,6 +44,37 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     // String email = emailController.text;
   }
 
+
+    //不能和原来的一样，用户输入完成后点击确认，先把数据发送给服务器，再去更新本地数据。
+    String newUserAge=this._userNameController.text;
+    User user= User.getInstance();
+    // user.age=int.parse(newUserAge);
+    try{
+      Response res = await Requests.modifyBasicInfo({
+        "uid": user.uid,
+        "token": user.token,
+        "age": newUserAge,
+        "gender": user.gender,
+        "nickname": user.userName,
+      });
+      if (res.data['code'] == 1) {
+        EasyLoading.showSuccess("Change success!",
+            duration: Duration(milliseconds: 2000));
+        user.age=int.parse(newUserAge);
+        user.save();
+        print("修改成功！！！！");
+      }
+    } on DioError catch(e){
+      print("Exception when sign up\n");
+      print(e.toString());
+    }
+
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) {return AccountPage();},
+      maintainState: false,
+    ));
+
+  }
 
   @override
   Widget build(BuildContext context) {

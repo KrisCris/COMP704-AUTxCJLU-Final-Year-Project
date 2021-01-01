@@ -6,6 +6,8 @@ class ScreenTool{
     static Size get phisicSize => window.physicalSize;
     static double get pixRatio => window.devicePixelRatio;
     static Size get pixSize => ScreenTool.phisicSize/ScreenTool.pixRatio;
+    static double get topPadding => window.padding.top;
+    static double get bottomPadding => window.padding.bottom;
 
     static Size partOfScreen(double part){
       return pixSize*part;
