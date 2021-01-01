@@ -43,7 +43,7 @@ class CustomTextField extends StatefulWidget {
   ComponentReactState firstReactState;
   ComponentThemeState firstThemeState;
   CustomTextFieldState st;
-
+  FocusNode _focusNode = FocusNode();
   ///when length change, button fix at center(0),left(1) or right(2)
   int sizeChangeMode;
 
@@ -102,7 +102,7 @@ class CustomTextField extends StatefulWidget {
   }
 
   FocusNode getFocusNode() {
-    return this.st._focusNode;
+    return this._focusNode;
   }
 
   void setWidth(double len) {
@@ -118,7 +118,9 @@ class CustomTextField extends StatefulWidget {
     });
     this.st.lengthAnimation.beginAnimation();
   }
-
+  void focus(BuildContext context){
+    FocusScope.of(context).requestFocus(this._focusNode);
+  }
   bool isEmpty() {
     return this.st.isEmpty();
   }
@@ -221,7 +223,6 @@ class CustomTextFieldState extends State<CustomTextField>
   TweenAnimation<double> lengthAnimation = TweenAnimation<double>();
 
   TextField field;
-  FocusNode _focusNode = FocusNode();
   Color errorColors = Colors.blue;
   bool isCorrect = false;
   bool disabled = false;
@@ -276,15 +277,15 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
 
-    this._focusNode.addListener(() {
-      if (this._focusNode.canRequestFocus) {
+    widget._focusNode.addListener(() {
+      if (widget._focusNode.canRequestFocus) {
         if (widget.doWhenCouldfocus != null &&
             widget.doWhenCouldfocus.isNotEmpty) {
           Function f = widget.doWhenCouldfocus.removeAt(0);
           f();
         }
       }
-      if (this._focusNode.hasFocus) {
+      if (widget._focusNode.hasFocus) {
         this.setReactState(ComponentReactState.focused);
         this.continuousInputChecker = new MyCounter(
             times: 1,
@@ -370,7 +371,7 @@ class CustomTextFieldState extends State<CustomTextField>
     this.suffixSizeAnimation.dispose();
     this.underlineWidthAnimation.dispose();
     this._inputcontroller.dispose();
-    this._focusNode.dispose();
+    widget._focusNode.dispose();
     super.dispose();
   }
 
@@ -406,7 +407,7 @@ class CustomTextFieldState extends State<CustomTextField>
       inputFormatters: [FilteringTextInputFormatter.deny(RegExp(' '))],
       textInputAction: widget.keyboardAction,
       keyboardType: widget.keyboardType,
-      focusNode: this._focusNode,
+      focusNode: widget._focusNode,
       controller: this._inputcontroller,
       maxLines: 1,
       style: TextStyle(fontSize: 18),

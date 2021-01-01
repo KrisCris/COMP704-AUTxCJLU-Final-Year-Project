@@ -33,12 +33,18 @@ class ExpandInputField extends StatefulWidget {
 class ExpandInputFieldState extends State<ExpandInputField>
     with TickerProviderStateMixin {
   TweenAnimation lengthAnimation;
+  CustomTextField textField;
 
   @override
   void initState() {
     this.lengthAnimation = new TweenAnimation();
     this.lengthAnimation.initAnimation(widget.width, 0.0, 400, this, () {
       setState(() {});
+    });
+    this.lengthAnimation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        this.textField.focus(context);
+      }
     });
   }
 
@@ -56,14 +62,14 @@ class ExpandInputFieldState extends State<ExpandInputField>
               child: this.createInput()
           ),
           this.createForeground(),
-          Positioned(right: 0, child: this.createSuffix()),
+          Positioned(right: 1, child: this.createSuffix()),
         ],
       ),
     );
   }
 
   Widget createInput() {
-    return CustomTextField(
+    this.textField = CustomTextField(
       placeholder: widget.placeholer,
       autoChangeState: false,
       inputType: InputFieldType.verifyCode,
@@ -71,6 +77,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
       width: widget.width - widget.iconSize*2,
       sizeChangeMode: 0,
     );
+    return this.textField;
   }
 
   Widget createSuffix() {

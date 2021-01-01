@@ -74,7 +74,7 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 color: Colors.black),
           ),
           Expanded(child:SizedBox()),
-          ExpandInputField(width: 0.4),
+          ExpandInputField(width: 0.4,foregroundColor: Colors.white,),
           SizedBox(width: 5)
           // InkWell(
           //     onTap: (){
