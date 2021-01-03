@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/Mycomponents/Background.dart';
-import 'package:fore_end/Mycomponents/CustomButton.dart';
-import 'package:fore_end/Mycomponents/CustomTextButton.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
+
 
 class Welcome extends StatelessWidget {
   @override

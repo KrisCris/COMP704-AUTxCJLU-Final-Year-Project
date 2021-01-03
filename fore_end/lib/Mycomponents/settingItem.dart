@@ -1,96 +1,106 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 
+import 'inputs/CustomTextField.dart';
 
 /// 个人信息设置页Item
-class SettingItem extends StatelessWidget {
-  final Function onTap; //点击事件
-  final String leftText; //左侧显示文字
-  final String rightText; //右侧显示文字
+class SettingItem extends StatefulWidget {
+  String leftText; //左侧显示文字
+  String rightText; //右侧显示文字
   final Widget leftIcon; //左侧图片
   final bool isRight; //是否显示右侧
   final bool isRightImage; //是否显示右侧图片
   final String rightImageUri; //右侧图片地址
   final bool isRightText; //是否显示右侧文字
+  final Widget rightImage;
+  final bool isChange;
+  double inputFieldWidth;
+  Image image;
+  Function onTap; //点击事件
+  ItemState state;
 
-  const SettingItem({
+  CustomTextField textField;
+
+  SettingItem({
     Key key,
     this.leftText = "",
     this.leftIcon,
-    this.rightText = "",
+    String rightText = "",
     this.isRight = true,
     this.isRightImage = false,
     this.rightImageUri = "",
     this.isRightText = true,
     this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return  Container(
-      width: double.infinity,
-      height: 50,
-      child:  Material(
-          //color:
-          child: InkWell(
-            onTap: onTap,
-            child: Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                      children: <Widget>[
-                        leftIcon,
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          child: Text(
-                            leftText,
-                            style: TextStyle(fontSize: 15.0, color: Colors.grey),
-                          ),
-                        )
-                      ]),
-                  //Visibility是控制子组件隐藏/可见的组件
-                  Visibility(
-                    visible: isRight,
-                    child: Row(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: Row(children: <Widget>[
-                              Visibility(
-                                  visible: isRightText,
-                                  child: Text(
-                                    rightText,
-                                    style: TextStyle(
-                                        fontSize: 15.0, color: Colors.grey),
-                                  )),
-                              Visibility(
-                                  visible: isRightImage,
-                                  child: CircleAvatar(
-                                    // backgroundImage: getBackgroundImage(rightImageUri),
-                                    child: Icon(FontAwesomeIcons.user),
-                                  ))
-                            ]),
-                          ),
-
-
-                          Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey,size: 20,),
-                        ]),
-                  )
-                ],
-              ),
-            ),
-          )),
+    this.rightImage,
+    this.isChange = true,
+    this.image,
+    this.inputFieldWidth = 0.3,
+    state,
+  }) : super(key: key) {
+    this.rightText = rightText;
+    this.inputFieldWidth = ScreenTool.partOfScreenWidth(this.inputFieldWidth);
+    this.textField = CustomTextField(
+      theme: MyTheme.blueStyle,
+      defaultContent: this.rightText,
+      ulDefaultWidth: 0,
+      width: this.inputFieldWidth,
+      helpText: "",
+      errorText: "",
+      disableSuffix: true,
+      bottomPadding: -10,
+      textAlign: TextAlign.right,
     );
   }
 
-  ImageProvider getBackgroundImage(String rightImageUri){
-    if(rightImageUri.contains("http")){
-      return NetworkImage(rightImageUri);
-    }else{
-      return AssetImage(rightImageUri);
-    }
+  void refresh() {
+    this.state.setState(() {});
+  }
+
+  CustomTextField getInpuitField() {
+    return this.textField;
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    this.state = new ItemState();
+    return this.state;
+  }
+}
+
+class ItemState extends State<SettingItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 60,
+      color: Colors.white,
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          widget.leftIcon,
+          Container(
+            margin: EdgeInsets.only(left: 15),
+            child: Text(
+              widget.leftText,
+              style: TextStyle(fontSize: 15.0, color: Colors.grey),
+            ),
+          ),
+          Expanded(child: SizedBox()),
+          Offstage(
+              offstage: !widget.isRightText,
+              child: Transform.translate(
+                  offset: Offset(0, 13), child: widget.textField)),
+          Offstage(
+            offstage: !widget.isRightImage,
+            child: widget.image,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -3,15 +3,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/Background.dart';
-import 'package:fore_end/Mycomponents/CustomButton.dart';
-import 'package:fore_end/Mycomponents/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
@@ -44,11 +43,11 @@ class Login extends StatelessWidget {
       rightMargin: 20,
       bottomMargin: 20,
       theme: MyTheme.blueStyle,
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () async {
         EasyLoading.show(status: "Logining...");
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         String emailVal = this.emailField.getInput();
         String passwordVal = this.passwordField.getInput();
         this.login(emailVal, passwordVal, context);
@@ -59,34 +58,28 @@ class Login extends StatelessWidget {
       // keyboardAction: TextInputAction.next,
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.email,
-
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       onCorrect: () {
         emailIsInput = true;
-        if (passwordIsInput) this.nextButton.setDisable(false);
+        if (passwordIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
         emailIsInput = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
-
     this.passwordField = CustomTextField(
       placeholder: "Password",
       theme: MyTheme.blueStyle,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       onCorrect: () {
         passwordIsInput = true;
-        if (emailIsInput) this.nextButton.setDisable(false);
+        if (emailIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
         passwordIsInput = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
     return Scaffold(
@@ -151,8 +144,7 @@ class Login extends StatelessWidget {
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));
-        this.
-        passwordField.clearInput();
+        this.passwordField.clearInput();
       } else if (res.data['code'] == 1) {
         User u = User.getInstance();
         u.token = res.data['data']['token'];
@@ -160,6 +152,7 @@ class Login extends StatelessWidget {
         u.email = email;
         int code = await u.synchronize();
         if(code == 1){
+          EasyLoading.dismiss();
           Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
             return new MainPage(user:u);
           }),(ct)=>false);

@@ -6,8 +6,7 @@ import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class CustomTextButton extends StatefulWidget {
-  MyTheme theme;
+class CustomTextButton extends StatefulWidget with ThemeWidgetMixIn{
   String text;
   double fontsize;
   Color textColor;
@@ -21,11 +20,11 @@ class CustomTextButton extends StatefulWidget {
   CustomTextButton(this.text,
       {this.fontsize = 16,
       this.tapUpFunc,
-        @required this.theme,
+        @required MyTheme theme,
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
-
+      this.theme = theme;
       this.textColor = this.theme.darkTextColor;
       this.clickColor = this.theme.getReactColor(ComponentReactState.focused);
   }
@@ -37,7 +36,7 @@ class CustomTextButton extends StatefulWidget {
 }
 
 class CustomTextButtonState extends State<CustomTextButton>
-    with TickerProviderStateMixin, Themeable {
+    with TickerProviderStateMixin, ThemeStateMixIn {
   TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
 
@@ -49,11 +48,20 @@ class CustomTextButtonState extends State<CustomTextButton>
         CalculatableColor.transform(widget.textColor),
         widget.theme.getReactColor(ComponentReactState.focused),
         widget.colorChangeDura, this, null);
+    //点击完毕后，颜色从高亮恢复正常
     this.animation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         if(!widget.isTap){
           this.animation.reverseAnimation();
         }
+      }
+    });
+    //状态变化后，重置点击变色动画
+    this.animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        widget.textColor = widget.theme.getThemeColor(this.themeState);
+        this.animation.initAnimation(widget.textColor, widget.clickColor,
+            widget.colorChangeDura, this, () { setState(() {});});
       }
     });
   }
@@ -105,28 +113,64 @@ class CustomTextButtonState extends State<CustomTextButton>
     //textButton don't have focus/disable state, so do nothing
   }
 
+
   @override
-  void setThemeState(ComponentThemeState the) {
-    //do nothing when state not change
-    if(this.themeState == the)return;
-    //update the state
-    this.themeState = the;
-    //if button disabled, don't update color animation
-    if(this.reactState == ComponentReactState.disabled)return;
-    //update color animation
+  ComponentThemeState setCorrect() {
+    // TODO: implement setCorrect
+    ComponentThemeState stt = super.setCorrect();
+
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.animation.initAnimation(
         CalculatableColor.transform(widget.textColor),
         newColor,
         widget.colorChangeDura,
         this, () {setState((){});});
-    this.animation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
-        widget.textColor = newColor;
-        this.animation.initAnimation(widget.textColor, widget.clickColor,
-            widget.colorChangeDura, this, () { setState(() {});});
-      }
-    });
     this.animation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setError() {
+    // TODO: implement setError
+    ComponentThemeState stt =super.setError();
+
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        newColor,
+        widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setNormal() {
+    // TODO: implement setNormal
+    ComponentThemeState stt =super.setNormal();
+
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        newColor,
+        widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.beginAnimation();
+    return stt;
+  }
+
+  @override
+  ComponentThemeState setWarning() {
+    // TODO: implement setWarning
+    ComponentThemeState stt =super.setWarning();
+
+    Color newColor = widget.theme.getThemeColor(this.themeState);
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        newColor,
+        widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.beginAnimation();
+    return stt;
   }
 }

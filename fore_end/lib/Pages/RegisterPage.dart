@@ -4,17 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/Constants.dart';
-import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/Background.dart';
-import 'package:fore_end/Mycomponents/CustomButton.dart';
-import 'package:fore_end/Mycomponents/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
+import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(Register());
@@ -22,12 +20,10 @@ void main() {
 
 class Register extends StatelessWidget {
   CustomTextField emailTextField;
-  CustomTextField verifyTextField;
+  VerifyCodeInputer verifyTextField;
   CustomTextField nicknameTextField;
   CustomTextField passwordTextField;
   CustomTextField confirmPasswordTextField;
-  CustomButton verifyButton;
-  MyCounter counter;
   CustomButton nextButton;
   CustomButton backButton;
   String emailWhenClickButton = "";
@@ -41,79 +37,73 @@ class Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    this.counter = new MyCounter(times: 60, duration: 1000);
+    // this.counter = new MyCounter(times: 60, duration: 1000);
     this.scrollCtl = new ScrollController();
 
-    this.verifyTextField = CustomTextField(
-      placeholder: 'Verify Code',
-      autoChangeState: false,
-      inputType: InputFieldType.verifyCode,
-      theme: MyTheme.blueStyle,
-      width: 0,
-      sizeChangeMode: 0,
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
-      maxlength: null,
-      onCorrect: () async {
-        String emailVal = this.emailTextField.getInput();
-        if (emailVal != this.emailWhenClickButton) {
-          this.verifyTextField.setError();
-          this.nextButton.setDisable(true);
-          this.verifyTextField.setErrorText("verify code invalid");
-          return;
-        }
-
-        if(this.verified)return;
-
-        String codeVal = this.verifyTextField.getInput();
-        try{
-          Response res = await Requests.checkVerifyCode({
-            "email": emailVal,
-            "auth_code": codeVal
-          });
-          if (res.data['code'] == -4) {
-            EasyLoading.showError("Verify failed",
-                duration: Duration(milliseconds: 2000));
-            this.nextButton.setDisable(true);
-            this.verifyTextField.setError();
-            this.verifyTextField.setErrorText("verify code wrong");
-          } else {
-            this.nextButton.setDisable(false);
-            this.verifyTextField.setCorrect();
-            this.verified = true;
-          }
-        }on DioError catch(e){
-          print("Exception when check verify code\n");
-          print(e.toString());
-        }
-        if (!this.counter.isStop()) return;
-        this.verifyButton.setDisable(false);
-      },
-    );
+    // this.verifyTextField = CustomTextField(
+    //   placeholder: 'Verify Code',
+    //   autoChangeState: false,
+    //   inputType: InputFieldType.verifyCode,
+    //   theme: MyTheme.blueStyle,
+    //   width: 0,
+    //   sizeChangeMode: 0,
+    //   onCorrect: () async {
+    //     String emailVal = this.emailTextField.getInput();
+    //     if (emailVal != this.emailWhenClickButton) {
+    //       this.verifyTextField.setError();
+    //       this.nextButton.setDisable(true);
+    //       this.verifyTextField.setErrorText("verify code invalid");
+    //       return;
+    //     }
+    //
+    //     if(this.verified)return;
+    //
+    //     String codeVal = this.verifyTextField.getInput();
+    //     try{
+    //       Response res = await Requests.checkVerifyCode({
+    //         "email": emailVal,
+    //         "auth_code": codeVal
+    //       });
+    //       if (res.data['code'] == -4) {
+    //         EasyLoading.showError("Verify failed",
+    //             duration: Duration(milliseconds: 2000));
+    //         this.nextButton.setDisable(true);
+    //         this.verifyTextField.setError();
+    //         this.verifyTextField.setErrorText("verify code wrong");
+    //       } else {
+    //         this.nextButton.setDisable(false);
+    //         this.verifyTextField.setCorrect();
+    //         this.verified = true;
+    //       }
+    //     }on DioError catch(e){
+    //       print("Exception when check verify code\n");
+    //       print(e.toString());
+    //     }
+    //     if (!this.counter.isStop()) return;
+    //     this.verifyButton.setDisable(false);
+    //   },
+    // );
 
     this.emailTextField = CustomTextField(
       placeholder: 'Email',
-      next: this.verifyTextField.getFocusNode(),
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
-      autoChangeState: false,
+      isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "Please input correct email!",
       maxlength: 30,
       onCorrect: () async {
-        if (!this.counter.isStop()) return;
+        // if (!this.counter.isStop()) return;
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
           "email":this.emailTextField.getInput()
         });
         if(res.data['code'] == 1){
-          this.verifyButton.setDisable(false);
+          this.verifyTextField.setButtonDisabled(false);
           this.emailTextField.setCorrect();
         }else{
-          this.verifyButton.setDisable(true);
+          this.verifyTextField.setButtonDisabled(true);
           this.emailTextField.setErrorText("This Email has already been registered");
           this.emailTextField.setError();
         }
@@ -121,19 +111,22 @@ class Register extends StatelessWidget {
       onError: () {
         this.emailTextField.setErrorText("please input correct email format");
         this.emailTextField.setError();
-        this.verifyButton.setDisable(true);
-        this.nextButton.setDisable(true);
+        this.verifyTextField.setButtonDisabled(true);
+        this.nextButton.setDisabled(true);
       },
+    );
+    this.verifyTextField = VerifyCodeInputer(
+      onCheckSuccess: (){ this.nextButton.setDisabled(false);},
+      onCheckFailed: (){this.nextButton.setDisabled(true);},
+      emailField: this.emailTextField,
     );
 
     this.confirmPasswordTextField = CustomTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
       theme: MyTheme.blueStyle,
-      autoChangeState: false,
+      isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "re-enter the password",
       maxlength: 30,
       onCorrect: () {
@@ -143,19 +136,19 @@ class Register extends StatelessWidget {
           this.repasswordDone = true;
           this.confirmPasswordTextField.setCorrect();
           if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-            this.nextButton.setDisable(false);
+            this.nextButton.setDisabled(false);
           }
         } else {
           this.repasswordDone = false;
           this.confirmPasswordTextField.setError();
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
           this.confirmPasswordTextField.setErrorText("two password different");
         }
       },
       onError: () {
         this.repasswordDone = false;
         this.confirmPasswordTextField.setError();
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         this.confirmPasswordTextField.setErrorText("two password different");
       },
     );
@@ -166,8 +159,6 @@ class Register extends StatelessWidget {
       inputType: InputFieldType.password,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
       onCorrect: () {
@@ -177,15 +168,15 @@ class Register extends StatelessWidget {
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
         }
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.passwordDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -195,23 +186,21 @@ class Register extends StatelessWidget {
       inputType: InputFieldType.text,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
-      ulDefaultWidth: Constants.WIDTH_TF_UNFOCUSED,
-      ulFocusedWidth: Constants.WIDTH_TF_FOCUSED,
       helpText: "please input your nick name",
       maxlength: 30,
       onCorrect: () {
         this.nickNameDone = true;
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
       onEmpty: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -220,26 +209,25 @@ class Register extends StatelessWidget {
       if (this.emailTextField.getInput() != this.emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
-          this.verifyTextField.setErrorText("verify code invalid");
         }
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       } else if (this.verified) {
         this.verifyTextField.setCorrect();
-        this.nextButton.setDisable(false);
+        this.nextButton.setDisabled(false);
       }
     });
 
-    this.verifyButton = CustomButton(
-        text: "Acquire verify code",
-        fontsize: 20,
-        width: 0.7,
-        height: 50,
-        radius: 8,
-        theme: MyTheme.blueStyle,
-        firstReactState: ComponentReactState.disabled,
-        sizeChangeMode: 2,
-        tapFunc: () {},
-        isBold: true);
+    // this.verifyButton = CustomButton(
+    //     text: "Acquire verify code",
+    //     fontsize: 20,
+    //     width: 0.7,
+    //     height: 50,
+    //     radius: 8,
+    //     theme: MyTheme.blueStyle,
+    //     firstReactState: ComponentReactState.disabled,
+    //     sizeChangeMode: 2,
+    //     tapFunc: () {},
+    //     isBold: true);
     this.backButton = CustomButton(
       text: "Back",
       isBold: true,
@@ -252,39 +240,39 @@ class Register extends StatelessWidget {
         Navigator.pop(context);
       },
     );
-    verifyButton.tapFunc = () async {
-      this.verified = false;
-      this.emailWhenClickButton = this.emailTextField.getInput();
-      try{
-        verifyButton.fontsize = 20;
-        verifyButton.setDisable(true);
-        verifyButton.setWidth(0.2);
-        verifyTextField.setWidth(0.45);
-        if (this.counter.isStop()) {
-          this.counter.start();
-        }
-        Response res = await Requests.sendRegisterEmail({
-          "email": this.emailWhenClickButton
-        });
-      } on DioError catch(e){
-        print("Exception when sending email:\n");
-        print(e.toString());
-      }
-    };
+    // verifyButton.tapFunc = () async {
+    //   this.verified = false;
+    //   this.emailWhenClickButton = this.emailTextField.getInput();
+    //   try{
+    //     verifyButton.fontsize = 20;
+    //     verifyButton.setDisable(true);
+    //     verifyButton.setWidth(0.2);
+    //     verifyTextField.setWidth(0.45);
+    //     if (this.counter.isStop()) {
+    //       this.counter.start();
+    //     }
+    //     Response res = await Requests.sendRegisterEmail({
+    //       "email": this.emailWhenClickButton
+    //     });
+    //   } on DioError catch(e){
+    //     print("Exception when sending email:\n");
+    //     print(e.toString());
+    //   }
+    // };
 
-    this.counter.calling = () {
-      if (!verifyButton.isMonted()) return;
-      verifyButton.text = this.counter.getRemain().toString();
-      verifyButton.refresh();
-      if (this.counter.isStop()) {
-        verifyButton.text = "Acquire\nagain";
-        verifyButton.fontsize = 13;
-        if (this.emailTextField.isCorrect()) verifyButton.setDisable(false);
-      }
-    };
+    // this.counter.calling = () {
+    //   if (!verifyButton.isMonted()) return;
+    //   verifyButton.text = this.counter.getRemain().toString();
+    //   verifyButton.refresh();
+    //   if (this.counter.isStop()) {
+    //     verifyButton.text = "Acquire\nagain";
+    //     verifyButton.fontsize = 13;
+    //     if (this.emailTextField.isCorrect()) verifyButton.setDisable(false);
+    //   }
+    // };
 
     this.nextButton = CustomButton(
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -298,9 +286,9 @@ class Register extends StatelessWidget {
         this.scrollCtl.animateTo(ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 800), curve: Curves.ease);
         this.step = 1;
-        nextButton.setDisable(true);
+        nextButton.setDisabled(true);
       } else if (this.step == 1) {
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
         try{
           Response res = await Requests.signUp({
@@ -314,7 +302,7 @@ class Register extends StatelessWidget {
             Navigator.pop(context);
           }
         } on DioError catch(e){
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
           print("Exception when sign up\n");
           print(e.toString());
         }
@@ -346,19 +334,7 @@ class Register extends StatelessWidget {
                 Container(
                   width: ScreenTool.partOfScreenWidth(0.7),
                   height: ScreenTool.partOfScreenHeight(0.1),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Positioned(
-                        left: 0,
-                        top: 8,
-                        child: this.verifyTextField,
-                      ),
-                      Positioned(
-                        child: verifyButton,
-                      ),
-                    ],
-                  ),
+                  child: this.verifyTextField
                 ),
                 SizedBox(height: 20),
                 SizedBox(height: 1),

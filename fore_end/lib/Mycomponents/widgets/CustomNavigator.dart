@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/CustomIconButton.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import '../buttons/CustomIconButton.dart';
 
 class CustomNavigator extends StatefulWidget {
   double width;
@@ -45,10 +44,10 @@ class CustomNavigator extends StatefulWidget {
   void activateButtonByIndex(int i) {
     for (int j = 0; j < this.buttons.length; j++) {
       if (j == i) {
-        this.buttons[i].setReactState(ComponentReactState.focused);
+        this.buttons[i].setFocus(true);
         this.activateButton = this.buttons[i];
       } else {
-        this.buttons[j].setReactState(ComponentReactState.unfocused);
+        this.buttons[j].setFocus(false);
       }
     }
   }
@@ -56,10 +55,10 @@ class CustomNavigator extends StatefulWidget {
   void activateButtonByObject(CustomIconButton button) {
     for (CustomIconButton bt in this.buttons) {
       if (bt == button) {
-        bt.setReactState(ComponentReactState.focused);
+        bt.setFocus(true);
         this.activateButton = bt;
       } else {
-        bt.setReactState(ComponentReactState.unfocused);
+        bt.setFocus(false);
       }
     }
   }
@@ -185,15 +184,15 @@ class CustomNavigatorState extends State<CustomNavigator>
     this.backgroundOpacity.beginAnimation();
     this.shadowSize.beginAnimation();
     this.shadowDense.beginAnimation();
-    this.positionChange.beginAnimation();
-    this.lengthChange.beginAnimation();
+    // this.positionChange.beginAnimation();
+    // this.lengthChange.beginAnimation();
   }
 
   void reverseOpacity() {
     this.backgroundOpacity.reverse();
     this.shadowSize.reverse();
     this.shadowDense.reverse();
-    this.positionChange.reverse();
-    this.lengthChange.reverse();
+    // this.positionChange.reverse();
+    // this.lengthChange.reverse();
   }
 }
