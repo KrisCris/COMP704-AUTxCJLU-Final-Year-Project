@@ -57,10 +57,13 @@ class TweenAnimation<T> implements MyAnimation<T>{
   }
   void basicStaticListener(AnimationStatus status){
     if (status == AnimationStatus.completed) {
+      print("done");
       this.isFinish = true;
       this.completeTime +=1;
     } else if (status == AnimationStatus.dismissed) {
       this.isFinish = false;
+    }else{
+      print("doing..");
     }
   }
   void addListener(VoidCallback listener) {

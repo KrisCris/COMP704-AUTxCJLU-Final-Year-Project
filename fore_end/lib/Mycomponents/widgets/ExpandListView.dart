@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/Mycomponents/clipper/TopDownClipper.dart';
 
 class ExpandListView extends StatefulWidget{
   double width;
@@ -17,33 +18,35 @@ class ExpandListView extends StatefulWidget{
 }
 class ExpandListViewState extends State<ExpandListView>
 with TickerProviderStateMixin{
-  TweenAnimation<double> clipAnimation;
+  TweenAnimation<double> clipAnimation = new TweenAnimation();
 
   @override
   void initState() {
     super.initState();
-    this.clipAnimation = new TweenAnimation();
-    this.clipAnimation.initAnimation(0.0, widget.height, 2000, this, (){setState((){});});
+    this.clipAnimation.initAnimation(0.0, widget.height, 600, this, (){setState((){});});
     this.clipAnimation.beginAnimation();
   }
   
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      color: widget.backgroundColor,
-      child: ListView(
-        children: [
-          ListTile(title: new Text("1"),),
-          ListTile(title: new Text("2"),),
-          ListTile(title: new Text("3"),),
-          ListTile(title: new Text("4"),),
-          ListTile(title: new Text("5"),),
-          ListTile(title: new Text("6"),),
-        ],
-      )
-    );
+    return  ClipRect(
+      clipper: new TopDownClipper(clipAnimation.getValue()),
+      child: Container(
+          width: widget.width,
+          height: widget.height,
+          color: widget.backgroundColor,
+          child: ListView(
+            children: [
+              ListTile(title: new Text("1"),),
+              ListTile(title: new Text("2"),),
+              ListTile(title: new Text("3"),),
+              ListTile(title: new Text("4"),),
+              ListTile(title: new Text("5"),),
+              ListTile(title: new Text("6"),),
+            ],
+          )
+      ),
+    ) ;
   }
 
 }

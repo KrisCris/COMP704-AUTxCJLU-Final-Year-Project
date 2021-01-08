@@ -12,7 +12,7 @@ class TopDownClipper extends CustomClipper<Rect>{
 
   @override
   bool shouldReclip(covariant CustomClipper<Rect> oldClipper) {
-    return false;
+    return true;
   }
 
 }
