@@ -9,11 +9,12 @@ import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import 'package:fore_end/interface/Valueable.dart';
 
 enum InputFieldType { email, password, text, verifyCode }
 
 class CustomTextField extends StatefulWidget
-    with ThemeWidgetMixIn,DisableWidgetMixIn {
+    with ThemeWidgetMixIn,DisableWidgetMixIn,ValueableWidgetMixIn<String> {
 
   static final double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
   static final double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
@@ -47,6 +48,7 @@ class CustomTextField extends StatefulWidget
   final InputFieldType inputType;
   TextInputType keyboardType;
   TextInputAction keyboardAction;
+  TextEditingController _inputcontroller = TextEditingController();
 
   ComponentThemeState firstThemeState;
   CustomTextFieldState st;
@@ -59,6 +61,7 @@ class CustomTextField extends StatefulWidget
 
   CustomTextField({
     bool disabled = false,
+    bool canChangeDisabled = true,
     this.placeholder,
     this.inputType = InputFieldType.text,
     this.isAutoCheck = true,
@@ -86,6 +89,7 @@ class CustomTextField extends StatefulWidget
   }) : super(key: key) {
     this.theme = theme;
     this.disabled = new ValueNotifier<bool>(disabled);
+    this.canChangeDisable = canChangeDisabled;
     if (this.ulFocusedWidth == null) {
       this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
     }
@@ -106,10 +110,6 @@ class CustomTextField extends StatefulWidget
 
     this.listenerList = List<Function>();
     this.doWhenCouldfocus = List<Function>();
-  }
-
-  String getInput() {
-    return this.st.getInput();
   }
 
   FocusNode getFocusNode() {
@@ -133,30 +133,22 @@ class CustomTextField extends StatefulWidget
     FocusScope.of(context).requestFocus(this._focusNode);
   }
   bool isEmpty() {
-    return this.st.isEmpty();
+    return this._inputcontroller.text == "";
   }
 
   bool isCorrect() {
     return this.st.isCorrect;
   }
 
-  bool isChange() {
-    return this.st.isCorrect;
-  }
-
   void clearInput() {
-    this.st._inputcontroller.clear();
+    this._inputcontroller.clear();
   }
 
   void addListener(Function f) {
     if (this.st == null)
       this.listenerList.add(f);
     else
-      this.st.addListener(f);
-  }
-
-  void addFunctionWhenCouldFocus(Function f) {
-    this.doWhenCouldfocus.add(f);
+      this._inputcontroller.addListener(f);
   }
 
   void setError() {
@@ -192,6 +184,11 @@ class CustomTextField extends StatefulWidget
   State<StatefulWidget> createState() {
     return this.st;
   }
+
+  @override
+  String getValue() {
+    return this._inputcontroller.text;
+  }
 }
 
 
@@ -203,7 +200,7 @@ class CustomTextField extends StatefulWidget
 
 class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn {
-  TextEditingController _inputcontroller = TextEditingController();
+
   TweenAnimation<CalculatableColor> colorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<double> suffixSizeAnimation = TweenAnimation<double>();
@@ -230,7 +227,7 @@ class CustomTextFieldState extends State<CustomTextField>
   void initState() {
     super.initState();
     this.firstWidth = widget.width;
-    this._inputcontroller = TextEditingController.fromValue(
+    widget._inputcontroller = TextEditingController.fromValue(
         TextEditingValue(
           text: widget.defaultContent,
           selection: TextSelection.fromPosition(
@@ -241,16 +238,9 @@ class CustomTextFieldState extends State<CustomTextField>
         )
     );
     this.prev = widget.defaultContent;
-    widget.disabled.addListener(() {
-      if(widget.disabled.value){
-        this.setDisabled();
-      }else{
-        this.setEnabled();
-      }
-    });
     this.initColor();
     for (Function f in widget.listenerList) {
-      this.addListener(f);
+      widget.addListener(f);
     }
     this.lengthAnimation.initAnimation(
         this.firstWidth, this.firstWidth, this.sizeChangeDura, this, null);
@@ -282,7 +272,7 @@ class CustomTextFieldState extends State<CustomTextField>
             duration: 700,
             calling: () {
               this.isInputing = false;
-              if (this._inputcontroller.text.isEmpty) {
+              if (widget._inputcontroller.text.isEmpty) {
                 if (widget.isAutoChangeState) {
                   this.setNormal();
                 }
@@ -299,7 +289,7 @@ class CustomTextFieldState extends State<CustomTextField>
                 if(!widget.isAutoCheck) return;
 
                 if (FormatChecker.check(
-                    widget.inputType, this._inputcontroller.text)) {
+                    widget.inputType, widget._inputcontroller.text)) {
                   if (widget.isAutoChangeState) {
                     this.setCorrect();
                     this.isCorrect = true;
@@ -330,9 +320,9 @@ class CustomTextFieldState extends State<CustomTextField>
       }
     });
 
-    this._inputcontroller.addListener(() {
-      if (this.prev == this._inputcontroller.text) return;
-      this.prev = this._inputcontroller.text;
+    widget._inputcontroller.addListener(() {
+      if (this.prev == widget._inputcontroller.text) return;
+      this.prev = widget._inputcontroller.text;
       this.isInputing = true;
       if (this.continuousInputChecker != null) {
         this.continuousInputChecker.reset();
@@ -340,6 +330,12 @@ class CustomTextFieldState extends State<CustomTextField>
       this.setNormal();
       this.suffixSizeAnimation.reverse();
     });
+    if(widget.disabled.value){
+      this.setDisabled();
+    }else{
+      this.setEnabled();
+    }
+    this.initDisableListener(widget.disabled);
   }
 
   void initColor() {
@@ -371,7 +367,7 @@ class CustomTextFieldState extends State<CustomTextField>
     this.colorAnimation.dispose();
     this.suffixSizeAnimation.dispose();
     this.underlineWidthAnimation.dispose();
-    this._inputcontroller.dispose();
+    widget._inputcontroller.dispose();
     widget._focusNode.dispose();
     super.dispose();
   }
@@ -394,14 +390,6 @@ class CustomTextFieldState extends State<CustomTextField>
     return vis;
   }
 
-  String getInput() {
-    return this._inputcontroller.text;
-  }
-
-  bool isEmpty() {
-    return this._inputcontroller.text == "";
-  }
-
   Widget getInputField() {
     return TextField(
       enabled: !widget.disabled.value,
@@ -409,7 +397,7 @@ class CustomTextFieldState extends State<CustomTextField>
       textInputAction: widget.keyboardAction,
       keyboardType: widget.keyboardType,
       focusNode: widget._focusNode,
-      controller: this._inputcontroller,
+      controller: widget._inputcontroller,
       maxLines: 1,
       style: TextStyle(fontSize: 18),
       autofocus: widget.isAutoFocus,
@@ -451,7 +439,7 @@ class CustomTextFieldState extends State<CustomTextField>
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,
         errorText: this.isCorrect ||
-                (!this.isCorrect && this._inputcontroller.text.isEmpty) || widget.disabled.value
+                (!this.isCorrect && widget._inputcontroller.text.isEmpty) || widget.disabled.value
             ? null
             : widget.errorText,
         suffixIcon: Transform.translate(
@@ -477,10 +465,6 @@ class CustomTextFieldState extends State<CustomTextField>
       double gap = this.firstWidth - this.lengthAnimation.getValue();
       return gap / 2;
     }
-  }
-
-  void addListener(Function f) {
-    this._inputcontroller.addListener(f);
   }
 
   @override

@@ -48,8 +48,8 @@ class Login extends StatelessWidget {
       tapFunc: () async {
         EasyLoading.show(status: "Logining...");
         this.nextButton.setDisabled(true);
-        String emailVal = this.emailField.getInput();
-        String passwordVal = this.passwordField.getInput();
+        String emailVal = this.emailField.getValue();
+        String passwordVal = this.passwordField.getValue();
         this.login(emailVal, passwordVal, context);
       },
     );
