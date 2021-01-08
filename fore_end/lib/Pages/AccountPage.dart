@@ -132,7 +132,7 @@ class PageState extends State<AccountPage> {
                onPressed:  () async {
                  User user= User.getInstance();
                  List<String> basicInfo = new List<String>();
-                 basicInfo= this.basicInfoEditableArea.getValue();
+                 basicInfo= this.basicInfoEditableArea.getAllValue();
                  user.userName=basicInfo[0];
                  user.gender=widget.setGender(basicInfo[1]);
                  user.age=int.parse(basicInfo[2]);
