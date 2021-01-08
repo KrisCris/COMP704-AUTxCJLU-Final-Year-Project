@@ -7,22 +7,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
+import 'package:fore_end/interface/Themeable.dart';
 
-class UpdatePwdPage extends StatefulWidget {
 import 'AccountPage.dart';
 
-
-
-
+class UpdatePwdPage extends StatefulWidget {
   @override
   UpdatePasswordPageState createState() => UpdatePasswordPageState();
 }
 
+
 class UpdatePasswordPageState extends State<UpdatePwdPage> {
   // FocusNode focusNode = new FocusNode();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController codeController = TextEditingController();
   TextEditingController pwdOneController = TextEditingController();
@@ -30,8 +31,18 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
   CustomButton saveButton;
   CustomTextField emailTextField;
-  CustomTextField pwdTextField;
+  CustomTextField pwdOneTextField;
+  CustomTextField pwdTwoTextField;
+  CustomTextField oldPasswordTextField;
   VerifyCodeInputer verifyTextField;
+
+  bool verifySuccess= false;
+  bool oldPasswordDone=false;
+  bool passwordDone = false;
+  bool repasswordDone = false;
+  String currentPassword;
+  CustomButton nextButton;
+  CustomButton backButton;
 
 
   @override
@@ -44,35 +55,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     // String email = emailController.text;
   }
 
-
-    //不能和原来的一样，用户输入完成后点击确认，先把数据发送给服务器，再去更新本地数据。
-    String newUserAge=this._userNameController.text;
-    User user= User.getInstance();
-    // user.age=int.parse(newUserAge);
-    try{
-      Response res = await Requests.modifyBasicInfo({
-        "uid": user.uid,
-        "token": user.token,
-        "age": newUserAge,
-        "gender": user.gender,
-        "nickname": user.userName,
-      });
-      if (res.data['code'] == 1) {
-        EasyLoading.showSuccess("Change success!",
-            duration: Duration(milliseconds: 2000));
-        user.age=int.parse(newUserAge);
-        user.save();
-        print("修改成功！！！！");
-      }
-    } on DioError catch(e){
-      print("Exception when sign up\n");
-      print(e.toString());
-    }
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) {return AccountPage();},
-      maintainState: false,
-    ));
+    Future<void> _confirm() async {
 
   }
 
@@ -90,7 +73,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       placeholder: 'Email',
       inputType: InputFieldType.email,
       theme: MyTheme.blueStyle,
-      autoChangeState: false,
+      // autoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "Please input correct email!",
@@ -118,21 +101,143 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       },
     );
 
-    this.verifyTextField = VerifyCodeInputer(
-      onCheckSuccess: (){ },
-      onCheckFailed: (){},
-      emailField: this.emailTextField,
-    );
 
-    this.pwdTextField=CustomTextField(
-      placeholder: 'password',
-      // next: this.confirmPasswordTextField.getFocusNode(),
+    this.oldPasswordTextField= CustomTextField(
+
+      placeholder: 'Old password',
+      // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
       theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
-      // helpText: "At least 6 length, contain number \nand english characters",
+      helpText: "At least 7 length",
       maxlength: 30,
+      onCorrect: (){
+        this.oldPasswordDone=true;
+      },
+
+
     );
+
+    this.verifyTextField = VerifyCodeInputer(
+      onCheckSuccess: (){ this.nextButton.setDisable(false); this.verifySuccess=true;},
+      onCheckFailed: (){this.nextButton.setDisable(true);},
+      emailField: this.emailTextField,
+    );
+
+    this.pwdOneTextField=CustomTextField(
+      placeholder: 'New password',
+      // next: pwdTwoTextField.getFocusNode(),
+      inputType: InputFieldType.password,
+      theme: MyTheme.blueStyle,
+      width: ScreenTool.partOfScreenWidth(0.7),
+      helpText: "At least 7 length",
+      maxlength: 30,
+
+      onCorrect: () {
+        this.passwordDone = true;
+        if (this.pwdTwoTextField.getInput() !=
+            this.pwdOneTextField.getInput() &&
+            !this.pwdTwoTextField.isEmpty()) {
+          this.pwdTwoTextField.setError();
+          this.repasswordDone = false;
+          this.nextButton.setDisable(true);
+        }
+        if (this.passwordDone && this.repasswordDone&&this.verifySuccess&&this.oldPasswordDone) {
+          this.nextButton.setDisable(false);
+        }
+      },
+      onError: () {
+        this.passwordDone = false;
+        this.nextButton.setDisable(true);
+      },
+    );
+
+    this.pwdTwoTextField=CustomTextField(
+      placeholder: 'Confirm password',
+      helpText: "re-enter the password",
+      // next: this.confirmPasswordTextField.getFocusNode(),
+      inputType: InputFieldType.password,
+      theme: MyTheme.blueStyle,
+      isAutoChangeState: false,
+      width: ScreenTool.partOfScreenWidth(0.7),
+
+      maxlength: 30,
+      onCorrect: () {
+        if (this.pwdTwoTextField.getInput() ==
+            this.pwdOneTextField.getInput()) {
+          //correct
+          this.repasswordDone = true;
+          this.pwdTwoTextField.setCorrect();
+          if (this.passwordDone  && this.repasswordDone&&this.verifySuccess&this.oldPasswordDone) {
+            this.nextButton.setDisable(false);
+          }
+        } else {
+          this.repasswordDone = false;
+          this.pwdTwoTextField.setError();
+          this.nextButton.setDisable(true);
+          this.pwdTwoTextField.setErrorText("two password different");  //bug有一个就是如果先输入pwdTwo的密码再输入pwdOne会显示不一样，就是这个验证的顺序问题，回头可能要改
+        }
+      },
+      onError: () {
+        this.repasswordDone = false;
+        this.pwdTwoTextField.setError();
+        this.nextButton.setDisable(true);
+        this.pwdTwoTextField.setErrorText("two password different");
+      },
+
+    );
+
+
+
+    this.backButton = CustomButton(
+      firstReactState: ComponentReactState.able,
+      text: "Back",
+      isBold: true,
+      rightMargin: 20,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.3),
+      theme: MyTheme.blueStyle,
+      tapFunc: (){
+        Navigator.pop(context);
+      },
+    );
+
+    this.nextButton = CustomButton(
+      firstReactState: ComponentReactState.disabled,
+      text: "Save",
+      isBold: true,
+      rightMargin: 20,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.3),
+      theme: MyTheme.blueStyle,
+    );
+
+    nextButton.tapFunc = () async {
+      User user= User.getInstance();
+      String oldPassword=oldPasswordTextField.getInput();
+      String newPassword=pwdTwoTextField.getInput();
+
+      try{
+        Response res = await Requests.modifyBasicInfo({
+          "uid": user.uid,
+          "token": user.token,
+          "password": oldPassword,
+          "new_password": newPassword,
+
+        });
+        if (res.data['code'] == 1) {
+          EasyLoading.showSuccess("Change success!",
+              duration: Duration(milliseconds: 2000));
+        }
+      } on DioError catch(e){
+        print("Exception when change password\n");
+        print(e.toString());
+      }
+
+      Navigator.pop(context);
+    };
+
+
 
 
     return FlutterEasyLoading(
@@ -141,7 +246,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
             children: <Widget>[
               Container(
               // margin: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(ScreenTool.partOfScreenWidth(20),20,10,10),
+              margin: EdgeInsets.fromLTRB(60,20,10,10),
               child: Text(
                 "Change login PASSWORD",
                 style: TextStyle(
@@ -149,39 +254,61 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
                   fontSize: 35,
                   fontFamily: "Futura",
                 ),
-
                 ),
               ),
+
+              SizedBox( height:  20,),
+
               Container(
                 decoration: BoxDecoration(
-                    border: Border.all(),
+                    // border: Border.all(),
                   ),
-                padding: EdgeInsets.fromLTRB(20, 1, 1, 20),
+                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
                 child:this.emailTextField,
               ),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(),
+                  // border: Border.all(),
                 ),
-                padding: EdgeInsets.fromLTRB(20, 1, 1, 20),
+                padding: EdgeInsets.fromLTRB(20, 1, 1, 10),
                 child:this.verifyTextField,
               ),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(),
+                  // border: Border.all(),
                 ),
-                padding: EdgeInsets.fromLTRB(20, 1, 1, 20),
-                child:this.pwdTextField,
+                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+                child:this.oldPasswordTextField,
               ),
-
-
-
+              Container(
+                decoration: BoxDecoration(
+                  // border: Border.all(),
+                ),
+                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+                child:this.pwdOneTextField,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  // border: Border.all(),
+                ),
+                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+                child:this.pwdTwoTextField,
+              ),
               SizedBox(height: 30,),
 
-              OutlineButton(
-                borderSide: BorderSide.none,
-                child: Text("Save",style: TextStyle(color: Colors.black54,fontSize: 30),),
-              )
+              Container(
+                decoration: BoxDecoration(
+                  // border: Border.all(),
+                ),
+                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+                child:Row(
+                  children: [
+                    this.backButton,
+                    this.nextButton,
+                  ],
+                ),
+              ),
+
             ],
           ),
         ),
@@ -190,44 +317,3 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
   }
 }
 
-// TextField(
-// controller: emailController,
-// // maxLength: 16,
-// keyboardType: TextInputType.number,
-// decoration: new InputDecoration(
-// prefixIcon: Icon(FontAwesomeIcons.envelope),
-// labelText: "Email Address",
-// labelStyle: TextStyle(color: Colors.blue),
-// // helperText: "Please input your age",
-// helperStyle: TextStyle(color: Colors.green),
-//
-// border: OutlineInputBorder(
-// borderRadius: BorderRadius.all(Radius.circular(10)),
-// borderSide: BorderSide(
-// color: Colors.red,
-// width: 2.0,
-// ),
-// ),
-// enabledBorder: OutlineInputBorder(
-// borderRadius: BorderRadius.all(Radius.circular(10)),
-// borderSide: BorderSide(
-// color: Colors.grey,
-// width: 2.0,
-// ),
-// ),
-// disabledBorder: OutlineInputBorder(
-// borderRadius: BorderRadius.all(Radius.circular(10)),
-// borderSide: BorderSide(
-// color: Colors.red,
-// width: 2.0,
-// ),
-// ),
-// focusedBorder: OutlineInputBorder(
-// borderRadius: BorderRadius.all(Radius.circular(10)),
-// borderSide: BorderSide(
-// color: Colors.blue,
-// width: 2.0,
-// ),
-// ),
-// )
-// ),

@@ -14,8 +14,8 @@ class SettingItem extends StatefulWidget {
   final Widget leftIcon; //左侧图片
   final bool isRight; //是否显示右侧
   final bool isRightImage; //是否显示右侧图片
-  final String rightImageUri; //右侧图片地址
   final bool isRightText; //是否显示右侧文字
+  bool isRightUneditText;
   final Widget rightImage;
   final bool isChange;
   double inputFieldWidth;
@@ -32,8 +32,8 @@ class SettingItem extends StatefulWidget {
     String rightText = "",
     this.isRight = true,
     this.isRightImage = false,
-    this.rightImageUri = "",
     this.isRightText = true,
+    this.isRightUneditText=false,
     this.onTap,
     this.rightImage,
     this.isChange = true,
@@ -74,7 +74,9 @@ class SettingItem extends StatefulWidget {
 class ItemState extends State<SettingItem> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+        onTap: widget.onTap,
+        child:Container(
       width: double.infinity,
       height: 60,
       color: Colors.white,
@@ -94,13 +96,20 @@ class ItemState extends State<SettingItem> {
           Offstage(
               offstage: !widget.isRightText,
               child: Transform.translate(
-                  offset: Offset(0, 13), child: widget.textField)),
+                  offset: Offset(57, 13), child: widget.textField)),
+          //通过调整Offset的位置来和其他的text对其，因为本身这个textfield的文字是居中的。
+          Offstage(
+              offstage: !widget.isRightUneditText,
+              child: Transform.translate(
+                  offset: Offset(0, 3), child: Text(widget.rightText, style: TextStyle(
+                  fontSize: 16.0, color: Colors.black),))),
           Offstage(
             offstage: !widget.isRightImage,
             child: widget.image,
           ),
         ],
       ),
+    )
     );
   }
 }
