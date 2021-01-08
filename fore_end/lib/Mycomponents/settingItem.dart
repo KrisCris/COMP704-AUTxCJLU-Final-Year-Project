@@ -90,13 +90,7 @@ class ItemState extends State<SettingItem>
 with DisableStateMixIn{
   @override
   void initState() {
-    widget.disabled.addListener(() {
-      if(widget.disabled.value){
-        this.setDisabled();
-      }else{
-        this.setEnabled();
-      }
-    });
+    this.initDisableListener(widget.disabled);
     super.initState();
   }
 

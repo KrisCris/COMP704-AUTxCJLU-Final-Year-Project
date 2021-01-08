@@ -238,13 +238,6 @@ class CustomTextFieldState extends State<CustomTextField>
         )
     );
     this.prev = widget.defaultContent;
-    widget.disabled.addListener(() {
-      if(widget.disabled.value){
-        this.setDisabled();
-      }else{
-        this.setEnabled();
-      }
-    });
     this.initColor();
     for (Function f in widget.listenerList) {
       widget.addListener(f);
@@ -337,6 +330,12 @@ class CustomTextFieldState extends State<CustomTextField>
       this.setNormal();
       this.suffixSizeAnimation.reverse();
     });
+    if(widget.disabled.value){
+      this.setDisabled();
+    }else{
+      this.setEnabled();
+    }
+    this.initDisableListener(widget.disabled);
   }
 
   void initColor() {

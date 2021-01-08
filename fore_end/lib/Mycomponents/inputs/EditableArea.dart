@@ -12,19 +12,22 @@ import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
-class EditableArea extends StatefulWidget with ThemeWidgetMixIn {
+class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
   List<Widget> displayContent;
+  CustomIconButton editButton;
+  bool editing;
   double width;
   double height;
   double borderRadius;
   String title;
-  EditableAreaState state;
+  ComponentThemeState the;
   EditableArea(
       {Key key,
       @required MyTheme theme,
       @required this.displayContent,
       this.width = 300,
       this.height = 500,
+        this.editing = false,
         this.borderRadius = 12,
       this.title = ""})
       : super(key: key) {
@@ -35,45 +38,17 @@ class EditableArea extends StatefulWidget with ThemeWidgetMixIn {
     if (this.height <= 1) {
       this.height = ScreenTool.partOfScreenHeight(this.height);
     }
-  }
-  List<String> getValue(){
-      return this.state.getAll();
-  }
-  @override
-  State<StatefulWidget> createState() {
-    this.state = new EditableAreaState(
-        ComponentReactState.able, ComponentThemeState.normal);
-    return this.state;
-  }
-}
-
-class EditableAreaState extends State<EditableArea>
-    with TickerProviderStateMixin, ThemeStateMixIn {
-  bool editing;
-  ComponentReactState rea;
-  ComponentThemeState the;
-
-  CustomIconButton editButton;
-
-  EditableAreaState(ComponentReactState rea, ComponentThemeState the) {
-    this.rea = rea;
-    this.the = the;
-  }
-  @override
-  void initState() {
-    this.editing = false;
     this.disableAll();
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: widget.width,
-        height: widget.height,
+        width: this.width,
+        height: this.height,
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
+            borderRadius: BorderRadius.all(Radius.circular(this.borderRadius)),
             boxShadow: [
               BoxShadow(
                 blurRadius: 12, //阴影范围
@@ -93,11 +68,11 @@ class EditableAreaState extends State<EditableArea>
         children: [
           SizedBox(width: 20),
           Expanded(
-            child: Text(widget.title,
+            child: Text(this.title,
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
                     fontSize: 17,
-                    color: widget.theme.getThemeColor(this.the),
+                    color: this.theme.getThemeColor(this.the),
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.bold)),
           ),
@@ -109,7 +84,7 @@ class EditableAreaState extends State<EditableArea>
         width: 10,
       )
     ];
-    for (Widget wd in widget.displayContent) {
+    for (Widget wd in this.displayContent) {
       widgets.add(wd);
     }
     return widgets;
@@ -135,8 +110,17 @@ class EditableAreaState extends State<EditableArea>
     return this.editButton;
   }
 
+  void startEdit(BuildContext context) {
+    this.editing = true;
+    this.enableAll();
+  }
+
+  void endEdit() {
+    this.editing = false;
+    this.disableAll();
+  }
   void disableAll() {
-    for (Widget wd in widget.displayContent) {
+    for (Widget wd in this.displayContent) {
       if(wd is DisableWidgetMixIn){
         (wd as DisableWidgetMixIn).setDisabled(true);
       }
@@ -144,19 +128,18 @@ class EditableAreaState extends State<EditableArea>
   }
 
   void enableAll({Function(CustomTextField) doOnFirstOne}) {
-    for (Widget wd in widget.displayContent) {
+    for (Widget wd in this.displayContent) {
       if(wd is DisableWidgetMixIn){
         (wd as DisableWidgetMixIn).setDisabled(false);
       }
     }
   }
-
   List<String> getAll(){
     List<String> res = new List<String>();
-    for (Widget wd in widget.displayContent) {
-     if( wd is ValueableWidgetMixIn<String>){
-       res.add((wd as ValueableWidgetMixIn).getValue());
-     }
+    for (Widget wd in this.displayContent) {
+      if( wd is ValueableWidgetMixIn<String>){
+        res.add((wd as ValueableWidgetMixIn).getValue());
+      }
     }
     return res;
   }
@@ -164,7 +147,7 @@ class EditableAreaState extends State<EditableArea>
     Map<String,String> res = new Map<String,String>();
 
     int i=0;
-    for(Widget wd in widget.displayContent){
+    for(Widget wd in this.displayContent){
       if(!(wd is ValueableWidgetMixIn))continue;
       if(keys.length <= i){
         String key = "name-"+(i-keys.length).toString();
@@ -176,14 +159,144 @@ class EditableAreaState extends State<EditableArea>
     }
     return res;
   }
-  void startEdit(BuildContext context) {
-    this.editing = true;
-    this.enableAll(doOnFirstOne: (CustomTextField f){
-    });
-  }
-
-  void endEdit() {
-    this.editing = false;
-    this.disableAll();
-  }
 }
+
+// class EditableAreaState extends State<EditableArea>
+//     with TickerProviderStateMixin, ThemeStateMixIn {
+//
+//   ComponentReactState rea;
+//
+//
+//   EditableAreaState(ComponentReactState rea, ComponentThemeState the) {
+//     this.rea = rea;
+//     this.the = the;
+//   }
+//   @override
+//   void initState() {
+//     this.editing = false;
+//     this.disableAll();
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//         width: widget.width,
+//         height: widget.height,
+//         decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
+//             boxShadow: [
+//               BoxShadow(
+//                 blurRadius: 12, //阴影范围
+//                 spreadRadius: 3, //阴影浓度
+//                 color: Color(0x33000000), //阴影颜色
+//               ),
+//             ]),
+//         child: Column(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             children: this.getColumn(context)));
+//   }
+//
+//   List<Widget> getColumn(BuildContext context) {
+//     List<Widget> widgets = [
+//       SizedBox(height: 10),
+//       Row(
+//         children: [
+//           SizedBox(width: 20),
+//           Expanded(
+//             child: Text(widget.title,
+//                 textDirection: TextDirection.ltr,
+//                 style: TextStyle(
+//                     fontSize: 17,
+//                     color: widget.theme.getThemeColor(this.the),
+//                     decoration: TextDecoration.none,
+//                     fontWeight: FontWeight.bold)),
+//           ),
+//           this.getEditButton(context),
+//           SizedBox(width: 10)
+//         ],
+//       ),
+//       SizedBox(
+//         width: 10,
+//       )
+//     ];
+//     for (Widget wd in widget.displayContent) {
+//       widgets.add(wd);
+//     }
+//     return widgets;
+//   }
+//
+//   CustomIconButton getEditButton(BuildContext context) {
+//     this.editButton = CustomIconButton(
+//       disabled: false,
+//       theme: MyTheme.blueStyle,
+//       icon: FontAwesomeIcons.edit,
+//       backgroundOpacity: 0,
+//       iconSize: 25,
+//     );
+//     this.editButton.onClick = (){
+//       if(!this.editing){
+//         this.editButton.changeIcon(FontAwesomeIcons.check);
+//         this.startEdit(context);
+//       }else{
+//         this.editButton.changeIcon(FontAwesomeIcons.edit);
+//         this.endEdit();
+//       }
+//     };
+//     return this.editButton;
+//   }
+//
+//   void disableAll() {
+//     for (Widget wd in widget.displayContent) {
+//       if(wd is DisableWidgetMixIn){
+//         (wd as DisableWidgetMixIn).setDisabled(true);
+//       }
+//     }
+//   }
+//
+//   void enableAll({Function(CustomTextField) doOnFirstOne}) {
+//     for (Widget wd in widget.displayContent) {
+//       if(wd is DisableWidgetMixIn){
+//         (wd as DisableWidgetMixIn).setDisabled(false);
+//       }
+//     }
+//   }
+//
+//   List<String> getAll(){
+//     List<String> res = new List<String>();
+//     for (Widget wd in widget.displayContent) {
+//      if( wd is ValueableWidgetMixIn<String>){
+//        res.add((wd as ValueableWidgetMixIn).getValue());
+//      }
+//     }
+//     return res;
+//   }
+//   Map<String,String> getMapWithValue(List<String> keys){
+//     Map<String,String> res = new Map<String,String>();
+//
+//     int i=0;
+//     for(Widget wd in widget.displayContent){
+//       if(!(wd is ValueableWidgetMixIn))continue;
+//       if(keys.length <= i){
+//         String key = "name-"+(i-keys.length).toString();
+//         res[key] = (wd as ValueableWidgetMixIn).getValue();
+//       }else{
+//         res.addAll((wd as ValueableWidgetMixIn).getValueWithKey(keys[i]));
+//       }
+//       i++;
+//     }
+//     return res;
+//   }
+//
+//   void startEdit(BuildContext context) {
+//     this.editing = true;
+//     this.enableAll(doOnFirstOne: (CustomTextField f){
+//     });
+//   }
+//
+//   void endEdit() {
+//     this.editing = false;
+//     this.disableAll();
+//   }
+// }
