@@ -13,8 +13,13 @@ class ComponentTestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackGround(
       opacity: 0.5,
-      child: ExpandInputField(
-        width: 0.5,
+      child: EditableArea(
+        theme: MyTheme.blueStyle,
+        title: "TEST",
+        displayContent: [
+          CustomTextField(theme: MyTheme.blueStyle),
+          CustomTextField(theme: MyTheme.blueStyle),
+        ],
       )
     );
   }

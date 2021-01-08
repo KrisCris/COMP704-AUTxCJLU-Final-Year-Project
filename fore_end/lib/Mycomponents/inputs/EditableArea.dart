@@ -41,6 +41,7 @@ class EditableArea extends StatelessWidget
     if (this.height <= 1) {
       this.height = ScreenTool.partOfScreenHeight(this.height);
     }
+    this.the = ComponentThemeState.normal;
     this.disableAll();
   }
 
