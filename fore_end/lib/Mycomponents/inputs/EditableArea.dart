@@ -8,7 +8,9 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
+import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import 'package:fore_end/interface/Valueable.dart';
 
 class EditableArea extends StatefulWidget with ThemeWidgetMixIn {
   List<Widget> displayContent;
@@ -133,54 +135,30 @@ class EditableAreaState extends State<EditableArea>
     return this.editButton;
   }
 
-  void disableAll({Function(CustomTextField) doOnFirstOne}) {
-    int i = 0;
+  void disableAll() {
     for (Widget wd in widget.displayContent) {
-      if (wd is CustomTextField) {
-        i++;
-        if(i == 1 && doOnFirstOne != null){
-          doOnFirstOne(wd);
-        }
-        (wd as CustomTextField).setDisabled(true);
-      }else if(wd is SettingItem){
-        i++;
-        if(i == 1 && doOnFirstOne != null){
-          doOnFirstOne(wd.getInpuitField());
-        }
-        (wd as SettingItem).getInpuitField().setDisabled(true);
+      if(wd is DisableWidgetMixIn){
+        (wd as DisableWidgetMixIn).setDisabled(true);
       }
     }
   }
 
   void enableAll({Function(CustomTextField) doOnFirstOne}) {
-    int i = 0;
     for (Widget wd in widget.displayContent) {
-      if (wd is CustomTextField) {
-        (wd as CustomTextField).setDisabled(false);
-        i++;
-        if(i == 1 && doOnFirstOne != null){
-          doOnFirstOne(wd);
-        }
-      }else if(wd is SettingItem){
-        (wd as SettingItem).getInpuitField().setDisabled(false);
-        i++;
-        if(i == 1 && doOnFirstOne != null){
-          doOnFirstOne(wd.getInpuitField());
-        }
+      if(wd is DisableWidgetMixIn){
+        (wd as DisableWidgetMixIn).setDisabled(false);
       }
     }
   }
 
   List<String> getAll(){
     List<String> res = new List<String>();
-
     for (Widget wd in widget.displayContent) {
-      if (wd is CustomTextField) {
-        res.add((wd as CustomTextField).getValue());
-      }else if(wd is SettingItem){
-        res.add((wd as SettingItem).getInpuitField().getValue());
-      }
+     if( wd is ValueableWidgetMixIn<String>){
+       res.add((wd as ValueableWidgetMixIn).getValue());
+     }
     }
+    return res;
   }
 
   void startEdit(BuildContext context) {

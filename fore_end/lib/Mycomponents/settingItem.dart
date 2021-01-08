@@ -4,11 +4,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/interface/Disable.dart';
+import 'package:fore_end/interface/Valueable.dart';
 
 import 'inputs/CustomTextField.dart';
 
 /// 个人信息设置页Item
-class SettingItem extends StatefulWidget {
+class SettingItem extends StatefulWidget
+with DisableWidgetMixIn,ValueableWidgetMixIn<String>{
   String leftText; //左侧显示文字
   String rightText; //右侧显示文字
   final Widget leftIcon; //左侧图片
@@ -27,6 +30,8 @@ class SettingItem extends StatefulWidget {
 
   SettingItem({
     Key key,
+    bool disabled = false,
+    bool canChangeDisabled = true,
     this.leftText = "",
     this.leftIcon,
     String rightText = "",
@@ -43,7 +48,12 @@ class SettingItem extends StatefulWidget {
   }) : super(key: key) {
     this.rightText = rightText;
     this.inputFieldWidth = ScreenTool.partOfScreenWidth(this.inputFieldWidth);
+    this.canChangeDisable = canChangeDisabled;
+    this.disabled = new ValueNotifier(disabled);
+
     this.textField = CustomTextField(
+      disabled: disabled,
+      canChangeDisabled: canChangeDisabled,
       theme: MyTheme.blueStyle,
       defaultContent: this.rightText,
       ulDefaultWidth: 0,
@@ -69,9 +79,27 @@ class SettingItem extends StatefulWidget {
     this.state = new ItemState();
     return this.state;
   }
+
+  @override
+  getValue() {
+      return this.textField.getValue();
+  }
 }
 
-class ItemState extends State<SettingItem> {
+class ItemState extends State<SettingItem>
+with DisableStateMixIn{
+  @override
+  void initState() {
+    widget.disabled.addListener(() {
+      if(widget.disabled.value){
+        this.setDisabled();
+      }else{
+        this.setEnabled();
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,5 +130,15 @@ class ItemState extends State<SettingItem> {
         ],
       ),
     );
+  }
+
+  @override
+  void setDisabled() {
+    widget.textField.setDisabled(true);
+  }
+
+  @override
+  void setEnabled() {
+    widget.textField.setDisabled(false);
   }
 }
