@@ -15,6 +15,7 @@ import 'package:fore_end/interface/Valueable.dart';
 class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
   List<Widget> displayContent;
   CustomIconButton editButton;
+  Function onEditComplete;
   bool editing;
   double width;
   double height;
@@ -29,6 +30,7 @@ class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
       this.height = 500,
         this.editing = false,
         this.borderRadius = 12,
+        @required this.onEditComplete,
       this.title = ""})
       : super(key: key) {
     this.theme = theme;
@@ -118,6 +120,9 @@ class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
   void endEdit() {
     this.editing = false;
     this.disableAll();
+    if(this.onEditComplete != null){
+      this.onEditComplete();
+    }
   }
   void disableAll() {
     for (Widget wd in this.displayContent) {
