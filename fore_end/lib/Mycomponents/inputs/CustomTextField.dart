@@ -59,6 +59,7 @@ class CustomTextField extends StatefulWidget
 
   CustomTextField({
     bool disabled = false,
+    bool canChangeDisable = false,
     this.placeholder,
     this.inputType = InputFieldType.text,
     this.isAutoCheck = true,
@@ -86,6 +87,7 @@ class CustomTextField extends StatefulWidget
   }) : super(key: key) {
     this.theme = theme;
     this.disabled = new ValueNotifier<bool>(disabled);
+    this.canChangeDisable = canChangeDisable;
     if (this.ulFocusedWidth == null) {
       this.ulFocusedWidth = CustomTextField.WIDTH_TF_FOCUSED;
     }
@@ -140,10 +142,6 @@ class CustomTextField extends StatefulWidget
     return this.st.isCorrect;
   }
 
-  bool isChange() {
-    return this.st.isCorrect;
-  }
-
   void clearInput() {
     this.st._inputcontroller.clear();
   }
@@ -153,10 +151,6 @@ class CustomTextField extends StatefulWidget
       this.listenerList.add(f);
     else
       this.st.addListener(f);
-  }
-
-  void addFunctionWhenCouldFocus(Function f) {
-    this.doWhenCouldfocus.add(f);
   }
 
   void setError() {

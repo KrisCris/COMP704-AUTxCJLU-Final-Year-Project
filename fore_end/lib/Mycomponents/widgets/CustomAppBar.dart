@@ -77,7 +77,7 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
           ExpandInputField(
             width: 0.4,
             foregroundColor: Colors.white,
-            disabled: false),
+            disabled: this.headerTransparency.getValue() == 0),
           SizedBox(width: 5)
         ],
       ),
