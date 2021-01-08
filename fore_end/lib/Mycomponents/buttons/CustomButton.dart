@@ -83,6 +83,7 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
       this.sizeChangeMode = 0,
       this.isBold = false,
         bool disabled = false,
+        bool canChangeDisabled = true,
       this.radius = 30.0,
       this.width = 120.0,
       this.height = 40.0,
@@ -103,6 +104,7 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
       Key key})
       : super(key: key) {
     this.theme = theme;
+    this.canChangeDisable = canChangeDisabled;
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
     this.textColor = CalculatableColor.transform(this.theme.lightTextColor);
