@@ -1,11 +1,10 @@
-import torch
+import base64
 from flask import Blueprint, request
 from flasgger import swag_from
 from werkzeug.security import generate_password_hash
 
 from db.User import User
 import util.user as func
-from cv.detect import detect
 
 user = Blueprint('user', __name__)
 
@@ -231,6 +230,9 @@ def modify_basic_info():
     gender = request.form.get('gender')
     age = request.form.get('age')
 
+    _test = nickname.replace(' ', '')
+    if _test == '':
+        return func.reply_json(-9)
     u = User.getUserByID(uid)
     u.nickname = nickname
     u.gender = gender
@@ -239,9 +241,15 @@ def modify_basic_info():
     return func.reply_json(1)
 
 
-# test
-@user.route('detect')
-def d():
-    with torch.no_grad():
-        detect()
+@user.route('modify_avatar', methods=['POST'])
+@func.require_login
+def modify_avatar():
+    uid = request.form.get('uid')
+    avatar_data = base64.b64decode(request.form.get('avatar'))
+    u = User.getUserByID(uid)
+    if u.avatar == "static/user/avatar/default.png":
+        u.avatar = "static/user/avatar/" + str(u.id) + ".png"
+        u.add()
+    with open(u.avatar, 'wb') as avatar:
+        avatar.write(avatar_data)
     return func.reply_json(1)

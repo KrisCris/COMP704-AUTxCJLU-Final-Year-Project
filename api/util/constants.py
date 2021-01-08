@@ -25,6 +25,7 @@ ENV = 'development'
 
 # CODE
 REPLY_CODES = {
+    -9: 'Bad Format',
     -8: 'Code Check Required',
     -7: 'Too Often',
     -6: 'Not Exist',
