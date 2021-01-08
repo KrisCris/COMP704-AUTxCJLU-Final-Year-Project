@@ -12,7 +12,8 @@ import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
-class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
+class EditableArea extends StatelessWidget
+    with ThemeWidgetMixIn {
   List<Widget> displayContent;
   CustomIconButton editButton;
   Function onEditComplete;
@@ -139,7 +140,7 @@ class EditableArea extends StatelessWidget with ThemeWidgetMixIn {
       }
     }
   }
-  List<String> getAll(){
+  List<String> getAllValue(){
     List<String> res = new List<String>();
     for (Widget wd in this.displayContent) {
       if( wd is ValueableWidgetMixIn<String>){

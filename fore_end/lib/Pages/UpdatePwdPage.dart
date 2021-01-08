@@ -82,7 +82,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
         // if (!this.counter.isStop()) return;
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
-          "email":this.emailTextField.getInput()
+          "email":this.emailTextField.getValue()
         });
         if(res.data['code'] == 1){
           this.verifyTextField.setButtonDisabled(false);
@@ -119,8 +119,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     this.verifyTextField = VerifyCodeInputer(
-      onCheckSuccess: (){ this.nextButton.setDisable(false); this.verifySuccess=true;},
-      onCheckFailed: (){this.nextButton.setDisable(true);},
+      onCheckSuccess: (){ this.nextButton.setDisabled(false); this.verifySuccess=true;},
+      onCheckFailed: (){this.nextButton.setDisabled(true);},
       emailField: this.emailTextField,
     );
 
@@ -135,20 +135,20 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
       onCorrect: () {
         this.passwordDone = true;
-        if (this.pwdTwoTextField.getInput() !=
-            this.pwdOneTextField.getInput() &&
+        if (this.pwdTwoTextField.getValue() !=
+            this.pwdOneTextField.getValue() &&
             !this.pwdTwoTextField.isEmpty()) {
           this.pwdTwoTextField.setError();
           this.repasswordDone = false;
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
         }
         if (this.passwordDone && this.repasswordDone&&this.verifySuccess&&this.oldPasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.passwordDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -163,25 +163,25 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
       maxlength: 30,
       onCorrect: () {
-        if (this.pwdTwoTextField.getInput() ==
-            this.pwdOneTextField.getInput()) {
+        if (this.pwdTwoTextField.getValue() ==
+            this.pwdOneTextField.getValue()) {
           //correct
           this.repasswordDone = true;
           this.pwdTwoTextField.setCorrect();
           if (this.passwordDone  && this.repasswordDone&&this.verifySuccess&this.oldPasswordDone) {
-            this.nextButton.setDisable(false);
+            this.nextButton.setDisabled(false);
           }
         } else {
           this.repasswordDone = false;
           this.pwdTwoTextField.setError();
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
           this.pwdTwoTextField.setErrorText("two password different");  //bug有一个就是如果先输入pwdTwo的密码再输入pwdOne会显示不一样，就是这个验证的顺序问题，回头可能要改
         }
       },
       onError: () {
         this.repasswordDone = false;
         this.pwdTwoTextField.setError();
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         this.pwdTwoTextField.setErrorText("two password different");
       },
 
@@ -190,7 +190,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
 
     this.backButton = CustomButton(
-      firstReactState: ComponentReactState.able,
+      disabled: false,
       text: "Back",
       isBold: true,
       rightMargin: 20,
@@ -203,7 +203,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     this.nextButton = CustomButton(
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       text: "Save",
       isBold: true,
       rightMargin: 20,
@@ -214,8 +214,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
     nextButton.tapFunc = () async {
       User user= User.getInstance();
-      String oldPassword=oldPasswordTextField.getInput();
-      String newPassword=pwdTwoTextField.getInput();
+      String oldPassword=oldPasswordTextField.getValue();
+      String newPassword=pwdTwoTextField.getValue();
 
       try{
         Response res = await Requests.modifyBasicInfo({
