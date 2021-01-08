@@ -110,6 +110,13 @@ class Requests{
     return res;
   }
 
+  static Future<Response> modifyPassword(data) async{
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/user/modify_password",data: dt);
+    return res;
+  }
+
   static Future<Response> checkEmailRepeat(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
