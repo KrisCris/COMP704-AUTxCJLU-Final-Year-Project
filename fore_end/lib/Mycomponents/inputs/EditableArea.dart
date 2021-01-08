@@ -160,7 +160,22 @@ class EditableAreaState extends State<EditableArea>
     }
     return res;
   }
+  Map<String,String> getMapWithValue(List<String> keys){
+    Map<String,String> res = new Map<String,String>();
 
+    int i=0;
+    for(Widget wd in widget.displayContent){
+      if(!(wd is ValueableWidgetMixIn))continue;
+      if(keys.length <= i){
+        String key = "name-"+(i-keys.length).toString();
+        res[key] = (wd as ValueableWidgetMixIn).getValue();
+      }else{
+        res.addAll((wd as ValueableWidgetMixIn).getValueWithKey(keys[i]));
+      }
+      i++;
+    }
+    return res;
+  }
   void startEdit(BuildContext context) {
     this.editing = true;
     this.enableAll(doOnFirstOne: (CustomTextField f){
