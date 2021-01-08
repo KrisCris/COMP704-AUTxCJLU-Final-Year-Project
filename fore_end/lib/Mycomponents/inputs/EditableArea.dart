@@ -176,9 +176,9 @@ class EditableAreaState extends State<EditableArea>
 
     for (Widget wd in widget.displayContent) {
       if (wd is CustomTextField) {
-        res.add((wd as CustomTextField).getInput());
+        res.add((wd as CustomTextField).getValue());
       }else if(wd is SettingItem){
-        res.add((wd as SettingItem).getInpuitField().getInput());
+        res.add((wd as SettingItem).getInpuitField().getValue());
       }
     }
   }

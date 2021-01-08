@@ -97,7 +97,7 @@ class Register extends StatelessWidget {
         // if (!this.counter.isStop()) return;
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
-          "email":this.emailTextField.getInput()
+          "email":this.emailTextField.getValue()
         });
         if(res.data['code'] == 1){
           this.verifyTextField.setButtonDisabled(false);
@@ -130,8 +130,8 @@ class Register extends StatelessWidget {
       helpText: "re-enter the password",
       maxlength: 30,
       onCorrect: () {
-        if (this.confirmPasswordTextField.getInput() ==
-            this.passwordTextField.getInput()) {
+        if (this.confirmPasswordTextField.getValue() ==
+            this.passwordTextField.getValue()) {
           //correct
           this.repasswordDone = true;
           this.confirmPasswordTextField.setCorrect();
@@ -163,8 +163,8 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () {
         this.passwordDone = true;
-        if (this.confirmPasswordTextField.getInput() !=
-                this.passwordTextField.getInput() &&
+        if (this.confirmPasswordTextField.getValue() !=
+                this.passwordTextField.getValue() &&
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
@@ -206,7 +206,7 @@ class Register extends StatelessWidget {
 
     this.emailTextField.addListener(() {
       if (this.emailWhenClickButton.isEmpty) return;
-      if (this.emailTextField.getInput() != this.emailWhenClickButton) {
+      if (this.emailTextField.getValue() != this.emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
         }
@@ -293,8 +293,8 @@ class Register extends StatelessWidget {
         try{
           Response res = await Requests.signUp({
             "email": this.emailWhenClickButton,
-            "password": this.passwordTextField.getInput(),
-            "nickname": this.nicknameTextField.getInput()
+            "password": this.passwordTextField.getValue(),
+            "nickname": this.nicknameTextField.getValue()
           });
           if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Register success!",
