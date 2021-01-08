@@ -31,7 +31,7 @@ class VerifyCodeInputer extends StatefulWidget{
   }
 
   void setButtonDisabled(bool dis){
-    this.state.button.setDisable(dis);
+    this.state.button.setDisabled(dis);
   }
   void setError(){
     this.state.textField.setError();
@@ -57,7 +57,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
       if (this.counter.isStop()) {
         this.button.text = widget.repeatShowText;
         this.button.fontsize = 13;
-        if (widget.emailField.isCorrect()) this.button.setDisable(false);
+        if (widget.emailField.isCorrect()) this.button.setDisabled(false);
       }
     };
     super.initState();
@@ -94,13 +94,13 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
         height: 50,
         radius: 8,
         theme: MyTheme.blueStyle,
-        firstReactState: ComponentReactState.disabled,
+        disabled: true,
         sizeChangeMode: 2,
         tapFunc: ()async {
           this.verified = false;
-          this.contentWhenClickButton = widget.emailField.getInput();
+          this.contentWhenClickButton = widget.emailField.getValue();
           this.button.fontsize = 20;
-          this.button.setDisable(true);
+          this.button.setDisabled(true);
           this.button.setWidth(0.3*widget.width);
           this.textField.setWidth(0.65*widget.width);
           if (this.counter.isStop()) {
@@ -121,18 +121,18 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
       width: 0,
       sizeChangeMode: 0,
       onCorrect: () async {
-        String emailVal = widget.emailField.getInput();
+        String emailVal = widget.emailField.getValue();
         if (emailVal != this.contentWhenClickButton) {
           this.textField.setError();
-          this.button.setDisable(true);
+          this.button.setDisabled(true);
           this.textField.setErrorText("verify code invalid");
           return;
         }
         if(this.verified)return;
-        String codeVal = this.textField.getInput();
+        String codeVal = this.textField.getValue();
         this.checkVerifyCode(emailVal, codeVal);
         if (!this.counter.isStop()) return;
-        this.button.setDisable(false);
+        this.button.setDisabled(false);
       },
     );
     return this.textField;

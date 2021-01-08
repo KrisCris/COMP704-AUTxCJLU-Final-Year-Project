@@ -97,7 +97,7 @@ class Register extends StatelessWidget {
         // if (!this.counter.isStop()) return;
         this.emailTextField.setHelpText("checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
-          "email":this.emailTextField.getInput()
+          "email":this.emailTextField.getValue()
         });
         if(res.data['code'] == 1){
           this.verifyTextField.setButtonDisabled(false);
@@ -112,13 +112,13 @@ class Register extends StatelessWidget {
         this.emailTextField.setErrorText("please input correct email format");
         this.emailTextField.setError();
         this.verifyTextField.setButtonDisabled(true);
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
     this.verifyTextField = VerifyCodeInputer(
-      onCheckSuccess: (){ this.nextButton.setDisable(false);},
-      onCheckFailed: (){this.nextButton.setDisable(true);},
+      onCheckSuccess: (){ this.nextButton.setDisabled(false);},
+      onCheckFailed: (){this.nextButton.setDisabled(true);},
       emailField: this.emailTextField,
     );
 
@@ -131,25 +131,25 @@ class Register extends StatelessWidget {
       helpText: "re-enter the password",
       maxlength: 30,
       onCorrect: () {
-        if (this.confirmPasswordTextField.getInput() ==
-            this.passwordTextField.getInput()) {
+        if (this.confirmPasswordTextField.getValue() ==
+            this.passwordTextField.getValue()) {
           //correct
           this.repasswordDone = true;
           this.confirmPasswordTextField.setCorrect();
           if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-            this.nextButton.setDisable(false);
+            this.nextButton.setDisabled(false);
           }
         } else {
           this.repasswordDone = false;
           this.confirmPasswordTextField.setError();
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
           this.confirmPasswordTextField.setErrorText("two password different");
         }
       },
       onError: () {
         this.repasswordDone = false;
         this.confirmPasswordTextField.setError();
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         this.confirmPasswordTextField.setErrorText("two password different");
       },
     );
@@ -164,20 +164,20 @@ class Register extends StatelessWidget {
       maxlength: 30,
       onCorrect: () {
         this.passwordDone = true;
-        if (this.confirmPasswordTextField.getInput() !=
-                this.passwordTextField.getInput() &&
+        if (this.confirmPasswordTextField.getValue() !=
+                this.passwordTextField.getValue() &&
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
-          this.nextButton.setDisable(true);
+          this.nextButton.setDisabled(true);
         }
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.passwordDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
@@ -192,29 +192,29 @@ class Register extends StatelessWidget {
       onCorrect: () {
         this.nickNameDone = true;
         if (this.passwordDone && this.nickNameDone && this.repasswordDone) {
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
         }
       },
       onError: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
       onEmpty: () {
         this.nickNameDone = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
 
     this.emailTextField.addListener(() {
       if (this.emailWhenClickButton.isEmpty) return;
-      if (this.emailTextField.getInput() != this.emailWhenClickButton) {
+      if (this.emailTextField.getValue() != this.emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
         }
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       } else if (this.verified) {
         this.verifyTextField.setCorrect();
-        this.nextButton.setDisable(false);
+        this.nextButton.setDisabled(false);
       }
     });
 
@@ -273,7 +273,7 @@ class Register extends StatelessWidget {
     // };
 
     this.nextButton = CustomButton(
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       text: "Next",
       isBold: true,
       rightMargin: 20,
@@ -287,15 +287,15 @@ class Register extends StatelessWidget {
         this.scrollCtl.animateTo(ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 800), curve: Curves.ease);
         this.step = 1;
-        nextButton.setDisable(true);
+        nextButton.setDisabled(true);
       } else if (this.step == 1) {
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
         try{
           Response res = await Requests.signUp({
             "email": this.emailWhenClickButton,
-            "password": this.passwordTextField.getInput(),
-            "nickname": this.nicknameTextField.getInput()
+            "password": this.passwordTextField.getValue(),
+            "nickname": this.nicknameTextField.getValue()
           });
           if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Register success!",
@@ -303,7 +303,7 @@ class Register extends StatelessWidget {
             Navigator.pop(context);
           }
         } on DioError catch(e){
-          this.nextButton.setDisable(false);
+          this.nextButton.setDisabled(false);
           print("Exception when sign up\n");
           print(e.toString());
         }

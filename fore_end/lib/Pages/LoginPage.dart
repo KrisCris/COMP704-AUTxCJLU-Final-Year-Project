@@ -43,13 +43,13 @@ class Login extends StatelessWidget {
       rightMargin: 20,
       bottomMargin: 20,
       theme: MyTheme.blueStyle,
-      firstReactState: ComponentReactState.disabled,
+      disabled: true,
       width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () async {
         EasyLoading.show(status: "Logining...");
-        this.nextButton.setDisable(true);
-        String emailVal = this.emailField.getInput();
-        String passwordVal = this.passwordField.getInput();
+        this.nextButton.setDisabled(true);
+        String emailVal = this.emailField.getValue();
+        String passwordVal = this.passwordField.getValue();
         this.login(emailVal, passwordVal, context);
       },
     );
@@ -61,11 +61,11 @@ class Login extends StatelessWidget {
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
         emailIsInput = true;
-        if (passwordIsInput) this.nextButton.setDisable(false);
+        if (passwordIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
         emailIsInput = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
     this.passwordField = CustomTextField(
@@ -75,11 +75,11 @@ class Login extends StatelessWidget {
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
         passwordIsInput = true;
-        if (emailIsInput) this.nextButton.setDisable(false);
+        if (emailIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
         passwordIsInput = false;
-        this.nextButton.setDisable(true);
+        this.nextButton.setDisabled(true);
       },
     );
     return Scaffold(
