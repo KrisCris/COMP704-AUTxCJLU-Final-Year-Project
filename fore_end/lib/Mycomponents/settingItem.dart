@@ -61,7 +61,7 @@ with DisableWidgetMixIn,ValueableWidgetMixIn<String>{
       helpText: "",
       errorText: "",
       disableSuffix: true,
-      bottomPadding: -10,
+      bottomPadding: -50,
       textAlign: TextAlign.right,
     );
   }

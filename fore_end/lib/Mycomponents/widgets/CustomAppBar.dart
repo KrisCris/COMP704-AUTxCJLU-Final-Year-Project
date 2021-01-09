@@ -7,36 +7,46 @@ import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
 import 'package:fore_end/Mycomponents/widgets/ExpandListView.dart';
 
-class CustomAppBar extends StatefulWidget{
+class CustomAppBar extends StatefulWidget {
   Widget userAvatarContainer;
   String username;
   CustomAppBarState state;
-  CustomAppBar({Key key, this.userAvatarContainer, this.username}):super(key:key){}
+  CustomAppBar({Key key, this.userAvatarContainer, this.username})
+      : super(key: key) {}
   @override
   State<StatefulWidget> createState() {
     this.state = CustomAppBarState();
     return this.state;
   }
-  void startTransparency(){
+
+  void startTransparency() {
     this.state.startTransparency();
   }
-  void reverseTransparency(){
+
+  void reverseTransparency() {
     this.state.reverseTransparency();
   }
 }
 
-class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixin{
+class CustomAppBarState extends State<CustomAppBar>
+    with TickerProviderStateMixin {
   TweenAnimation<double> headerTransparency;
   @override
   void initState() {
     this.headerTransparency = new TweenAnimation<double>();
-    this.headerTransparency.initAnimation(1.0, 0.0, 300, this,
-            () {setState(() {}); });
+    this.headerTransparency.initAnimation(1.0, 0.0, 300, this, () {
+      setState(() {});
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    ExpandListView historySearch = new ExpandListView(width: 0.85,height: 200,open: false,);
+    ExpandListView historySearch = new ExpandListView(
+      width: 0.85,
+      height: 200,
+      open: false,
+    );
     Container container = Container(
       width: ScreenTool.partOfScreenWidth(0.85),
       height: 70,
@@ -58,7 +68,7 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
           ),
           GestureDetector(
             onTap: () {
-              if(this.headerTransparency.getValue() == 0)return;
+              if (this.headerTransparency.getValue() == 0) return;
               this.openDrawer(context);
             },
             child: widget.userAvatarContainer,
@@ -75,18 +85,20 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 fontFamily: "Futura",
                 color: Colors.black),
           ),
-          Expanded(child:SizedBox()),
-          ExpandInputField(
-            width: 0.4,
-            foregroundColor: Colors.white,
-            disabled: this.headerTransparency.getValue() == 0,
-            isFirstFocusDoFunction: true,
-            onEmpty: (){
-              historySearch.open();
-            },
-            onNotEmpty: (){
-              historySearch.close();
-            },
+          SizedBox(width: 10,),
+          Expanded(
+            child: ExpandInputField(
+              width: 0.4,
+              foregroundColor: Colors.white,
+              disabled: this.headerTransparency.getValue() == 0,
+              isFirstFocusDoFunction: true,
+              onEmpty: () {
+                historySearch.open();
+              },
+              onNotEmpty: () {
+                historySearch.close();
+              },
+            ),
           ),
           SizedBox(width: 5)
         ],
@@ -94,13 +106,15 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
     );
     return AnimatedBuilder(
         animation: this.headerTransparency.ctl,
-        builder: (BuildContext context, Widget child){
+        builder: (BuildContext context, Widget child) {
           return Opacity(
-              opacity:this.headerTransparency.getValue(),
+              opacity: this.headerTransparency.getValue(),
               child: Column(
                 children: [
                   container,
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -108,16 +122,18 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                     ],
                   )
                 ],
-              )
-          );
+              ));
         });
   }
-  void startTransparency(){
+
+  void startTransparency() {
     this.headerTransparency.beginAnimation();
   }
-  void reverseTransparency(){
+
+  void reverseTransparency() {
     this.headerTransparency.reverse();
   }
+
   void openDrawer(BuildContext ctx) {
     Scaffold.of(ctx).openDrawer();
   }

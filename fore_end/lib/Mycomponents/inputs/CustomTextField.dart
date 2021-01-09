@@ -452,7 +452,7 @@ class CustomTextFieldState extends State<CustomTextField>
     });
     widget._inputcontroller.addListener(() {
       if (this.prev == widget._inputcontroller.text) return;
-      if(this.prev == ""){
+      if(this.prev == "" && widget.onNotEmpty != null){
         widget.onNotEmpty();
       }
       this.prev = widget._inputcontroller.text;

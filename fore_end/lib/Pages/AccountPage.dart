@@ -280,6 +280,7 @@ class PageState extends State<AccountPage> {
       leftText: "Username",
       rightText: widget.user.userName,
       inputFieldWidth: 0.45,
+      disabled: true,
     );
   }
 
@@ -289,6 +290,7 @@ class PageState extends State<AccountPage> {
       leftText: "Age",
       rightText: widget.user.age.toString(),
       inputFieldWidth: 0.45,
+      disabled: true,
     );
   }
 }

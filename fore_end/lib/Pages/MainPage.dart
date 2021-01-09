@@ -125,6 +125,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         widget.bodyContent,
                         Column(
                           children: [
+                            SizedBox(height: ScreenTool.partOfScreenHeight(0.025),),
                             widget.appBar,
                             Expanded(child: SizedBox()),
                             Row(
