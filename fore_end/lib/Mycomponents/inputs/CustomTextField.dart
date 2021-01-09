@@ -32,6 +32,7 @@ class CustomTextField extends StatefulWidget
   final bool isAutoCheck;
   final bool isAutoChangeState;
   final bool disableSuffix;
+  final bool isFirstFocusDoFunction;
 
   final int maxlength; //长度
   int sizeChangeMode;
@@ -39,6 +40,8 @@ class CustomTextField extends StatefulWidget
   Function onCorrect;
   Function onError;
   Function onEmpty;
+  //only do when from empty to not empty
+  Function onNotEmpty;
   List<Function> listenerList;
   List<Function> doWhenCouldfocus;
 
@@ -70,6 +73,7 @@ class CustomTextField extends StatefulWidget
     this.disableSuffix=false,
     this.errorText = "input error",
     this.helpText = "",
+    this.isFirstFocusDoFunction = false,
     @required MyTheme theme,
     this.width = 0.5,
     this.bottomPadding=0,
@@ -83,6 +87,7 @@ class CustomTextField extends StatefulWidget
     this.onCorrect,
     this.onError,
     this.onEmpty,
+    this.onNotEmpty,
     this.next,
     this.sizeChangeMode = 0,
     Key key,
@@ -131,6 +136,7 @@ class CustomTextField extends StatefulWidget
   }
   void focus(BuildContext context){
     FocusScope.of(context).requestFocus(this._focusNode);
+    this._focusNode.notifyListeners();
   }
   bool isEmpty() {
     return this._inputcontroller.text == "";
@@ -266,6 +272,11 @@ class CustomTextFieldState extends State<CustomTextField>
       }
       if (widget._focusNode.hasFocus) {
         this.setFocus();
+        if(widget.isFirstFocusDoFunction){
+          if(widget._inputcontroller.text.isEmpty){
+            widget.onEmpty();
+          }
+        }
         this.continuousInputChecker = new MyCounter(
             times: 1,
             callWhenStart: false,
@@ -322,6 +333,9 @@ class CustomTextFieldState extends State<CustomTextField>
 
     widget._inputcontroller.addListener(() {
       if (this.prev == widget._inputcontroller.text) return;
+      if(this.prev == ""){
+        widget.onNotEmpty();
+      }
       this.prev = widget._inputcontroller.text;
       this.isInputing = true;
       if (this.continuousInputChecker != null) {

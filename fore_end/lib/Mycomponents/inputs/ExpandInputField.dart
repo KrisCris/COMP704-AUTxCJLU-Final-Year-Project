@@ -15,7 +15,10 @@ class ExpandInputField extends StatefulWidget {
   Color foregroundColor;
 
   bool disabled;
+  bool isFirstFocusDoFunction;
 
+  Function onEmpty;
+  Function onNotEmpty;
 
   IconData suffix;
   String placeholer;
@@ -23,6 +26,9 @@ class ExpandInputField extends StatefulWidget {
       {@required double width = 0.7,
       this.placeholer,
         this.disabled = true,
+        this.onEmpty,
+        this.onNotEmpty,
+        this.isFirstFocusDoFunction=false,
       this.suffix = FontAwesomeIcons.search,
       double iconSize = 20,
       this.backgroundColor = Colors.white,
@@ -49,7 +55,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
     });
     this.lengthAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        this.textField.focus(context);
+        //this.textField.focus(context);
       }
     });
   }
@@ -64,7 +70,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
       child: Stack(
         children: [
           Positioned(bottom: -25, left: 5, child: this.createInput()),
-          this.createForeground(),
+          //this.createForeground(),
           Positioned(right: 8, child: this.createSuffix()),
         ],
       ),
@@ -83,6 +89,9 @@ class ExpandInputFieldState extends State<ExpandInputField>
       bottomPadding: -15,
       disableSuffix: true,
       disabled: widget.disabled,
+      onEmpty: widget.onEmpty,
+      onNotEmpty: widget.onNotEmpty,
+      isFirstFocusDoFunction: widget.isFirstFocusDoFunction,
     );
     return this.textField;
   }
