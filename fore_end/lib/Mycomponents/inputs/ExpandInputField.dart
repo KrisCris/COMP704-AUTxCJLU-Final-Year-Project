@@ -5,6 +5,7 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/clipper/RightLeftClipper.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 
 class ExpandInputField extends StatefulWidget {
@@ -25,10 +26,10 @@ class ExpandInputField extends StatefulWidget {
   ExpandInputField(
       {@required double width = 0.7,
       this.placeholer,
-        this.disabled = true,
-        this.onEmpty,
-        this.onNotEmpty,
-        this.isFirstFocusDoFunction=false,
+      this.disabled = true,
+      this.onEmpty,
+      this.onNotEmpty,
+      this.isFirstFocusDoFunction = false,
       this.suffix = FontAwesomeIcons.search,
       double iconSize = 20,
       this.backgroundColor = Colors.white,
@@ -50,12 +51,12 @@ class ExpandInputFieldState extends State<ExpandInputField>
   @override
   void initState() {
     this.lengthAnimation = new TweenAnimation();
-    this.lengthAnimation.initAnimation(widget.width, 0.0, 400, this, () {
+    this.lengthAnimation.initAnimation(0.0, widget.width, 400, this, () {
       setState(() {});
     });
     this.lengthAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        //this.textField.focus(context);
+        this.textField.focus(context);
       }
     });
   }
@@ -69,7 +70,12 @@ class ExpandInputFieldState extends State<ExpandInputField>
           color: widget.backgroundColor),
       child: Stack(
         children: [
-          Positioned(bottom: -25, left: 5, child: this.createInput()),
+          Positioned(
+              bottom: -25,
+              left: 5,
+              child: ClipRect(
+                  clipper: new RightLeftClipper(lengthAnimation.getValue()),
+                  child: this.createInput())),
           Positioned(right: 8, child: this.createSuffix()),
         ],
       ),
@@ -77,21 +83,23 @@ class ExpandInputFieldState extends State<ExpandInputField>
   }
 
   Widget createInput() {
-    this.textField = CustomTextField(
-      placeholder: widget.placeholer,
-      isAutoChangeState: false,
-      isAutoCheck: false,
-      inputType: InputFieldType.verifyCode,
-      theme: MyTheme.blueStyle,
-      width: widget.width - widget.iconSize*1.5,
-      sizeChangeMode: 0,
-      bottomPadding: -15,
-      disableSuffix: true,
-      disabled: widget.disabled,
-      onEmpty: widget.onEmpty,
-      onNotEmpty: widget.onNotEmpty,
-      isFirstFocusDoFunction: widget.isFirstFocusDoFunction,
-    );
+    if(this.textField == null){
+      this.textField = CustomTextField(
+        placeholder: widget.placeholer,
+        isAutoChangeState: false,
+        isAutoCheck: false,
+        inputType: InputFieldType.verifyCode,
+        theme: MyTheme.blueStyle,
+        width: widget.width - widget.iconSize * 1.5,
+        sizeChangeMode: 0,
+        bottomPadding: -15,
+        disableSuffix: true,
+        disabled: widget.disabled,
+        onEmpty: widget.onEmpty,
+        onNotEmpty: widget.onNotEmpty,
+        isFirstFocusDoFunction: widget.isFirstFocusDoFunction,
+      );
+    }
     return this.textField;
   }
 
