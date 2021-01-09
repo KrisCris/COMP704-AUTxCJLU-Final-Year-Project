@@ -178,13 +178,8 @@ class CustomButtonState extends State<CustomButton>
   void initState() {
     super.initState();
     this.initBgColor();
-    widget.disabled.addListener(() {
-      if(widget.disabled.value){
-        this.setDisabled();
-      }else{
-        this.setEnabled();
-      }
-    });
+    this.initDisableListener(widget.disabled);
+
 
     this.firstWidth = widget.width;
     this
