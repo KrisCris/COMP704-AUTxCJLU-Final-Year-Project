@@ -93,13 +93,6 @@ with TickerProviderStateMixin{
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color:  widget.backgroundColor,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 12, //阴影范围
-                  spreadRadius: 4, //阴影浓度
-                  color: Color(0x33000000), //阴影颜色
-                ),
-              ]
           ),
           child: ListView(
             children: [
