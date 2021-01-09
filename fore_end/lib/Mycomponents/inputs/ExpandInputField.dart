@@ -70,7 +70,6 @@ class ExpandInputFieldState extends State<ExpandInputField>
       child: Stack(
         children: [
           Positioned(bottom: -25, left: 5, child: this.createInput()),
-          //this.createForeground(),
           Positioned(right: 8, child: this.createSuffix()),
         ],
       ),
