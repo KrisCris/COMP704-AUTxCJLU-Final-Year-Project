@@ -31,16 +31,18 @@ class AccountPage extends StatefulWidget {
   String getUserGender(int i) {
     if (i == 0) {
       return "Male";
-    } else {
+    } else if(i==1){
       return "Female";
     }
+      return null;
   }
 
   int setGender(String gender) {
     if (gender == "Male")
       return 0;
-    else
+    else if(gender== "Female")
       return 1;
+    return null;
   }
 
   Future<String> pictureToBase64(File f) async {
@@ -66,8 +68,7 @@ class PageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    this.basicInfoEditableArea= EditableArea(
+    this.basicInfoEditableArea = EditableArea(
         theme: MyTheme.blueStyle,
         width: 0.7,
         height: 320,
@@ -75,103 +76,101 @@ class PageState extends State<AccountPage> {
         displayContent: [
           this.getAvatarItem(),
           this.getUserNameItem(),
-          this.getGenderItem(context),
           this.getAgeItem(),
+          this.getGenderItem(context),
+
         ]
     );
 
-
-    return Scaffold(
-        body: ListView(
-           children: <Widget>[
-             //Account Page的最上面标题
-         Container(
-          // margin: EdgeInsets.all(20),
-          margin:
-              EdgeInsets.fromLTRB(ScreenTool.partOfScreenWidth(20), 20, 10, 10),
-          child: Text(
-            "ACCOUNT INFO",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35,
-              fontFamily: "Futura",
-            ),
-          ),
-        ),
-
-
-          SizedBox(
-          height: 10,
-        ),
-
-          EditableArea(
-              theme: MyTheme.blueStyle,
-              width: 0.7,
-              height: 190,
-              title: "Account information",
-              displayContent: [
-                this.getEmailItem(),
-                this.getPwdItem(context),
-              ]
-          ),
-
-             SizedBox(
-               height: 10,
-             ),
-
-           this.basicInfoEditableArea,
+    this.basicInfoEditableArea.onEditComplete= () async {
+      User user = User.getInstance();
+      List<String> basicInfo = new List<String>();
+      basicInfo = this.basicInfoEditableArea.getAllValue();
+      try {
+        Response res = await Requests.modifyBasicInfo({
+          "uid": widget.user.uid,
+          "token": widget.user.token,
+          "age": int.parse(basicInfo[2]),
+          "gender": widget.setGender(basicInfo[3]),
+          "nickname": basicInfo[1],
+        });
+        if (res.data['code'] == 1) {
+          EasyLoading.showSuccess("Change success!",
+              duration: Duration(milliseconds: 4000));
+          user.userName = basicInfo[1];
+          user.age = int.parse(basicInfo[2]);
+          user.gender = widget.setGender(basicInfo[3]);
+          widget.user.save();
+        }
+      } on DioError catch (e) {
+        print("Exception when sign up\n");
+        print(e.toString());
+      }
+      // Navigator.pop(context);
+    };
 
 
+    return FlutterEasyLoading(
+        child: Scaffold(
+            body: ListView(
+              children: <Widget>[
+                //Account Page的最上面标题
+                Container(
+                  // margin: EdgeInsets.all(20),
+                  margin:
+                  EdgeInsets.fromLTRB(
+                      ScreenTool.partOfScreenWidth(20), 20, 10, 10),
+                  child: Text(
+                    "ACCOUNT INFO",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 35,
+                      fontFamily: "Futura",
+                    ),
+                  ),
+                ),
 
-             SizedBox(
-          height: 10,
-        ),
 
-             OutlineButton(
-               child: Text("Save Changes"),
-               onPressed:  () async {
-                 User user= User.getInstance();
-                 List<String> basicInfo = new List<String>();
-                 basicInfo= this.basicInfoEditableArea.getAllValue();
-                 user.userName=basicInfo[0];
-                 user.gender=widget.setGender(basicInfo[1]);
-                 user.age=int.parse(basicInfo[2]);
+                SizedBox(
+                  height: 10,
+                ),
 
-                 try{
-                   Response res = await Requests.modifyBasicInfo({
-                     "uid": widget.user.uid,
-                     "token": widget.user.token,
-                     "age": widget.user.age.toString(),
-                     "gender": widget.getUserGender(user.gender),
-                     "nickname": widget.user.userName,
-                   });
-                   if (res.data['code'] == 1) {
-                     EasyLoading.showSuccess("Change success!",
-                         duration: Duration(milliseconds: 2000));
+                EditableArea(
+                    theme: MyTheme.blueStyle,
+                    width: 0.7,
+                    height: 190,
+                    title: "Account information",
+                    displayContent: [
+                      this.getEmailItem(),
+                      this.getPwdItem(context),
+                    ]
+                ),
 
-                     widget.user.save();
+                SizedBox(
+                  height: 10,
+                ),
 
-                   }
-                 } on DioError catch(e){
-                   print("Exception when sign up\n");
-                   print(e.toString());
-                 }
-               },
+                this.basicInfoEditableArea,
 
-             ),
-             SizedBox(
-               height: 10,
-             ),
 
-             OutlineButton(
-                child: Text("Back MainPage"),
-              onPressed: () {
-                Navigator.pop(context);
-          },
-        ),
-      ],
-    ));
+                SizedBox(
+                  height: 10,
+                ),
+
+                OutlineButton(
+                  child: Text("Back MainPage"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+        )
+    );
   }
+
+
+
 
 
   Widget getEmailItem(){
@@ -179,7 +178,6 @@ class PageState extends State<AccountPage> {
       leftIcon: Icon(FontAwesomeIcons.envelope),
       leftText: "Email",
       rightText: widget.user.email,
-      isChange: false,
       isRightText: false,
       isRightUneditText: true,
       onTap: () {},
@@ -196,7 +194,6 @@ class PageState extends State<AccountPage> {
       ),
       leftText: "Password",
       rightText: "*******",
-      isChange: false,
       isRightText: false,
       isRightUneditText: true,
       onTap: () {
@@ -232,10 +229,12 @@ class PageState extends State<AccountPage> {
         widget.imageSource = await widget.pictureToBase64(image);
         u.avatar = widget.imageSource;
         u.save();
+        item.imageBase64=widget.imageSource;
         item.image = u.getAvatar(40, 40);
         item.refresh();
       }
     };
+
     return item;
   }
 
@@ -249,20 +248,26 @@ class PageState extends State<AccountPage> {
     );
 
     genderItem.onTap = () {
-      print("click gender Item");
-      User u = User.getInstance();
+      User user = User.getInstance();
       int newGender;
+      if(genderItem.rightText=="Female"){
+        newGender=1;
+      }else if(genderItem.rightText=="Male"){
+        newGender=0;
+      }
+
       JhPickerTool.showStringPicker(context,
           title: 'Gender',
-          normalIndex: u.gender,
+          normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
-        newGender = widget.setGender(item);
-        print("newGender现在的值是" + newGender.toString());
-        u.gender = newGender;
-        u.save();
-
-        genderItem.rightText = widget.getUserGender(u.gender);
+        genderItem.rightText=item;
+        if(item=="Male"){
+          user.gender=0;
+        }else if(item=="Female"){
+          user.gender=1;
+        }
         genderItem.refresh();
+
       });
     };
 
