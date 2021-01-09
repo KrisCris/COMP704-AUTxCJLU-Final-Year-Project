@@ -32,6 +32,7 @@ class CustomTextField extends StatefulWidget
   final bool isAutoCheck;
   final bool isAutoChangeState;
   final bool disableSuffix;
+  final bool isFirstFocusDoFunction;
 
   final int maxlength; //长度
   int sizeChangeMode;
@@ -39,6 +40,8 @@ class CustomTextField extends StatefulWidget
   Function onCorrect;
   Function onError;
   Function onEmpty;
+  //only do when from empty to not empty
+  Function onNotEmpty;
   List<Function> listenerList;
   List<Function> doWhenCouldfocus;
 
@@ -70,6 +73,7 @@ class CustomTextField extends StatefulWidget
     this.disableSuffix=false,
     this.errorText = "input error",
     this.helpText = "",
+    this.isFirstFocusDoFunction = false,
     @required MyTheme theme,
     this.width = 0.5,
     this.bottomPadding=0,
@@ -83,6 +87,7 @@ class CustomTextField extends StatefulWidget
     this.onCorrect,
     this.onError,
     this.onEmpty,
+    this.onNotEmpty,
     this.next,
     this.sizeChangeMode = 0,
     Key key,
@@ -96,8 +101,6 @@ class CustomTextField extends StatefulWidget
     if (this.ulDefaultWidth == null) {
       this.ulDefaultWidth = CustomTextField.WIDTH_TF_UNFOCUSED;
     }
-    this.st = new CustomTextFieldState(
-        this.firstThemeState);
     this.width = ScreenTool.partOfScreenWidth(this.width);
     if (this.inputType == InputFieldType.email) {
       this.keyboardType = TextInputType.emailAddress;
@@ -182,6 +185,8 @@ class CustomTextField extends StatefulWidget
   }
   @override
   State<StatefulWidget> createState() {
+    this.st = new CustomTextFieldState(
+        this.firstThemeState);
     return this.st;
   }
 
@@ -222,7 +227,13 @@ class CustomTextFieldState extends State<CustomTextField>
       : super() {
     this.themeState = the;
   }
+  @override
+  void didUpdateWidget(covariant CustomTextField oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    this.widgetBinding();
 
+  }
   @override
   void initState() {
     super.initState();
@@ -239,9 +250,9 @@ class CustomTextFieldState extends State<CustomTextField>
     );
     this.prev = widget.defaultContent;
     this.initColor();
-    for (Function f in widget.listenerList) {
-      widget.addListener(f);
-    }
+    // for (Function f in widget.listenerList) {
+    //   widget.addListener(f);
+    // }
     this.lengthAnimation.initAnimation(
         this.firstWidth, this.firstWidth, this.sizeChangeDura, this, null);
     this.lengthAnimation.beginAnimation();
@@ -256,6 +267,121 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
 
+    // widget._focusNode.addListener(() {
+    //   if (widget._focusNode.canRequestFocus) {
+    //     if (widget.doWhenCouldfocus != null &&
+    //         widget.doWhenCouldfocus.isNotEmpty) {
+    //       Function f = widget.doWhenCouldfocus.removeAt(0);
+    //       f();
+    //     }
+    //   }
+    //   if (widget._focusNode.hasFocus) {
+    //     this.setFocus();
+    //     if(widget.isFirstFocusDoFunction){
+    //       if(widget._inputcontroller.text.isEmpty){
+    //         widget.onEmpty();
+    //       }
+    //     }
+    //     this.continuousInputChecker = new MyCounter(
+    //         times: 1,
+    //         callWhenStart: false,
+    //         duration: 700,
+    //         calling: () {
+    //           this.isInputing = false;
+    //           if (widget._inputcontroller.text.isEmpty) {
+    //             if (widget.isAutoChangeState) {
+    //               this.setNormal();
+    //             }
+    //             if (widget.onEmpty != null) {
+    //               widget.onEmpty();
+    //             }
+    //             this.suffixSizeAnimation.reverseAnimation();
+    //             this.isCorrect = false;
+    //           } else {
+    //             if (this.themeState == ComponentThemeState.normal &&
+    //                 widget.isAutoChangeState) {
+    //               this.suffixSizeAnimation.beginAnimation();
+    //             }
+    //             if(!widget.isAutoCheck) return;
+    //
+    //             if (FormatChecker.check(
+    //                 widget.inputType, widget._inputcontroller.text)) {
+    //               if (widget.isAutoChangeState) {
+    //                 this.setCorrect();
+    //                 this.isCorrect = true;
+    //               }
+    //
+    //               if (widget.onCorrect != null) {
+    //                 widget.onCorrect();
+    //               }
+    //             } else {
+    //               if (widget.isAutoChangeState) {
+    //                 this.setError();
+    //                 this.isCorrect = false;
+    //               }
+    //               if (widget.onError != null) {
+    //                 widget.onError();
+    //               }
+    //             }
+    //           }
+    //         });
+    //   } else {
+    //     if (this.continuousInputChecker != null &&
+    //         !this.continuousInputChecker.isStop()) {
+    //       this.continuousInputChecker.stop();
+    //       this.continuousInputChecker.callCounterFunc();
+    //     } else {
+    //       this.setUnFocus();
+    //     }
+    //   }
+    // });
+
+    // widget._inputcontroller.addListener(() {
+    //   if (this.prev == widget._inputcontroller.text) return;
+    //   if(this.prev == ""){
+    //     widget.onNotEmpty();
+    //   }
+    //   this.prev = widget._inputcontroller.text;
+    //   this.isInputing = true;
+    //   if (this.continuousInputChecker != null) {
+    //     this.continuousInputChecker.reset();
+    //   }
+    //   this.setNormal();
+    //   this.suffixSizeAnimation.reverse();
+    // });
+    if(widget.disabled.value){
+      this.setDisabled();
+    }else{
+      this.setEnabled();
+    }
+    // this.initDisableListener(widget.disabled);
+    this.widgetBinding();
+  }
+
+  void initColor() {
+    if(widget.disabled.value){
+      this.colorAnimation.initAnimation(
+          widget.theme.getDisabledColor(),
+          widget.theme.getDisabledColor(),
+          colorChangeDura,
+          this, () {
+        setState(() {});
+      });
+    }else{
+      this.colorAnimation.initAnimation(
+          widget.theme.getThemeColor(this.themeState),
+          widget.theme.getThemeColor(this.themeState),
+          colorChangeDura,
+          this, () {
+        setState(() {});
+      });
+    }
+    this.colorAnimation.beginAnimation();
+  }
+  void widgetBinding(){
+    for (Function f in widget.listenerList) {
+      widget.addListener(f);
+    }
     widget._focusNode.addListener(() {
       if (widget._focusNode.canRequestFocus) {
         if (widget.doWhenCouldfocus != null &&
@@ -266,6 +392,11 @@ class CustomTextFieldState extends State<CustomTextField>
       }
       if (widget._focusNode.hasFocus) {
         this.setFocus();
+        if(widget.isFirstFocusDoFunction){
+          if(widget._inputcontroller.text.isEmpty){
+            widget.onEmpty();
+          }
+        }
         this.continuousInputChecker = new MyCounter(
             times: 1,
             callWhenStart: false,
@@ -319,9 +450,11 @@ class CustomTextFieldState extends State<CustomTextField>
         }
       }
     });
-
     widget._inputcontroller.addListener(() {
       if (this.prev == widget._inputcontroller.text) return;
+      if(this.prev == ""){
+        widget.onNotEmpty();
+      }
       this.prev = widget._inputcontroller.text;
       this.isInputing = true;
       if (this.continuousInputChecker != null) {
@@ -330,35 +463,8 @@ class CustomTextFieldState extends State<CustomTextField>
       this.setNormal();
       this.suffixSizeAnimation.reverse();
     });
-    if(widget.disabled.value){
-      this.setDisabled();
-    }else{
-      this.setEnabled();
-    }
     this.initDisableListener(widget.disabled);
   }
-
-  void initColor() {
-    if(widget.disabled.value){
-      this.colorAnimation.initAnimation(
-          widget.theme.getDisabledColor(),
-          widget.theme.getDisabledColor(),
-          colorChangeDura,
-          this, () {
-        setState(() {});
-      });
-    }else{
-      this.colorAnimation.initAnimation(
-          widget.theme.getThemeColor(this.themeState),
-          widget.theme.getThemeColor(this.themeState),
-          colorChangeDura,
-          this, () {
-        setState(() {});
-      });
-    }
-    this.colorAnimation.beginAnimation();
-  }
-
   @override
   void dispose() {
     if (this.continuousInputChecker != null) {

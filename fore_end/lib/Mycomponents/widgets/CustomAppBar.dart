@@ -5,6 +5,7 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
+import 'package:fore_end/Mycomponents/widgets/ExpandListView.dart';
 
 class CustomAppBar extends StatefulWidget{
   Widget userAvatarContainer;
@@ -35,6 +36,7 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
   }
   @override
   Widget build(BuildContext context) {
+    ExpandListView historySearch = new ExpandListView(width: 0.85,height: 200,open: false,);
     Container container = Container(
       width: ScreenTool.partOfScreenWidth(0.85),
       height: 70,
@@ -77,7 +79,15 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
           ExpandInputField(
             width: 0.4,
             foregroundColor: Colors.white,
-            disabled: this.headerTransparency.getValue() == 0),
+            disabled: this.headerTransparency.getValue() == 0,
+            isFirstFocusDoFunction: true,
+            onEmpty: (){
+              historySearch.open();
+            },
+            onNotEmpty: (){
+              historySearch.close();
+            },
+          ),
           SizedBox(width: 5)
         ],
       ),
@@ -87,7 +97,18 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
         builder: (BuildContext context, Widget child){
           return Opacity(
               opacity:this.headerTransparency.getValue(),
-              child:container
+              child: Column(
+                children: [
+                  container,
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      historySearch,
+                    ],
+                  )
+                ],
+              )
           );
         });
   }

@@ -77,7 +77,7 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
   ComponentThemeState firstThemeState;
 
   CustomButton(
-      {this.text,
+      {this.text = "Button",
       @required MyTheme theme,
       this.fontsize = 18.0,
       this.sizeChangeMode = 0,
