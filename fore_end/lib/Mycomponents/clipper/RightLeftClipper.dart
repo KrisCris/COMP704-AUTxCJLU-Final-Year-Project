@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class TopDownClipper extends CustomClipper<Rect>{
-  final double height;
+class RightLeftClipper extends CustomClipper<Rect>{
+  final double width;
 
-  TopDownClipper(this.height);
+  RightLeftClipper(this.width);
 
   @override
   Rect getClip(Size size) {
-    return Rect.fromLTRB(0.0, 0.0, size.width, height);
+    return Rect.fromLTRB(size.width-width, 0.0, size.width, size.height);
   }
 
   @override

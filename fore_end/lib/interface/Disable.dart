@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 abstract class DisableWidgetMixIn{
   ValueNotifier<bool> disabled;
   bool lastDisabledState;
-  bool canChangeDisable;
+  bool canChangeDisable=true;
 
   void setDisabled(bool t){
     if(this.disabled == null){
