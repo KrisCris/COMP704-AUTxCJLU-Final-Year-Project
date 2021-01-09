@@ -117,12 +117,21 @@ class Requests{
     return res;
   }
 
+  static Future<Response> sendSecurityCode(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/user/send_security_code", data: dt);
+    return res;
+  }
+
   static Future<Response> checkEmailRepeat(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
     Response res = await dio.get("/user/is_new_email"+urlPara);
     return res;
   }
+
+
 
   static Future<Response> logout(data) async {
     Dio dio = Req.instance;

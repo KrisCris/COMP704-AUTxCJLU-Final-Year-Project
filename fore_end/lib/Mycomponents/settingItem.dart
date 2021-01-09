@@ -20,9 +20,9 @@ with DisableWidgetMixIn,ValueableWidgetMixIn<String>{
   final bool isRightText; //是否显示右侧文字
   bool isRightUneditText;
   final Widget rightImage;
-  final bool isChange;
   double inputFieldWidth;
   Image image;
+  String imageBase64;
   Function onTap; //点击事件
   ItemState state;
 
@@ -41,8 +41,8 @@ with DisableWidgetMixIn,ValueableWidgetMixIn<String>{
     this.isRightUneditText=false,
     this.onTap,
     this.rightImage,
-    this.isChange = true,
     this.image,
+    this.imageBase64,
     this.inputFieldWidth = 0.3,
     state,
   }) : super(key: key) {
@@ -82,7 +82,14 @@ with DisableWidgetMixIn,ValueableWidgetMixIn<String>{
 
   @override
   getValue() {
-      return this.textField.getValue();
+      if(this.isRightUneditText){
+        return this.rightText;
+      }else if(this.isRightImage){
+        return this.imageBase64;
+      }else{
+        return this.textField.getValue();
+      }
+
   }
 }
 

@@ -17,10 +17,12 @@ class VerifyCodeInputer extends StatefulWidget{
   String checkWrongText;
   String placeHolder;
   double width;
+  bool transVerifyType;
+
 
   VerifyCodeState state;
 
-  VerifyCodeInputer({Key key, this.emailField, this.onCheckFailed,this.onCheckSuccess,
+  VerifyCodeInputer({Key key,this.transVerifyType=false, this.emailField, this.onCheckFailed,this.onCheckSuccess,
     this.firstShowText="Acquire Verify Code",this.repeatShowText="Acquire again",
     this.checkWrongText="Wrong verify code",this.placeHolder="input verify code",
     this.width = 0.7}):super(key:key);
@@ -39,6 +41,11 @@ class VerifyCodeInputer extends StatefulWidget{
   void setCorrect(){
     this.state.textField.setCorrect();
   }
+  bool getCodeType(){
+    return this.transVerifyType;
+  }
+
+
 }
 
 class VerifyCodeState extends State<VerifyCodeInputer>{
@@ -47,6 +54,12 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   CustomTextField textField;
   CustomButton  button;
   MyCounter counter;
+
+
+
+
+
+
   @override
   void initState() {
     this.counter = new MyCounter(times: 60, duration: 1000);
@@ -106,7 +119,13 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
           if (this.counter.isStop()) {
             this.counter.start();
           }
-          this.sendEmail(this.contentWhenClickButton);
+          ////////////zsk修改
+          if(widget.getCodeType()){
+            this.sendSecurityCode(this.contentWhenClickButton);
+          }else{
+            this.sendEmail(this.contentWhenClickButton);
+          }
+
         },
         isBold: true);
     return this.button;
@@ -169,4 +188,16 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
       print(e.toString());
     }
   }
+
+  Future<void> sendSecurityCode(String emailVal) async{
+    try{
+      Response res = await Requests.sendSecurityCode({
+        "email": emailVal
+      });
+    } on DioError catch(e){
+      print("Exception when sending email:\n");
+      print(e.toString());
+    }
+  }
+
 }
