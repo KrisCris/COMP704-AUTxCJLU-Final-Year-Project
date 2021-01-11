@@ -177,10 +177,9 @@ class PageState extends State<AccountPage> {
     SettingItem item =new SettingItem(
       leftIcon: Icon(FontAwesomeIcons.envelope),
       leftText: "Email",
-      rightText: widget.user.email,
-      isRightText: false,
-      isRightUneditText: true,
-      onTap: () {},
+      text: widget.user.email,
+      disabled: true,
+      canChangeDisabled: false,
     );
 
     return item;
@@ -193,16 +192,14 @@ class PageState extends State<AccountPage> {
         size: 23,
       ),
       leftText: "Password",
-      rightText: "*******",
-      isRightText: false,
-      isRightUneditText: true,
+      text:"******",
+      disabled: false,
+      canChangeDisabled: true,
+      couldInputByKeyBoard: false,
       onTap: () {
-
         Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UpdatePwdPage();}
             ));
-
-
       },
     );
 
@@ -217,9 +214,8 @@ class PageState extends State<AccountPage> {
     SettingItem item = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.userCircle),
       leftText: "Profile Photo",
-      isRightText: false,
-      isRightImage: true,
-      image: u.getAvatar(40, 40),
+      base64: u.avatar,
+      disabled: true,
     );
     item.onTap = () async {
       File image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -229,9 +225,7 @@ class PageState extends State<AccountPage> {
         widget.imageSource = await widget.pictureToBase64(image);
         u.avatar = widget.imageSource;
         u.save();
-        item.imageBase64=widget.imageSource;
-        item.image = u.getAvatar(40, 40);
-        item.refresh();
+        item.setValue(u.avatar);
       }
     };
 
@@ -242,17 +236,17 @@ class PageState extends State<AccountPage> {
     SettingItem genderItem = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.transgender),
       leftText: "Gender",
-      isRightText: false,
-      isRightUneditText: true,
-      rightText: widget.getUserGender(widget.user.gender),
+      disabled: true,
+      couldInputByKeyBoard: false,
+      text: widget.getUserGender(widget.user.gender),
     );
 
     genderItem.onTap = () {
       User user = User.getInstance();
       int newGender;
-      if(genderItem.rightText=="Female"){
+      if(genderItem.getValue()=="Female"){
         newGender=1;
-      }else if(genderItem.rightText=="Male"){
+      }else if(genderItem.getValue()=="Male"){
         newGender=0;
       }
 
@@ -260,14 +254,12 @@ class PageState extends State<AccountPage> {
           title: 'Gender',
           normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
-        genderItem.rightText=item;
+        genderItem.setValue(item);
         if(item=="Male"){
           user.gender=0;
         }else if(item=="Female"){
           user.gender=1;
         }
-        genderItem.refresh();
-
       });
     };
 
@@ -278,7 +270,8 @@ class PageState extends State<AccountPage> {
     return SettingItem(
       leftIcon: Icon(FontAwesomeIcons.user),
       leftText: "Username",
-      rightText: widget.user.userName,
+      text: widget.user.userName,
+      couldInputByKeyBoard: true,
       inputFieldWidth: 0.45,
       disabled: true,
     );
@@ -288,7 +281,8 @@ class PageState extends State<AccountPage> {
     return SettingItem(
       leftIcon: Icon(Icons.calendar_today),
       leftText: "Age",
-      rightText: widget.user.age.toString(),
+      text: widget.user.age.toString(),
+      couldInputByKeyBoard: true,
       inputFieldWidth: 0.45,
       disabled: true,
     );

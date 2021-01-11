@@ -194,6 +194,10 @@ class CustomTextField extends StatefulWidget
   String getValue() {
     return this._inputcontroller.text;
   }
+  @override
+  void setValue(String s){
+    this._inputcontroller.text = s;
+  }
 }
 
 
@@ -267,94 +271,6 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
 
-    // widget._focusNode.addListener(() {
-    //   if (widget._focusNode.canRequestFocus) {
-    //     if (widget.doWhenCouldfocus != null &&
-    //         widget.doWhenCouldfocus.isNotEmpty) {
-    //       Function f = widget.doWhenCouldfocus.removeAt(0);
-    //       f();
-    //     }
-    //   }
-    //   if (widget._focusNode.hasFocus) {
-    //     this.setFocus();
-    //     if(widget.isFirstFocusDoFunction){
-    //       if(widget._inputcontroller.text.isEmpty){
-    //         widget.onEmpty();
-    //       }
-    //     }
-    //     this.continuousInputChecker = new MyCounter(
-    //         times: 1,
-    //         callWhenStart: false,
-    //         duration: 700,
-    //         calling: () {
-    //           this.isInputing = false;
-    //           if (widget._inputcontroller.text.isEmpty) {
-    //             if (widget.isAutoChangeState) {
-    //               this.setNormal();
-    //             }
-    //             if (widget.onEmpty != null) {
-    //               widget.onEmpty();
-    //             }
-    //             this.suffixSizeAnimation.reverseAnimation();
-    //             this.isCorrect = false;
-    //           } else {
-    //             if (this.themeState == ComponentThemeState.normal &&
-    //                 widget.isAutoChangeState) {
-    //               this.suffixSizeAnimation.beginAnimation();
-    //             }
-    //             if(!widget.isAutoCheck) return;
-    //
-    //             if (FormatChecker.check(
-    //                 widget.inputType, widget._inputcontroller.text)) {
-    //               if (widget.isAutoChangeState) {
-    //                 this.setCorrect();
-    //                 this.isCorrect = true;
-    //               }
-    //
-    //               if (widget.onCorrect != null) {
-    //                 widget.onCorrect();
-    //               }
-    //             } else {
-    //               if (widget.isAutoChangeState) {
-    //                 this.setError();
-    //                 this.isCorrect = false;
-    //               }
-    //               if (widget.onError != null) {
-    //                 widget.onError();
-    //               }
-    //             }
-    //           }
-    //         });
-    //   } else {
-    //     if (this.continuousInputChecker != null &&
-    //         !this.continuousInputChecker.isStop()) {
-    //       this.continuousInputChecker.stop();
-    //       this.continuousInputChecker.callCounterFunc();
-    //     } else {
-    //       this.setUnFocus();
-    //     }
-    //   }
-    // });
-
-    // widget._inputcontroller.addListener(() {
-    //   if (this.prev == widget._inputcontroller.text) return;
-    //   if(this.prev == ""){
-    //     widget.onNotEmpty();
-    //   }
-    //   this.prev = widget._inputcontroller.text;
-    //   this.isInputing = true;
-    //   if (this.continuousInputChecker != null) {
-    //     this.continuousInputChecker.reset();
-    //   }
-    //   this.setNormal();
-    //   this.suffixSizeAnimation.reverse();
-    // });
-    if(widget.disabled.value){
-      this.setDisabled();
-    }else{
-      this.setEnabled();
-    }
-    // this.initDisableListener(widget.disabled);
     this.widgetBinding();
   }
 
