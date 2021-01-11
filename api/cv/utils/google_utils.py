@@ -23,11 +23,11 @@ def attempt_download(weights):
     file = Path(weights).name
 
     msg = weights + ' missing, try downloading from https://github.com/ultralytics/yolov5/releases/'
-    models = ['yolov5s.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt']  # available models
+    models = ['s_v1.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt']  # available models
 
     if file in models and not os.path.isfile(weights):
         # Google Drive
-        # d = {'yolov5s.pt': '1R5T6rIyy3lLwgFXNms8whc-387H0tMQO',
+        # d = {'s_v1.pt': '1R5T6rIyy3lLwgFXNms8whc-387H0tMQO',
         #      'yolov5m.pt': '1vobuEExpWQVpXExsJ2w-Mbf3HJjWkQJr',
         #      'yolov5l.pt': '1hrlqD1Wdei7UT4OgT785BEk1JwnSvNEV',
         #      'yolov5x.pt': '1mM8aZJlWTxOg7BZJvNUMrTnA2AbeCVzS'}

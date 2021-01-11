@@ -16,7 +16,7 @@ from cv.utils.general import check_img_size, non_max_suppression, scale_coords
 
 def _detect(save_img=False):
     out, source, weights, view_img, save_txt, imgsz, device, augment, save_conf, conf_thres, iou_thres, classes, agnostic_nms = \
-        'cv/inference/output', 'cv/inference/images', 'cv/weights/yolov5s.pt', None, \
+        'cv/inference/output', 'cv/inference/images', 'cv/weights/s_v1.pt', None, \
         None, 640, 'cpu', 'store_true', 'store_true', 0.25, 0.45, None, 'store_true'
 
     # Initialize
