@@ -9,10 +9,27 @@ import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
 import numpy as np
+import base64
 
 from models.experimental import attempt_load
 from cv.utils.datasets import LoadStreams, LoadImages
 from cv.utils.general import check_img_size, non_max_suppression, scale_coords
+
+
+def base64_to_image(base64_code):
+    img_original = base64.b64decode(base64_code)
+    img_np = np.frombuffer(img_original, dtype=np.uint8)
+    img = cv2.imdecode(img_np, cv2.IMREAD_UNCHANGED)
+
+    return img
+
+
+def img_to_base64(path):
+    mat = cv2.imread(path)
+    # Mat to Base64
+    string = base64.b64encode(cv2.imencode('.png', mat)[1]).decode()
+
+    return string
 
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
@@ -48,8 +65,10 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     return img, ratio, (dw, dh)
 
 
-def _img_handle(path, img_size):
-    img0 = cv2.imread(path)  # BGR
+def _img_handle(b64, img_size):
+    # img0 = cv2.imread(path)  # BGR
+    img0 = b64
+
     assert img0 is not None, 'Image Not Found ' + path
 
     # Padded resize
@@ -62,9 +81,9 @@ def _img_handle(path, img_size):
     return path, img, img0, None
 
 
-def _detect(path):
+def _detect(b64):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
-        'cv/inference/output', path, '../cv/weights/s_v1.pt', \
+        'cv/inference/output', b64, '../cv/weights/s_v1.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
 
     # Initialize
@@ -85,7 +104,7 @@ def _detect(path):
     # Run inference
     img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
     _ = model(img.half() if half else img) if device.type != 'cpu' else None  # run once
-    for path, img, im0s, vid_cap in [dataset]:
+    for b64, img, im0s, vid_cap in [dataset]:
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -101,7 +120,7 @@ def _detect(path):
         result = []
         # Process detections
         for i, det in enumerate(pred):  # detections per image
-            p, s, im0 = path, '', im0s
+            p, s, im0 = b64, '', im0s
 
             s += '%gx%g ' % img.shape[2:]  # print string
             if det is not None and len(det):
@@ -120,12 +139,15 @@ def _detect(path):
         return result
 
 
-def detect(path):
+def detect(b64):
     with torch.no_grad():
-        out = _detect(path)
+        out = _detect(b64)
         print(out)
 
 
 if __name__ == '__main__':
     path = 'cv/inference/images/test1.png'
-    detect(path)
+    img64 = img_to_base64(path)
+    img = base64_to_image(img64)
+    # cv2.imwrite('test111.png', img)
+    detect(img)
