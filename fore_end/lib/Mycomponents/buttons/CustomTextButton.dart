@@ -4,27 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
+import 'package:fore_end/interface/Valueable.dart';
 
-class CustomTextButton extends StatefulWidget with ThemeWidgetMixIn{
-  String text;
+class CustomTextButton extends StatefulWidget
+    with ThemeWidgetMixIn, DisableWidgetMixIn, ValueableWidgetMixIn<String>{
+
   double fontsize;
   Color textColor;
   Color clickColor;
   Function tapUpFunc;
   int colorChangeDura;
   bool isTap = false;
+  bool ignoreTap;
+  bool autoReturnColor;
 
-
-
-  CustomTextButton(this.text,
+  CustomTextButton(
+      String text,
       {this.fontsize = 16,
-      this.tapUpFunc,
+        bool disabled = false,
+        bool canChangeDisable = true,
+        this.ignoreTap = false,
+        this.autoReturnColor = true,
+        Function tapUpFunc,
         @required MyTheme theme,
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
       this.theme = theme;
+      this.tapUpFunc = tapUpFunc==null?(){}:tapUpFunc;
+      this.widgetValue = ValueNotifier<String>(text);
+      this.disabled = ValueNotifier(disabled);
+      this.canChangeDisable = canChangeDisable;
       this.textColor = this.theme.darkTextColor;
       this.clickColor = this.theme.getReactColor(ComponentReactState.focused);
   }
@@ -36,34 +48,43 @@ class CustomTextButton extends StatefulWidget with ThemeWidgetMixIn{
 }
 
 class CustomTextButtonState extends State<CustomTextButton>
-    with TickerProviderStateMixin, ThemeStateMixIn {
+    with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn,ValueableStateMixIn<String> {
   TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
-
+  CustomTextButtonState(){
+    this.themeState = ComponentThemeState.normal;
+  }
   @override
   void initState() {
     super.initState();
+
+    this.initValueListener(widget.widgetValue);
+    this.initDisableListener(widget.disabled);
 
     this.animation.initAnimation(
         CalculatableColor.transform(widget.textColor),
         widget.theme.getReactColor(ComponentReactState.focused),
         widget.colorChangeDura, this, null);
     //点击完毕后，颜色从高亮恢复正常
-    this.animation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
-        if(!widget.isTap){
-          this.animation.reverseAnimation();
+    if(widget.autoReturnColor) {
+      this.animation.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          if (!widget.isTap) {
+            this.animation.reverseAnimation();
+          }
         }
-      }
-    });
-    //状态变化后，重置点击变色动画
-    this.animation.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
-        widget.textColor = widget.theme.getThemeColor(this.themeState);
-        this.animation.initAnimation(widget.textColor, widget.clickColor,
-            widget.colorChangeDura, this, () { setState(() {});});
-      }
-    });
+      });
+      //状态变化后，重置点击变色动画
+      this.animation.addStatusListener((status) {
+        if(status == AnimationStatus.completed){
+          widget.textColor = widget.theme.getThemeColor(this.themeState);
+          this.animation.initAnimation(widget.textColor, widget.clickColor,
+              widget.colorChangeDura, this, () { setState(() {});});
+        }
+      });
+    }else{
+      widget.textColor = widget.theme.getThemeColor(this.themeState);
+    }
   }
   @override
   void dispose() {
@@ -76,34 +97,41 @@ class CustomTextButtonState extends State<CustomTextButton>
   }
 
   Widget get TextBUttonUI {
+    TapGestureRecognizer recog = TapGestureRecognizer()
+      ..onTapUp = (TapUpDetails tpd) {
+        if(widget.disabled.value)return;
+        widget.isTap = false;
+        print("tapUp");
+        this.animation.reverseAnimation();
+        widget.tapUpFunc();
+      }
+      ..onTapDown = (TapDownDetails details) {
+        if(widget.disabled.value)return;
+        widget.isTap = true;
+        print("tapDown");
+        this.animation.beginAnimation();
+      }
+      ..onTapCancel= (){
+        if(widget.disabled.value)return;
+        widget.isTap = false;
+        print("tapCancel");
+        this.animation.reverseAnimation();
+      };
+    if(widget.ignoreTap){
+      recog = null;
+    }
     return AnimatedBuilder(
         animation: this.animation.ctl,
         builder: (BuildContext context, Widget child){
           return RichText(
               text: TextSpan(
-                  text: widget.text,
+                  text: widget.widgetValue.value,
                   style: TextStyle(
                       decoration: TextDecoration.none,
                       fontSize: widget.fontsize,
                       fontFamily: "Futura",
                       color: this.animation.getValue()),
-                  recognizer: TapGestureRecognizer()
-                    ..onTapUp = (TapUpDetails tpd) {
-                      widget.isTap = false;
-                      print("tapUp");
-                      this.animation.reverseAnimation();
-                      widget.tapUpFunc();
-                    }
-                    ..onTapDown = (TapDownDetails details) {
-                      widget.isTap = true;
-                      print("tapDown");
-                      this.animation.beginAnimation();
-                    }
-                    ..onTapCancel= (){
-                      widget.isTap = false;
-                      print("tapCancel");
-                      this.animation.reverseAnimation();
-                    }
+                  recognizer: recog
               ));
         });
   }
@@ -172,5 +200,30 @@ class CustomTextButtonState extends State<CustomTextButton>
         this, () {setState((){});});
     this.animation.beginAnimation();
     return stt;
+  }
+
+  @override
+  void onChangeValue() {
+    setState(() {});
+  }
+
+  @override
+  void setDisabled() {
+    this.animation.initAnimation(
+        CalculatableColor.transform(widget.textColor),
+        widget.theme.getDisabledColor(),
+        widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.beginAnimation();
+  }
+
+  @override
+  void setEnabled() {
+    this.animation.initAnimation(
+        widget.theme.getDisabledColor(),
+        CalculatableColor.transform(widget.textColor),
+        widget.colorChangeDura,
+        this, () {setState((){});});
+    this.animation.beginAnimation();
   }
 }
