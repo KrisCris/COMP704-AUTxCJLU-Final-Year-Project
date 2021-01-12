@@ -1,6 +1,6 @@
 # Miscellaneous
 api/cv/inference/output
-api/cv/inference/images
+api/cv/cv/inference/images
 *.class
 *.log
 *.pyc
