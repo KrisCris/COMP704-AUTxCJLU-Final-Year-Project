@@ -433,14 +433,14 @@ class CustomTextFieldState extends State<CustomTextField>
         ),
         disabledBorder: UnderlineInputBorder(
             borderSide: BorderSide.none,),
-        // errorBorder: UnderlineInputBorder(
-        //     borderSide: BorderSide(
-        //         color: colorAnimation.getValue(),
-        //         width: this.underlineWidthAnimation.getValue())),
-        // focusedErrorBorder: UnderlineInputBorder(
-        //     borderSide: BorderSide(
-        //         color: colorAnimation.getValue(),
-        //         width: this.underlineWidthAnimation.getValue())),
+        errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: colorAnimation.getValue(),
+                width: this.underlineWidthAnimation.getValue())),
+        focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: colorAnimation.getValue(),
+                width: this.underlineWidthAnimation.getValue())),
 
         //文本框基本属性
         hintText: widget.placeholder,
@@ -549,9 +549,6 @@ class CustomTextFieldState extends State<CustomTextField>
 
   @override
   void setEnabled() {
-    //仅在聚焦状态下执行后续流程
-    if(!widget._focusNode.hasFocus)return;
-
     //可用状态，从当前颜色回到theme控制的颜色
     this.colorAnimation.initAnimation(
         this.colorAnimation.getValue(),

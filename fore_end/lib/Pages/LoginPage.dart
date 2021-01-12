@@ -56,7 +56,7 @@ class Login extends StatelessWidget {
     this.emailField = CustomTextField(
       placeholder: "Email address",
       // keyboardAction: TextInputAction.next,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -70,7 +70,7 @@ class Login extends StatelessWidget {
     );
     this.passwordField = CustomTextField(
       placeholder: "Password",
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {

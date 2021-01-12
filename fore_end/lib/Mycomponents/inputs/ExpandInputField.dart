@@ -89,7 +89,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
         isAutoChangeState: false,
         isAutoCheck: false,
         inputType: InputFieldType.verifyCode,
-        theme: MyTheme.blueStyle,
+        theme: MyTheme.blueStyleForInput,
         width: widget.width - widget.iconSize * 1.5,
         sizeChangeMode: 0,
         bottomPadding: -15,

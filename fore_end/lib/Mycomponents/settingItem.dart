@@ -49,13 +49,14 @@ class SettingItem extends StatefulWidget
         this.rightComponent = CustomTextField(
           disabled: disabled,
           canChangeDisabled: canChangeDisabled,
-          theme: MyTheme.blueStyle,
+          theme: MyTheme.blueStyleForInput,
           defaultContent: text,
           ulDefaultWidth: 0,
           width: this.inputFieldWidth,
           helpText: "",
           errorText: "",
           disableSuffix: true,
+          isAutoCheck: false,
           bottomPadding: -50,
           textAlign: TextAlign.right,
         );
