@@ -254,9 +254,6 @@ class CustomTextFieldState extends State<CustomTextField>
     );
     this.prev = widget.defaultContent;
     this.initColor();
-    // for (Function f in widget.listenerList) {
-    //   widget.addListener(f);
-    // }
     this.lengthAnimation.initAnimation(
         this.firstWidth, this.firstWidth, this.sizeChangeDura, this, null);
     this.lengthAnimation.beginAnimation();
@@ -275,7 +272,6 @@ class CustomTextFieldState extends State<CustomTextField>
   }
 
   void initColor() {
-    if(widget.disabled.value){
       this.colorAnimation.initAnimation(
           widget.theme.getDisabledColor(),
           widget.theme.getDisabledColor(),
@@ -283,15 +279,6 @@ class CustomTextFieldState extends State<CustomTextField>
           this, () {
         setState(() {});
       });
-    }else{
-      this.colorAnimation.initAnimation(
-          widget.theme.getThemeColor(this.themeState),
-          widget.theme.getThemeColor(this.themeState),
-          colorChangeDura,
-          this, () {
-        setState(() {});
-      });
-    }
     this.colorAnimation.beginAnimation();
   }
   void widgetBinding(){
@@ -439,11 +426,11 @@ class CustomTextFieldState extends State<CustomTextField>
               color: colorAnimation.getValue(),
               width: this.underlineWidthAnimation.getValue()),
         ),
-        // enabledBorder: UnderlineInputBorder(
-        //   borderSide: BorderSide(
-        //       color: colorAnimation.getValue(),
-        //       width: this.underlineWidthAnimation.getValue()),
-        // ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: colorAnimation.getValue(),
+              width: this.underlineWidthAnimation.getValue()),
+        ),
         disabledBorder: UnderlineInputBorder(
             borderSide: BorderSide.none,),
         // errorBorder: UnderlineInputBorder(
@@ -501,6 +488,7 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
+    this.themeState = ComponentThemeState.correct;
   }
 
   @override
@@ -561,6 +549,9 @@ class CustomTextFieldState extends State<CustomTextField>
 
   @override
   void setEnabled() {
+    //仅在聚焦状态下执行后续流程
+    if(!widget._focusNode.hasFocus)return;
+
     //可用状态，从当前颜色回到theme控制的颜色
     this.colorAnimation.initAnimation(
         this.colorAnimation.getValue(),
@@ -589,6 +580,7 @@ class CustomTextFieldState extends State<CustomTextField>
         setState(() {});
       });
       this.underlineWidthAnimation.beginAnimation();
+      this.colorAnimation.beginAnimation();
     }
   }
   void setUnFocus(){
@@ -602,6 +594,7 @@ class CustomTextFieldState extends State<CustomTextField>
         setState(() {});
       });
       this.underlineWidthAnimation.reverseAnimation();
+      this.colorAnimation.beginAnimation();
     }
   }
 }
