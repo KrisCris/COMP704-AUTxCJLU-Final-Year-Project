@@ -14,30 +14,40 @@ class FoodBox extends StatefulWidget {
   String picture;
   double height;
   double width;
+  double detailedPaddingLeft;
   double paddingLeft;
   double paddingBottom;
   double paddingTop;
   double paddingRight;
+  double borderRadius;
+  int expandDuration;
 
   FoodBox(
       {@required String picture = "",
       @required Food food,
-      double height = 100,
-        double paddingLeft = 10,
-        double paddingBottom = 10,
-        double paddingTop = 0,
-        double paddingRight = 15,
+      double height = 70,
+      double detailedPaddingLeft = 30,
+      double paddingLeft = 10,
+      double paddingBottom = 50,
+      double paddingTop = 0,
+      double paddingRight = 30,
+      int expandDuration = 150,
+        double borderRadius = 50,
       double width = 1})
       : assert(food != null) {
     this.food = food;
     this.picture = picture;
     this.height = ScreenTool.partOfScreenHeight(height);
     this.width = ScreenTool.partOfScreenWidth(width);
+    this.detailedPaddingLeft = detailedPaddingLeft;
     this.paddingLeft = paddingLeft;
     this.paddingTop = paddingTop;
     this.paddingBottom = paddingBottom;
     this.paddingRight = paddingRight;
+    this.expandDuration = expandDuration;
+    this.borderRadius = borderRadius;
   }
+
   @override
   State<StatefulWidget> createState() {
     return new FoodBoxState();
@@ -53,11 +63,12 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.expandAnimation.initAnimation(widget.height, widget.height, 200, this,
-        () {
+    this.expandAnimation.initAnimation(
+        widget.height, widget.height, widget.expandDuration, this, () {
       setState(() {});
     });
-    this.iconAngleAnimation.initAnimation(0.0, pi, 200, this, () {
+    this.iconAngleAnimation.initAnimation(0.0, pi, widget.expandDuration, this,
+        () {
       setState(() {});
     });
   }
@@ -70,11 +81,11 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
   Widget getBorderBox() {
     return AnimatedContainer(
       curve: Curves.fastOutSlowIn,
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: widget.expandDuration),
       width: widget.width,
       child: this.getContainer(),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -90,7 +101,9 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: widget.paddingTop,),
+        SizedBox(
+          height: widget.paddingTop,
+        ),
         this.getHeader(),
         AnimatedCrossFade(
             firstChild: Container(
@@ -100,7 +113,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
             crossFadeState: this.isTurningUp
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200))
+            duration: Duration(milliseconds: widget.expandDuration))
       ],
     );
   }
@@ -129,6 +142,9 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
       width: 50,
       height: 50,
       decoration: BoxDecoration(
+
+        color: Colors.yellow,
+        borderRadius: BorderRadius.circular(50),
         image: DecorationImage(
           image: img,
           fit: BoxFit.cover,
@@ -164,41 +180,58 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
   Widget getDetailedProperty() {
     return Column(
       children: [
-        this.propertyLine("calorie",widget.food.getCalorie()),
-        this.propertyLine("VC","61mg"),
-        this.propertyLine("VD","39mg"),
-        this.propertyLine("water","721mg"),
-        SizedBox(height: widget.paddingBottom,)
+        this.propertyLine("calorie", widget.food.getCalorie()),
+        this.propertyLine("VC", "61mg"),
+        this.propertyLine("VD", "39mg"),
+        this.propertyLine("VD", "39mg"),
+        this.propertyLine("water", "721mg"),
+        SizedBox(
+          height: widget.paddingBottom,
+        )
       ],
     );
   }
-  Widget propertyLine(String name, String value){
+
+  Widget propertyLine(String name, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(width: widget.paddingLeft,),
-        Expanded(child: Text(name,style: TextStyle(
-            decoration: TextDecoration.none,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Futura",
-            color: Colors.black)),),
-        Text(value,style: TextStyle(
-            decoration: TextDecoration.none,
-            fontSize: 20,
-            fontWeight: FontWeight.normal,
-            fontFamily: "Futura",
-            color: Colors.black),),
-        SizedBox(width: widget.paddingRight,)
+        SizedBox(
+          width: widget.detailedPaddingLeft,
+        ),
+        Expanded(
+          child: Text(name,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: Colors.black)),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+              fontFamily: "Futura",
+              color: Colors.black),
+        ),
+        SizedBox(
+          width: widget.paddingRight,
+        )
       ],
     );
   }
+
   void expandIconTap() {
     if (this.isTurningUp) {
       this.isTurningUp = false;
+      widget.borderRadius = 50;
       this.iconAngleAnimation.reverse();
     } else {
       this.isTurningUp = true;
+      widget.borderRadius = 35;
       this.iconAngleAnimation.forward();
     }
   }

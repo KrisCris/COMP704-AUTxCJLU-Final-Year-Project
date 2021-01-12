@@ -12,7 +12,7 @@ class ComponentTestPage extends StatelessWidget {
     ExpandListView list = ExpandListView(width: 200,height: 200,);
     return BackGround(
       opacity: 0.5,
-      child: FoodBox(food: Food(name: "apple",calorie: 23.0),width: 0.8,)
+      child: FoodBox(food: Food(name: "apple",calorie: 23.0),width: 0.90,)
     );
   }
 }

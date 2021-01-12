@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -13,16 +14,32 @@ class BackGround extends StatelessWidget {
   double opacity;
   Alignment alignment;
 
-  BackGround(
-      {this.sigmaX = 0,
+  ///type = 0 -> AssetImage
+  ///type = 1 -> MemoryImage
+  int _type;
+
+  BackGround({
+    this.sigmaX = 0,
       this.sigmaY = 0,
       this.opacity = 0,
       this.alignment = Alignment.center,
       this.backgroundImage = "image/fruit-main.jpg",
       this.color = Colors.white,
       this.child,
-      Key key})
-      : super(key: key);
+      Key key}) : super(key: key){this._type = 0;}
+
+  BackGround.base64({
+    Key key,
+    String base64,
+    this.sigmaX=0,
+   this.sigmaY=0,
+   this.opacity=0,
+    this.alignment=Alignment.center,
+    this.child,
+    this.color=Colors.white}):super(key: key){
+      this._type = 1;
+      this.backgroundImage = base64;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +47,7 @@ class BackGround extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(this.backgroundImage),
+              image: this.getImage(),
               fit: BoxFit.cover,
             ),
           ),
@@ -45,5 +62,13 @@ class BackGround extends StatelessWidget {
                     child: this.child)),
           ),
     ));
+  }
+
+  ImageProvider getImage(){
+    if(this._type == 0){
+      return AssetImage(this.backgroundImage);
+    }else if(this._type == 1){
+      return MemoryImage(base64Decode(this.backgroundImage));
+    }
   }
 }
