@@ -144,11 +144,29 @@ class LoadImages:  # for inference
             raise StopIteration
         path = self.files[self.count]
 
-        # Read image
-        self.count += 1
-        img0 = cv2.imread(path)  # BGR
-        assert img0 is not None, 'Image Not Found ' + path
-        # print('image %g/%g %s: ' % (self.count, self.nf, path), end='')
+        if self.video_flag[self.count]:
+            # Read video
+            self.mode = 'video'
+            ret_val, img0 = self.cap.read()
+            if not ret_val:
+                self.count += 1
+                self.cap.release()
+                if self.count == self.nf:  # last video
+                    raise StopIteration
+                else:
+                    path = self.files[self.count]
+                    self.new_video(path)
+                    ret_val, img0 = self.cap.read()
+
+            self.frame += 1
+            print('video %g/%g (%g/%g) %s: ' % (self.count + 1, self.nf, self.frame, self.nframes, path), end='')
+
+        else:
+            # Read image
+            self.count += 1
+            img0 = cv2.imread(path)  # BGR
+            assert img0 is not None, 'Image Not Found ' + path
+            # print('image %g/%g %s: ' % (self.count, self.nf, path), end='')
 
         # Padded resize
         img = letterbox(img0, new_shape=self.img_size)[0]
