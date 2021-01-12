@@ -17,6 +17,7 @@ class SettingItem extends StatefulWidget
   final String leftText; //左侧显示文字
   final Widget leftIcon; //左侧图片
 
+
   double inputFieldWidth;
   Function onTap; //点击事件
   ValueableWidgetMixIn rightComponent;
@@ -25,51 +26,33 @@ class SettingItem extends StatefulWidget
     Key key,
     bool disabled = false,
     bool canChangeDisabled = true,
-    bool couldInputByKeyBoard = false,
+    ValueableWidgetMixIn rightComponent,
+    String text,
     this.leftText = "",
     this.leftIcon,
-    String text = "",
-    String base64,
     this.onTap,
     this.inputFieldWidth = 0.3,
   }) : super(key: key) {
     this.inputFieldWidth = ScreenTool.partOfScreenWidth(this.inputFieldWidth);
     this.canChangeDisable = canChangeDisabled;
     this.disabled = new ValueNotifier(disabled);
-    if (base64 != null) {
-      this.rightComponent = ValueableImage(
-        base64: base64,
+    if (rightComponent == null) {
+      this.rightComponent = CustomTextField(
         disabled: disabled,
-        canChangeDisable: canChangeDisable,
-        behavior: HitTestBehavior.translucent,
-        ignoreTap: true,
+        canChangeDisabled: canChangeDisabled,
+        theme: MyTheme.blueStyleForInput,
+        defaultContent: text,
+        ulDefaultWidth: 0,
+        width: this.inputFieldWidth,
+        helpText: "",
+        errorText: "",
+        disableSuffix: true,
+        isAutoCheck: false,
+        bottomPadding: -50,
+        textAlign: TextAlign.right,
       );
-    } else {
-      if (couldInputByKeyBoard) {
-        this.rightComponent = CustomTextField(
-          disabled: disabled,
-          canChangeDisabled: canChangeDisabled,
-          theme: MyTheme.blueStyleForInput,
-          defaultContent: text,
-          ulDefaultWidth: 0,
-          width: this.inputFieldWidth,
-          helpText: "",
-          errorText: "",
-          disableSuffix: true,
-          isAutoCheck: false,
-          bottomPadding: -50,
-          textAlign: TextAlign.right,
-        );
-      } else {
-        this.rightComponent = CustomTextButton(
-          text,
-          theme: MyTheme.blueStyle,
-          disabled: disabled,
-          canChangeDisable: canChangeDisable,
-          ignoreTap: true,
-          autoReturnColor: false,
-        );
-      }
+    }else{
+      this.rightComponent = rightComponent;
     }
   }
 
@@ -103,7 +86,7 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.disabled.value?(){}:widget.onTap,
+        onTap: widget.disabled.value ? () {} : widget.onTap,
         child: Container(
           width: double.infinity,
           height: 60,
