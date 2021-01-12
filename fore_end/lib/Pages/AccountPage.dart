@@ -8,8 +8,10 @@ import 'package:fore_end/MyTool/Picker_Tool.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
+import 'package:fore_end/Mycomponents/widgets/ValueableImage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -177,7 +179,10 @@ class PageState extends State<AccountPage> {
     SettingItem item =new SettingItem(
       leftIcon: Icon(FontAwesomeIcons.envelope),
       leftText: "Email",
-      text: widget.user.email,
+      rightComponent: CustomTextButton(
+        widget.user.email,
+        theme: MyTheme.blueStyle,
+      ),
       disabled: true,
       canChangeDisabled: false,
     );
@@ -192,10 +197,14 @@ class PageState extends State<AccountPage> {
         size: 23,
       ),
       leftText: "Password",
-      text:"******",
       disabled: false,
       canChangeDisabled: true,
-      couldInputByKeyBoard: false,
+      rightComponent: CustomTextButton(
+        "******",
+        theme: MyTheme.blueStyle,
+        ignoreTap: true,
+        autoReturnColor: false,
+      ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UpdatePwdPage();}
@@ -214,7 +223,12 @@ class PageState extends State<AccountPage> {
     SettingItem item = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.userCircle),
       leftText: "Profile Photo",
-      base64: u.avatar,
+      rightComponent: ValueableImage(
+        base64: u.avatar,
+        disabled: true,
+        behavior: HitTestBehavior.translucent,
+        ignoreTap: true,
+      ),
       disabled: true,
     );
     item.onTap = () async {
@@ -237,8 +251,12 @@ class PageState extends State<AccountPage> {
       leftIcon: Icon(FontAwesomeIcons.transgender),
       leftText: "Gender",
       disabled: true,
-      couldInputByKeyBoard: false,
-      text: widget.getUserGender(widget.user.gender),
+      rightComponent: CustomTextButton(
+        widget.getUserGender(widget.user.gender),
+        theme: MyTheme.blueStyle,
+        ignoreTap: true,
+        autoReturnColor: false,
+      ),
     );
 
     genderItem.onTap = () {
@@ -271,7 +289,6 @@ class PageState extends State<AccountPage> {
       leftIcon: Icon(FontAwesomeIcons.user),
       leftText: "Username",
       text: widget.user.userName,
-      couldInputByKeyBoard: true,
       inputFieldWidth: 0.45,
       disabled: true,
     );
@@ -282,7 +299,6 @@ class PageState extends State<AccountPage> {
       leftIcon: Icon(Icons.calendar_today),
       leftText: "Age",
       text: widget.user.age.toString(),
-      couldInputByKeyBoard: true,
       inputFieldWidth: 0.45,
       disabled: true,
     );

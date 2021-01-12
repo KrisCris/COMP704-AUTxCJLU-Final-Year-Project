@@ -136,7 +136,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
       placeholder: widget.placeHolder,
       isAutoChangeState: false,
       inputType: InputFieldType.verifyCode,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       width: 0,
       sizeChangeMode: 0,
       onCorrect: () async {

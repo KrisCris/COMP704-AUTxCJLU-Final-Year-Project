@@ -53,7 +53,16 @@ class MyTheme {
   CalculatableColor getFocusedColor(){
     return CalculatableColor.transform(this.reactMap[ComponentReactState.focused]);
   }
-
+  static final MyTheme blueStyleForInput = MyTheme._privateConstructor(
+    focusedColor:  Color(0xFF0090FF),
+    disabledColor: Color(0xFF929497),
+    errorColor: Color(0xFFFF6060),
+    warningColor: Color(0xFFFFC35F),
+    normalColor: Color(0xFF929497),
+    correctColor: Color(0xFF4ED882),
+    textColorDark: Colors.black,
+    textColorLight: Colors.white,
+  );
   static final MyTheme blueStyle = MyTheme._privateConstructor(
       focusedColor:  Color(0xFF0090FF),
       disabledColor: Color(0xFF929497),
