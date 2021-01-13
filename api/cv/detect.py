@@ -77,7 +77,7 @@ def _img_handle(b64, img_size):
 
 def _detect(b64):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
-        'cv/inference/output', b64, '../cv/weights/s_v1.pt', \
+        'cv/inference/output', b64, 'cv/weights/s_v1.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
 
     # Initialize
@@ -112,8 +112,6 @@ def _detect(b64):
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             p, s, im0 = b64, '', im0s
-
-            s += '%gx%g ' % img.shape[2:]  # print string
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
@@ -121,8 +119,6 @@ def _detect(b64):
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     # det_reversed: 左上角坐标(x, y), 宽度，高度, confidence, class
-                    print('\n', list(map(lambda x: x.item(), xyxy)), conf.item(), cls.item(), names[int(cls)])
-
                     label = '%s %.2f' % (names[int(cls)], conf)
                     plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
 
@@ -132,7 +128,8 @@ def _detect(b64):
                 inner = list(map(lambda x: x.item(), inner))
                 inner[-1] = names[int(inner[-1])]
                 result.append(inner)
-        # print(result)
+
+        print('\n'.join(str(i) for i in result))
         return result
 
 
@@ -143,9 +140,9 @@ def detect(img):
 
 
 #
-if __name__ == '__main__':
-    path = 'cv/inference/images/test1.png'
-    img64 = img_to_base64(path)
-    img = base64_to_image(img64)
-    # cv2.imwrite('test111.png', img)
-    detect(img)
+# if __name__ == '__main__':
+#     path = 'cv/inference/images/test1.png'
+#     img64 = img_to_base64(path)
+#     img = base64_to_image(img64)
+#     # cv2.imwrite('test111.png', img)
+#     detect(img)
