@@ -291,9 +291,10 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         await _ctl.takePicture(this._path);
         File pic = File(this._path);
-        String bs64 = await this.pictureToBase64(pic);
+        Map<String,Uint8List> res  = await this.pictureToBase64(pic);
         pic.delete();
-        FoodRecognizer.addFoodPic(bs64);
+        var entry = res.entries.first;
+        FoodRecognizer.addFoodPic(entry.key,entry.value);
       },
     );
   }
@@ -317,8 +318,9 @@ class TakePhotoState extends State<TakePhotoPage>
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
 
-        String bs64 = await this.pictureToBase64(image);
-        FoodRecognizer.addFoodPic(bs64);
+        Map<String,Uint8List> res = await this.pictureToBase64(image);
+        var entry = res.entries.first;
+        FoodRecognizer.addFoodPic(entry.key,entry.value);
       },
     );
   }
@@ -346,11 +348,11 @@ class TakePhotoState extends State<TakePhotoPage>
     );
   }
 
-  Future<String> pictureToBase64(File f) async {
+  Future<Map<String,Uint8List>> pictureToBase64(File f) async {
     Uint8List byteData = await f.readAsBytes();
     String bs64 = base64Encode(byteData);
     print("picture convert complete:\n" + bs64);
-    return bs64;
+    return {bs64:byteData};
   }
 
   @override

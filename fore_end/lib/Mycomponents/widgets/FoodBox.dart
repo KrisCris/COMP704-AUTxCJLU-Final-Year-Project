@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'dart:math' as math;
 
 class FoodBox extends StatefulWidget {
   static const String defaultPicturePath = "image/defaultFood.png";
-
+  ValueNotifier<bool> shouldShowPic;
   Food food;
   String picture;
   double height;
@@ -32,7 +33,8 @@ class FoodBox extends StatefulWidget {
       double paddingTop = 0,
       double paddingRight = 30,
       int expandDuration = 150,
-        double borderRadius = 35,
+      double borderRadius = 35,
+        bool shouldShowPic = false,
       double width = 1})
       : assert(food != null) {
     this.food = food;
@@ -46,30 +48,48 @@ class FoodBox extends StatefulWidget {
     this.paddingRight = paddingRight;
     this.expandDuration = expandDuration;
     this.borderRadius = borderRadius;
+    this.shouldShowPic = ValueNotifier(shouldShowPic);
   }
 
   @override
   State<StatefulWidget> createState() {
     return new FoodBoxState();
   }
+  Future<void> setShow(bool b) async {
+    this.shouldShowPic.value = b;
+  }
 }
 
-class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
-  TweenAnimation<double> expandAnimation = TweenAnimation<double>();
-  TweenAnimation<double> iconAngleAnimation = TweenAnimation<double>();
-  bool isTurningUp = false;
+class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
   double expandedHeight;
+  bool shouldExpand = false;
+  ///picType = 0 -> defaultPicutre
+  ///picType = 1 -> photo
+  int picType = 0;
+  TweenAnimation<double> angleAnimation = new TweenAnimation<double>();
+  Container pic;
+  @override
+  void didUpdateWidget(covariant FoodBox oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    widget.shouldShowPic.addListener(() {
+      if(widget.shouldShowPic.value && mounted){
+        setState(() {});
+      }
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.expandAnimation.initAnimation(
-        widget.height, widget.height, widget.expandDuration, this, () {
-      setState(() {});
-    });
-    this.iconAngleAnimation.initAnimation(0.0, pi, widget.expandDuration, this,
-        () {
-      setState(() {});
+    this.angleAnimation.initAnimation(0, math.pi, widget.expandDuration, this,
+            () {
+          setState(() {});
+        });
+    widget.shouldShowPic.addListener(() {
+      if(widget.shouldShowPic.value && mounted){
+        setState(() {});
+      }
     });
   }
 
@@ -83,6 +103,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: widget.expandDuration),
       width: widget.width,
+      margin: EdgeInsets.only(bottom: 15,left: 5,right: 5),
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -110,7 +131,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
               height: 0.0,
             ),
             secondChild: this.getDetailedProperty(),
-            crossFadeState: this.isTurningUp
+            crossFadeState: this.shouldExpand
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
             duration: Duration(milliseconds: widget.expandDuration))
@@ -119,31 +140,46 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
   }
 
   Widget getHeader() {
-    return Container(
-      height: widget.height,
-      child: Row(children: [
-        SizedBox(width: widget.paddingLeft),
-        getFoodPic(),
-        SizedBox(width: 20),
-        Expanded(child: getFoodName()),
-        getExpandIcon(),
-        SizedBox(width: widget.paddingRight)
-      ]),
+    return GestureDetector(
+      onTap: this.clickFunc,
+      child: Container(
+        height: widget.height,
+        child: Row(children: [
+          SizedBox(width: widget.paddingLeft),
+          getFoodPic(),
+          SizedBox(width: 20),
+          Expanded(child: getFoodName()),
+          getExpandIcon(),
+          SizedBox(width: widget.paddingRight)
+        ]),
+      ),
     );
   }
 
   Widget getFoodPic() {
-    ImageProvider img = AssetImage(FoodBox.defaultPicturePath);
-
-    if (widget.picture != "" && widget.picture != null) {
-      img = MemoryImage(base64Decode(widget.picture));
+    if (this.pic != null){
+      if(widget.shouldShowPic.value && this.picType == 0){
+        this.pic = null;
+      }else{
+        return this.pic;
+      }
+    }else{
+      this.picType = 0;
     }
-    return Container(
+    ImageProvider img = null;
+    if(widget.shouldShowPic.value == false){
+      img = AssetImage(FoodBox.defaultPicturePath);
+    }else{
+      if (widget.picture != "" && widget.picture != null) {
+        img = MemoryImage(base64Decode(widget.picture));
+        this.picType = 1;
+      }
+    }
+    this.pic = Container(
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-
-        color: Colors.yellow,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(25),
         image: DecorationImage(
           image: img,
@@ -151,6 +187,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
         ),
       ),
     );
+    return this.pic;
   }
 
   Widget getFoodName() {
@@ -166,15 +203,13 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
   }
 
   Widget getExpandIcon() {
-    return GestureDetector(
-        onTap: expandIconTap,
-        child: Transform.rotate(
-          angle: this.iconAngleAnimation.getValue(),
+    return Transform.rotate(
+          angle: this.angleAnimation.getValue(),
           child: Icon(
             FontAwesomeIcons.chevronDown,
             color: Colors.blue,
           ),
-        ));
+        );
   }
 
   Widget getDetailedProperty() {
@@ -224,15 +259,17 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
     );
   }
 
-  void expandIconTap() {
-    if (this.isTurningUp) {
-      this.isTurningUp = false;
-      widget.borderRadius = 50;
-      this.iconAngleAnimation.reverse();
+  void clickFunc() {
+    if (this.shouldExpand) {
+      this.shouldExpand = false;
+      this.angleAnimation.reverse();
     } else {
-      this.isTurningUp = true;
-      widget.borderRadius = 35;
-      this.iconAngleAnimation.forward();
+      this.shouldExpand = true;
+      this.angleAnimation.forward();
     }
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => false;
 }
