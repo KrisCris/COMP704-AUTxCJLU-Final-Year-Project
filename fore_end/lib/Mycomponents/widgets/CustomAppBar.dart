@@ -47,7 +47,7 @@ class CustomAppBarState extends State<CustomAppBar>
       height: 200,
       open: false,
     );
-    Container container = Container(
+    Widget container = Container(
       width: ScreenTool.partOfScreenWidth(0.85),
       height: 70,
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -103,6 +103,10 @@ class CustomAppBarState extends State<CustomAppBar>
           SizedBox(width: 5)
         ],
       ),
+    );
+    container = Offstage(
+      offstage:this.headerTransparency.getValue() == 0,
+      child:container,
     );
     return AnimatedBuilder(
         animation: this.headerTransparency.ctl,

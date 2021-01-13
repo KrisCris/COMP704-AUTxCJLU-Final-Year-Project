@@ -32,7 +32,7 @@ class FoodBox extends StatefulWidget {
       double paddingTop = 0,
       double paddingRight = 30,
       int expandDuration = 150,
-        double borderRadius = 50,
+        double borderRadius = 35,
       double width = 1})
       : assert(food != null) {
     this.food = food;
@@ -144,7 +144,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin {
       decoration: BoxDecoration(
 
         color: Colors.yellow,
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(25),
         image: DecorationImage(
           image: img,
           fit: BoxFit.cover,

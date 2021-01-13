@@ -1,36 +1,28 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Food.dart';
-import 'package:fore_end/MyTool/Req.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
-import 'package:image/image.dart' as cropper;
 
 
 class ResultPage extends StatefulWidget {
+  static const String defaultBackground = "image/fruit-main.jpg";
   String backgroundBase64;
-  String targetPicBase64;
-  Image targetPic;
-  ValueNotifier<bool> isDone;
-  List<FoodBox> foods;
+  FoodRecognizer recognizer;
 
-  ResultPage({String backgroundBase64, String targetPicBase64}) {
+  ResultPage({String backgroundBase64}) {
     this.backgroundBase64 = backgroundBase64;
-    this.targetPicBase64 = targetPicBase64;
-    this.isDone = ValueNotifier<bool>(false);
-    this.foods = List<FoodBox>();
+    if(backgroundBase64 == null){
+      this.backgroundBase64 = ResultPage.defaultBackground;
+    }
+    this.recognizer = FoodRecognizer.instance;
   }
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return new ResultPageState();
   }
-
-
 }
 class ResultPageState extends State<ResultPage>{
 
@@ -38,9 +30,18 @@ class ResultPageState extends State<ResultPage>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.isDone.addListener(() {setState(() {});});
-    this.sendFoodRecognizeRequest();
+    widget.recognizer.setOnRecognizedDone((){
+      if(!mounted)return;
+      setState(() {});
+    });
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.recognizer.removeOnRecognizedDone();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -63,9 +64,9 @@ class ResultPageState extends State<ResultPage>{
     Widget content = AnimatedCrossFade(
         firstChild: this.getWaiting(),
         secondChild: this.getResult(),
-        crossFadeState: widget.isDone.value
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
+        crossFadeState: widget.recognizer.isEmpty()
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
         duration: Duration(milliseconds: 100));
 
     return BackGround.base64(
@@ -82,46 +83,14 @@ class ResultPageState extends State<ResultPage>{
   }
 
   Widget getWaiting(){
-    return Container(
-      width: 100,
-      height:100,
-      child: Text("Waiting For Results..."),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.white
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text("Waiting For Results...")],
     );
   }
   Widget getResult(){
-    return Column(
-      children: widget.foods,
+    return ListView(
+      children: widget.recognizer.foods,
     );
-  }
-
-  void sendFoodRecognizeRequest() async{
-    widget.targetPic = Image.memory(base64Decode(widget.targetPicBase64));
-
-    Response res = await Requests.foodDetect({
-      "food_b64":widget.targetPicBase64
-    });
-    if(res.data.code == 1){
-      for(dynamic r in res.data['data']){
-        cropper.Image img = cropper.copyCrop(
-            cropper.Image.fromBytes(
-                widget.targetPic.width.round(),
-                widget.targetPic.height.round(),
-                base64Decode(widget.targetPicBase64)),
-            r['x'], r["y"], r["w"], r["h"]);
-        widget.foods.add(
-            FoodBox(
-              food: Food(name: r['name'], calorie: r['calorie']),
-              picture: base64Encode(img.getBytes()),
-            )
-        );
-      }
-      widget.isDone.value = true;
-    }else{
-
-    }
   }
 }
