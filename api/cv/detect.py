@@ -10,10 +10,10 @@ import torch.backends.cudnn as cudnn
 from numpy import random
 import numpy as np
 import base64
+import time
 
 from models.experimental import attempt_load
-from cv.utils.datasets import LoadStreams, LoadImages
-from cv.utils.general import check_img_size, non_max_suppression, scale_coords
+from cv.utils.general import check_img_size, non_max_suppression, scale_coords, plot_one_box
 
 
 def base64_to_image(base64_code):
@@ -26,13 +26,12 @@ def base64_to_image(base64_code):
 def img_to_base64(path):
     mat = cv2.imread(path)
     # Mat to Base64
-    string = base64.b64encode(cv2.imencode('.jpeg', mat)[1]).decode()
+    string = base64.b64encode(cv2.imencode('.png', mat)[1]).decode()
 
     return string
 
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
-    # Resize image to a 32-pixel-multiple rectangle https://github.com/ultralytics/yolov3/issues/232
     shape = img.shape[:2]  # current shape [height, width]
     if isinstance(new_shape, int):
         new_shape = (new_shape, new_shape)
@@ -114,21 +113,26 @@ def _detect(b64):
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             p, s, im0 = b64, '', im0s
-
-            s += '%gx%g ' % img.shape[2:]  # print string
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
 
-                # Print results
-                for c in det[:, -1].unique():
-                    n = (det[:, -1] == c).sum()  # detections per class
-                    s += '%g %ss, ' % (n, names[int(c)])  # add to string (resulation, counts, name)
-            for inner in det:
-                inner = list(map(lambda x: x.item(), inner))
-                inner[-1] = names[int(inner[-1])]
-                result.append(inner)
-        # print(result)
+                # Write results
+                for *xyxy, conf, cls in reversed(det):
+                    # det_reversed: 左上角坐标(x, y), 宽度，高度, confidence, class
+                    label = '%s %.2f' % (names[int(cls)], conf)
+                    plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
+
+            if det is not None and len(det):
+                cv2.imwrite('cv/inference/output/{}.jpg'.format(time.time()), im0)
+                for inner in det:
+                    inner = list(map(lambda x: x.item(), inner))
+                    inner[-1] = names[int(inner[-1])]
+                    result.append(inner)
+            else:
+                result.append('None')
+
+        print('\n'.join(str(i) for i in result))
         return result
 
 
@@ -137,9 +141,10 @@ def detect(img):
         out = _detect(img)
         return out
 
+
 #
 # if __name__ == '__main__':
-#     path = 'cv/inference/images/test.jpg'
+#     path = 'cv/inference/images/tree.jpg'
 #     img64 = img_to_base64(path)
 #     img = base64_to_image(img64)
 #     # cv2.imwrite('test111.png', img)
