@@ -20,7 +20,6 @@ def base64_to_image(base64_code):
     img_original = base64.b64decode(base64_code)
     img_np = np.frombuffer(img_original, dtype=np.uint8)
     img = cv2.imdecode(img_np, cv2.IMREAD_UNCHANGED)
-
     return img
 
 
@@ -133,16 +132,15 @@ def _detect(b64):
         return result
 
 
-def detect(b64):
+def detect(img):
     with torch.no_grad():
-        img_64 = base64_to_image(b64)
-        out = _detect(img_64)
+        out = _detect(img)
         return out
 
-
-if __name__ == '__main__':
-    path = 'cv/inference/images/test.jpg'
-    img64 = img_to_base64(path)
-    img = base64_to_image(img64)
-    # cv2.imwrite('test111.png', img)
-    detect(img)
+#
+# if __name__ == '__main__':
+#     path = 'cv/inference/images/test.jpg'
+#     img64 = img_to_base64(path)
+#     img = base64_to_image(img64)
+#     # cv2.imwrite('test111.png', img)
+#     detect(img)
