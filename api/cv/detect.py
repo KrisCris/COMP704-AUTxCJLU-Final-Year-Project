@@ -12,8 +12,7 @@ import numpy as np
 import base64
 
 from models.experimental import attempt_load
-from cv.utils.datasets import LoadStreams, LoadImages
-from cv.utils.general import check_img_size, non_max_suppression, scale_coords
+from cv.utils.general import check_img_size, non_max_suppression, scale_coords, plot_one_box
 
 
 def base64_to_image(base64_code):
@@ -26,13 +25,12 @@ def base64_to_image(base64_code):
 def img_to_base64(path):
     mat = cv2.imread(path)
     # Mat to Base64
-    string = base64.b64encode(cv2.imencode('.jpeg', mat)[1]).decode()
+    string = base64.b64encode(cv2.imencode('.png', mat)[1]).decode()
 
     return string
 
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
-    # Resize image to a 32-pixel-multiple rectangle https://github.com/ultralytics/yolov3/issues/232
     shape = img.shape[:2]  # current shape [height, width]
     if isinstance(new_shape, int):
         new_shape = (new_shape, new_shape)
@@ -79,7 +77,7 @@ def _img_handle(b64, img_size):
 
 def _detect(b64):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
-        'cv/inference/output', b64, 'cv/weights/s_v1.pt', \
+        'cv/inference/output', b64, '../cv/weights/s_v1.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
 
     # Initialize
@@ -120,10 +118,16 @@ def _detect(b64):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
 
-                # Print results
-                for c in det[:, -1].unique():
-                    n = (det[:, -1] == c).sum()  # detections per class
-                    s += '%g %ss, ' % (n, names[int(c)])  # add to string (resulation, counts, name)
+                # Write results
+                for *xyxy, conf, cls in reversed(det):
+                    # det_reversed: 左上角坐标(x, y), 宽度，高度, confidence, class
+                    print('\n', list(map(lambda x: x.item(), xyxy)), conf.item(), cls.item(), names[int(cls)])
+
+                    label = '%s %.2f' % (names[int(cls)], conf)
+                    plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
+
+            cv2.imwrite('cv/inference/output/test1.jpg', im0)
+
             for inner in det:
                 inner = list(map(lambda x: x.item(), inner))
                 inner[-1] = names[int(inner[-1])]
@@ -137,10 +141,11 @@ def detect(img):
         out = _detect(img)
         return out
 
+
 #
-# if __name__ == '__main__':
-#     path = 'cv/inference/images/test.jpg'
-#     img64 = img_to_base64(path)
-#     img = base64_to_image(img64)
-#     # cv2.imwrite('test111.png', img)
-#     detect(img)
+if __name__ == '__main__':
+    path = 'cv/inference/images/test1.png'
+    img64 = img_to_base64(path)
+    img = base64_to_image(img64)
+    # cv2.imwrite('test111.png', img)
+    detect(img)

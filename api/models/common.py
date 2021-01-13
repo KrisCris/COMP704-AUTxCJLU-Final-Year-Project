@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from cv.utils.datasets import letterbox
+# from cv.utils.datasets import letterbox
 from cv.utils.general import non_max_suppression, make_divisible, scale_coords
 
 
