@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Pages/ResultPage.dart';
 import 'package:fore_end/Pages/TestPicturePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,14 +38,12 @@ class TakePhotoState extends State<TakePhotoPage>
   CameraController _ctl;
   Future<void> _initDone;
   bool _hasCamera = true;
-  List<String> picQueue;
   TweenAnimation<double> loadingCameraAnimation = new TweenAnimation<double>();
   String _path;
 
   @override
   void initState() {
     super.initState();
-    this.picQueue = new List<String>();
     this.loadingCameraAnimation.initAnimation(0.0, -10.0, 1000, this, () {
       setState(() {});
     });
@@ -236,7 +236,6 @@ class TakePhotoState extends State<TakePhotoPage>
     }else{
       scale = previewRatio/deviceRatio;
     }
-    print(scale.toString());
     Widget content = Stack(
         children: [
           Center(
@@ -255,7 +254,8 @@ class TakePhotoState extends State<TakePhotoPage>
                 children: [
                   Expanded(child: SizedBox()),
                   this.getAlbumButton(),
-                  SizedBox(width: 10)
+                  SizedBox(width: 10),
+                  this.getResultButton(),
                 ],
               ),
               Expanded(child: SizedBox()),
@@ -292,12 +292,8 @@ class TakePhotoState extends State<TakePhotoPage>
         await _ctl.takePicture(this._path);
         File pic = File(this._path);
         String bs64 = await this.pictureToBase64(pic);
-        this.picQueue.add(bs64);
         pic.delete();
-        Navigator.push(context,
-            new MaterialPageRoute(builder: (BuildContext ctx) {
-          return TestPicturePage(bs64);
-        }));
+        FoodRecognizer.addFoodPic(bs64);
       },
     );
   }
@@ -322,7 +318,30 @@ class TakePhotoState extends State<TakePhotoPage>
         if (image == null) return;
 
         String bs64 = await this.pictureToBase64(image);
-        this.picQueue.add(bs64);
+        FoodRecognizer.addFoodPic(bs64);
+      },
+    );
+  }
+
+  Widget getResultButton() {
+    return new CustomIconButton(
+      theme: MyTheme.blackAndWhite,
+      icon: FontAwesomeIcons.appleAlt,
+      iconSize: 34,
+      buttonRadius: 45,
+      backgroundOpacity: 1,
+      borderRadius: 10,
+      shadows: [
+        BoxShadow(
+          blurRadius: 10,
+          spreadRadius: 3,
+          color: Color(0x33000000),
+        )
+      ],
+      onClick: () async {
+        Navigator.push(context,MaterialPageRoute(builder: (context){
+          return ResultPage();
+        }));
       },
     );
   }

@@ -34,5 +34,6 @@ class MyApp extends StatelessWidget {
   void _preCacheAllImage() {
     precacheImage(AssetImage("image/fruit-main.jpg"), context);
     precacheImage(AssetImage("image/food.jpg"), context);
+    precacheImage(AssetImage("image/defaultFood.png"), context);
   }
 }

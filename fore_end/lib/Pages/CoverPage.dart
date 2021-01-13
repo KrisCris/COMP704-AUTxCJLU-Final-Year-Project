@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
@@ -90,6 +91,9 @@ class CoverState extends State<CoverPage> {
 
   Future<int> attemptLogin() async {
     await LocalDataManager.init();
+    //init FoodRecognizer instance
+    FoodRecognizer fd = FoodRecognizer.instance;
+    //init User instance
     User u = User.getInstance();
     if(u.token == null){
       return 0;
