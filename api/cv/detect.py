@@ -10,6 +10,7 @@ import torch.backends.cudnn as cudnn
 from numpy import random
 import numpy as np
 import base64
+import time
 
 from models.experimental import attempt_load
 from cv.utils.general import check_img_size, non_max_suppression, scale_coords, plot_one_box
@@ -122,7 +123,7 @@ def _detect(b64):
                     label = '%s %.2f' % (names[int(cls)], conf)
                     plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
 
-            cv2.imwrite('cv/inference/output/test1.jpg', im0)
+            cv2.imwrite('cv/inference/output/{}.jpg'.format(time.time()), im0)
 
             for inner in det:
                 inner = list(map(lambda x: x.item(), inner))
@@ -141,7 +142,7 @@ def detect(img):
 
 #
 # if __name__ == '__main__':
-#     path = 'cv/inference/images/test1.png'
+#     path = 'cv/inference/images/3.jpeg'
 #     img64 = img_to_base64(path)
 #     img = base64_to_image(img64)
 #     # cv2.imwrite('test111.png', img)
