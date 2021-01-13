@@ -1,5 +1,5 @@
-import 'dart:ffi';
 
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
@@ -19,6 +19,7 @@ class CustomIconButton extends StatefulWidget
   double buttonRadius;
   double borderRadius;
   double backgroundOpacity;
+  int angleDuration;
   String text;
   CustomIconButtonState state;
   List<Function> delayInit = <Function>[];
@@ -37,12 +38,14 @@ class CustomIconButton extends StatefulWidget
       this.buttonRadius = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
+        this.angleDuration = 200,
       this.shadows,
       this.onClick,
         bool disabled = false,
         bool focus = false,
+        Key key,
       this.navigatorCallback})
-      : super() {
+      : super(key:key) {
     this.theme = theme;
     this.disabled = new ValueNotifier<bool>(disabled);
     this.focus = new ValueNotifier<bool>(focus);

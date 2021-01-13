@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 class Food {
   String name;
-  Image image;
   double calorie;
 
-  Food({this.name,this.calorie, this.image});
+  Food({this.name,this.calorie});
 
   String getCalorie(){
     return calorie.toString() + "KJ";
