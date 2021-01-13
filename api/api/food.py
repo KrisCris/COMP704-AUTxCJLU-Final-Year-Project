@@ -9,12 +9,12 @@ food = Blueprint('food', __name__)
 def detect():
     b64 = request.form.get('food_b64')
     res = food_detect(b64)
-    res_dict = {}
+    res_dict = []
     for fr in res:
         # TODO search in db
-        res_dict[fr[5]] = {
-            'basic': {'x': fr[0], 'y': fr[1], 'w': fr[2], 'h': fr[3], 'prob': fr[4]},
+        res_dict.append({
+            'basic': {'x': fr[0], 'y': fr[1], 'w': fr[2], 'h': fr[3], 'prob': fr[4], 'name': fr[5]},
             'info': {'calories': 0, 'protain':0, 'va': 0, 'vb':0, 'vc':0}
-        }
+        })
     from util.func import reply_json
-    return reply_json(1, data={'result': res_dict})
+    return reply_json(1, data=res_dict)
