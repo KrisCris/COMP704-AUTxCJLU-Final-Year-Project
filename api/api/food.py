@@ -7,11 +7,14 @@ food = Blueprint('food', __name__)
 
 @food.route('detect', methods=['POST'])
 def detect():
-    import base64
-    img_data = base64.b64decode(request.form.get('food_b64'))
-    with open('cv/inference/images/image.jpg', 'wb') as f:
-        f.write(img_data)
-    res = food_detect()
-    print(res)
+    b64 = request.form.get('food_b64')
+    res = food_detect(b64)
+    res_dict = {}
+    for fr in res:
+        # TODO search in db
+        res_dict[fr[5]] = {
+            'basic': {'x': fr[0], 'y': fr[1], 'w': fr[2], 'h': fr[3], 'prob': fr[4]},
+            'info': {'calories': 0, 'protain':0, 'va': 0, 'vb':0, 'vc':0}
+        }
     from util.func import reply_json
-    return reply_json(1,data={'result':res})
+    return reply_json(1, data={'result': res_dict})
