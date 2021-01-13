@@ -27,7 +27,7 @@ def base64_to_image(base64_code):
 def img_to_base64(path):
     mat = cv2.imread(path)
     # Mat to Base64
-    string = base64.b64encode(cv2.imencode('.png', mat)[1]).decode()
+    string = base64.b64encode(cv2.imencode('.jpeg', mat)[1]).decode()
 
     return string
 
@@ -66,10 +66,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
 
 
 def _img_handle(b64, img_size):
-    # img0 = cv2.imread(path)  # BGR
     img0 = b64
-
-    assert img0 is not None, 'Image Not Found ' + path
 
     # Padded resize
     img = letterbox(img0, new_shape=img_size)[0]
@@ -78,7 +75,7 @@ def _img_handle(b64, img_size):
     img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
     img = np.ascontiguousarray(img)
 
-    return path, img, img0, None
+    return b64, img, img0, None
 
 
 def _detect(b64):
@@ -88,9 +85,6 @@ def _detect(b64):
 
     # Initialize
     device = torch.device('cpu')
-    if os.path.exists(out):
-        shutil.rmtree(out)  # delete output folder
-    os.makedirs(out)  # make new output folder
     half = device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
@@ -146,7 +140,7 @@ def detect(b64):
 
 
 if __name__ == '__main__':
-    path = 'cv/inference/images/test1.png'
+    path = 'cv/inference/images/3.jpeg'
     img64 = img_to_base64(path)
     img = base64_to_image(img64)
     # cv2.imwrite('test111.png', img)
