@@ -11,10 +11,16 @@ from api.food import food
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%s:%s@%s:%s/%s' % (
-    DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = SECRET_KEY
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%s:%s@%s:%s/%s' % (
+#     DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE)
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SECRET_KEY'] = SECRET_KEY
+#
+# app.config['ENV'] = ENV
+# app.config['DEBUG'] = DEBUG
+from config import DevConfig
+app.config.from_object(DevConfig())
+
 
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(food, url_prefix='/food')
