@@ -20,6 +20,7 @@ class CustomIconButton extends StatefulWidget
   double borderRadius;
   double backgroundOpacity;
   int angleDuration;
+  double adjustHeight;
   String text;
   CustomIconButtonState state;
   List<Function> delayInit = <Function>[];
@@ -27,18 +28,21 @@ class CustomIconButton extends StatefulWidget
   Function navigatorCallback;
   CustomNavigator navi;
   List<BoxShadow> shadows;
+  bool sizeChangeWhenClick;
 
   CustomIconButton(
       {
         @required MyTheme theme,
       @required this.icon,
       this.text = "",
+        this.sizeChangeWhenClick = false,
       this.iconSize = 20,
       this.fontSize = 12,
       this.buttonRadius = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
         this.angleDuration = 200,
+        this.adjustHeight = 0,
       this.shadows,
       this.onClick,
         bool disabled = false,
@@ -78,6 +82,7 @@ class CustomIconButtonState extends State<CustomIconButton>
       TweenAnimation<CalculatableColor>();
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
       TweenAnimation<CalculatableColor>();
+  TweenAnimation<double> iconSizeAnimation = TweenAnimation<double>();
   List<BoxShadow> shadow;
   bool disabled = false;
 
@@ -126,6 +131,11 @@ class CustomIconButtonState extends State<CustomIconButton>
         this, () {
       setState(() {});
     });
+    double res = widget.iconSize;
+    if(widget.sizeChangeWhenClick){
+      res -= 5;
+    }
+    this.iconSizeAnimation.initAnimation(widget.iconSize, res, 100, this, () {setState(() {});});
   }
 
   Widget get IconText {
@@ -137,7 +147,7 @@ class CustomIconButtonState extends State<CustomIconButton>
             builder: (BuildContext context, Widget child) {
               return Icon(widget.icon,
                   color: this.iconAndTextColorAnimation.getValue(),
-                  size: widget.iconSize);
+                  size: this.iconSizeAnimation.getValue());
             }),
         Offstage(
             offstage: widget.text == "" || widget.text == null,
@@ -153,7 +163,8 @@ class CustomIconButtonState extends State<CustomIconButton>
                         fontFamily: "Futura",
                         color: this.iconAndTextColorAnimation.getValue()),
                   );
-                }))
+                })),
+        SizedBox(height: widget.adjustHeight)
       ],
     );
   }
@@ -177,6 +188,12 @@ class CustomIconButtonState extends State<CustomIconButton>
             widget.navi.switchPageByObject(widget);
           }
         },
+        onTapDown: (TapDownDetails details){
+          this.iconSizeAnimation.forward();
+        },
+        onTapUp: (TapUpDetails details){
+          this.iconSizeAnimation.reverse();
+        },
         child: AnimatedBuilder(
           animation: this.backgroundColorAnimation.ctl,
           child: this.IconText,
@@ -184,6 +201,7 @@ class CustomIconButtonState extends State<CustomIconButton>
             return Container(
               width: widget.buttonRadius,
               height: widget.buttonRadius,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   color: this.backgroundColorAnimation.getValue(),

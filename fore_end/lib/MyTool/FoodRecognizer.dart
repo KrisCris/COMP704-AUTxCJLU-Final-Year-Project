@@ -44,30 +44,18 @@ class FoodRecognizer{
     }
     Response res = await Requests.foodDetect({
       "food_b64":bs64,
-      "rotate":rotate
+      "rotation":rotate
     });
 
     if(res.data['code']== 1){
       for(dynamic r in res.data['data']){
         var position = r['basic'];
-        double width = position['x2'] - position['x1'];
-        double height = position['y2'] - position['y1'];
-        cropper.Image img = cropper.decodeImage(byte);
-
-
         var info = r['info'];
-        double cal = (info['calories'] as int).toDouble();
 
-        img = cropper.copyCrop(
-            img,
-            (position['x1'] as double).round(),
-            (position['y1'] as double).round(),
-            width.round(),
-            height.round());
         FoodRecognizer._instance.foods.add(
             FoodBox(
-              food: Food(name: position['name'], calorie: cal),
-              picture: base64Encode(Uint8List.fromList(cropper.encodePng(img))),
+              food: Food(name: position['name'], calorie: info['calories']),
+              picture: base64Encode(position['img']),
             )
         );
       }
