@@ -12,37 +12,39 @@ class FoodRecognizer{
   static final FoodRecognizer _instance = FoodRecognizer._privateConstructor();
   static FoodRecognizer get instance => _instance;
   FoodRecognizer._privateConstructor(){
-    this.targetPicBase64 = new ValueNotifier<Queue<String>>(new Queue());
-    byteList = new Queue();
+    this.targetPicInfo = new ValueNotifier<Queue<RequestItem>>(new Queue());
     this.foods = List<FoodBox>();
-    this.targetPicBase64.addListener(() {
-      String bs64 = this.targetPicBase64.value.removeFirst();
-      Uint8List u8 = byteList.removeFirst();
-      FoodRecognizer._sendFoodRecognizeRequest(bs64, u8);
+    this.targetPicInfo.addListener(() {
+      RequestItem item  = this.targetPicInfo.value.removeFirst();
+      FoodRecognizer._sendFoodRecognizeRequest(item.bs64, item.byte,item.rotate);
     });
   }
 
-  ValueNotifier<Queue<String>> targetPicBase64;
-  Queue<Uint8List> byteList;
+  ValueNotifier<Queue<RequestItem>> targetPicInfo;
   List<FoodBox> foods;
   Function onRecognizedDone;
 
-  static void addFoodPic(String targetPicBase64, Uint8List byte){
+  static void addFoodPic(String targetPicBase64, Uint8List byte, int rotate){
     if(_instance == null) {
       print("Try add Food when Recognizer is not init yet");
       return;
     }
-    FoodRecognizer._instance.byteList.add(byte);
-    FoodRecognizer._instance.targetPicBase64.value = Queue.from(FoodRecognizer._instance.targetPicBase64.value)..add(targetPicBase64);
+    FoodRecognizer._instance.targetPicInfo.value = Queue.from(
+        FoodRecognizer._instance.targetPicInfo.value)..add(new RequestItem(
+      bs64: targetPicBase64,
+      byte: byte,
+      rotate: rotate
+    ));
   }
 
-  static void _sendFoodRecognizeRequest(String bs64,Uint8List byte) async{
+  static void _sendFoodRecognizeRequest(String bs64,Uint8List byte,int rotate) async{
     if(_instance == null) {
       print("Try recognize Food when Recognizer is not init yet");
       return;
     }
     Response res = await Requests.foodDetect({
-      "food_b64":bs64
+      "food_b64":bs64,
+      "rotate":rotate
     });
 
     if(res.data['code']== 1){
@@ -86,18 +88,10 @@ class FoodRecognizer{
     this.onRecognizedDone = null;
   }
 
-  static Uint8List _crop(Uint8List byte, int x, int y, int width, int height){
-    Uint8List res = new Uint8List(width*height);
-    int xt = 0;
-    int yt = 0;
-    for(int yi = y-1;yi < yi+height;yi++ ){
-      for(int xi = x-1;xi < xi+width;xi++){
-        print((yt*width + xt).toString());
-        res[yt*width + xt] = byte[yi*width+xi];
-        xt++;
-      }
-      yt++;
-    }
-    return res;
-  }
+}
+class RequestItem{
+  String bs64;
+  Uint8List byte;
+  int rotate;
+  RequestItem({this.bs64,this.byte,this.rotate});
 }
