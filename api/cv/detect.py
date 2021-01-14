@@ -118,7 +118,9 @@ def _detect(b64, output):
                     inner[-1] = names[int(inner[-1])]
                     result.append(inner)
             else:
-                result.append('None')
+                # result.append('None')
+                print('None')
+                return None
 
         print('\n'.join(str(i) for i in result))
         return result

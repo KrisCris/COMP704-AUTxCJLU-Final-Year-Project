@@ -13,16 +13,15 @@ food = Blueprint('food', __name__)
 @food.route('detect', methods=['POST'])
 def detect():
     img = base64_to_image(request.form.get('food_b64'))
-    rotation = request.form.get('rotation')
-
-    # # too hard to get size on flutter side
-    # ph, pw = img.shape[:2]
+    rotation = int(request.form.get('rotation'))
 
     # fuck flutter camera :/
     img = fix_flutter_img_rotation_issue(img, rotation)
 
     # detect
     res = food_detect(img, False)
+    if res is None:
+        return reply_json(-6)
 
     res_dict = []
     for fr in res:
