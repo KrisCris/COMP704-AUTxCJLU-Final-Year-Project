@@ -266,7 +266,14 @@ class TakePhotoState extends State<TakePhotoPage>
                   Expanded(child: SizedBox()),
                   this.getAlbumButton(),
                   SizedBox(width: 10),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: SizedBox()),
                   this.getResultButton(),
+                  SizedBox(width: 10),
                 ],
               ),
               Expanded(child: SizedBox()),
