@@ -61,7 +61,7 @@ def _img_handle(b64, img_size):
     return b64, img, img0, None
 
 
-def _detect(b64):
+def _detect(b64, output):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
         'cv/inference/output', b64, 'cv/weights/s_v1.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
@@ -102,14 +102,17 @@ def _detect(b64):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
 
-                # Write results
-                for *xyxy, conf, cls in reversed(det):
-                    # det_reversed: 左上角坐标(x, y), 宽度，高度, confidence, class
-                    label = '%s %.2f' % (names[int(cls)], conf)
-                    plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
+                if output:
+                    # Write results
+                    for *xyxy, conf, cls in reversed(det):
+                        # det_reversed: 左上角坐标(x, y), 宽度，高度, confidence, class
+                        label = '%s %.2f' % (names[int(cls)], conf)
+                        plot_one_box(xyxy, im0, label=label, color=[0, 0, 0], line_thickness=3)
 
             if det is not None and len(det):
-                cv2.imwrite('cv/inference/output/{}.jpg'.format(time.time()), im0)
+                # only output file when being enabled
+                if output:
+                    cv2.imwrite('cv/inference/output/{}.jpg'.format(time.time()), im0)
                 for inner in det:
                     inner = list(map(lambda x: x.item(), inner))
                     inner[-1] = names[int(inner[-1])]
@@ -121,9 +124,9 @@ def _detect(b64):
         return result
 
 
-def detect(img):
+def detect(img, output):
     with torch.no_grad():
-        out = _detect(img)
+        out = _detect(img, output)
         return out
 
 #

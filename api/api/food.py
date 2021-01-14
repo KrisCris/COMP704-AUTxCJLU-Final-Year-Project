@@ -22,7 +22,7 @@ def detect():
     img = fix_flutter_img_rotation_issue(img, rotation)
 
     # detect
-    res = food_detect(img)
+    res = food_detect(img, False)
 
     res_dict = []
     for fr in res:
