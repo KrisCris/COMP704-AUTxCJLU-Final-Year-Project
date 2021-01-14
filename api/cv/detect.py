@@ -16,21 +16,6 @@ from models.experimental import attempt_load
 from cv.utils.general import check_img_size, non_max_suppression, scale_coords, plot_one_box
 
 
-def base64_to_image(base64_code):
-    img_original = base64.b64decode(base64_code)
-    img_np = np.frombuffer(img_original, dtype=np.uint8)
-    img = cv2.imdecode(img_np, cv2.IMREAD_UNCHANGED)
-    return img
-
-
-def img_to_base64(path):
-    mat = cv2.imread(path)
-    # Mat to Base64
-    string = base64.b64encode(cv2.imencode('.png', mat)[1]).decode()
-
-    return string
-
-
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
     shape = img.shape[:2]  # current shape [height, width]
     if isinstance(new_shape, int):
@@ -140,7 +125,6 @@ def detect(img):
     with torch.no_grad():
         out = _detect(img)
         return out
-
 
 #
 # if __name__ == '__main__':
