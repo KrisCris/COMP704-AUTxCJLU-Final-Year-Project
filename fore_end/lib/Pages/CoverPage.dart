@@ -65,7 +65,7 @@ class CoverState extends State<CoverPage> {
           if (snapShot.hasData) {
             int resCode = snapShot.data;
             if(resCode == 0){
-              Future.delayed(Duration(milliseconds: 2500),(){
+              Future.delayed(Duration(milliseconds: 1500),(){
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context){return new Welcome();}),
                         (route){return route==null;}
@@ -73,7 +73,7 @@ class CoverState extends State<CoverPage> {
               });
               return this.getPage("welcome to here!");
             }else if(resCode == 1){
-              Future.delayed(Duration(milliseconds: 1500),(){
+              Future.delayed(Duration(milliseconds: 1000),(){
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context){return new MainPage(user: User.getInstance());}),
                     (route){return route==null;}

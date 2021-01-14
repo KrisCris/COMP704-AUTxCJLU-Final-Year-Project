@@ -287,11 +287,13 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget getPhotoButton() {
     return new CustomIconButton(
       theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.camera,
-      iconSize: 34,
+      icon: FontAwesomeIcons.circle,
+      iconSize: 38,
+      adjustHeight: 2.5,
+      sizeChangeWhenClick: true,
       buttonRadius: 45,
       backgroundOpacity: 1,
-      borderRadius: 10,
+      borderRadius: 45,
       shadows: [
         BoxShadow(
           blurRadius: 10,
