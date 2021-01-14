@@ -22,7 +22,7 @@ def image_to_base64_path(path):
 
 def img_to_b64(img):
     retval, buffer = cv2.imencode('.jpg', img)
-    b64_img = str(base64.b64encode(buffer))
+    b64_img = base64.b64encode(buffer).decode('ascii')
     return b64_img
 
 
