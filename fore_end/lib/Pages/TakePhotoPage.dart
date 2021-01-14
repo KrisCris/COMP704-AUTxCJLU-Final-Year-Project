@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
+import 'package:exifdart/exifdart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -291,10 +292,10 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         await _ctl.takePicture(this._path);
         File pic = File(this._path);
-        Map<String,Uint8List> res  = await this.pictureToBase64(pic);
+        Map<String,List<int>> res  = await this.pictureToBase64(pic);
         pic.delete();
         var entry = res.entries.first;
-        FoodRecognizer.addFoodPic(entry.key,entry.value);
+        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
       },
     );
   }
@@ -320,7 +321,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
         Map<String,Uint8List> res = await this.pictureToBase64(image);
         var entry = res.entries.first;
-        FoodRecognizer.addFoodPic(entry.key,entry.value);
+        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
       },
     );
   }
@@ -348,13 +349,26 @@ class TakePhotoState extends State<TakePhotoPage>
     );
   }
 
-  Future<Map<String,Uint8List>> pictureToBase64(File f) async {
+  Future<Map<String,List<int>>> pictureToBase64(File f) async {
     Uint8List byteData = await f.readAsBytes();
+    int rotateAngle = await this.getImageRotateAngular(byteData);
     String bs64 = base64Encode(byteData);
-    print("picture convert complete:\n" + bs64);
-    return {bs64:byteData};
+    return {bs64:byteData,"rotate":[rotateAngle]};
   }
-
+  Future<int> getImageRotateAngular(List<int> bytes) async {
+    Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
+    var orientation = tags['Orientation']; //获取该照片的拍摄方向
+    switch (orientation) {
+      case 3:
+        return 180;
+      case 6:
+        return 90;
+      case 8:
+        return -90;
+      default:
+        return 0;
+    }
+  }
   @override
   bool get wantKeepAlive => true;
 }
