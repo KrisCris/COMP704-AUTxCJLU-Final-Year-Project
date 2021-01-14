@@ -40,6 +40,7 @@ class TakePhotoState extends State<TakePhotoPage>
   Future<void> _initDone;
   bool _hasCamera = true;
   TweenAnimation<double> loadingCameraAnimation = new TweenAnimation<double>();
+  TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
   String _path;
 
   @override
@@ -56,12 +57,15 @@ class TakePhotoState extends State<TakePhotoPage>
       }
     });
     this.loadingCameraAnimation.beginAnimation();
+    this.flashAnimation.initAnimation(0.0, 0.0, 200, this, () {setState(() {
+    });});
   }
 
   @override
   void dispose() {
     this._ctl.dispose();
     this.loadingCameraAnimation.dispose();
+    this.flashAnimation.dispose();
     super.dispose();
   }
 
@@ -248,6 +252,12 @@ class TakePhotoState extends State<TakePhotoPage>
               ),
             ),
           ),
+          Opacity(
+            opacity: this.flashAnimation.getValue(),
+            child: Container(
+              color: Colors.grey,
+            ),
+          ),
           Column(
             children: [
               SizedBox(height:ScreenTool.topPadding),
@@ -268,7 +278,7 @@ class TakePhotoState extends State<TakePhotoPage>
               ),
               SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
             ],
-          )
+          ),
         ],
       );
     return content;
@@ -291,6 +301,7 @@ class TakePhotoState extends State<TakePhotoPage>
       ],
       onClick: () async {
         await _ctl.takePicture(this._path);
+        this.startFlash();
         File pic = File(this._path);
         Map<String,List<int>> res  = await this.pictureToBase64(pic);
         pic.delete();
@@ -318,7 +329,6 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-
         Map<String,Uint8List> res = await this.pictureToBase64(image);
         var entry = res.entries.first;
         FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
@@ -347,6 +357,11 @@ class TakePhotoState extends State<TakePhotoPage>
         }));
       },
     );
+  }
+  void startFlash(){
+    this.flashAnimation.initAnimation(0.5, 0, 300, this, () {setState(() {
+    });});
+    this.flashAnimation.beginAnimation();
   }
 
   Future<Map<String,List<int>>> pictureToBase64(File f) async {
