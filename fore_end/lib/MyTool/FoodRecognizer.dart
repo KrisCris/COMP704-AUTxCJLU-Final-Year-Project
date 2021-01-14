@@ -51,11 +51,16 @@ class FoodRecognizer{
       for(dynamic r in res.data['data']){
         var position = r['basic'];
         var info = r['info'];
-
+        double cal = 0;
+        if(info['calories'] is int){
+          cal = (info['calories'] as int).toDouble();
+        }else if(info['calories'] is double){
+          cal = info['calories'];
+        }
         FoodRecognizer._instance.foods.add(
             FoodBox(
-              food: Food(name: position['name'], calorie: info['calories']),
-              picture: base64Encode(position['img']),
+              food: Food(name: position['name'], calorie: cal),
+              picture: position['img'],
             )
         );
       }
@@ -63,7 +68,7 @@ class FoodRecognizer{
         FoodRecognizer.instance.onRecognizedDone();
       }
     }else{
-
+      print("No Food Found, Asshole!");
     }
   }
   bool isEmpty(){
