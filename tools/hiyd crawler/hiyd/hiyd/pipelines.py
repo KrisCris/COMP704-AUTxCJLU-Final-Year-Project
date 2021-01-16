@@ -11,7 +11,8 @@ import pymysql
 
 class HiydPipeline:
     def __init__(self):
-        self.connect = pymysql.connect('localhost', 'food_usr', 'Qwe123456789.', 'food')
+        self.connect = pymysql.connect(host='localhost', user='food_usr', password='Qwe123456789.', database='food')
+        self.cursor = self.connect.cursor()
 
     def process_item(self, item, spider):
         self.cursor.execute(
