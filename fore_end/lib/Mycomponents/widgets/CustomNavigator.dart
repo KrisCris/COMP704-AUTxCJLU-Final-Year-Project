@@ -1,46 +1,70 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/interface/Themeable.dart';
 import '../buttons/CustomIconButton.dart';
 
+///自定义的导航器，用于多个标签页之间的切换
 class CustomNavigator extends StatefulWidget {
+
+  ///导航器的宽度
   double width;
+
+  ///导航器的高度
   double height;
+
+  ///导航器的透明度
+  ///0 - 完全透明
+  ///1 - 完全不透明
   double opacity;
-  double edgeWidth;
+
+  ///背景色
   Color backgroundColor;
+
+  ///当前被选中的标签按钮
   CustomIconButton activateButton;
+
+  ///导航器中的所有标签按钮
   List<CustomIconButton> buttons = const <CustomIconButton>[];
+
+  ///标签页控制器
   TabController controller;
+
+  ///历史遗留问题，不推荐使用这种方式保存State的引用
   CustomNavigatorState state;
+
   CustomNavigator({
     this.width,
     this.height,
-    this.edgeWidth = 1,
     this.opacity = 1,
     this.backgroundColor = Colors.white,
     this.controller,
     List<CustomIconButton> buttons,
   }) {
     this.buttons = buttons;
+    //遍历数组，设置对应按钮所属的导航器
     for (CustomIconButton bt in this.buttons) {
       bt.setParentNavigator(this);
     }
+    //默认选中第一个标签按钮
     this.buttons[0].addDelayInit(() {
       this.activateButtonByIndex(0);
     });
   }
+
+  ///历史遗留问题，不推荐使用这种方式保存State的引用
   @override
   State<StatefulWidget> createState() {
     this.state = new CustomNavigatorState();
     return this.state;
   }
 
+  ///某个按钮是否为当前选中的按钮
+  ///参数 [bt] 为想要判断的按钮实例
   bool isActivate(CustomIconButton bt) {
     return this.activateButton == bt;
   }
 
+  ///根据索引 [i] 选中某个按钮
   void activateButtonByIndex(int i) {
     for (int j = 0; j < this.buttons.length; j++) {
       if (j == i) {
@@ -52,6 +76,7 @@ class CustomNavigator extends StatefulWidget {
     }
   }
 
+  ///根据按钮实例 [button] 选重某个按钮
   void activateButtonByObject(CustomIconButton button) {
     for (CustomIconButton bt in this.buttons) {
       if (bt == button) {
@@ -63,14 +88,17 @@ class CustomNavigator extends StatefulWidget {
     }
   }
 
+  ///获取当前选中的标签页索引
   int getActivatePageNo() {
     return this.controller.index;
   }
 
+  ///获取标签页控制器 [TabController]
   TabController getController() {
     return this.controller;
   }
 
+  ///根据按钮实例 [button] 切换标签页
   void switchPageByObject(CustomIconButton button) {
     for (int i = 0; i < this.buttons.length; i++) {
       if (this.buttons[i] == button) {
@@ -80,27 +108,46 @@ class CustomNavigator extends StatefulWidget {
     }
   }
 
+  ///历史遗留问题，不推荐使用这种方式调用State的函数
+  ///开始播放透明度动画
   void beginOpacity() {
     this.state.beginOpacity();
   }
 
+  ///历史遗留问题，不推荐使用这种方式调用State的函数
+  ///逆向播放透明度动画
   void reverseOpacity() {
     this.state.reverseOpacity();
   }
 }
 
+///CustomNavitor的State类
+///混入了 [TickerProviderStateMixin] 用于控制动画
+///
 class CustomNavigatorState extends State<CustomNavigator>
     with TickerProviderStateMixin {
+
+  ///背景透明度动画
   TweenAnimation backgroundOpacity;
+
+  ///阴影尺寸动画
   TweenAnimation shadowSize;
+
+  ///阴影浓度动画
   TweenAnimation shadowDense;
+
+  ///navigator长度动画
   TweenAnimation lengthChange;
+
+  ///位置变化动画
   TweenAnimation positionChange;
+
+  ///是否正在切换标签页
   bool changing;
-  bool changeDone;
 
   @override
   void initState() {
+    //初始化各种动画
     this.backgroundOpacity = new TweenAnimation();
     this.shadowSize = new TweenAnimation();
     this.shadowDense = new TweenAnimation();
@@ -121,8 +168,8 @@ class CustomNavigatorState extends State<CustomNavigator>
     this.positionChange.initAnimation(0.0, -65.0, 300, this, null);
 
     this.changing = false;
-    this.changeDone = false;
 
+    //标签页添加监听器
     widget.controller.addListener(() {
       if (widget.controller.indexIsChanging) {
         this.changing = true;
@@ -130,7 +177,7 @@ class CustomNavigatorState extends State<CustomNavigator>
         if (this.changing == true) {
           this.changing = false;
           print("page animate done, now " + widget.controller.index.toString());
-          //do the function
+          //当切换标签页完毕时，执行回调
           if (widget.activateButton.navigatorCallback != null)
             widget.activateButton.navigatorCallback();
         }

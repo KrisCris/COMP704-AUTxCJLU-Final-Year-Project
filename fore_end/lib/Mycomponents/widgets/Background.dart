@@ -5,19 +5,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+///背景图片组件
 class BackGround extends StatelessWidget {
+  ///X轴上的模糊程度
   double sigmaX;
+
+  ///Y轴上的模糊程度
   double sigmaY;
+
+  ///背景图片。根据 [_type] 来决定采用图片路径还是base64编码
   String backgroundImage;
+
+  ///表面蒙版的颜色，默认为白色
   Color color;
-  Widget child;
+
+  ///表面蒙版的透明度
   double opacity;
+
+  ///子组件
+  Widget child;
+
+  ///子组件的对齐方式
   Alignment alignment;
 
   ///type = 0 -> AssetImage
   ///type = 1 -> MemoryImage
   int _type;
 
+  ///采用资源图片路径指定背景图片
   BackGround({
     this.sigmaX = 0,
       this.sigmaY = 0,
@@ -28,6 +43,7 @@ class BackGround extends StatelessWidget {
       this.child,
       Key key}) : super(key: key){this._type = 0;}
 
+  ///采用base64指定背景图片
   BackGround.base64({
     Key key,
     String base64,
@@ -64,6 +80,7 @@ class BackGround extends StatelessWidget {
     ));
   }
 
+  ///获取图片的ImageProvider
   ImageProvider getImage(){
     if(this._type == 0){
       return AssetImage(this.backgroundImage);

@@ -20,7 +20,6 @@ class ResultPage extends StatefulWidget {
   }
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return new ResultPageState();
   }
 }
@@ -30,7 +29,6 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     widget.recognizer.setOnRecognizedDone(() {
       if (!mounted) return;
@@ -41,14 +39,12 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     widget.recognizer.removeOnRecognizedDone();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     Widget header = Row(
       children: [
         SizedBox(

@@ -4,23 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Food.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'dart:math' as math;
 
+///用于显示检测到食物后，展示食物数据的组件
 class FoodBox extends StatefulWidget {
+  ///未提供食物图片，或者未加载图片时，采用的默认图片
   static const String defaultPicturePath = "image/defaultFood.png";
+
+  ///控制是否需要加载食物图片，一般用于滚动组件
   ValueNotifier<bool> shouldShowPic;
+
+  ///该组件展示的食物
   Food food;
+
+  ///食物的图片
   String picture;
+
+  ///未显示详情时，组件的高度
   double height;
+
+  ///组件的宽度
   double width;
+
+  ///详情内容的左边距
   double detailedPaddingLeft;
+
+  ///头部内容的左边距
   double paddingLeft;
+
+  ///头部内容的底边距
   double paddingBottom;
+
+  ///头部内容的顶边距
   double paddingTop;
+
+  ///头部内容的右边距
   double paddingRight;
+
+  ///圆角边框的半径
   double borderRadius;
+
+  ///展开详细内容的动画持续时间
   int expandDuration;
 
   FoodBox(
@@ -55,22 +80,32 @@ class FoodBox extends StatefulWidget {
   State<StatefulWidget> createState() {
     return new FoodBoxState();
   }
+
+  ///展开详细内容
   Future<void> setShow(bool b) async {
     this.shouldShowPic.value = b;
   }
 }
 
 class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
-  double expandedHeight;
+
+  ///是否应该展开，主要用于辅助判断展开按钮的图标旋转动画方向
   bool shouldExpand = false;
+
+  ///图片类型，0表示使用默认图片，1表示使用拍摄获得的照片
   ///picType = 0 -> defaultPicutre
   ///picType = 1 -> photo
   int picType = 0;
+
+  ///控制按钮旋转角度的动画
   TweenAnimation<double> angleAnimation = new TweenAnimation<double>();
+
+  ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
+
+  ///父组件更新时，重新为监听器添加回调
   @override
   void didUpdateWidget(covariant FoodBox oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     widget.shouldShowPic.addListener(() {
       if(widget.shouldShowPic.value && mounted){
@@ -78,14 +113,17 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       }
     });
   }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    //初始化动画
     this.angleAnimation.initAnimation(0, math.pi, widget.expandDuration, this,
             () {
           setState(() {});
         });
+
+    //给监听器添加回调
     widget.shouldShowPic.addListener(() {
       if(widget.shouldShowPic.value && mounted){
         setState(() {});
@@ -212,6 +250,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
         );
   }
 
+  //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
     return Column(
       children: [
@@ -270,6 +309,5 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 }
