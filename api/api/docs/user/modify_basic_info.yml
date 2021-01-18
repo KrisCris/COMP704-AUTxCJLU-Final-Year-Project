@@ -28,6 +28,11 @@ parameters:
     type: string
     required: true
     description: nickname
+  - in: formData
+    name: avatar
+    type: string
+    required: true
+    description: b64 string of avatar
 responses:
   1:
     description: Successfully Changed Password (Require re-login)
