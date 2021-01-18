@@ -12,17 +12,37 @@ import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
+///用于统一修改可变值组件的区域
 class EditableArea extends StatelessWidget
     with ThemeWidgetMixIn {
+
+  ///区域内显示的组件
   List<Widget> displayContent;
+
+  ///右上角的编辑按钮
   CustomIconButton editButton;
+
+  ///编辑完成时执行的回调函数
   Function onEditComplete;
+
+  ///是否正在编辑
   bool editing;
+
+  ///区域的宽度
   double width;
+
+  ///区域的高度
   double height;
+
+  ///圆角边框半径
   double borderRadius;
+
+  ///区域的标题
   String title;
+
+  ///第一次渲染时候的主题状态
   ComponentThemeState the;
+
   EditableArea(
       {Key key,
       @required MyTheme theme,
@@ -42,7 +62,7 @@ class EditableArea extends StatelessWidget
       this.height = ScreenTool.partOfScreenHeight(this.height);
     }
     this.the = ComponentThemeState.normal;
-    this.disableAll();
+    this._disableAll();
   }
 
   @override
@@ -105,28 +125,32 @@ class EditableArea extends StatelessWidget
     this.editButton.onClick = (){
       if(!this.editing){
         this.editButton.changeIcon(FontAwesomeIcons.check);
-        this.startEdit(context);
+        this._startEdit(context);
       }else{
         this.editButton.changeIcon(FontAwesomeIcons.edit);
-        this.endEdit();
+        this._endEdit();
       }
     };
     return this.editButton;
   }
 
-  void startEdit(BuildContext context) {
+  ///开始编辑
+  void _startEdit(BuildContext context) {
     this.editing = true;
     this.enableAll();
   }
 
-  void endEdit() {
+  ///结束编辑
+  void _endEdit() {
     this.editing = false;
-    this.disableAll();
+    this._disableAll();
     if(this.onEditComplete != null){
       this.onEditComplete();
     }
   }
-  void disableAll() {
+
+  ///将所有可以设置为disable的组件全部设置为disable
+  void _disableAll() {
     for (Widget wd in this.displayContent) {
       if(wd is DisableWidgetMixIn){
         (wd as DisableWidgetMixIn).setDisabled(true);
@@ -134,13 +158,16 @@ class EditableArea extends StatelessWidget
     }
   }
 
-  void enableAll({Function(CustomTextField) doOnFirstOne}) {
+  ///将所有可以设置为disable的组件全部取消disable
+  void enableAll() {
     for (Widget wd in this.displayContent) {
       if(wd is DisableWidgetMixIn){
         (wd as DisableWidgetMixIn).setDisabled(false);
       }
     }
   }
+
+  ///获取所有可以产生值的组件里的值，以list返回
   List<String> getAllValue(){
     List<String> res = new List<String>();
     for (Widget wd in this.displayContent) {
@@ -150,6 +177,9 @@ class EditableArea extends StatelessWidget
     }
     return res;
   }
+
+  ///获取所有可以产生值的组件里的值，并以给定的键 [keys] 对应
+  ///若给定的键不够，将自动补充键
   Map<String,String> getMapWithValue(List<String> keys){
     Map<String,String> res = new Map<String,String>();
 

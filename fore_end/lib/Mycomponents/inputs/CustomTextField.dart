@@ -288,10 +288,6 @@ class CustomTextField extends StatefulWidget
 
 
 
-
-
-
-
 ///CustomTextField的State类
 ///混入了 [TickerProviderStateMixin] 用于控制动画
 ///混入了 [ThemeStateMixIn] 用于控制主题颜色
