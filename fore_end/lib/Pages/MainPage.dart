@@ -281,7 +281,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       buttons: buttons,
       controller: ctl,
       opacity: 0.25,
-      edgeWidth: 0.5,
       width: ScreenTool.partOfScreenWidth(0.85),
       height: ScreenTool.partOfScreenHeight(0.08),
     );

@@ -121,18 +121,33 @@ class CustomNavigator extends StatefulWidget {
   }
 }
 
+///CustomNavitor的State类
+///混入了 [TickerProviderStateMixin] 用于控制动画
+///
 class CustomNavigatorState extends State<CustomNavigator>
     with TickerProviderStateMixin {
+
+  ///背景透明度动画
   TweenAnimation backgroundOpacity;
+
+  ///阴影尺寸动画
   TweenAnimation shadowSize;
+
+  ///阴影浓度动画
   TweenAnimation shadowDense;
+
+  ///navigator长度动画
   TweenAnimation lengthChange;
+
+  ///位置变化动画
   TweenAnimation positionChange;
+
+  ///是否正在切换标签页
   bool changing;
-  bool changeDone;
 
   @override
   void initState() {
+    //初始化各种动画
     this.backgroundOpacity = new TweenAnimation();
     this.shadowSize = new TweenAnimation();
     this.shadowDense = new TweenAnimation();
@@ -153,8 +168,8 @@ class CustomNavigatorState extends State<CustomNavigator>
     this.positionChange.initAnimation(0.0, -65.0, 300, this, null);
 
     this.changing = false;
-    this.changeDone = false;
 
+    //标签页添加监听器
     widget.controller.addListener(() {
       if (widget.controller.indexIsChanging) {
         this.changing = true;
@@ -162,7 +177,7 @@ class CustomNavigatorState extends State<CustomNavigator>
         if (this.changing == true) {
           this.changing = false;
           print("page animate done, now " + widget.controller.index.toString());
-          //do the function
+          //当切换标签页完毕时，执行回调
           if (widget.activateButton.navigatorCallback != null)
             widget.activateButton.navigatorCallback();
         }

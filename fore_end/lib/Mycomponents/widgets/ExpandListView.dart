@@ -5,12 +5,24 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/clipper/DownTopClipper.dart';
 import 'package:fore_end/Mycomponents/clipper/TopDownClipper.dart';
 
+///从上到下展开的listView
 class ExpandListView extends StatefulWidget{
+  ///组件的宽度
   double width;
+
+  ///展开后的组件高度
   double height;
+
+  ///展开动画的持续时间
   int animationTime;
+
+  ///展开后的列表项
   List<Widget> children;
+
+  ///背景颜色
   Color backgroundColor;
+
+  ///是否展开
   ValueNotifier<bool> isOpen;
 
   ExpandListView({this.animationTime = 400,double width,this.height,this.children,bool open = true,this.backgroundColor = Colors.white}){
@@ -18,9 +30,12 @@ class ExpandListView extends StatefulWidget{
     this.width = ScreenTool.partOfScreenWidth(width);
   }
 
+  ///展开列表
   void open(){
     this.isOpen.value = true;
   }
+
+  ///关闭列表
   void close(){
     this.isOpen.value = false;
   }
@@ -31,14 +46,23 @@ class ExpandListView extends StatefulWidget{
   }
 
 }
+
+///ExpandListView的State类
+///混入了 [TickerProviderStateMixin] 用于控制动画
+///
 class ExpandListViewState extends State<ExpandListView>
 with TickerProviderStateMixin{
+  ///展开动画
   TweenAnimation<double> clipAnimation = new TweenAnimation();
+
+  ///展开的类型，0表示从上到下展开，1表示从下到上展开
   ///0 - TopDownClipper   1 - DownTopClipper
   int activateClipper = 0;
+
   @override
   void initState() {
     super.initState();
+    //根据初始状态设置展开动画
     if(widget.isOpen.value){
       this.clipAnimation.initAnimation(widget.height, 0.0, widget.animationTime, this, (){setState((){});});
       this.activateClipper = 1;
@@ -47,6 +71,8 @@ with TickerProviderStateMixin{
       this.activateClipper = 0;
     }
     print("clip animation initialize state: dismissed = "+this.clipAnimation.isDismissed().toString());
+
+    //添加监听器
     this.clipAnimation.addStatusListener((status) {
       if(status == AnimationStatus.completed){
         //1 to 0, 0 to 1
@@ -59,6 +85,8 @@ with TickerProviderStateMixin{
         this.setState(() {});
       }
     });
+
+    //主要用于处理当高速连续变化展开状态时的情况
     widget.isOpen.addListener(() {
         if(this.clipAnimation.isDismissed()){
           this.clipAnimation.beginAnimation();
@@ -77,12 +105,15 @@ with TickerProviderStateMixin{
         }
     });
   }
+
+  ///当快速多次切换展开状态时，等待完全展开或关闭后再执行下一项动画
   void delayAnimation(AnimationStatus status){
     if(status == AnimationStatus.dismissed){
       this.clipAnimation.popStatusListener();
       this.clipAnimation.beginAnimation();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return  ClipRect(
