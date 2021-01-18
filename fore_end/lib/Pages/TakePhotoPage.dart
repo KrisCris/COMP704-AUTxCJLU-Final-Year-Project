@@ -298,7 +298,7 @@ class TakePhotoState extends State<TakePhotoPage>
       iconSize: 38,
       adjustHeight: 2.5,
       sizeChangeWhenClick: true,
-      buttonRadius: 45,
+      buttonSize: 45,
       backgroundOpacity: 1,
       borderRadius: 45,
       shadows: [
@@ -325,7 +325,7 @@ class TakePhotoState extends State<TakePhotoPage>
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.image,
       iconSize: 34,
-      buttonRadius: 45,
+      buttonSize: 45,
       backgroundOpacity: 1,
       borderRadius: 10,
       shadows: [
@@ -350,7 +350,7 @@ class TakePhotoState extends State<TakePhotoPage>
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.appleAlt,
       iconSize: 34,
-      buttonRadius: 45,
+      buttonSize: 45,
       backgroundOpacity: 1,
       borderRadius: 10,
       shadows: [

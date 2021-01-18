@@ -66,7 +66,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   void initState() {
     this.counter = new MyCounter(times: 60, duration: 1000);
     this.counter.calling = () {
-      if (!this.button.isMonted()) return;
+      if (!this.button.isMounted()) return;
       this.button.text = this.counter.getRemain().toString();
       this.button.refresh();
       if (this.counter.isStop()) {

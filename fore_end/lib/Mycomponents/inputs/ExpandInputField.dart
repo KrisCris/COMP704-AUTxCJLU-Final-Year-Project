@@ -110,7 +110,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
       backgroundOpacity: 0,
       iconSize: widget.iconSize,
       borderRadius: 100,
-      buttonRadius: 35,
+      buttonSize: 35,
       onClick: () {
         this.lengthAnimation.beginAnimation();
       },

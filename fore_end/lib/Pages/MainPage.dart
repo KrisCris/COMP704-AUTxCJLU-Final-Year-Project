@@ -51,7 +51,7 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
-      buttonRadius: 65,
+      buttonSize: 65,
       iconSize: 25,
       borderRadius: 10,
       onClick: () {
@@ -63,7 +63,7 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
       backgroundOpacity: 0.0,
-      buttonRadius: 65,
+      buttonSize: 65,
       borderRadius: 10,
       iconSize: 25,
       fontSize: 12,
@@ -80,7 +80,7 @@ class MainPage extends StatefulWidget {
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
         borderRadius: 10,
-        buttonRadius: 65,
+        buttonSize: 65,
         iconSize: 25,
         fontSize: 12,
         onClick: () {

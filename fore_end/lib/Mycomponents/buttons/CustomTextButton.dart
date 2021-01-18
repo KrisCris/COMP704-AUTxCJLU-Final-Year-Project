@@ -11,14 +11,29 @@ import 'package:fore_end/interface/Valueable.dart';
 
 class CustomTextButton extends StatefulWidget
     with ThemeWidgetMixIn, DisableWidgetMixIn, ValueableWidgetMixIn<String>{
-
+  ///文字的尺寸
   double fontsize;
+
+  ///文字的颜色
   Color textColor;
+
+  ///文字点击后的颜色
   Color clickColor;
+
+  ///按下的函数
   Function tapUpFunc;
+
+  ///颜色变化动画的持续时间
+  ///单位: 毫秒
   int colorChangeDura;
+
+  ///是否被点击，历史遗留问题，不建议在Widget中用这些可变属性
   bool isTap = false;
+
+  ///是否不执行点击时间
   bool ignoreTap;
+
+  ///颜色变化动画执行完毕时，是否自动恢复到变化之前的颜色
   bool autoReturnColor;
 
   CustomTextButton(
@@ -48,6 +63,12 @@ class CustomTextButton extends StatefulWidget
   }
 }
 
+///CustomTextButton的State类
+///混入了 [TickerProviderStateMixin] 用于控制动画
+///混入了 [ThemeStateMixIn] 用于控制主题颜色
+///混入了 [DisableStateMixIn] 用于控制disable状态
+///混入了 [ValueableStateMixIn] 用于控制控件的输出值
+///
 class CustomTextButtonState extends State<CustomTextButton>
     with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn,ValueableStateMixIn<String> {
   TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
@@ -58,10 +79,11 @@ class CustomTextButtonState extends State<CustomTextButton>
   @override
   void initState() {
     super.initState();
-
+    //初始化value监听器，实现在ValueableStateMixIn中
     this.initValueListener(widget.widgetValue);
+    //初始化disable监听器，实现在DisbaleStateMxiIn中
     this.initDisableListener(widget.disabled);
-
+    //初始化动画效果
     this.animation.initAnimation(
         CalculatableColor.transform(widget.textColor),
         widget.theme.getReactColor(ComponentReactState.focused),
@@ -142,7 +164,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     //textButton don't have focus/disable state, so do nothing
   }
 
-
+  ///设置correct状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setCorrect() {
     // TODO: implement setCorrect
@@ -158,6 +180,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     return stt;
   }
 
+  ///设置error状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setError() {
     // TODO: implement setError
@@ -173,6 +196,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     return stt;
   }
 
+  ///设置normal状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setNormal() {
     // TODO: implement setNormal
@@ -188,6 +212,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     return stt;
   }
 
+  ///设置warning状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setWarning() {
     // TODO: implement setWarning
@@ -203,11 +228,13 @@ class CustomTextButtonState extends State<CustomTextButton>
     return stt;
   }
 
+  ///ValueableStateMixIn的抽象函数, value发生变化时，进行组件刷新
   @override
   void onChangeValue() {
     setState(() {});
   }
 
+  ///设置disable状态时的动画变化
   @override
   void setDisabled() {
     this.animation.initAnimation(
@@ -218,6 +245,7 @@ class CustomTextButtonState extends State<CustomTextButton>
     this.animation.beginAnimation();
   }
 
+  ///设置enable状态时的动画变化
   @override
   void setEnabled() {
     this.animation.initAnimation(
