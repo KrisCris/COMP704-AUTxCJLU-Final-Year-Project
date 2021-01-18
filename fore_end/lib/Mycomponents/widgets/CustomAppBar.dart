@@ -89,7 +89,6 @@ class CustomAppBarState extends State<CustomAppBar>
           Expanded(
             child: ExpandInputField(
               width: 0.4,
-              foregroundColor: Colors.white,
               disabled: this.headerTransparency.getValue() == 0,
               isFirstFocusDoFunction: true,
               onEmpty: () {
