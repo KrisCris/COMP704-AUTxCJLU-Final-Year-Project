@@ -20,7 +20,7 @@ class VerifyCodeInputer extends StatefulWidget{
 
   ///当验证码错误时的回调
   Function onCheckFailed;
-  
+
   ///获取验证码按钮上，第一次显示的文字
   String firstShowText;
 
