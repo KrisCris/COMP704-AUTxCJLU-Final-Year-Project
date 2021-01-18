@@ -156,7 +156,7 @@ class CustomTextField extends StatefulWidget
 
   void setError() {
     this.st.isCorrect = false;
-    this.st.setNormal();
+    this.st.setError();
     this.st.suffixSizeAnimation.beginAnimation();
   }
 

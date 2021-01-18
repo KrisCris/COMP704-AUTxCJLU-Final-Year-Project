@@ -162,8 +162,10 @@ class Register extends StatelessWidget {
     );
 
     this.emailTextField.addListener(() {
-      if (this.emailWhenClickButton.isEmpty) return;
-      if (this.emailTextField.getValue() != this.emailWhenClickButton) {
+      String contentWhenClickButton = this.verifyTextField.getContentWhenClickButton();
+      if (contentWhenClickButton.isEmpty) return;
+
+      if (this.emailTextField.getValue() != emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
         }
@@ -207,7 +209,7 @@ class Register extends StatelessWidget {
         EasyLoading.showToast("Waiting for register...");
         try{
           Response res = await Requests.signUp({
-            "email": this.emailWhenClickButton,
+            "email": this.verifyTextField.getContentWhenClickButton(),
             "password": this.passwordTextField.getValue(),
             "nickname": this.nicknameTextField.getValue()
           });

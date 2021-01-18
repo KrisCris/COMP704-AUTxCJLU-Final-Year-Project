@@ -44,7 +44,9 @@ class VerifyCodeInputer extends StatefulWidget{
   bool getCodeType(){
     return this.transVerifyType;
   }
-
+  String getContentWhenClickButton(){
+    return this.state.contentWhenClickButton;
+  }
 
 }
 
