@@ -104,7 +104,11 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
                 ),
               ),
               Expanded(child: SizedBox()),
-              (widget.rightComponent as Widget),
+              // (widget.rightComponent as Widget),
+              Container(
+                margin: EdgeInsets.only(top:20,left: 20 ),
+                child: (widget.rightComponent as Widget),
+              ),
             ],
           ),
         ));

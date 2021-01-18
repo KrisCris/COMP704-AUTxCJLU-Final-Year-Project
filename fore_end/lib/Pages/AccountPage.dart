@@ -23,7 +23,7 @@ class AccountPage extends StatefulWidget {
   String gender;
   String age;
   String email;
-  String imageSource;
+  String imageSource = User.getInstance().avatar;
   User user = User.getInstance();
   var genderData = ['Male', 'Female'];
   bool visible = true;
@@ -95,6 +95,7 @@ class PageState extends State<AccountPage> {
           "age": int.parse(basicInfo[2]),
           "gender": widget.setGender(basicInfo[3]),
           "nickname": basicInfo[1],
+          "avatar": widget.imageSource,
         });
         if (res.data['code'] == 1) {
           EasyLoading.showSuccess("Change success!",
@@ -102,6 +103,7 @@ class PageState extends State<AccountPage> {
           user.userName = basicInfo[1];
           user.age = int.parse(basicInfo[2]);
           user.gender = widget.setGender(basicInfo[3]);
+          user.avatar = widget.imageSource;
           widget.user.save();
         }
       } on DioError catch (e) {
@@ -237,8 +239,7 @@ class PageState extends State<AccountPage> {
         return;
       } else {
         widget.imageSource = await widget.pictureToBase64(image);
-        u.avatar = widget.imageSource;
-        u.save();
+        u.avatar=widget.imageSource;
         item.setValue(u.avatar);
       }
     };
