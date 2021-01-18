@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+///用于从下往上执行剪切的矩形clipper
 class DownTopClipper extends CustomClipper<Rect>{
   final double height;
 
