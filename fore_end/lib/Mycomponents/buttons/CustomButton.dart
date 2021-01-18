@@ -50,6 +50,7 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
   double bottomMargin;
 
   ///when length change, button fix at center(0),left(1) or right(2)
+  ///有时候表现会出现错误，不推荐大量使用
   int sizeChangeMode;
 
   /// the opacity that flash animation start at
