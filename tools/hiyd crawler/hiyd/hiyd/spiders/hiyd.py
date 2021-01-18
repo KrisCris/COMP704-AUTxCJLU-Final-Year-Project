@@ -5,7 +5,15 @@ from hiyd.items import FoodCrawlerItem
 class HiydSpider(scrapy.Spider):
     name = 'hiyd'
     allowed_domains = ['hiyd.com']
-    start_urls = ['https://m.food.hiyd.com/list-1-html/']
+    start_urls = ['https://m.food.hiyd.com/list-1-html/',
+                  'https://m.food.hiyd.com/list-2-html',
+                  'https://m.food.hiyd.com/list-3-html',
+                  'https://m.food.hiyd.com/list-4-html',
+                  'https://m.food.hiyd.com/list-5-html',
+                  'https://m.food.hiyd.com/list-6-html',
+                  'https://m.food.hiyd.com/list-9-html',
+                  'https://m.food.hiyd.com/list-132-html'
+                  ]
 
     def parse(self, response):
         selector = response.xpath('//ul[@id="foodList"]/li')
@@ -48,6 +56,16 @@ class HiydSpider(scrapy.Spider):
         # selector = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul')
 
         # for response in selector:
+        normal_weight = response.xpath('//div[@class="info-unit"]/div[@class="box-bd"]/ul/li[2]/p[1]/text()').get()
+        if normal_weight:
+            normal_weight = normal_weight.strip()
+        food_obj['normal_weight'] = normal_weight
+
+        normal_calories = response.xpath('//div[@class="info-unit"]/div[@class="box-bd"]/ul/li[2]/p[2]/text()').get()
+        if normal_calories:
+            normal_calories = normal_calories.strip()
+        food_obj['normal_calories'] = normal_calories
+
         calories = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[2]/p[2]/text()').get().strip()
         food_obj['calories'] = calories
 

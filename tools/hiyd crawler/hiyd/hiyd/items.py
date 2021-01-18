@@ -12,6 +12,8 @@ class FoodCrawlerItem(scrapy.Item):
     cate_name = scrapy.Field()
     food_name = scrapy.Field()
     food_url = scrapy.Field()
+    normal_weight = scrapy.Field()
+    normal_calories = scrapy.Field()
     calories = scrapy.Field()  # 热量
     fat = scrapy.Field()  # 脂肪
     carbohydrate = scrapy.Field()  # 碳水化合物
