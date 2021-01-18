@@ -70,7 +70,6 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   Container pic;
   @override
   void didUpdateWidget(covariant FoodBox oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     widget.shouldShowPic.addListener(() {
       if(widget.shouldShowPic.value && mounted){
@@ -80,7 +79,6 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.angleAnimation.initAnimation(0, math.pi, widget.expandDuration, this,
             () {
@@ -270,6 +268,5 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => false;
 }

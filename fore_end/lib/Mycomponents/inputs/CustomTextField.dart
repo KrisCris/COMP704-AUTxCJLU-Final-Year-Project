@@ -647,7 +647,6 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置error状态时的动画播放
   @override
   ComponentThemeState setError() {
-    // TODO: implement setError
     ComponentThemeState stt = super.setError();
     this.colorAnimation.initAnimation(
         widget.theme.getThemeColor(stt),
@@ -662,7 +661,6 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置normal状态时的动画播放
   @override
   ComponentThemeState setNormal() {
-    // TODO: implement setNormal
     ComponentThemeState stt = super.setNormal();
     this.colorAnimation.initAnimation(
         widget.theme.getThemeColor(stt),
@@ -677,7 +675,6 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置warning状态时候的动画播放
   @override
   ComponentThemeState setWarning() {
-    // TODO: implement setWarning
     ComponentThemeState stt = super.setWarning();
     this.colorAnimation.initAnimation(
         widget.theme.getThemeColor(stt),
@@ -692,7 +689,6 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置disable的动画播放
   @override
   void setDisabled() {
-    // TODO: implement setDisabled
     //进入禁用状态，直接从当前颜色变化到disable状态
     this.colorAnimation.initAnimation(this.colorAnimation.getValue(),
         widget.theme.getDisabledColor(), colorChangeDura, this, () {

@@ -167,7 +167,6 @@ class CustomTextButtonState extends State<CustomTextButton>
   ///设置correct状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setCorrect() {
-    // TODO: implement setCorrect
     ComponentThemeState stt = super.setCorrect();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
@@ -183,7 +182,6 @@ class CustomTextButtonState extends State<CustomTextButton>
   ///设置error状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setError() {
-    // TODO: implement setError
     ComponentThemeState stt =super.setError();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
@@ -199,7 +197,6 @@ class CustomTextButtonState extends State<CustomTextButton>
   ///设置normal状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setNormal() {
-    // TODO: implement setNormal
     ComponentThemeState stt =super.setNormal();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
@@ -215,7 +212,6 @@ class CustomTextButtonState extends State<CustomTextButton>
   ///设置warning状态时的动画变化，返回旧的主题状态
   @override
   ComponentThemeState setWarning() {
-    // TODO: implement setWarning
     ComponentThemeState stt =super.setWarning();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);

@@ -34,7 +34,6 @@ class ValueableImageState extends State<ValueableImage>
     with DisableStateMixIn, ValueableStateMixIn<String> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.initDisableListener(widget.disabled);
     this.initValueListener(widget.widgetValue);

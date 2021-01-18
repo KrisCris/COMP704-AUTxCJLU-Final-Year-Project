@@ -411,7 +411,6 @@ class CustomButtonState extends State<CustomButton>
   ///设置correct状态的动画效果，并返回旧的状态
   @override
   ComponentThemeState setCorrect() {
-    // TODO: implement setCorrect
     ComponentThemeState stt = super.setCorrect();
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(
@@ -423,7 +422,6 @@ class CustomButtonState extends State<CustomButton>
   ///设置error状态的动画效果，并返回旧的状态
   @override
   ComponentThemeState setError() {
-    // TODO: implement setError
     ComponentThemeState stt = super.setError();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
@@ -436,7 +434,6 @@ class CustomButtonState extends State<CustomButton>
   ///设置normal状态的动画效果，并返回旧的状态
   @override
   ComponentThemeState setNormal() {
-    // TODO: implement setNormal
     ComponentThemeState stt = super.setNormal();
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
@@ -449,7 +446,6 @@ class CustomButtonState extends State<CustomButton>
   ///设置warning状态的动画效果，并返回旧的状态
   @override
   ComponentThemeState setWarning() {
-    // TODO: implement setWarning
     ComponentThemeState stt = super.setWarning();
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(

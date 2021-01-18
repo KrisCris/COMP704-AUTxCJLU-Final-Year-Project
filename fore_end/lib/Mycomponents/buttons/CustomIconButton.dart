@@ -321,7 +321,6 @@ class CustomIconButtonState extends State<CustomIconButton>
   ///聚焦时需要执行的动画变化
   @override
   void setFocus() {
-    // TODO: implement setFocus
     this.backgroundColorAnimation.initAnimation(
         this.getBackgroundColor(false),
         this.getBackgroundColor(true),
@@ -343,7 +342,6 @@ class CustomIconButtonState extends State<CustomIconButton>
   ///取消聚焦时，需要执行的动画变化
   @override
   void setUnFocus() {
-    // TODO: implement setUnFocus
     this.backgroundColorAnimation.initAnimation(
         this.getBackgroundColor(true),
         this.getBackgroundColor(false),

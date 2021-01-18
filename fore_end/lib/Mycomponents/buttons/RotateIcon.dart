@@ -36,7 +36,6 @@ class RotateIcon extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return new RotateIconState();
   }
 }
@@ -50,7 +49,6 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //初始化动画
     this.angleAnimation.initAnimation(0, widget.angle, widget.rotateTime, this,
@@ -61,7 +59,6 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
         onTap: this._innerOnTap,
         child: Transform.rotate(

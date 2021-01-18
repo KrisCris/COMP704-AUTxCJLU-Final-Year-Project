@@ -9,10 +9,18 @@ import 'package:fore_end/Mycomponents/clipper/RightLeftClipper.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 
 class ExpandInputField extends StatefulWidget {
+
+  ///输入框的宽度
   double width;
+
+  ///输入框右侧图标的尺寸
   double iconSize;
 
+  //TODO: 不应该通过背景前景色遮盖来呈现展开效果，尝试使用clipper
+  ///背景色
   Color backgroundColor;
+
+  ///前景色
   Color foregroundColor;
 
   bool disabled;
