@@ -7,12 +7,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
+
+import 'MainPage.dart';
+import 'WelcomePage.dart';
 
 void main() {
   runApp(Register());
@@ -214,9 +218,31 @@ class Register extends StatelessWidget {
             "nickname": this.nicknameTextField.getValue()
           });
           if (res.data['code'] == 1) {
-            EasyLoading.showSuccess("Register success!",
-                duration: Duration(milliseconds: 500));
-            Navigator.pop(context);
+            EasyLoading.showSuccess("Register success, login in...",
+                duration: Duration(milliseconds: 1000));
+            res = await Requests.login({
+              "email":  this.verifyTextField.getContentWhenClickButton(),
+              "password": this.passwordTextField.getValue()
+            });
+            if(res.data['code'] == 1){
+              User u = User.getInstance();
+              u.token = res.data['data']['token'];
+              u.uid = res.data['data']['uid'];
+              u.email = this.verifyTextField.getContentWhenClickButton();
+              int code = await u.synchronize();
+              if(code == 1){
+                EasyLoading.dismiss();
+                Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+                  return new MainPage(user:u);
+                }),(ct)=>false);
+              }else{
+                EasyLoading.showError("Login token invalid",
+                    duration: Duration(milliseconds: 2000));
+                Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+                  return new Welcome();
+                }),(ct)=>false);
+              }
+            }
           }
         } on DioError catch(e){
           this.nextButton.setDisabled(false);
