@@ -10,12 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Plan.dart';
 
 class User {
-  static const String defaultAvatar="";
-  static const String defaultUsername="defaultUsername";
+  static const String defaultAvatar = "";
+  static const String defaultUsername = "defaultUsername";
   static const List<Icon> genderIcons = [
-    Icon(FontAwesomeIcons.horse,color: Colors.grey,size: 30),
-    Icon(FontAwesomeIcons.male,color: Colors.lightBlueAccent,size: 30),
-    Icon(FontAwesomeIcons.female,color: Colors.pinkAccent,size: 30),
+    Icon(FontAwesomeIcons.horse, color: Colors.grey, size: 30),
+    Icon(FontAwesomeIcons.male, color: Colors.lightBlueAccent, size: 30),
+    Icon(FontAwesomeIcons.female, color: Colors.pinkAccent, size: 30),
   ];
   static User _instance;
 
@@ -28,47 +28,57 @@ class User {
   String _userName;
   String _email;
   String _avatar;
+  bool _needSetPlanFirst;
 
-  User._internal({ String username=User.defaultUsername, int planType=0,int age, int gender, int uid, String avatar=User.defaultAvatar, String token, String email}){
+  User._internal(
+      {String username = User.defaultUsername,
+      int planType = 0,
+      int age,
+      int gender,
+      int uid,
+        bool needSetPlan,
+      String avatar = User.defaultAvatar,
+      String token,
+      String email}) {
     this._userName = username;
     this._token = token;
     this._email = email;
     this._uid = uid;
     this._gender = gender;
     this._age = age;
-    if(planType == null){
+    this._needSetPlanFirst = needSetPlan;
+    if (planType == null) {
       planType = 0;
     }
     this._planType = Plan.planType[planType];
-    if(avatar == null){
-      this._avatar =User.defaultAvatar;
-    }else{
+    if (avatar == null) {
+      this._avatar = User.defaultAvatar;
+    } else {
       List<String> stringVal = avatar.split(',');
-      if(stringVal.length == 2){
+      if (stringVal.length == 2) {
         this._avatar = stringVal[1];
-      }else if(stringVal.length == 1){
+      } else if (stringVal.length == 1) {
         this._avatar = stringVal[0];
-      }else{
+      } else {
         this._avatar = "";
       }
     }
   }
   static User getInstance() {
-    if(User._instance == null){
+    if (User._instance == null) {
       SharedPreferences pre = LocalDataManager.pre;
       User._instance = User._internal(
-        token:pre.getString('token'),
-        uid:pre.getInt('uid'),
-        username: pre.getString("userName"),
-        email: pre.getString('email'),
-        gender: pre.getInt('gender'),
-        age: pre.getInt('age'),
-        avatar: pre.getString("avatar")
-      );
+          token: pre.getString('token'),
+          uid: pre.getInt('uid'),
+          username: pre.getString("userName"),
+          email: pre.getString('email'),
+          gender: pre.getInt('gender'),
+          age: pre.getInt('age'),
+          avatar: pre.getString("avatar"),
+          needSetPlan: pre.getBool("needSetPlan"));
     }
     return User._instance;
   }
-
 
   String get token => _token;
 
@@ -76,37 +86,37 @@ class User {
     _token = value;
   }
 
-  Image getAvatar(double width, double height){
+  Image getAvatar(double width, double height) {
     return Image.memory(
       base64Decode(this._avatar),
       width: width,
-      height:height,
+      height: height,
       fit: BoxFit.cover,
     );
   }
-  Uint8List getAvatarBin(){
+
+  Uint8List getAvatarBin() {
     return base64Decode(this._avatar);
   }
 
-
-  Future<int> synchronize()async {
-    Response res = await Requests.getBasicInfo({
-      'uid':this._uid,
-      'token':this._token
-    });
-    if(res.data['code'] == 1){
+  Future<int> synchronize() async {
+    Response res =
+        await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
+    if (res.data['code'] == 1) {
       this._age = res.data['data']['age'];
       this._gender = res.data['data']['gender'];
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
+      this._needSetPlanFirst = res.data['data']['needSetPlan'];
       this.save();
       return 1;
-    }else if(res.data['code'] == -1){
+    } else if (res.data['code'] == -1) {
       return 0;
     }
   }
-  void save(){
+
+  void save() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.setString("token", _token);
     pre.setInt("uid", _uid);
@@ -115,9 +125,10 @@ class User {
     pre.setString("email", _email);
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
+    pre.setBool("needSetPlan", _needSetPlanFirst);
   }
 
-  void logOut(){
+  void logOut() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.remove("token");
     pre.remove("uid");
@@ -126,8 +137,10 @@ class User {
     pre.remove("email");
     pre.remove("userName");
     pre.remove("avatar");
+    pre.remove("needSetPlan");
   }
-  Icon genderIcon(){
+
+  Icon genderIcon() {
     return User.genderIcons[this._gender];
   }
 

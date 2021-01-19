@@ -92,6 +92,9 @@ class TweenAnimation<T> implements MyAnimation<T>{
   void forward() {
     this.ctl.forward();
   }
+  void stop(){
+    this.ctl.stop();
+  }
   void beginAnimation(){
     this.isFinish = false;
     this.ctl.forward();

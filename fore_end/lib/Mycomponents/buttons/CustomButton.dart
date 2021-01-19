@@ -113,7 +113,6 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
     this.height = ScreenTool.partOfScreenHeight(this.height);
     this.textColor = CalculatableColor.transform(this.theme.lightTextColor);
     this.disabled = ValueNotifier<bool>(disabled);
-    // if (this.disabled) this.firstDisabled = true;
   }
 
   ///创建State,并将S状态保存到私有变量. 历史遗留问题, 不推荐用这种方式保存state的引用

@@ -27,7 +27,7 @@ class MainPage extends StatefulWidget {
   User user;
   MySearchBarDelegate searchBarDelegate;
   CustomAppBar appBar;
-  MainPage({@required User user, Key key}) : super(key: key) {
+  MainPage({@required User user, bool needSetPlan=false, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
