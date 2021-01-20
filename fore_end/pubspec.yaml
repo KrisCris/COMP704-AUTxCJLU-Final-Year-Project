@@ -41,6 +41,7 @@ dependencies:
   date_format: ^1.0.8 #https://pub.dev/packages/date_format
   image: ^2.1.19
   exifdart: ^0.7.0+3
+  common_utils: ^1.2.1
 
 dev_dependencies:
   flutter_test:

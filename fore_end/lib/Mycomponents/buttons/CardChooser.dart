@@ -5,9 +5,11 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
+import 'package:fore_end/interface/Valueable.dart';
 
 ///卡片选择器，功能类似于方框勾选组件
-class CardChooser extends StatefulWidget {
+class CardChooser<T> extends StatefulWidget
+with ValueableWidgetMixIn<T>{
   ///卡片的宽度
   double _width;
 
@@ -57,11 +59,12 @@ class CardChooser extends StatefulWidget {
   double _dotGap;
 
   ///被选中时执行的函数
-  Function _onTap;
+  List<Function> _onTap;
 
   CardChooser(
       {double width = 300,
       double height = 200,
+        T value,
       IconData icon,
       @required String text,
       Color backgroundColor = Colors.white,
@@ -90,10 +93,15 @@ class CardChooser extends StatefulWidget {
     this._backgroundColor = backgroundColor;
     this._gapBetweenIconAndText = gapBetweenIconAndText;
     this._sizeChangeAnimationDuration = sizeChangeAnimationDuration;
-    this._onTap = onTap;
+    if(onTap != null){
+      this._onTap = [onTap];
+    }else{
+      this._onTap = [];
+    }
     this._dotGap = dotGap;
     this._borderRadius = borderRadius;
     this._chosen = ValueNotifier<bool>(false);
+    this.widgetValue = ValueNotifier<T>(value);
   }
   @override
   State<StatefulWidget> createState() {
@@ -101,20 +109,20 @@ class CardChooser extends StatefulWidget {
   }
 
   void setOnTap(Function f) {
-    this._onTap = f;
+    this._onTap.add(f);
   }
 
-  void setChoosen() {
+  void setChosen() {
     this._chosen.value = true;
   }
 
-  void setUnChoosen() {
+  void setUnChosen() {
     this._chosen.value = false;
   }
 }
 
 class CardChooserState extends State<CardChooser>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, ValueableStateMixIn {
   TweenAnimation<double> dotMoveAnimation;
   TweenAnimation<double> sizeChangeAnimation;
   TweenAnimation<double> fontSizeAnimation;
@@ -123,9 +131,17 @@ class CardChooserState extends State<CardChooser>
   @override
   void didUpdateWidget(covariant CardChooser oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this.initValueNotifier();
+    this.initChosenNotifier();
   }
 
+  @override
+  void dispose() {
+    dotMoveAnimation.dispose();
+    sizeChangeAnimation.dispose();
+    fontSizeAnimation.dispose();
+    shadowSizeAnimation.dispose();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
@@ -155,10 +171,10 @@ class CardChooserState extends State<CardChooser>
         dotMoveAnimation.forward();
       }
     });
-    this.initValueNotifier();
+    this.initChosenNotifier();
   }
 
-  void initValueNotifier() {
+  void initChosenNotifier() {
     widget._chosen.addListener(() {
       if (widget._chosen.value == false) {
         dotMoveAnimation.stop();
@@ -193,8 +209,10 @@ class CardChooserState extends State<CardChooser>
         },
         onTapUp: (TapUpDetails dt) {
           widget._chosen.value = true;
-          if (widget._onTap != null) {
-            widget._onTap();
+          if (widget._onTap.isNotEmpty) {
+            for(Function f in widget._onTap){
+              f();
+            }
           }
           this.sizeChangeAnimation.reverse();
         },
@@ -229,5 +247,10 @@ class CardChooserState extends State<CardChooser>
         ));
 
     return res;
+  }
+
+  @override
+  void onChangeValue() {
+    return;
   }
 }

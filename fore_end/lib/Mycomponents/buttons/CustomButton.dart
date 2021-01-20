@@ -188,6 +188,13 @@ class CustomButtonState extends State<CustomButton>
       : super() {
     this.themeState = the;
   }
+  @override
+  void didUpdateWidget(covariant CustomButton oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    widget.disabled = oldWidget.disabled;
+    this.initBgColor();
+  }
 
   ///在initState中调用. 初始化按钮的背景颜色
   void initBgColor() {
@@ -222,7 +229,7 @@ class CustomButtonState extends State<CustomButton>
 
     this.colorAnimation.initAnimation(
         widget.bgColor, widget.bgColor, widget.colorDura, this, () {
-      setState(() {});
+      if(mounted)setState(() {});
     });
 
     //颜色动画执行完毕后，更新当前的背景色。
@@ -413,7 +420,7 @@ class CustomButtonState extends State<CustomButton>
     ComponentThemeState stt = super.setCorrect();
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
     return stt;
   }
@@ -425,7 +432,7 @@ class CustomButtonState extends State<CustomButton>
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
     return stt;
   }
@@ -437,7 +444,7 @@ class CustomButtonState extends State<CustomButton>
 
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
     return stt;
   }
@@ -448,7 +455,7 @@ class CustomButtonState extends State<CustomButton>
     ComponentThemeState stt = super.setWarning();
     Color newColor = widget.theme.getThemeColor(this.themeState);
     this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){setState(() {});});
+        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
     return stt;
   }
@@ -459,7 +466,7 @@ class CustomButtonState extends State<CustomButton>
     this.colorAnimation.initAnimation(
         widget.bgColor,
         widget.theme.getDisabledColor(),
-        widget.colorDura, this, (){setState(() {});});
+        widget.colorDura, this, (){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
   }
 
@@ -469,7 +476,7 @@ class CustomButtonState extends State<CustomButton>
     this.colorAnimation.initAnimation(
         widget.bgColor,
         widget.theme.getThemeColor(this.themeState),
-        widget.colorDura, this,(){setState(() {});});
+        widget.colorDura, this,(){if(mounted)setState(() {});});
     this.colorAnimation.beginAnimation();
   }
 }

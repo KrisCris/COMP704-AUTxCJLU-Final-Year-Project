@@ -8,6 +8,7 @@ class LinePainter extends CustomPainter {
   double lineGap;
   double lineWidth;
   double moveVal;
+  double xBias;
 
   LinePainter(
       {@required Color color,
@@ -29,13 +30,13 @@ class LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if(k > 0){
-      for(double x = 0 + this.moveVal;(x-size.height/k)<=size.width;x+=this.lineGap){
+      for(double x = -(size.height/this.k + this.lineWidth) + this.moveVal;(x-size.height/k)<=size.width;x+=this.lineGap){
         Offset startPoint = Offset(x,0);
         Offset endPoint = Offset(x-size.height/k,size.height);
         canvas.drawLine(startPoint, endPoint, this.pen);
       }
     }else if(k < 0){
-      for(double x = 0 + this.moveVal;(x + size.height/k)<=size.width;x+=this.lineGap){
+      for(double x = (size.height/this.k  + this.lineWidth) + this.moveVal;(x + size.height/k)<=size.width;x+=this.lineGap){
         Offset startPoint = Offset(x,size.height);
         Offset endPoint = Offset(x+size.height/k,0);
         canvas.drawLine(startPoint, endPoint, this.pen);
@@ -47,7 +48,7 @@ class LinePainter extends CustomPainter {
         canvas.drawLine(startPoint, endPoint, this.pen);
       }
     }else if(k >= 10000000){
-      for(double x = 0; x <= size.width;x += this.lineGap){
+      for(double x = -this.lineGap - this.lineWidth + this.moveVal; x <= size.width;x += this.lineGap){
         Offset startPoint = Offset(x,0);
         Offset endPoint = Offset(x,size.height);
         canvas.drawLine(startPoint, endPoint, this.pen);
