@@ -50,8 +50,8 @@ class BodyDataInputer extends StatelessWidget {
     );
     CardChooser noExercise = CardChooser<double>(
       value: 1.3,
-      text: "I did little exercise everyday.",
-      textSize: 15,
+      text: "I hardly do exercise.",
+      textSize: 14,
       textColor: Colors.white,
       paintColor: Color(0xFFB4A122),
       backgroundColor: Color(0xFFD1BC2C),
@@ -62,7 +62,7 @@ class BodyDataInputer extends StatelessWidget {
     CardChooser haveExercise = CardChooser<double>(
       value: 1.55,
       text: "I did exercise regularly.",
-      textSize: 15,
+      textSize: 14,
       textColor: Colors.white,
       paintColor: Color(0xFFBD7E28),
       backgroundColor: Color(0xFFD38F33),
@@ -73,7 +73,7 @@ class BodyDataInputer extends StatelessWidget {
     CardChooser lotExercise = CardChooser<double>(
       value: 1.8,
       text: "I am professional athletes.",
-      textSize: 15,
+      textSize: 14,
       textColor: Colors.white,
       paintColor: Color(0xFFCE602A),
       backgroundColor: Color(0xFFE66D32),
@@ -132,7 +132,7 @@ class BodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Text("We Need Collect Some Data",
                       style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 22,
                           color: Colors.white,
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold)),
@@ -164,7 +164,7 @@ class BodyDataInputer extends StatelessWidget {
                   TitleText(
                   text: "Are You Male or Female ?",
                   maxHeight: 20,
-                  maxWidth: 250,
+                  maxWidth: 300,
                   underLineLength: 0.795,
                   fontSize: 18,
                     lineWidth: 5,
