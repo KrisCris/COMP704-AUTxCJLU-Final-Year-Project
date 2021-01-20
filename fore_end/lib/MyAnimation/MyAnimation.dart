@@ -108,6 +108,7 @@ class TweenAnimation<T> implements MyAnimation<T>{
     }
   }
   void dispose(){
+    if(this.ctl == null)return;
     this.ctl.dispose();
   }
   T getValue() {

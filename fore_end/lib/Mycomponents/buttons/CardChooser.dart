@@ -135,6 +135,14 @@ class CardChooserState extends State<CardChooser>
   }
 
   @override
+  void dispose() {
+    dotMoveAnimation.dispose();
+    sizeChangeAnimation.dispose();
+    fontSizeAnimation.dispose();
+    shadowSizeAnimation.dispose();
+    super.dispose();
+  }
+  @override
   void initState() {
     super.initState();
     fontSizeAnimation = new TweenAnimation();
