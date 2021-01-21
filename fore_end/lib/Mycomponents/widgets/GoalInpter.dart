@@ -5,11 +5,37 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 
-class GoalInputer extends StatelessWidget{
+class GoalInputer extends StatefulWidget {
   Function nextDo;
-  int planType;
+  ValueNotifier<int> planType;
 
-  GoalInputer({this.nextDo,this.planType});
+  GoalInputer({this.nextDo}){
+    this.planType = ValueNotifier<int>(0);
+  }
+  void setNextDo(Function f){
+    this.nextDo = f;
+  }
+
+
+  @override
+  State<StatefulWidget> createState() {
+  }
+}
+
+class GoalInputerState extends State<GoalInputer>{
+
+  @override
+  void didUpdateWidget(covariant GoalInputer oldWidget) {
+    widget.planType = oldWidget.planType;
+    super.didUpdateWidget(oldWidget);
+  }
+  @override
+  void initState() {
+    widget.planType.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +47,8 @@ class GoalInputer extends StatelessWidget{
       height: 50,
       text: "Next Step",
       disabled: true,
-      tapFunc: this.nextDo,
+      tapFunc: widget.nextDo,
     );
-
     return Stack(
       children: [
         this.getBackground(),

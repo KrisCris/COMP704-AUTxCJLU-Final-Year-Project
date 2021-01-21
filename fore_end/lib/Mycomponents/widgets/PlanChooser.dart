@@ -10,8 +10,13 @@ import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 
 class PlanChooser extends StatelessWidget {
   Function nextDo;
+  int planType;
 
   PlanChooser({this.nextDo});
+
+  void setNextDo(Function f){
+    this.nextDo = f;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +69,17 @@ class PlanChooser extends StatelessWidget {
       borderRadius: 10,
     );
     addMuscle.setOnTap(() {
+      this.planType = 0;
       info.changeTo(
           "Eating more food with more protein and less carbohydrate. Sufficient exercise is the guarantee of gaining muscle");
     });
     loseWeight.setOnTap(() {
+      this.planType = 1;
       info.changeTo(
           "Eating less food, reduce the amount of carbohydrate and fat in the food, keep exercises to burn the fat in the body");
     });
     keep.setOnTap(() {
+      this.planType = 2;
       info.changeTo(
           "Eating as what general people eat, not eat less deliberately or eat too much");
     });

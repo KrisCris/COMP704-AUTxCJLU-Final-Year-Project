@@ -254,7 +254,7 @@ class ValueBarState extends State<ValueBar>
   void onChangeValue() {
     if (!this.needBarAnimation) return;
 
-    double persent = widget.widgetValue.value / widget.maxVal;
+    double persent = (widget.widgetValue.value-widget.minVal) / (widget.maxVal-widget.minVal);
     double firstVal = this.barWidthAnimation.getValue();
     this.barWidthAnimation.initAnimation(
         firstVal,
@@ -299,7 +299,7 @@ class ValueBarState extends State<ValueBar>
 
     double persentage =
         dx / (widget.width - 2 * widget.borderThickness - widget.blockWidth);
-    double value = NumUtil.getNumByValueDouble(persentage * widget.maxVal, 1);
+    double value = NumUtil.getNumByValueDouble(widget.minVal + persentage * (widget.maxVal-widget.minVal), 1);
     if(widget.widgetValue.value is double){
       widget.widgetValue.value = value;
     }else if (widget.widgetValue.value is int){

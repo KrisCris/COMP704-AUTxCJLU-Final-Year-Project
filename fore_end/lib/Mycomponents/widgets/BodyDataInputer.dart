@@ -13,6 +13,9 @@ class BodyDataInputer extends StatelessWidget {
 
   BodyDataInputer({this.nextDo});
 
+  void setNextDo(Function f){
+    this.nextDo = f;
+  }
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
