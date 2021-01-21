@@ -5,13 +5,21 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class BodyDataInputer extends StatelessWidget {
   Function nextDo;
+  double bodyHeight;
+  int bodyWeight;
+  int genderRatio;
 
   BodyDataInputer({this.nextDo});
+
+  void setNextDo(Function f) {
+    this.nextDo = f;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +35,7 @@ class BodyDataInputer extends StatelessWidget {
     );
 
     CardChooser male = CardChooser<int>(
-      value: 1,
+      value: 5,
       text: "Male",
       textSize: 15,
       textColor: Colors.white,
@@ -38,7 +46,7 @@ class BodyDataInputer extends StatelessWidget {
       height: 70,
     );
     CardChooser female = CardChooser<int>(
-      value: 2,
+      value: -161,
       text: "Female",
       textSize: 15,
       textColor: Colors.white,
@@ -48,39 +56,46 @@ class BodyDataInputer extends StatelessWidget {
       width: 0.35,
       height: 70,
     );
-    CardChooser noExercise = CardChooser<double>(
-      value: 1.3,
-      text: "I hardly do exercise.",
-      textSize: 14,
-      textColor: Colors.white,
-      paintColor: Color(0xFFB4A122),
-      backgroundColor: Color(0xFFD1BC2C),
-      borderRadius: 6,
+    ValueBar height = ValueBar<double>(
+      barThickness: 14,
+      roundNum: 2,
+      adjustVal: 0.1,
       width: 0.8,
-      height: 40,
+      maxVal: 2.50,
+      minVal: 1.00,
+      initVal: 1.65,
+      borderThickness: 4,
+      barColor: Colors.white,
+      effectColor: Color(0xFFBDBBBA),
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
     );
-    CardChooser haveExercise = CardChooser<double>(
-      value: 1.55,
-      text: "I did exercise regularly.",
-      textSize: 14,
-      textColor: Colors.white,
-      paintColor: Color(0xFFBD7E28),
-      backgroundColor: Color(0xFFD38F33),
-      borderRadius: 6,
+
+    ValueBar weight = ValueBar<int>(
+      barThickness: 14,
       width: 0.8,
-      height: 40,
+      maxVal: 200,
+      minVal: 30,
+      initVal: 50,
+      barColor: Color(0xFFBCA5D6),
+      effectColor: Color(0xFFA88EC6),
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
     );
-    CardChooser lotExercise = CardChooser<double>(
-      value: 1.8,
-      text: "I am professional athletes.",
-      textSize: 14,
-      textColor: Colors.white,
-      paintColor: Color(0xFFCE602A),
-      backgroundColor: Color(0xFFE66D32),
-      borderRadius: 6,
-      width: 0.8,
-      height: 40,
-    );
+    height.setOnChange(() {
+      this.bodyHeight = height.getValue();
+    });
+    weight.setOnChange(() {
+      this.bodyWeight = weight.getValue();
+    });
+
+    this.bodyHeight = height.getValue();
+    this.bodyWeight = weight.getValue();
 
     CardChooserGroup<int> genderChoose = CardChooserGroup<int>(
       initVal: -1,
@@ -89,23 +104,14 @@ class BodyDataInputer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       gap: ScreenTool.partOfScreenWidth(0.1),
     );
-    CardChooserGroup<double> exerciseChoose = CardChooserGroup<double>(
-      initVal: -1,
-      cards: [noExercise, haveExercise,lotExercise],
-      direction: CardChooserGroupDirection.vertical,
-      mainAxisAlignment: MainAxisAlignment.center,
-      gap: 20.0,
-    );
-    genderChoose.addValueChangeListener((){
-      if(exerciseChoose.getValue() >= 0 && genderChoose.getValue() >= 0){
+
+    genderChoose.addValueChangeListener(() {
+      if (genderChoose.getValue() >= 0) {
+        this.genderRatio = genderChoose.getValue();
         nextButton.setDisabled(false);
       }
     });
-    exerciseChoose.addValueChangeListener((){
-      if(exerciseChoose.getValue() >= 0 && genderChoose.getValue() >= 0){
-        nextButton.setDisabled(false);
-      }
-    });
+
     return Stack(
       children: [
         ClipRect(
@@ -144,8 +150,8 @@ class BodyDataInputer extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
-                    width: ScreenTool.partOfScreenWidth(0.55),
-                    height: 70,
+                    width: ScreenTool.partOfScreenWidth(0.8),
+                    height: 50,
                     child: Text(
                         "Please be relieved, these data will only be used as the figure support of daily energy intake.",
                         style: TextStyle(
@@ -162,14 +168,15 @@ class BodyDataInputer extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                  text: "Are You Male or Female ?",
-                  maxHeight: 20,
-                  maxWidth: 300,
-                  underLineLength: 0.795,
-                  fontSize: 18,
+                    text: "Are You Male or Female ?",
+                    maxHeight: 20,
+                    maxWidth: 300,
+                    underLineLength: 0.795,
+                    fontSize: 18,
                     lineWidth: 5,
                     underLineDistance: 8,
-                )],
+                  )
+                ],
               ),
               SizedBox(height: 30),
               CardChooserGroup<int>(
@@ -179,29 +186,25 @@ class BodyDataInputer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 gap: ScreenTool.partOfScreenWidth(0.1),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 50),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                    text: "How Do You Exercise?",
-                    maxHeight: 20,
-                    maxWidth: 250,
-                    underLineLength: 0.795,
-                    fontSize: 18,
-                    lineWidth: 5,
-                    underLineDistance: 8,
-                  )],
+                      text: "What Is Your Stature And Weight ?",
+                      maxWidth: 0.6,
+                      maxHeight: 40,
+                      fontSize: 18,
+                      lineWidth: 5,
+                      underLineLength: 0.8,
+                      underLineDistance: 8),
+                ],
               ),
+              SizedBox(height: 60),
+              height,
               SizedBox(height: 30),
-              CardChooserGroup<double>(
-                initVal: -1,
-                cards: [noExercise, haveExercise,lotExercise],
-                direction: CardChooserGroupDirection.vertical,
-                mainAxisAlignment: MainAxisAlignment.center,
-                gap: 20.0,
-              ),
+              weight,
               Expanded(child: (SizedBox())),
               nextButton,
               SizedBox(height: 50),

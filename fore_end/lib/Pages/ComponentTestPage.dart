@@ -23,12 +23,16 @@ class ComponentTestPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ValueBar<double>(
+            ValueBar<int>(
               barThickness: 20,
               borderThickness: 4,
               width: 0.7,
               initVal: 20,
-              edgeEmpty: [0.6,0.93,0.6,0.93],
+              showValue: true,
+              showAdjustButton: false,
+              borderDistance: 1,
+              borderRadius_RT_RB_RT_RB: [2,2,2,2],
+              edgeEmpty: [0,0.95,0,0.95],
             )
           ],
         )

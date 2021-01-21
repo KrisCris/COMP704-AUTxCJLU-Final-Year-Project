@@ -23,22 +23,23 @@ class LinePainter extends CustomPainter {
     this.moveVal = moveVal;
     this.pen = Paint()
       ..color = color
-      ..strokeCap = StrokeCap.round
       ..isAntiAlias = true
       ..strokeWidth = this.lineWidth;
   }
   @override
   void paint(Canvas canvas, Size size) {
+    double angle = math.atan(k);
+    double extraHeight = math.sin(angle)* this.lineWidth/k;
     if(k > 0){
       for(double x = -(size.height/this.k + this.lineWidth) + this.moveVal;(x-size.height/k)<=size.width;x+=this.lineGap){
-        Offset startPoint = Offset(x,0);
-        Offset endPoint = Offset(x-size.height/k,size.height);
+        Offset startPoint = Offset(x,0-extraHeight);
+        Offset endPoint = Offset(x-size.height/k,size.height+extraHeight);
         canvas.drawLine(startPoint, endPoint, this.pen);
       }
     }else if(k < 0){
       for(double x = (size.height/this.k  + this.lineWidth) + this.moveVal;(x + size.height/k)<=size.width;x+=this.lineGap){
-        Offset startPoint = Offset(x,size.height);
-        Offset endPoint = Offset(x+size.height/k,0);
+        Offset startPoint = Offset(x,size.height+extraHeight);
+        Offset endPoint = Offset(x+size.height/k,0-extraHeight);
         canvas.drawLine(startPoint, endPoint, this.pen);
       }
     }else if(k == 0){

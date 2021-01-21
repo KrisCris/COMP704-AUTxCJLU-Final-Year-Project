@@ -16,6 +16,7 @@ class UnderLinePainter extends CustomPainter{
 
   @override
   void paint(Canvas canvas, Size size) {
+    if(lineLength ==0) return;
     Offset startPoint = Offset(0, size.height+this.bottomDistance);
     Offset endPoint = Offset(this.lineLength, size.height+this.bottomDistance);
     canvas.drawLine(startPoint, endPoint, pen);
