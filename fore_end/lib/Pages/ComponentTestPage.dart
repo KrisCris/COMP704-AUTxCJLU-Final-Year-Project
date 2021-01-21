@@ -28,7 +28,9 @@ class ComponentTestPage extends StatelessWidget {
               borderThickness: 4,
               width: 0.7,
               initVal: 20,
-              edgeEmpty: [0.6,0.93,0.6,0.93],
+              borderDistance: 3,
+              borderRadius_RT_RB_RT_RB: [5,5,5,5],
+              edgeEmpty: [0.5,0.95,0.5,0.95],
             )
           ],
         )
