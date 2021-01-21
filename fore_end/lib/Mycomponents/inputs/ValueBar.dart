@@ -16,6 +16,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   double barThickness;
   int roundNum;
   double adjustVal;
+  Function onChange;
   List<double> edgeEmpty;
   List<double> borderRadius_LT_LB_RT_RB;
   bool showBorder;
@@ -36,6 +37,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       {double width = 100,
       this.barThickness = 10,
       this.borderThickness = 2,
+        this.onChange,
       List<double> borderRadius_RT_RB_RT_RB,
       this.showBorder = true,
         this.roundNum = 1,
@@ -69,6 +71,9 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
     this.barColor = barColor;
     this.effectColor = effectColor;
   }
+  void setOnChange(Function f){
+    this.onChange = f;
+  }
   @override
   State<StatefulWidget> createState() {
     return ValueBarState();
@@ -81,10 +86,18 @@ class ValueBarState extends State<ValueBar>
   TweenAnimation<double> barWidthAnimation;
   bool needBarAnimation = true;
   double startDragX;
+
+  @override
+  void dispose() {
+    moveAnimation.dispose();
+    barWidthAnimation.dispose();
+    super.dispose();
+  }
   @override
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.widgetValue = oldWidget.widgetValue;
+    widget.onChange = oldWidget.onChange;
   }
 
   @override
@@ -261,6 +274,10 @@ class ValueBarState extends State<ValueBar>
   }
   @override
   void onChangeValue() {
+
+    if(widget.onChange != null){
+      widget.onChange();
+    }
     if (!this.needBarAnimation) return;
 
     double persent = (widget.widgetValue.value-widget.minVal) / (widget.maxVal-widget.minVal);

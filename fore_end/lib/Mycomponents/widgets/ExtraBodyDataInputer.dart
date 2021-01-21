@@ -10,7 +10,7 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 class ExtraBodyDataInputer extends StatelessWidget {
   Function nextDo;
   double bodyHeight;
-  double bodyWeight;
+  int bodyWeight;
 
   ExtraBodyDataInputer({this.nextDo}) {
   }
@@ -82,6 +82,43 @@ class ExtraBodyDataInputer extends StatelessWidget {
   }
 
   Widget getSetting() {
+    ValueBar height = ValueBar<double>(
+      barThickness: 20,
+      roundNum: 2,
+      adjustVal: 0.1,
+      width: 0.8,
+      maxVal: 2.50,
+      minVal: 1.00,
+      initVal: 1.65,
+      borderThickness: 4,
+      barColor: Colors.white,
+      effectColor: Color(0xFFBDBBBA),
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+    );
+
+    ValueBar weight = ValueBar<int>(
+      barThickness: 20,
+      width: 0.8,
+      maxVal: 200,
+      minVal: 30,
+      initVal: 50,
+      barColor: Color(0xFFBCA5D6),
+      effectColor: Color(0xFFA88EC6),
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
+    );
+    height.setOnChange((){
+      this.bodyHeight = height.getValue();
+    });
+    weight.setOnChange((){
+      this.bodyWeight = weight.getValue();
+    });
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -101,19 +138,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
             ),
           ],
         ),
-        ValueBar<double>(
-          barThickness: 20,
-          width: 0.8,
-          maxVal: 2.5,
-          minVal: 1.0,
-          initVal: 1.6,
-          borderThickness: 4,
-          showValue: true,
-          showAdjustButton: true,
-          showBorder: false,
-          borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
-          edgeEmpty: [0, 0.95, 0, 0.95],
-        ),
+        height,
         SizedBox(height: 80),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -123,7 +148,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: "How Much Weight Do You Want To Lose (KG) ?",
+                text: "What is Your Weight (KG) ?",
                 maxWidth: 0.6,
                 maxHeight: 50,
                 underLineLength: 0,
@@ -131,21 +156,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
             ),
           ],
         ),
-        ValueBar<int>(
-          barThickness: 20,
-          width: 0.8,
-          maxVal: 50,
-          minVal: 1,
-          initVal: 10,
-          barColor: Color(0xFFEB9D33),
-          effectColor: Color(0xFFECBC7B),
-          borderThickness: 4,
-          showValue: true,
-          showAdjustButton: true,
-          showBorder: false,
-          borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
-          edgeEmpty: [0, 0.95, 0, 0.95],
-        ),
+        weight,
         SizedBox(height: 30)
       ],
     );
