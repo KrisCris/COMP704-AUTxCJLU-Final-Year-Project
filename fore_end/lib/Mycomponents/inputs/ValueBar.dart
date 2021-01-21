@@ -35,12 +35,12 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       this.barThickness = 10,
       this.borderThickness = 2,
       List<double> borderRadius_RT_RB_RT_RB,
-      this.showBorder = false,
+      this.showBorder = true,
       this.effectThickness = 20,
       this.effectGap = 45,
       this.edgeEmpty,
-      this.showValue = true,
-      this.showAdjustButton = true,
+      this.showValue = false,
+      this.showAdjustButton = false,
       this.borderColor = Colors.black,
       this.borderDistance = 0,
       Color barColor,
@@ -275,10 +275,19 @@ class ValueBarState extends State<ValueBar>
       } else if (widget.widgetValue.value is int) {
         return 5;
       }
-    } else if (widget.widgetValue.value < 100)
-      return 15;
-    else
-      return 20;
+    } else if (widget.widgetValue.value < 100) {
+      if (widget.widgetValue.value is double) {
+        return 15;
+      } else if (widget.widgetValue.value is int) {
+        return 10;
+      }
+    }else {
+      if (widget.widgetValue.value is double) {
+        return 20;
+      } else if (widget.widgetValue.value is int) {
+        return 15;
+      }
+    }
   }
 
   void solveDragSpace(double dx) {
@@ -291,7 +300,11 @@ class ValueBarState extends State<ValueBar>
     double persentage =
         dx / (widget.width - 2 * widget.borderThickness - widget.blockWidth);
     double value = NumUtil.getNumByValueDouble(persentage * widget.maxVal, 1);
-    widget.widgetValue.value = value;
+    if(widget.widgetValue.value is double){
+      widget.widgetValue.value = value;
+    }else if (widget.widgetValue.value is int){
+      widget.widgetValue.value = value.round();
+    }
     this.barWidthAnimation.initAnimation(dx, dx, 200, this, () {});
     setState(() {});
   }
