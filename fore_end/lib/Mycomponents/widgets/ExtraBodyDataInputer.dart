@@ -7,40 +7,16 @@ import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
-class GoalInputer extends StatefulWidget {
+class ExtraBodyDataInputer extends StatelessWidget {
   Function nextDo;
-  ValueNotifier<int> planType;
-  ValueNotifier<double> exerciseRatio;
+  double bodyHeight;
+  double bodyWeight;
 
-  GoalInputer({this.nextDo}) {
-    this.planType = ValueNotifier<int>(0);
+  ExtraBodyDataInputer({this.nextDo}) {
   }
   void setNextDo(Function f) {
     this.nextDo = f;
   }
-
-  @override
-  State<StatefulWidget> createState() {
-    return GoalInputerState();
-  }
-}
-
-class GoalInputerState extends State<GoalInputer> {
-  @override
-  void didUpdateWidget(covariant GoalInputer oldWidget) {
-    widget.planType = oldWidget.planType;
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void initState() {
-    widget.planType.addListener(() {
-      if (!mounted) return;
-      setState(() {});
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
@@ -51,7 +27,7 @@ class GoalInputerState extends State<GoalInputer> {
       height: 50,
       text: "Next Step",
       disabled: false,
-      tapFunc: widget.nextDo,
+      tapFunc: this.nextDo,
     );
     return Stack(
       children: [
@@ -65,7 +41,7 @@ class GoalInputerState extends State<GoalInputer> {
               SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
               this.getHeader(),
               SizedBox(height: 30),
-              this.getContent(),
+              this.getSetting(),
               Expanded(child: (SizedBox())),
               nextButton,
               SizedBox(height: 50),
@@ -95,7 +71,7 @@ class GoalInputerState extends State<GoalInputer> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-        Text("Set Your Goal",
+        Text("A little More",
             style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
@@ -105,7 +81,7 @@ class GoalInputerState extends State<GoalInputer> {
     );
   }
 
-  Widget getLoseWeightSetting() {
+  Widget getSetting() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -117,7 +93,7 @@ class GoalInputerState extends State<GoalInputer> {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: "How Many Days Do You Want To Spend To Lose Your Weight?",
+                text: "What Is Your Stature (meter) ?",
                 maxWidth: 0.6,
                 maxHeight: 50,
                 underLineLength: 0,
@@ -125,12 +101,12 @@ class GoalInputerState extends State<GoalInputer> {
             ),
           ],
         ),
-        ValueBar<int>(
+        ValueBar<double>(
           barThickness: 20,
           width: 0.8,
-          maxVal: 365,
-          minVal: 1,
-          initVal: 30,
+          maxVal: 2.5,
+          minVal: 1.0,
+          initVal: 1.6,
           borderThickness: 4,
           showValue: true,
           showAdjustButton: true,
@@ -175,10 +151,4 @@ class GoalInputerState extends State<GoalInputer> {
     );
   }
 
-  Widget getContent() {
-    if (widget.planType.value == 0) {
-    } else if (widget.planType.value == 1) {
-      return getLoseWeightSetting();
-    } else {}
-  }
 }

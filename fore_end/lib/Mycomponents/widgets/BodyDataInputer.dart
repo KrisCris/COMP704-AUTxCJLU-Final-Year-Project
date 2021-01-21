@@ -41,7 +41,7 @@ class BodyDataInputer extends StatelessWidget {
       height: 70,
     );
     CardChooser female = CardChooser<int>(
-      value: 2,
+      value: -161,
       text: "Female",
       textSize: 15,
       textColor: Colors.white,

@@ -14,6 +14,8 @@ import 'package:fore_end/interface/Valueable.dart';
 class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   double width;
   double barThickness;
+  int roundNum;
+  double adjustVal;
   List<double> edgeEmpty;
   List<double> borderRadius_LT_LB_RT_RB;
   bool showBorder;
@@ -36,6 +38,8 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       this.borderThickness = 2,
       List<double> borderRadius_RT_RB_RT_RB,
       this.showBorder = true,
+        this.roundNum = 1,
+        this.adjustVal = 1.0,
       this.effectThickness = 20,
       this.effectGap = 45,
       this.edgeEmpty,
@@ -185,7 +189,12 @@ class ValueBarState extends State<ValueBar>
         offset: Offset(widget.width / 2 - calculateTextOffset(), -17),
         child: Text(
           widget.widgetValue.value.toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold
+          ),
         ));
 
     List<Widget> res = [];
@@ -205,7 +214,7 @@ class ValueBarState extends State<ValueBar>
             borderRadius: 2,
             buttonSize: 17,
             onClick: () {
-              addValue(-1);
+              addValue(-1*widget.adjustVal);
             },
           ));
       Widget addButton = Positioned(
@@ -219,7 +228,7 @@ class ValueBarState extends State<ValueBar>
             borderRadius: 2,
             buttonSize: 17,
             onClick: () {
-              addValue(1);
+              addValue(widget.adjustVal);
             },
           ));
       res.add(minusButton);
@@ -244,7 +253,7 @@ class ValueBarState extends State<ValueBar>
       after = widget.maxVal;
     }
     if(widget.widgetValue.value is double){
-      widget.widgetValue.value = NumUtil.getNumByValueDouble(after, 1);
+      widget.widgetValue.value = NumUtil.getNumByValueDouble(after, widget.roundNum);
     }else if(widget.widgetValue.value is int){
       widget.widgetValue.value = after.round();
     }
@@ -299,7 +308,7 @@ class ValueBarState extends State<ValueBar>
 
     double persentage =
         dx / (widget.width - 2 * widget.borderThickness - widget.blockWidth);
-    double value = NumUtil.getNumByValueDouble(widget.minVal + persentage * (widget.maxVal-widget.minVal), 1);
+    double value = NumUtil.getNumByValueDouble(widget.minVal + persentage * (widget.maxVal-widget.minVal), widget.roundNum);
     if(widget.widgetValue.value is double){
       widget.widgetValue.value = value;
     }else if (widget.widgetValue.value is int){

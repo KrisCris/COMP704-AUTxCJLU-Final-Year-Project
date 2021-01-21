@@ -20,7 +20,7 @@ class GuidePage extends StatelessWidget{
       goal.planType.value = plan.planType;
     });
     body.setNextDo((){
-      ctl.animateTo(ScreenTool.partOfScreenWidth(2), duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
+      ctl.animateTo(2*ScreenTool.partOfScreenWidth(1), duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
     });
     goal.setNextDo((){
 
