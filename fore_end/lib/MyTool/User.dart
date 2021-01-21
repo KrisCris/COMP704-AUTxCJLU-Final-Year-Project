@@ -23,7 +23,7 @@ class User {
   int _uid;
   int _age;
   //male - 1, female - 2, other - 0
-  String _planType;
+  Plan plan;
   int _gender;
   String _userName;
   String _email;
@@ -50,7 +50,6 @@ class User {
     if (planType == null) {
       planType = 0;
     }
-    this._planType = Plan.planType[planType];
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {

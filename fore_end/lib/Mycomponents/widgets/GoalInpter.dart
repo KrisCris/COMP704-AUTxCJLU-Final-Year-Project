@@ -10,7 +10,9 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 class GoalInputer extends StatefulWidget {
   Function nextDo;
   ValueNotifier<int> planType;
-  ValueNotifier<double> exerciseRatio;
+  int days;
+  int weightLose;
+  int gainMuscle;
 
   GoalInputer({this.nextDo}) {
     this.planType = ValueNotifier<int>(0);
@@ -29,6 +31,10 @@ class GoalInputerState extends State<GoalInputer> {
   @override
   void didUpdateWidget(covariant GoalInputer oldWidget) {
     widget.planType = oldWidget.planType;
+    widget.days = oldWidget.days;
+    widget.gainMuscle = oldWidget.gainMuscle;
+    widget.weightLose = oldWidget.weightLose;
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -106,6 +112,44 @@ class GoalInputerState extends State<GoalInputer> {
   }
 
   Widget getLoseWeightSetting() {
+    ValueBar day = ValueBar<int>(
+      barThickness: 20,
+      width: 0.8,
+      maxVal: 365,
+      minVal: 1,
+      initVal: 30,
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
+    );
+    ValueBar weight = ValueBar<int>(
+      barThickness: 20,
+      width: 0.8,
+      maxVal: 50,
+      minVal: 1,
+      initVal: 10,
+      barColor: Color(0xFFEB9D33),
+      effectColor: Color(0xFFECBC7B),
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
+    );
+    day.setOnChange((){
+      widget.days = day.widgetValue.value;
+    });
+    weight.setOnChange((){
+      widget.weightLose = weight.widgetValue.value;
+    });
+
+    widget.days = day.widgetValue.value;
+    widget.weightLose = weight.widgetValue.value;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -125,19 +169,7 @@ class GoalInputerState extends State<GoalInputer> {
             ),
           ],
         ),
-        ValueBar<int>(
-          barThickness: 20,
-          width: 0.8,
-          maxVal: 365,
-          minVal: 1,
-          initVal: 30,
-          borderThickness: 4,
-          showValue: true,
-          showAdjustButton: true,
-          showBorder: false,
-          borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
-          edgeEmpty: [0, 0.95, 0, 0.95],
-        ),
+        day,
         SizedBox(height: 80),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -155,21 +187,7 @@ class GoalInputerState extends State<GoalInputer> {
             ),
           ],
         ),
-        ValueBar<int>(
-          barThickness: 20,
-          width: 0.8,
-          maxVal: 50,
-          minVal: 1,
-          initVal: 10,
-          barColor: Color(0xFFEB9D33),
-          effectColor: Color(0xFFECBC7B),
-          borderThickness: 4,
-          showValue: true,
-          showAdjustButton: true,
-          showBorder: false,
-          borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
-          edgeEmpty: [0, 0.95, 0, 0.95],
-        ),
+        weight,
         SizedBox(height: 30)
       ],
     );

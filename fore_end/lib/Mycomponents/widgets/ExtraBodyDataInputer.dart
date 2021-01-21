@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
+import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
@@ -9,8 +11,8 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtraBodyDataInputer extends StatelessWidget {
   Function nextDo;
-  double bodyHeight;
-  int bodyWeight;
+  double exerciseRatio;
+  int age;
 
   ExtraBodyDataInputer({this.nextDo}) {
   }
@@ -26,9 +28,75 @@ class ExtraBodyDataInputer extends StatelessWidget {
       width: 0.8,
       height: 50,
       text: "Next Step",
-      disabled: false,
+      disabled: true,
       tapFunc: this.nextDo,
     );
+
+    CardChooser noExercise = CardChooser<double>(
+      value: 1.3,
+      text: "I hardly do exercise.",
+      textSize: 14,
+      textColor: Colors.white,
+      paintColor: Color(0xFFB4A122),
+      backgroundColor: Color(0xFFD1BC2C),
+      borderRadius: 6,
+      width: 0.8,
+      height: 50,
+    );
+    CardChooser haveExercise = CardChooser<double>(
+      value: 1.55,
+      text: "I did exercise regularly.",
+      textSize: 14,
+      textColor: Colors.white,
+      paintColor: Color(0xFFBD7E28),
+      backgroundColor: Color(0xFFD38F33),
+      borderRadius: 6,
+      width: 0.8,
+      height: 50,
+    );
+    CardChooser lotExercise = CardChooser<double>(
+      value: 1.8,
+      text: "I am professional athletes.",
+      textSize: 14,
+      textColor: Colors.white,
+      paintColor: Color(0xFFCE602A),
+      backgroundColor: Color(0xFFE66D32),
+      borderRadius: 6,
+      width: 0.8,
+      height: 50,
+    );
+    ValueBar age = ValueBar<int>(
+      barThickness: 14,
+      roundNum: 2,
+      adjustVal: 1,
+      width: 0.8,
+      maxVal: 100,
+      minVal: 1,
+      initVal: 10,
+      borderThickness: 4,
+      barColor: Color(0xFF82BFFC),
+      effectColor: Color(0xFF4EA5FC),
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+    );
+    age.setOnChange((){
+      this.age = age.getValue();
+    });
+    this.age = age.getValue();
+    CardChooserGroup<double> exerciseChoose = CardChooserGroup<double>(
+      initVal: -1,
+      cards: [noExercise, haveExercise,lotExercise],
+      direction: CardChooserGroupDirection.vertical,
+      mainAxisAlignment: MainAxisAlignment.center,
+      gap: 25.0,
+    );
+    exerciseChoose.addValueChangeListener((){
+      if(exerciseChoose.getValue() >= 0){
+        this.exerciseRatio = exerciseChoose.getValue();
+        nextButton.setDisabled(false);
+      }
+    });
     return Stack(
       children: [
         this.getBackground(),
@@ -41,7 +109,39 @@ class ExtraBodyDataInputer extends StatelessWidget {
               SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
               this.getHeader(),
               SizedBox(height: 30),
-              this.getSetting(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+                  TitleText(
+                    text: "What Is Your Age ?",
+                    maxHeight: 20,
+                    maxWidth: 250,
+                    underLineLength: 0.795,
+                    fontSize: 18,
+                    lineWidth: 5,
+                    underLineDistance: 8,
+                  )],
+              ),
+              SizedBox(height: 45),
+              age,
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+                  TitleText(
+                    text: "How Do You Exercise?",
+                    maxHeight: 20,
+                    maxWidth: 250,
+                    underLineLength: 0.795,
+                    fontSize: 18,
+                    lineWidth: 5,
+                    underLineDistance: 8,
+                  )],
+              ),
+              SizedBox(height: 40),
+              exerciseChoose,
               Expanded(child: (SizedBox())),
               nextButton,
               SizedBox(height: 50),
@@ -80,86 +180,4 @@ class ExtraBodyDataInputer extends StatelessWidget {
       ],
     );
   }
-
-  Widget getSetting() {
-    ValueBar height = ValueBar<double>(
-      barThickness: 20,
-      roundNum: 2,
-      adjustVal: 0.1,
-      width: 0.8,
-      maxVal: 2.50,
-      minVal: 1.00,
-      initVal: 1.65,
-      borderThickness: 4,
-      barColor: Colors.white,
-      effectColor: Color(0xFFBDBBBA),
-      showValue: true,
-      showAdjustButton: true,
-      showBorder: false,
-    );
-
-    ValueBar weight = ValueBar<int>(
-      barThickness: 20,
-      width: 0.8,
-      maxVal: 200,
-      minVal: 30,
-      initVal: 50,
-      barColor: Color(0xFFBCA5D6),
-      effectColor: Color(0xFFA88EC6),
-      borderThickness: 4,
-      showValue: true,
-      showAdjustButton: true,
-      showBorder: false,
-      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
-      edgeEmpty: [0, 0.95, 0, 0.95],
-    );
-    height.setOnChange((){
-      this.bodyHeight = height.getValue();
-    });
-    weight.setOnChange((){
-      this.bodyWeight = weight.getValue();
-    });
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.55),
-              height: 80,
-              child: TitleText(
-                text: "What Is Your Stature (meter) ?",
-                maxWidth: 0.6,
-                maxHeight: 50,
-                underLineLength: 0,
-              ),
-            ),
-          ],
-        ),
-        height,
-        SizedBox(height: 80),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.55),
-              height: 80,
-              child: TitleText(
-                text: "What is Your Weight (KG) ?",
-                maxWidth: 0.6,
-                maxHeight: 50,
-                underLineLength: 0,
-              ),
-            ),
-          ],
-        ),
-        weight,
-        SizedBox(height: 30)
-      ],
-    );
-  }
-
 }
