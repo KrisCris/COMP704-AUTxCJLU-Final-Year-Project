@@ -196,10 +196,101 @@ class GoalInputerState extends State<GoalInputer> {
     );
   }
 
+  Widget getBuildMuscle() {
+    ValueBar day = ValueBar<int>(
+      barThickness: 20,
+      width: 0.8,
+      maxVal: 365,
+      minVal: 1,
+      valueName:'',
+      unit: 'Days',
+      initVal: 30,
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
+    );
+    ValueBar muscle = ValueBar<int>(
+      barThickness: 20,
+      width: 0.8,
+      maxVal: 20,
+      unit: 'KG',
+      minVal: 1,
+      initVal: 10,
+      barColor: Color(0xFFEB9D33),
+      effectColor: Color(0xFFECBC7B),
+      borderThickness: 4,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
+      edgeEmpty: [0, 0.95, 0, 0.95],
+    );
+    day.setOnChange((){
+      widget.days = day.widgetValue.value;
+    });
+    muscle.setOnChange((){
+      widget.gainMuscle = muscle.widgetValue.value;
+    });
+
+    widget.days = day.widgetValue.value;
+    widget.gainMuscle = muscle.widgetValue.value;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+            Container(
+              width: ScreenTool.partOfScreenWidth(0.55),
+              height: 80,
+              child: TitleText(
+                text: "How Many Days Do You Want To Spend To Build Your Muscle?",
+                maxWidth: 0.6,
+                maxHeight: 50,
+                underLineLength: 0,
+              ),
+            ),
+          ],
+        ),
+        day,
+        SizedBox(height: 80),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+            Container(
+              width: ScreenTool.partOfScreenWidth(0.55),
+              height: 80,
+              child: TitleText(
+                text: "How Much Weight of Muscle Do You Want To Gain (KG) ?",
+                maxWidth: 0.6,
+                maxHeight: 50,
+                underLineLength: 0,
+              ),
+            ),
+          ],
+        ),
+        muscle,
+        SizedBox(height: 30)
+      ],
+    );
+  }
+
   Widget getContent() {
+    //0 -> 增肌  1 -> 减肥  2 -> 保持
     if (widget.planType.value == 0) {
+      return getBuildMuscle();
     } else if (widget.planType.value == 1) {
       return getLoseWeightSetting();
-    } else {}
+    } else {
+
+    }
   }
+
+
 }
