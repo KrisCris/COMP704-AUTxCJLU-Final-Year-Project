@@ -30,7 +30,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   double borderThickness;
   double effectThickness;
   double effectGap;
-  double minVal;
+  ValueNotifier<double> minVal;
   double maxVal;
   double blockWidth;
   String valueName;
@@ -64,12 +64,13 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       Color effectColor,
       Color fontColor,
       this.blockWidth = 10,
-      this.minVal = 0,
+      double minVal = 0,
       this.maxVal = 100,
       @required T initVal})
       : assert(initVal != null) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.widgetValue = ValueNotifier(initVal);
+    this.minVal = ValueNotifier(minVal);
     this.valuePosition = valuePosition;
     if (valuePosition != ValuePosition.center) {
       showAdjustButton = false;
@@ -95,7 +96,9 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   void setOnChange(Function f) {
     this.onChange = f;
   }
-
+  void changeMin(double min){
+    this.minVal.value = min;
+  }
   @override
   State<StatefulWidget> createState() {
     return ValueBarState();
@@ -120,13 +123,24 @@ class ValueBarState extends State<ValueBar>
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.widgetValue = oldWidget.widgetValue;
+    widget.minVal = oldWidget.minVal;
     widget.onChange = oldWidget.onChange;
   }
 
   @override
   void initState() {
     this.initValueListener(widget.widgetValue);
-
+    widget.minVal.addListener(() {
+      if(widget.widgetValue.value < widget.minVal.value){
+        if(widget.widgetValue.value is int){
+          widget.widgetValue.value = widget.minVal.value.ceil();
+        }else{
+          widget.widgetValue.value = widget.minVal.value ;
+        }
+      }else{
+        onChangeValue();
+      }
+    });
     this.moveAnimation = TweenAnimation<double>();
     this.barWidthAnimation = TweenAnimation<double>();
 
@@ -212,7 +226,7 @@ class ValueBarState extends State<ValueBar>
             this.startDragX = dt.localPosition.dx;
           },
           onPanUpdate: (DragUpdateDetails dt) {
-            this.solveDragSpace(dt.localPosition.dx);
+            this.solveDragSpace(dt.localPosition.dx,dt.delta.dx >0?1:-1);
           },
           onPanEnd: (DragEndDetails dt) {
             this.needBarAnimation = true;
@@ -279,8 +293,8 @@ class ValueBarState extends State<ValueBar>
 
   void addValue(double delta) {
     double after = widget.widgetValue.value + delta;
-    if (after < widget.minVal) {
-      after = widget.minVal;
+    if (after < widget.minVal.value) {
+      after = widget.minVal.value;
     } else if (after > widget.maxVal) {
       after = widget.maxVal;
     }
@@ -288,7 +302,7 @@ class ValueBarState extends State<ValueBar>
       widget.widgetValue.value =
           NumUtil.getNumByValueDouble(after, widget.roundNum);
     } else if (widget.widgetValue.value is int) {
-      widget.widgetValue.value = after.round();
+      widget.widgetValue.value = after.floor();
     }
   }
 
@@ -299,8 +313,8 @@ class ValueBarState extends State<ValueBar>
     }
     if (!this.needBarAnimation) return;
 
-    double persent = (widget.widgetValue.value - widget.minVal) /
-        (widget.maxVal - widget.minVal);
+    double persent = (widget.widgetValue.value - widget.minVal.value) /
+        (widget.maxVal - widget.minVal.value);
     double firstVal = this.barWidthAnimation.getValue();
     this.barWidthAnimation.initAnimation(
         firstVal,
@@ -314,29 +328,8 @@ class ValueBarState extends State<ValueBar>
     this.moveAnimation.forward();
   }
 
-  double calculateTextOffset() {
-    if (widget.widgetValue.value < 10) {
-      if (widget.widgetValue.value is double) {
-        return 10;
-      } else if (widget.widgetValue.value is int) {
-        return 5;
-      }
-    } else if (widget.widgetValue.value < 100) {
-      if (widget.widgetValue.value is double) {
-        return 15;
-      } else if (widget.widgetValue.value is int) {
-        return 10;
-      }
-    } else {
-      if (widget.widgetValue.value is double) {
-        return 20;
-      } else if (widget.widgetValue.value is int) {
-        return 15;
-      }
-    }
-  }
-
-  void solveDragSpace(double dx) {
+  void solveDragSpace(double dx,int addOrMinus) {
+    dx = dx- widget.blockWidth/2;
     if (dx > widget.width - 2 * widget.borderThickness - widget.blockWidth) {
       dx = widget.width - 2 * widget.borderThickness - widget.blockWidth;
     } else if (dx < 0) {
@@ -345,13 +338,16 @@ class ValueBarState extends State<ValueBar>
 
     double persentage =
         dx / (widget.width - 2 * widget.borderThickness - widget.blockWidth);
+    if(persentage < 0)persentage = 0;
+    else if(persentage > 100)persentage = 100;
+
     double value = NumUtil.getNumByValueDouble(
-        widget.minVal + persentage * (widget.maxVal - widget.minVal),
+        widget.minVal.value + persentage * (widget.maxVal - widget.minVal.value),
         widget.roundNum);
     if (widget.widgetValue.value is double) {
       widget.widgetValue.value = value;
     } else if (widget.widgetValue.value is int) {
-      widget.widgetValue.value = value.round();
+      widget.widgetValue.value = value.floor();
     }
     this.barWidthAnimation.initAnimation(dx, dx, 200, this, () {});
     setState(() {});
