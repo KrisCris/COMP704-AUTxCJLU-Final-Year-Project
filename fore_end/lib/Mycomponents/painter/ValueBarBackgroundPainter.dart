@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ValueBarBackgroundPainter extends CustomPainter {
   List<double> radius;
   Color color;
+  Color fontColor;
   String str;
   bool showAdjustButton;
   bool showNumber;
@@ -12,6 +13,7 @@ class ValueBarBackgroundPainter extends CustomPainter {
       {@required this.radius,
       this.color = Colors.black38,
       this.showAdjustButton = true,
+        @required this.fontColor,
         this.str="",
         this.showNumber = true,
       })
@@ -62,6 +64,7 @@ class ValueBarBackgroundPainter extends CustomPainter {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
+                color: this.fontColor,
               )))..layout(minWidth: 0.0,maxWidth: double.infinity);
       double textWidth = painter.width;
       double spareSpace = 10;

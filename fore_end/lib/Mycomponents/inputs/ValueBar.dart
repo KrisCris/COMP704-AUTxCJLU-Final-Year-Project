@@ -34,6 +34,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   Color borderColor;
   Color barColor;
   Color effectColor;
+  Color fontColor;
 
   ValueBar(
       {double width = 100,
@@ -55,6 +56,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       this.borderDistance = 0,
       Color barColor,
       Color effectColor,
+        Color fontColor,
       this.blockWidth = 10,
       this.minVal = 0,
       this.maxVal = 100,
@@ -68,12 +70,16 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
     if (effectColor == null) {
       effectColor = Color(0xFF37BC79);
     }
+    if(fontColor == null){
+      fontColor = Colors.white;
+    }
     if (borderRadius_RT_RB_RT_RB == null) {
       borderRadius_RT_RB_RT_RB = [0, 0, 0, 0];
     }
     this.borderRadius_LT_LB_RT_RB = borderRadius_RT_RB_RT_RB;
     this.barColor = barColor;
     this.effectColor = effectColor;
+    this.fontColor = fontColor;
   }
   void setOnChange(Function f){
     this.onChange = f;
@@ -127,7 +133,6 @@ class ValueBarState extends State<ValueBar>
         this.moveAnimation.forward();
       }
     });
-    // this.moveAnimation.forward();
     this.onChangeValue();
     super.initState();
   }
@@ -165,6 +170,7 @@ class ValueBarState extends State<ValueBar>
             showAdjustButton: widget.showAdjustButton,
             showNumber: widget.showValue,
             str: widget.valueName +" "+ widget.widgetValue.value.toString() + " "+widget.unit,
+            fontColor:widget.fontColor,
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,

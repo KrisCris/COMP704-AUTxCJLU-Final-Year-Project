@@ -11,22 +11,22 @@ class DotBox extends StatefulWidget{
   ///卡片的高度
   double _height;
 
-  ///圆角边框半径
-  double _borderRadius;
-
   ///背景颜色
   Color _backgroundColor;
 
   ///绘制色
   Color _paintColor;
 
+  ///圆角半径
+  double _borderRadius;
+
   ///斑点移动动画的持续时间
   int _dotAnimationDuration;
 
-  ///文字和icon距离卡片左边的额外间距
+  ///距离卡片左边的额外间距
   double _paddingLeft;
 
-  ///文字和icon距离卡片右边的额外间距
+  ///距离卡片右边的额外间距
   double _paddingRight;
 
   ///前景的斑点间距
