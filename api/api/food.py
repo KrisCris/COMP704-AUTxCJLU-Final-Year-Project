@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from flasgger import swag_from
 
 from cv.detect import detect as food_detect
-from util.img_func import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
+from util.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
 from util.func import reply_json
 
 food = Blueprint(name='food', import_name=__name__)
