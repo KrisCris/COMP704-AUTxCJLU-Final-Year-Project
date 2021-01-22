@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 from db.User import User
 import util.user as func
 
-user = Blueprint('user', __name__)
+user = Blueprint(name='user', import_name=__name__)
 
 
 @user.route('/login', methods=['POST'])
@@ -218,6 +218,7 @@ def get_basic_info():
         'avatar': b2s_avatar,
         'gender': u.gender,
         'age': u.age,
+        'needGuide': u.guide
     })
 
 
