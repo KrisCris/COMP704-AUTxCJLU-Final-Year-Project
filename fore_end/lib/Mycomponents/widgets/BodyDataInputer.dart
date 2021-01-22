@@ -59,8 +59,10 @@ class BodyDataInputer extends StatelessWidget {
     ValueBar height = ValueBar<double>(
       barThickness: 14,
       roundNum: 2,
-      adjustVal: 0.1,
+      adjustVal: 0.01,
       width: 0.8,
+      valueName: "Height",
+      unit: "m",
       maxVal: 2.50,
       minVal: 1.00,
       initVal: 1.65,
@@ -75,7 +77,9 @@ class BodyDataInputer extends StatelessWidget {
     ValueBar weight = ValueBar<int>(
       barThickness: 14,
       width: 0.8,
-      maxVal: 200,
+      valueName: "Weight",
+      unit: "KG",
+      maxVal: 150,
       minVal: 30,
       initVal: 50,
       barColor: Color(0xFFBCA5D6),

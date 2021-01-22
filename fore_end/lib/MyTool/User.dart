@@ -47,9 +47,6 @@ class User {
     this._gender = gender;
     this._age = age;
     this._needSetPlanFirst = needSetPlan;
-    if (planType == null) {
-      planType = 0;
-    }
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
