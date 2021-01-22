@@ -27,3 +27,7 @@ def get_current_time():
 
 def get_time_gap(old):
     return int(time.time()) - old
+
+
+def get_future_time(days):
+    return int(time.time()+3600*24*days)
