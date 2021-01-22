@@ -14,13 +14,27 @@ class GoalInputer extends StatefulWidget {
   int weightLose;
   int gainMuscle;
 
+  int genderRatio;
+  double height;
+  int weight;
+  int age;
+  double exerciseRatio;
+
+  double dailyCostCalorie;
+
   GoalInputer({this.nextDo}) {
     this.planType = ValueNotifier<int>(0);
   }
   void setNextDo(Function f) {
     this.nextDo = f;
   }
-
+  void setData(int genderRatio, double height, int weight, int age,double exerciseRatio){
+    this.genderRatio=genderRatio;
+    this.height = height;
+    this.weight = weight;
+    this.age = age;
+    this.exerciseRatio = exerciseRatio;
+  }
   @override
   State<StatefulWidget> createState() {
     return GoalInputerState();
@@ -112,6 +126,10 @@ class GoalInputerState extends State<GoalInputer> {
   }
 
   Widget getLoseWeightSetting() {
+    double basicCalorie = widget.exerciseRatio *
+        ( 10 * widget.weight.roundToDouble() + 6.25 * widget.height*100 - 5*widget.age.roundToDouble() + widget.genderRatio.roundToDouble());
+  double maxDailyCalorie = basicCalorie - 1000;
+  double maxLoseWeight = maxDailyCalorie*365/7000;
     ValueBar day = ValueBar<int>(
       barThickness: 20,
       width: 0.8,
@@ -130,10 +148,10 @@ class GoalInputerState extends State<GoalInputer> {
     ValueBar weight = ValueBar<int>(
       barThickness: 20,
       width: 0.8,
-      maxVal: 50,
+      maxVal: maxLoseWeight,
       unit: 'KG',
       minVal: 1,
-      initVal: 10,
+      initVal: 3,
       barColor: Color(0xFFEB9D33),
       effectColor: Color(0xFFECBC7B),
       borderThickness: 4,
@@ -145,11 +163,15 @@ class GoalInputerState extends State<GoalInputer> {
     );
     day.setOnChange((){
       widget.days = day.widgetValue.value;
+      widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
     });
     weight.setOnChange((){
       widget.weightLose = weight.widgetValue.value;
+      widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
+      int newDay = ((weight.widgetValue.value*7000/maxDailyCalorie) as double).round();
+      day.changeMin(newDay.roundToDouble());
     });
-
+    widget.dailyCostCalorie = (weight.widgetValue.value  * 7000)/day.widgetValue.value;
     widget.days = day.widgetValue.value;
     widget.weightLose = weight.widgetValue.value;
 

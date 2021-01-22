@@ -26,13 +26,14 @@ class GuidePage extends StatelessWidget{
       ctl.animateTo(2*ScreenTool.partOfScreenWidth(1), duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
     });
     body2.setNextDo((){
+      goal.setData(body.genderRatio, body.bodyHeight, body.bodyWeight, body2.age,body2.exerciseRatio);
       ctl.animateTo(3*ScreenTool.partOfScreenWidth(1), duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
     });
     goal.setNextDo((){
         //0 -> 增肌  1 -> 减肥  2 -> 保持
         int planType = plan.planType;
         double bodyHeight = body.bodyHeight;
-        int bodyWidth =body.bodyWeight;
+        int bodyWeight =body.bodyWeight;
         int genderRatio = body.genderRatio;
         int age = body2.age;
         double exerciseRatio = body2.exerciseRatio;
