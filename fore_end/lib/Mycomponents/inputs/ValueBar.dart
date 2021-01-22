@@ -11,6 +11,8 @@ import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/painter/ValueBarBackgroundPainter.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
+enum ValuePosition { left, center, right }
+
 class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   double width;
   double barThickness;
@@ -21,6 +23,8 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   List<double> borderRadius_LT_LB_RT_RB;
   bool showBorder;
   bool showValue;
+  bool showDragHead;
+  ValuePosition valuePosition;
   bool showAdjustButton;
   double borderDistance;
   double borderThickness;
@@ -40,23 +44,25 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       {double width = 100,
       this.barThickness = 10,
       this.borderThickness = 2,
-        this.onChange,
+      this.onChange,
       List<double> borderRadius_RT_RB_RT_RB,
       this.showBorder = true,
-        this.roundNum = 1,
-        this.adjustVal = 1.0,
+      this.roundNum = 1,
+      this.adjustVal = 1.0,
       this.effectThickness = 20,
-        this.valueName = "",
+      this.valueName = "",
+      ValuePosition valuePosition = ValuePosition.center,
       this.unit = "",
       this.effectGap = 45,
       this.edgeEmpty,
       this.showValue = false,
-      this.showAdjustButton = false,
+      bool showAdjustButton = false,
+      this.showDragHead = true,
       this.borderColor = Colors.black,
       this.borderDistance = 0,
       Color barColor,
       Color effectColor,
-        Color fontColor,
+      Color fontColor,
       this.blockWidth = 10,
       this.minVal = 0,
       this.maxVal = 100,
@@ -64,13 +70,18 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       : assert(initVal != null) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.widgetValue = ValueNotifier(initVal);
+    this.valuePosition = valuePosition;
+    if (valuePosition != ValuePosition.center) {
+      showAdjustButton = false;
+    }
+    this.showAdjustButton = showAdjustButton;
     if (barColor == null) {
       barColor = Color(0xFF50DC96);
     }
     if (effectColor == null) {
       effectColor = Color(0xFF37BC79);
     }
-    if(fontColor == null){
+    if (fontColor == null) {
       fontColor = Colors.white;
     }
     if (borderRadius_RT_RB_RT_RB == null) {
@@ -81,9 +92,10 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
     this.effectColor = effectColor;
     this.fontColor = fontColor;
   }
-  void setOnChange(Function f){
+  void setOnChange(Function f) {
     this.onChange = f;
   }
+
   @override
   State<StatefulWidget> createState() {
     return ValueBarState();
@@ -103,6 +115,7 @@ class ValueBarState extends State<ValueBar>
     barWidthAnimation.dispose();
     super.dispose();
   }
+
   @override
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -139,38 +152,18 @@ class ValueBarState extends State<ValueBar>
 
   @override
   Widget build(BuildContext context) {
-    Widget dragHead = GestureDetector(
-        onPanStart: (DragStartDetails dt) {
-          this.needBarAnimation = false;
-          this.startDragX = dt.localPosition.dx;
-        },
-        onPanUpdate: (DragUpdateDetails dt) {
-          this.solveDragSpace(dt.localPosition.dx);
-        },
-        onPanEnd: (DragEndDetails dt) {
-          this.needBarAnimation = true;
-        },
-        child: Container(
-          width: widget.blockWidth,
-          height: widget.barThickness,
-          margin: EdgeInsets.only(
-              left: this.barWidthAnimation.getValue() + widget.borderThickness,
-              top: 5),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(2),
-              boxShadow: [
-                BoxShadow(color: Colors.black38, blurRadius: 4, spreadRadius: 4)
-              ]),
-        ));
-
     Widget bar = CustomPaint(
         painter: ValueBarBackgroundPainter(
             radius: widget.borderRadius_LT_LB_RT_RB,
             showAdjustButton: widget.showAdjustButton,
             showNumber: widget.showValue,
-            str: widget.valueName +" "+ widget.widgetValue.value.toString() + " "+widget.unit,
-            fontColor:widget.fontColor,
+            position: widget.valuePosition,
+            str: widget.valueName +
+                " " +
+                widget.widgetValue.value.toString() +
+                " " +
+                widget.unit,
+            fontColor: widget.fontColor,
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
@@ -192,8 +185,8 @@ class ValueBarState extends State<ValueBar>
                           Radius.circular(widget.borderRadius_LT_LB_RT_RB[0]),
                       bottomLeft:
                           Radius.circular(widget.borderRadius_LT_LB_RT_RB[1]),
-                      topRight: Radius.circular(0),
-                      bottomRight: Radius.circular(0)),
+                      topRight: widget.showDragHead?Radius.circular(0):Radius.circular(widget.borderRadius_LT_LB_RT_RB[2]),
+                      bottomRight: widget.showDragHead?Radius.circular(0):Radius.circular(widget.borderRadius_LT_LB_RT_RB[3])),
                   child: CustomPaint(
                     foregroundPainter: LinePainter(
                         color: widget.effectColor,
@@ -211,7 +204,35 @@ class ValueBarState extends State<ValueBar>
         ));
 
     List<Widget> res = [];
-    List<Widget> barInfo = [bar, dragHead];
+    List<Widget> barInfo = [bar];
+    if (widget.showDragHead) {
+      barInfo.add(GestureDetector(
+          onPanStart: (DragStartDetails dt) {
+            this.needBarAnimation = false;
+            this.startDragX = dt.localPosition.dx;
+          },
+          onPanUpdate: (DragUpdateDetails dt) {
+            this.solveDragSpace(dt.localPosition.dx);
+          },
+          onPanEnd: (DragEndDetails dt) {
+            this.needBarAnimation = true;
+          },
+          child: Container(
+            width: widget.blockWidth,
+            height: widget.barThickness,
+            margin: EdgeInsets.only(
+                left:
+                    this.barWidthAnimation.getValue() + widget.borderThickness,
+                top: 5),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38, blurRadius: 4, spreadRadius: 4)
+                ]),
+          )));
+    }
     res.add(Positioned(left: 0, bottom: 0, child: Stack(children: barInfo)));
 
     if (widget.showAdjustButton) {
@@ -226,7 +247,7 @@ class ValueBarState extends State<ValueBar>
             borderRadius: 2,
             buttonSize: 17,
             onClick: () {
-              addValue(-1*widget.adjustVal);
+              addValue(-1 * widget.adjustVal);
             },
           ));
       Widget addButton = Positioned(
@@ -249,37 +270,37 @@ class ValueBarState extends State<ValueBar>
     return Container(
       width: widget.width,
       height: widget.barThickness + 30,
-      child: Stack(
-        children: res
-      ),
+      child: Stack(children: res),
     );
     Stack(
       children: res,
     );
   }
-  void addValue(double delta){
+
+  void addValue(double delta) {
     double after = widget.widgetValue.value + delta;
-    if(after < widget.minVal){
+    if (after < widget.minVal) {
       after = widget.minVal;
-    }else if(after > widget.maxVal){
+    } else if (after > widget.maxVal) {
       after = widget.maxVal;
     }
-    if(widget.widgetValue.value is double){
-      widget.widgetValue.value = NumUtil.getNumByValueDouble(after, widget.roundNum);
-    }else if(widget.widgetValue.value is int){
+    if (widget.widgetValue.value is double) {
+      widget.widgetValue.value =
+          NumUtil.getNumByValueDouble(after, widget.roundNum);
+    } else if (widget.widgetValue.value is int) {
       widget.widgetValue.value = after.round();
     }
-
   }
+
   @override
   void onChangeValue() {
-
-    if(widget.onChange != null){
+    if (widget.onChange != null) {
       widget.onChange();
     }
     if (!this.needBarAnimation) return;
 
-    double persent = (widget.widgetValue.value-widget.minVal) / (widget.maxVal-widget.minVal);
+    double persent = (widget.widgetValue.value - widget.minVal) /
+        (widget.maxVal - widget.minVal);
     double firstVal = this.barWidthAnimation.getValue();
     this.barWidthAnimation.initAnimation(
         firstVal,
@@ -306,7 +327,7 @@ class ValueBarState extends State<ValueBar>
       } else if (widget.widgetValue.value is int) {
         return 10;
       }
-    }else {
+    } else {
       if (widget.widgetValue.value is double) {
         return 20;
       } else if (widget.widgetValue.value is int) {
@@ -324,10 +345,12 @@ class ValueBarState extends State<ValueBar>
 
     double persentage =
         dx / (widget.width - 2 * widget.borderThickness - widget.blockWidth);
-    double value = NumUtil.getNumByValueDouble(widget.minVal + persentage * (widget.maxVal-widget.minVal), widget.roundNum);
-    if(widget.widgetValue.value is double){
+    double value = NumUtil.getNumByValueDouble(
+        widget.minVal + persentage * (widget.maxVal - widget.minVal),
+        widget.roundNum);
+    if (widget.widgetValue.value is double) {
       widget.widgetValue.value = value;
-    }else if (widget.widgetValue.value is int){
+    } else if (widget.widgetValue.value is int) {
       widget.widgetValue.value = value.round();
     }
     this.barWidthAnimation.initAnimation(dx, dx, 200, this, () {});

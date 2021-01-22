@@ -43,6 +43,6 @@ class ComponentTestState extends State<ComponentTestPage>
         sigmaY: 10,
         sigmaX: 10,
         opacity: 0.7,
-        child: PlanNotifier(width: 0.8, height: 200));
+        child: PlanNotifier(width: 0.8, height: 100));
   }
 }

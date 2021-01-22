@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
@@ -23,6 +21,8 @@ class PlanNotifier extends StatelessWidget{
         maxVal: 4200.0,
         width: 0.7,
         borderThickness: 6,
+        showDragHead: false,
+        valuePosition: ValuePosition.right,
         borderRadius_RT_RB_RT_RB: [5,5,5,5],
         roundNum: 1,
         initVal: 1259,
@@ -44,19 +44,26 @@ class PlanNotifier extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
-            Row(
-              children:[
-                TitleText(
-                  text: "Today's Calories",
-                  fontSize: 18,
-                  underLineLength: 0,
-                  maxWidth: 0.7,
-                  fontColor: Color(0xFF5079AF),
+            SizedBox(height: 26),
+            Stack(
+              children: [
+                Row(
+                  children:[
+                    Transform.translate(
+                      offset: Offset(0,-2),
+                      child:TitleText(
+                        text: "Today's Calories",
+                        fontSize: 18,
+                        underLineLength: 0,
+                        maxWidth: 0.7,
+                        fontColor: Color(0xFF5079AF),
+                      )
+                    )
+                  ],
                 ),
+                calories
               ],
-            ),
-            calories
+            )
           ],
         ),
       );
