@@ -69,6 +69,8 @@ class ExtraBodyDataInputer extends StatelessWidget {
       barThickness: 14,
       roundNum: 2,
       adjustVal: 1,
+      valueName: "Age",
+      unit: "Years old",
       width: 0.8,
       maxVal: 100,
       minVal: 1,
@@ -115,7 +117,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
                     text: "What Is Your Age ?",
-                    maxHeight: 20,
+                    maxHeight: 25,
                     maxWidth: 250,
                     underLineLength: 0.795,
                     fontSize: 18,

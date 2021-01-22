@@ -29,6 +29,8 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   double minVal;
   double maxVal;
   double blockWidth;
+  String valueName;
+  String unit;
   Color borderColor;
   Color barColor;
   Color effectColor;
@@ -43,6 +45,8 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
         this.roundNum = 1,
         this.adjustVal = 1.0,
       this.effectThickness = 20,
+        this.valueName = "",
+      this.unit = "",
       this.effectGap = 45,
       this.edgeEmpty,
       this.showValue = false,
@@ -160,6 +164,7 @@ class ValueBarState extends State<ValueBar>
             radius: widget.borderRadius_LT_LB_RT_RB,
             showAdjustButton: widget.showAdjustButton,
             showNumber: widget.showValue,
+            str: widget.valueName +" "+ widget.widgetValue.value.toString() + " "+widget.unit,
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
@@ -198,21 +203,9 @@ class ValueBarState extends State<ValueBar>
             ),
           ),
         ));
-    Widget number = Transform.translate(
-        offset: Offset(widget.width / 2 - calculateTextOffset(), -17),
-        child: Text(
-          widget.widgetValue.value.toString(),
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold
-          ),
-        ));
 
     List<Widget> res = [];
     List<Widget> barInfo = [bar, dragHead];
-    if (widget.showValue) barInfo.add(number);
     res.add(Positioned(left: 0, bottom: 0, child: Stack(children: barInfo)));
 
     if (widget.showAdjustButton) {
