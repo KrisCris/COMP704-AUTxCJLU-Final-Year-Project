@@ -68,12 +68,7 @@ def set_plan():
 
     # db
     user = User.getUserByID(uid)
-    # update user data
-    user.age = age
-    user.gender = gender
-    user.weight = weight
-    user.height = height
-    user.add()
+
     # check old plan
     old_plan = Plan.getCurrentPlanByUID(uid).first()
     if old_plan:
@@ -96,6 +91,14 @@ def set_plan():
         proteinH=calories / 7.7 * 0.32
     )
     new_plan.add()
+
+    # update user data
+    user.age = age
+    user.gender = gender
+    user.weight = weight
+    user.height = height
+    user.guide = False
+    user.add()
 
     return reply_json(
         1,
