@@ -4,9 +4,19 @@ def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
     from util.Planer.Intervention import Intervention
     from util.Planer.Baseline import Baseline
 
-    baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal*1.15 if type == 3 else pal, bfp=True, rmr=False)
+    baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal*1.05 if type == 3 else pal, bfp=True, rmr=False)
     maintainCal = round(baseline.getMaintCals())
 
+    # calculate target weight bmi
+    bmi = baseline.getNewBMI(newWeight=goalWeight if type == 1 else weight)
+    if bmi > 25:
+        bmi_flag = 1
+    elif bmi < 18.5:
+        bmi_flag = -1
+    else:
+        bmi_flag = 0
+
+    # calculate shedding weight calories intake
     if type == 1:
         if goalWeight != weight:
             try:
@@ -22,9 +32,17 @@ def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
 
         low_eng_warn = False if goalCal >= 1000 else True
 
-        return {'goalCal': goalCal, 'completedCal': goalMaintainCal, 'maintainCal': maintainCal, 'low': low_eng_warn}
+        return {
+            'goalCal': goalCal, 'completedCal': goalMaintainCal, 'maintainCal': maintainCal,
+            'low': low_eng_warn, 'bmi': bmi_flag
+        }
+
     elif type == 2 or type == 3:
-        return {'goalCal': maintainCal, 'completedCal': maintainCal, 'maintainCal': maintainCal, 'low': False}
+        return {
+            'goalCal': maintainCal, 'completedCal': maintainCal, 'maintainCal': maintainCal,
+            'low': False, 'bmi': bmi_flag
+        }
+
     else:
         return 'wrong type'
 
