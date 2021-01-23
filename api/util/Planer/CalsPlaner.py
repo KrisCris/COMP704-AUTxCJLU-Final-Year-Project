@@ -1,44 +1,37 @@
-import math
+# type = 1, 2, 3., i.e. shed weight, maintain, build muscle
+def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
+    from util.Planer.BodyModel import BodyModel
+    from util.Planer.Intervention import Intervention
+    from util.Planer.Baseline import Baseline
 
-from util.Planer.BodyModel import BodyModel
-from util.Planer.Intervention import Intervention
-from util.Planer.Baseline import Baseline
-
-
-def calc_calories(age, height, weight, pal, time, goalWeight, gender):
-    flag = False
-    baseline = Baseline(gender, age, height, weight, pal, True, False)
-    goalCal = None
-    goalMaintainCal = None
-    maintainCal = None
-    if goalWeight != weight:
-        try:
-            goalItv = Intervention.forgoal(baseline, goalWeight, time, 0, 0, 0.001)
-            goalCal = goalItv.calories
-            goalModel = BodyModel.projectFromBaselineViaIntervention(baseline, goalItv, int(time) + 1)
-            goalMaintainCal = goalModel.cals4balance(baseline, goalItv.getAct(baseline))
-        except Exception as e:
-            flag = True
-    if flag:
-        print('unachievable!')
-        return
+    baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal*1.15 if type == 3 else pal, bfp=True, rmr=False)
     maintainCal = round(baseline.getMaintCals())
-    print('goal: ' + str(goalCal) if goalCal else None)
-    print('maintain: ' + str(maintainCal))
-    print('goalMaintainCal: ' + str(goalMaintainCal) if goalMaintainCal else None)
+
+    if type == 1:
+        if goalWeight != weight:
+            try:
+                goalItv = Intervention.forgoal(baseline, goalWeight, time, 0, 0, 0.001)
+                goalCal = round(goalItv.calories)
+                goalModel = BodyModel.projectFromBaselineViaIntervention(baseline, goalItv, int(time) + 1)
+                goalMaintainCal = round(goalModel.cals4balance(baseline, goalItv.getAct(baseline)))
+            except Exception as e:
+                return 'unachievable'
+        else:
+            goalCal = maintainCal
+            goalMaintainCal = maintainCal
+
+        low_eng_warn = False if goalCal >= 1000 else True
+
+        return {'goalCal': goalCal, 'completedCal': goalMaintainCal, 'maintainCal': maintainCal, 'low': low_eng_warn}
+    elif type == 2 or type == 3:
+        return {'goalCal': maintainCal, 'completedCal': maintainCal, 'maintainCal': maintainCal, 'low': False}
+    else:
+        return 'wrong type'
 
 
 if __name__ == '__main__':
-
-    age = 22
-    height = 170
-    weight = 70
-    physicalActivityLevel = 1.6
-    goalTime = 60
-    goalWeight = 70
-    male = True
-
-    calc_calories(age, height, weight, physicalActivityLevel, goalTime, goalWeight, male)
+    result = calc_calories(age=22, height=170, weight=70, pal=1.4, time=30, goalWeight=65, gender=True, type=1)
+    print(result)
     # baseline = Baseline(male, age, height, weight, physicalActivityLevel, True, False)
     # goalIntervention = Intervention()
     # goalMaintenanceIntervention = goalIntervention
