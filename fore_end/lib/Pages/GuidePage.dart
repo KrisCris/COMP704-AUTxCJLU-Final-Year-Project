@@ -1,13 +1,17 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/widgets/BodyDataInputer.dart';
 import 'package:fore_end/Mycomponents/widgets/ConfirmPlan.dart';
 import 'package:fore_end/Mycomponents/widgets/ExtraBodyDataInputer.dart';
 import 'package:fore_end/Mycomponents/widgets/GoalInpter.dart';
 import 'package:fore_end/Mycomponents/widgets/PlanChooser.dart';
+
+import 'MainPage.dart';
 
 class GuidePage extends StatelessWidget {
   @override
@@ -65,8 +69,26 @@ class GuidePage extends StatelessWidget {
         //TODO:计划不合理的情况
       } else if (res.data["code"] == 1) {
         dynamic data = res.data['data'];
-        planPreview.setNextDo(() {
+        planPreview.setNextDo(()async{
           //TODO: 创建计划按钮的回调
+          Response res = await Requests.setPlan({
+            "height": bodyHeight*100,
+            "weight": bodyWeight.round(),
+            "age": age,
+            "gender": gender,
+            "plan": planType,
+            "duration": days,
+            "goal_weight": goalWeight,
+            "calories": (data["goalCal"] as int).floorToDouble(),
+            "maintainCalories": (data["completedCal"] as int).floorToDouble()
+          });
+          if(res.data['code'] == 1){
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new MainPage(user:User.getInstance());
+            }),(ct)=>false);
+          }else{
+            //TODO:创建计划失败的情况
+          }
         });
         planPreview.setBackDo(() {
           ctl.animateTo(0,

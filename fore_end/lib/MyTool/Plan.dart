@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class Plan {
   static const List<String> planTypes = ["None","Muscle Gain","Loose Weight","Maintain"];
-
+  int id;
   String planType;
   double startTime;
   double endTime;
@@ -12,6 +12,7 @@ class Plan {
   double dailyProteinUpperLimit;
 
   Plan({int planType=0,
+    @required this.id,
     @required this.startTime,
     @required this.endTime,
     @required this.dailyCaloriesUpperLimit,

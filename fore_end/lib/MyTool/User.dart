@@ -23,7 +23,7 @@ class User {
   int _uid;
   int _age;
   //male - 1, female - 2, other - 0
-  Plan plan;
+  int _planID;
   int _gender;
   String _userName;
   String _email;
@@ -32,10 +32,10 @@ class User {
 
   User._internal(
       {String username = User.defaultUsername,
-      int planType = 0,
       int age,
       int gender,
       int uid,
+        int planID,
         bool needGuide,
       String avatar = User.defaultAvatar,
       String token,
@@ -46,6 +46,7 @@ class User {
     this._uid = uid;
     this._gender = gender;
     this._age = age;
+    this._planID = planID;
     this._needGuide = needGuide;
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
@@ -60,6 +61,7 @@ class User {
       }
     }
   }
+  
   static User getInstance() {
     if (User._instance == null) {
       SharedPreferences pre = LocalDataManager.pre;
