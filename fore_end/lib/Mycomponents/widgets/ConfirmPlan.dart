@@ -49,21 +49,22 @@ class ConfirmPlan extends StatelessWidget {
       theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
-      width: 0.4,
+      width: 0.35,
       height: 50,
       text: "Create Plan",
-      disabled: true,
+      disabled: false,
       tapFunc: this.nextDo,
     );
 
     CustomButton backButton = CustomButton(
       theme: MyTheme.blueStyle,
       radius: 5,
+      firstThemeState: ComponentThemeState.error,
       fontsize: 15,
-      width: 0.4,
+      width: 0.35,
       height: 50,
       text: "Adjust Plan",
-      disabled: true,
+      disabled: false,
       tapFunc: this.backDo,
     );
 
@@ -105,7 +106,7 @@ class ConfirmPlan extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                    text: "Your Plan is" + this.planType,
+                    text: "Your Plan is " + this.planType,
                     maxHeight: 20,
                     maxWidth: 300,
                     underLineLength: 0.795,
@@ -116,7 +117,7 @@ class ConfirmPlan extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 30),
-
+              this.getContent(),
               Expanded(child: (SizedBox())),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -152,7 +153,7 @@ class ConfirmPlan extends StatelessWidget {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "Your plan is" + (this.isTooLow?"unbalanced, you will eat not enough":"balanced"),
+          text: "Your plan is " + (this.isTooLow?"unbalanced, you will eat not enough":"balanced"),
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -167,10 +168,10 @@ class ConfirmPlan extends StatelessWidget {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "You should not eat more than " + this.dailyCalories.toString()+" Calories every day",
+          text: "You should eat less than " + this.dailyCalories.toString()+" Calories every day",
           maxHeight: 50,
           maxWidth: 300,
-          underLineLength: 0.795,
+          underLineLength: 0,
           fontSize: 15,
           lineWidth: 5,
           underLineDistance: 8,
@@ -188,7 +189,7 @@ class ConfirmPlan extends StatelessWidget {
           underLineLength: 0.795,
           fontSize: 15,
           lineWidth: 5,
-          underLineDistance: 8,
+          underLineDistance: 12,
         )
       ],
     );

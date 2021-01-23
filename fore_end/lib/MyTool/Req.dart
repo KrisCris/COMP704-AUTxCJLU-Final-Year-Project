@@ -128,7 +128,7 @@ class Requests{
   static String _readUrlPara(Map data){
     String urlPara = "?";
     data.forEach((key, value) {
-      urlPara+=key+"="+value+"&";
+      urlPara+=key+"="+value.toString()+"&";
     });
     return urlPara;
   }
