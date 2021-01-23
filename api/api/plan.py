@@ -8,6 +8,7 @@ from util.Planer.CalsPlaner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
 
+
 # type = 1, 2, 3., i.e. shed weight, maintain, build muscle
 
 
@@ -42,3 +43,38 @@ def query_plan():
     return reply_json(code=1, data=result)
 
 
+@plan.route('set_plan', methods=['POST'])
+@require_login
+def set_plan():
+    # params
+    uid = request.form.get('uid')
+
+    age = int(request.form.get('age'))
+    gender = int(request.form.get('gender'))
+    weight = float(request.form.get('weight'))
+    goal_weight = float(request.form.get('goalWeight'))
+    height = float(request.form.get('height'))
+    calories = int(request.form.get('calories'))
+    protein = float(request.form.get('protein'))
+    plan_type = int(request.form.get('type'))
+    duration = int(request.form.get('duration'))
+
+    # db
+    user = User.getUserByID(uid)
+    # update user data
+    user.age = age
+    user.gender = gender
+    user.weight = weight
+    user.height = height
+    user.add()
+    # new plan
+    new_plan = Plan(
+        uid=uid,
+        begin=get_current_time(), end=get_future_time(duration), plan_type=plan_type,
+        goal_weight=goal_weight,
+        caloriesL=round(calories * 0.95), caloriesH=round(calories * 1.05),
+        proteinL=protein * 0.95, proteinH=protein * 1.05
+    )
+    new_plan.add()
+
+    return reply_json(1)
