@@ -25,7 +25,7 @@ def query_plan():
     goal_weight = weight if plan_type == 2 or plan_type == 3 else float(request.values.get('goal_weight'))
     physical_activity_level = float(request.values.get('pal'))
 
-    # calculation
+    # calories calculation
     result = calc_calories(
         age=age,
         height=height,
@@ -39,6 +39,13 @@ def query_plan():
 
     if result == 'unachievable':
         return reply_json(code=-2, msg='unachievable')
+    if result == 'wrong type':
+        return reply_json(code=-2, msg='wrong type')
+
+
+    # protein calculation
+    result['protein_l'] = result['maintainCal'] / 7.7 * 0.22
+    result['protein_h'] = result['maintainCal'] / 7.7 * 0.32
 
     return reply_json(code=1, data=result)
 
@@ -55,18 +62,13 @@ def set_plan():
     goal_weight = float(request.form.get('goalWeight'))
     height = float(request.form.get('height'))
     calories = int(request.form.get('calories'))
-    protein = float(request.form.get('protein'))
+    maintCalories = int(request.form.get('maintCalories'))
     plan_type = int(request.form.get('type'))
     duration = int(request.form.get('duration'))
 
     # db
     user = User.getUserByID(uid)
-    # update user data
-    user.age = age
-    user.gender = gender
-    user.weight = weight
-    user.height = height
-    user.add()
+
     # check old plan
     old_plan = Plan.getCurrentPlanByUID(uid).first()
     if old_plan:
@@ -77,15 +79,26 @@ def set_plan():
             'begin': old_plan.begin, 'end': old_plan.end,
             'type': old_plan.type, 'goal': old_plan.goalWeight
         })
+
     # new plan
     new_plan = Plan(
         uid=uid,
         begin=get_current_time(), end=get_future_time(duration), plan_type=plan_type,
         goal_weight=goal_weight,
-        caloriesL=round(calories * 0.95), caloriesH=round(calories * 1.05),
-        proteinL=protein * 0.95, proteinH=protein * 1.05
+        caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
+        caloriesH=round(calories * 1.05),
+        proteinL=calories / 7.7 * 0.22,
+        proteinH=calories / 7.7 * 0.32
     )
     new_plan.add()
+
+    # update user data
+    user.age = age
+    user.gender = gender
+    user.weight = weight
+    user.height = height
+    user.guide = False
+    user.add()
 
     return reply_json(
         1,
