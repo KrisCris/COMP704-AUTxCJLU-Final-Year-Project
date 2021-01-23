@@ -22,7 +22,7 @@ INITIAL_DECW = 0
 
 class Baseline(object):
 
-    def __init__(self, isMale, age, height, weight, pal, bfp, rmr):
+    def __init__(self, isMale=True, age=INITIAL_AGE, height=INITIAL_HEIGHT, weight=INITIAL_WEIGHT, pal=INITIAL_PAL, bfp=INITIAL_BFP, rmr=INITIAL_RMR):
         # settled attributes
         self.isMale = isMale
         self.age = age
@@ -76,8 +76,8 @@ class Baseline(object):
     # the range of healthy weight
     def getHealthyWeightRange(self):
         hwr = {}
-        hwr.low = math.round(18.5 * math.pow((self.height / 100), 2))
-        hwr.high = math.round(25 * math.pow((self.height / 100), 2))
+        hwr.low = round(18.5 * math.pow((self.height / 100), 2))
+        hwr.high = round(25 * math.pow((self.height / 100), 2))
         return hwr
 
     # no idea what self is
@@ -88,7 +88,7 @@ class Baseline(object):
         return self.pal * self.getRMR()
 
     def getTEE(self):
-        return self.pal * self.getBFP() / 100.0
+        return self.pal * self.getRMR()
 
     def getFatWeight(self):
         return self.weight * self.getBFP() / 100.0
