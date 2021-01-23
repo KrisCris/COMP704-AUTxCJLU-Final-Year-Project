@@ -44,8 +44,8 @@ def query_plan():
 
 
     # protein calculation
-    result['protein_l'] = result['maintainCal'] / 7.7 * 0.22
-    result['protein_h'] = result['maintainCal'] / 7.7 * 0.32
+    result['protein_l'] = result['completedCal'] / 7.7 * 0.22
+    result['protein_h'] = result['completedCal'] / 7.7 * 0.32
 
     return reply_json(code=1, data=result)
 
@@ -87,8 +87,8 @@ def set_plan():
         goal_weight=goal_weight,
         caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
         caloriesH=round(calories * 1.05),
-        proteinL=calories / 7.7 * 0.22,
-        proteinH=calories / 7.7 * 0.32
+        proteinL=maintCalories / 7.7 * 0.22,
+        proteinH=maintCalories / 7.7 * 0.32
     )
     new_plan.add()
 
