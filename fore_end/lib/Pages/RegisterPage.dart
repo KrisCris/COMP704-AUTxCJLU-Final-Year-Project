@@ -15,6 +15,7 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
+import 'GuidePage.dart';
 import 'MainPage.dart';
 import 'WelcomePage.dart';
 
@@ -233,7 +234,7 @@ class Register extends StatelessWidget {
               if(code == 1){
                 EasyLoading.dismiss();
                 Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-                  return new MainPage(user:u);
+                  return new GuidePage();
                 }),(ct)=>false);
               }else{
                 EasyLoading.showError("Login token invalid",

@@ -36,7 +36,7 @@ class PlanChooser extends StatelessWidget {
       tapFunc: this.nextDo,
     );
     CardChooser addMuscle = CardChooser<int>(
-      value: 0,
+      value: 3,
       text: "Build Muscle",
       textColor: Colors.white,
       textSize: 15,

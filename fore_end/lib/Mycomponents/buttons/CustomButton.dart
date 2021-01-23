@@ -190,7 +190,6 @@ class CustomButtonState extends State<CustomButton>
   }
   @override
   void didUpdateWidget(covariant CustomButton oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     widget.disabled = oldWidget.disabled;
     this.initBgColor();

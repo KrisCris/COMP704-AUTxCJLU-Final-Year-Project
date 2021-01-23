@@ -28,7 +28,7 @@ class User {
   String _userName;
   String _email;
   String _avatar;
-  bool _needSetPlanFirst;
+  bool _needGuide;
 
   User._internal(
       {String username = User.defaultUsername,
@@ -36,7 +36,7 @@ class User {
       int age,
       int gender,
       int uid,
-        bool needSetPlan,
+        bool needGuide,
       String avatar = User.defaultAvatar,
       String token,
       String email}) {
@@ -46,7 +46,7 @@ class User {
     this._uid = uid;
     this._gender = gender;
     this._age = age;
-    this._needSetPlanFirst = needSetPlan;
+    this._needGuide = needGuide;
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
@@ -71,13 +71,13 @@ class User {
           gender: pre.getInt('gender'),
           age: pre.getInt('age'),
           avatar: pre.getString("avatar"),
-          needSetPlan: pre.getBool("needSetPlan"));
+          needGuide: pre.getBool("needSetPlan"));
     }
     return User._instance;
   }
 
   String get token => _token;
-
+  bool get needGuide => _needGuide;
   set token(String value) {
     _token = value;
   }
@@ -104,7 +104,7 @@ class User {
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
-      this._needSetPlanFirst = res.data['data']['needSetPlan'];
+      this._needGuide = res.data['data']['needGuide'];
       this.save();
       return 1;
     } else if (res.data['code'] == -1) {
@@ -121,7 +121,7 @@ class User {
     pre.setString("email", _email);
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
-    pre.setBool("needSetPlan", _needSetPlanFirst);
+    pre.setBool("needSetPlan", _needGuide);
   }
 
   void logOut() {

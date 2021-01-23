@@ -14,7 +14,7 @@ class BodyDataInputer extends StatelessWidget {
   double bodyHeight;
   int bodyWeight;
   int genderRatio;
-
+  int gender;
   BodyDataInputer({this.nextDo});
 
   void setNextDo(Function f) {
@@ -112,6 +112,11 @@ class BodyDataInputer extends StatelessWidget {
     genderChoose.addValueChangeListener(() {
       if (genderChoose.getValue() >= 0) {
         this.genderRatio = genderChoose.getValue();
+        if(this.genderRatio == 5){
+          this.gender = 1;
+        }else if(this.genderRatio == -161){
+          this.gender = 2;
+        }
         nextButton.setDisabled(false);
       }
     });
