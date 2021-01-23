@@ -67,6 +67,10 @@ def set_plan():
     user.weight = weight
     user.height = height
     user.add()
+    # check old plan
+    res = Plan.getCurrentPlanByID(uid)
+    if res:
+        return reply_json(-3)
     # new plan
     new_plan = Plan(
         uid=uid,

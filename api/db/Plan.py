@@ -34,3 +34,7 @@ class Plan(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def getCurrentPlanByID(uid):
+        return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True)
