@@ -22,7 +22,7 @@ class User(db.Model):
     guide = db.Column(db.BOOLEAN)
 
     def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(), nickname='', password='',
-                 group=0, token='', code_check=0):
+                 group=0, token='', code_check=0, guide=1):
         self.email = email
         self.nickname = nickname
         self.password = password
@@ -35,6 +35,7 @@ class User(db.Model):
         self.weight = weight
         self.height = height
         self.code_check = code_check
+        self.guide = guide
 
     def add(self):
         db.session.add(self)
