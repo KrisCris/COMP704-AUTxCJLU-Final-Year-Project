@@ -23,7 +23,7 @@ class User {
   int _uid;
   int _age;
   //male - 1, female - 2, other - 0
-  int _planID;
+  Plan _plan;
   int _gender;
   String _userName;
   String _email;
@@ -35,7 +35,7 @@ class User {
       int age,
       int gender,
       int uid,
-        int planID,
+        Plan plan,
         bool needGuide,
       String avatar = User.defaultAvatar,
       String token,
@@ -45,8 +45,8 @@ class User {
     this._email = email;
     this._uid = uid;
     this._gender = gender;
+    this._plan = plan;
     this._age = age;
-    this._planID = planID;
     this._needGuide = needGuide;
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
@@ -61,7 +61,8 @@ class User {
       }
     }
   }
-  
+
+  ///从本地文件读取用户信息
   static User getInstance() {
     if (User._instance == null) {
       SharedPreferences pre = LocalDataManager.pre;
@@ -72,6 +73,7 @@ class User {
           email: pre.getString('email'),
           gender: pre.getInt('gender'),
           age: pre.getInt('age'),
+          plan:Plan.readLocal(),
           avatar: pre.getString("avatar"),
           needGuide: pre.getBool("needSetPlan"));
     }
@@ -97,6 +99,7 @@ class User {
     return base64Decode(this._avatar);
   }
 
+  ///与服务器上的用户数据同步
   Future<int> synchronize() async {
     Response res =
         await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
@@ -107,6 +110,24 @@ class User {
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
       this._needGuide = res.data['data']['needGuide'];
+      res = await Requests.getPlan({
+        uid:this._uid
+      });
+      if(res.data["code"] == -6){
+        //TODO:初始化用户，获取计划失败的情况
+      }else if(res.data['code'] == 1){
+        this._plan = new Plan(
+            id: res.data['data']['pid'],
+            startTime: res.data['data']['begin'],
+            endTime: res.data['data']['end'],
+            planType: res.data['data']['type'],
+            dailyCaloriesLowerLimit: res.data['data']['cl'],
+            dailyCaloriesUpperLimit: res.data['data']['ch'],
+            dailyProteinLowerLimit: res.data['data']['pl'],
+            dailyProteinUpperLimit: res.data['data']['ph']
+        );
+      }
+
       this.save();
       return 1;
     } else if (res.data['code'] == -1) {
@@ -124,6 +145,9 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
+    if(this._plan != null){
+      this._plan.save();
+    }
   }
 
   void logOut() {
@@ -136,6 +160,7 @@ class User {
     pre.remove("userName");
     pre.remove("avatar");
     pre.remove("needSetPlan");
+    Plan.removeLocal();
   }
 
   Icon genderIcon() {
