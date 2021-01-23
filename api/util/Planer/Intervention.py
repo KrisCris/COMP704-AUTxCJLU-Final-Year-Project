@@ -16,7 +16,7 @@ INITIAL_ACTIVITY_CHG_PCT = 0.0
 
 
 class Intervention(object):
-    def __init__(self, day, calories, carbinpercent, actchangepercent, sodium):
+    def __init__(self, day=100, calories=INITIAL_CALORIES, carbinpercent=INITIAL_CARB_INTAKE_PCT, actchangepercent=INITIAL_ACTIVITY_CHG_PCT, sodium=INITIAL_SODIUM):
         self.calories = calories if calories and calories >= MIN_CALORIES else INITIAL_CALORIES
         self.carbinpercent = carbinpercent if carbinpercent and MAX_CARB_INTAKE_PCT >= carbinpercent >= MIN_CARB_INTAKE_PCT else INITIAL_CARB_INTAKE_PCT
         self.PAL = INITIAL_PAL
@@ -33,7 +33,7 @@ class Intervention(object):
         logMessage = ''
         holdcals = 0.0
 
-        goalinter = Intervention(None, None, None, None, None)
+        goalinter = Intervention()
         goalinter.title = 'Goal Intervention'
         goalinter.day = 1
         goalinter.calories = mincals
@@ -44,8 +44,7 @@ class Intervention(object):
             goalinter.calories = baseline.getMaintCals()
             goalinter.setproportionalsodium(baseline)
         else:
-            bm = BodyModel(None, None, None, None, None)
-            starvtest = bm.projectFromBaselineViaIntervention(baseline, goalinter, goaltime)
+            starvtest = BodyModel.projectFromBaselineViaIntervention(baseline, goalinter, goaltime)
 
             starvwt = starvtest.getWeight(baseline)
             starvwt = 0 if starvwt < 0 else starvwt
@@ -81,7 +80,7 @@ class Intervention(object):
                 goalinter.calories = checkcals
                 goalinter.setproportionalsodium(baseline)
 
-                testbc = bm.projectFromBaselineViaIntervention(baseline, goalinter, goaltime)
+                testbc = BodyModel.projectFromBaselineViaIntervention(baseline, goalinter, goaltime)
                 testwt = testbc.getWeight(baseline)
 
                 if testwt < 0.0:
