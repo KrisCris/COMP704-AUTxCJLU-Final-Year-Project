@@ -14,7 +14,7 @@ class Plan(db.Model):
     proteinL = db.Column(db.FLOAT, nullable=False)
     proteinH = db.Column(db.FLOAT, nullable=False)
 
-    def __init__(self, uid, begin, end, type, caloriesL, caloriesH, proteinL, proteinH):
+    def __init__(self, uid, begin, end, type, caloriesL, caloriesH, proteinL=0, proteinH=0):
         self.uid = uid
         self.begin = begin
         self.end = end
