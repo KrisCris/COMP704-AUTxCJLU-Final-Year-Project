@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 
 import 'MainPage.dart';
@@ -75,7 +76,14 @@ class CoverState extends State<CoverPage> {
             }else if(resCode == 1){
               Future.delayed(Duration(milliseconds: 1000),(){
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){return new MainPage(user: User.getInstance());}),
+                    MaterialPageRoute(builder: (context){
+                      User u = User.getInstance();
+                      if(u.needGuide){
+                        return GuidePage();
+                      }else{
+                        return new MainPage(user: u);
+                      }
+                    }),
                     (route){return route==null;}
                 );
               });

@@ -23,20 +23,20 @@ class User {
   int _uid;
   int _age;
   //male - 1, female - 2, other - 0
-  Plan plan;
+  Plan _plan;
   int _gender;
   String _userName;
   String _email;
   String _avatar;
-  bool _needSetPlanFirst;
+  bool _needGuide;
 
   User._internal(
       {String username = User.defaultUsername,
-      int planType = 0,
       int age,
       int gender,
       int uid,
-        bool needSetPlan,
+        Plan plan,
+        bool needGuide,
       String avatar = User.defaultAvatar,
       String token,
       String email}) {
@@ -45,8 +45,9 @@ class User {
     this._email = email;
     this._uid = uid;
     this._gender = gender;
+    this._plan = plan;
     this._age = age;
-    this._needSetPlanFirst = needSetPlan;
+    this._needGuide = needGuide;
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
@@ -60,6 +61,8 @@ class User {
       }
     }
   }
+
+  ///从本地文件读取用户信息
   static User getInstance() {
     if (User._instance == null) {
       SharedPreferences pre = LocalDataManager.pre;
@@ -70,14 +73,15 @@ class User {
           email: pre.getString('email'),
           gender: pre.getInt('gender'),
           age: pre.getInt('age'),
+          plan:Plan.readLocal(),
           avatar: pre.getString("avatar"),
-          needSetPlan: pre.getBool("needSetPlan"));
+          needGuide: pre.getBool("needSetPlan"));
     }
     return User._instance;
   }
 
   String get token => _token;
-
+  bool get needGuide => _needGuide;
   set token(String value) {
     _token = value;
   }
@@ -95,6 +99,7 @@ class User {
     return base64Decode(this._avatar);
   }
 
+  ///与服务器上的用户数据同步
   Future<int> synchronize() async {
     Response res =
         await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
@@ -104,14 +109,44 @@ class User {
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
-      this._needSetPlanFirst = res.data['data']['needSetPlan'];
+      this._needGuide = res.data['data']['needGuide'];
+      res = await Requests.getPlan({
+        "uid":this._uid,
+        "token":this._token
+      });
+      if(res.data["code"] == -6){
+        //TODO:初始化用户，获取计划失败的情况
+      }else if(res.data['code'] == 1){
+        this._plan = new Plan(
+            id: res.data['data']['pid'],
+            startTime: res.data['data']['begin'],
+            endTime: res.data['data']['end'],
+            planType: res.data['data']['type'],
+            dailyCaloriesLowerLimit: res.data['data']['cl'],
+            dailyCaloriesUpperLimit: res.data['data']['ch'],
+            dailyProteinLowerLimit: res.data['data']['pl'],
+            dailyProteinUpperLimit: res.data['data']['ph']
+        );
+      }
       this.save();
       return 1;
     } else if (res.data['code'] == -1) {
       return 0;
     }
   }
-
+  void setPlan(res){
+    this._plan = new Plan(
+        id: res.data['data']['pid'],
+        startTime: res.data['data']['begin'],
+        endTime: res.data['data']['end'],
+        planType: res.data['data']['type'],
+        dailyCaloriesLowerLimit: res.data['data']['cl'],
+        dailyCaloriesUpperLimit: res.data['data']['ch'],
+        dailyProteinLowerLimit: res.data['data']['pl'],
+        dailyProteinUpperLimit: res.data['data']['ph']
+    );
+    this._plan.save();
+  }
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.setString("token", _token);
@@ -121,7 +156,10 @@ class User {
     pre.setString("email", _email);
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
-    pre.setBool("needSetPlan", _needSetPlanFirst);
+    pre.setBool("needSetPlan", _needGuide);
+    if(this._plan != null){
+      this._plan.save();
+    }
   }
 
   void logOut() {
@@ -134,6 +172,7 @@ class User {
     pre.remove("userName");
     pre.remove("avatar");
     pre.remove("needSetPlan");
+    Plan.removeLocal();
   }
 
   Icon genderIcon() {
