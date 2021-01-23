@@ -68,9 +68,15 @@ def set_plan():
     user.height = height
     user.add()
     # check old plan
-    res = Plan.getCurrentPlanByID(uid)
-    if res:
-        return reply_json(-3)
+    old_plan = Plan.getCurrentPlanByID(uid).first()
+    if old_plan:
+        return reply_json(-3, data={
+            'pid': old_plan.id,
+            'cl': old_plan.caloriesL, 'ch': old_plan.caloriesH,
+            'pl': old_plan.proteinL, 'ph': old_plan.proteinH,
+            'begin': old_plan.begin, 'end': old_plan.end,
+            'type': old_plan.type, 'goal': old_plan.goalWeight
+        })
     # new plan
     new_plan = Plan(
         uid=uid,
@@ -81,4 +87,26 @@ def set_plan():
     )
     new_plan.add()
 
-    return reply_json(1)
+    return reply_json(
+        1,
+        data={
+            'pid': new_plan.id,
+            'cl': new_plan.caloriesL, 'ch': new_plan.caloriesH,
+            'pl': new_plan.proteinL, 'ph': new_plan.proteinH,
+            'begin': new_plan.begin, 'end': new_plan.end,
+            'type': new_plan.type, 'goal': new_plan.goalWeight
+        }
+    )
+
+
+@plan.route('finish_plan', methods=['POST'])
+@require_login
+def finish_plan():
+    uid = request.form.get('uid')
+    weight = request.form.get('weight')
+    pid = request.form.get('pid')
+
+
+@plan.route('get_plan', methods=['POST'])
+def get_plan():
+    pass
