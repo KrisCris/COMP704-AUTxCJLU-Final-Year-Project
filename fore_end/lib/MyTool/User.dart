@@ -111,7 +111,8 @@ class User {
       this._email = res.data['data']['email'];
       this._needGuide = res.data['data']['needGuide'];
       res = await Requests.getPlan({
-        uid:this._uid
+        "uid":this._uid,
+        "token":this._token
       });
       if(res.data["code"] == -6){
         //TODO:初始化用户，获取计划失败的情况
@@ -127,14 +128,25 @@ class User {
             dailyProteinUpperLimit: res.data['data']['ph']
         );
       }
-
       this.save();
       return 1;
     } else if (res.data['code'] == -1) {
       return 0;
     }
   }
-
+  void setPlan(res){
+    this._plan = new Plan(
+        id: res.data['data']['pid'],
+        startTime: res.data['data']['begin'],
+        endTime: res.data['data']['end'],
+        planType: res.data['data']['type'],
+        dailyCaloriesLowerLimit: res.data['data']['cl'],
+        dailyCaloriesUpperLimit: res.data['data']['ch'],
+        dailyProteinLowerLimit: res.data['data']['pl'],
+        dailyProteinUpperLimit: res.data['data']['ph']
+    );
+    this._plan.save();
+  }
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.setString("token", _token);

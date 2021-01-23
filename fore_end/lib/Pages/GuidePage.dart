@@ -71,20 +71,25 @@ class GuidePage extends StatelessWidget {
         dynamic data = res.data['data'];
         planPreview.setNextDo(()async{
           //TODO: 创建计划按钮的回调
+          User u = User.getInstance();
           Response res = await Requests.setPlan({
+            "uid":u.uid,
+            "token":u.token,
             "height": bodyHeight*100,
             "weight": bodyWeight.round(),
             "age": age,
             "gender": gender,
-            "plan": planType,
+            "type": planType,
             "duration": days,
-            "goal_weight": goalWeight,
-            "calories": (data["goalCal"] as int).floorToDouble(),
-            "maintainCalories": (data["completedCal"] as int).floorToDouble()
+            "goalWeight": goalWeight,
+            "calories": (data["goalCal"] as int),
+            "maintCalories": (data["completedCal"] as int)
           });
           if(res.data['code'] == 1){
+
+            u.setPlan(res);
             Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-              return new MainPage(user:User.getInstance());
+              return new MainPage(user:u);
             }),(ct)=>false);
           }else{
             //TODO:创建计划失败的情况
