@@ -9,16 +9,18 @@ class Plan(db.Model):
     begin = db.Column(db.INTEGER, nullable=False)
     end = db.Column(db.INTEGER, nullable=False)
     type = db.Column(db.INTEGER, nullable=False)
+    goalWeight = db.Column(db.FLOAT)
     caloriesL = db.Column(db.FLOAT, nullable=False)
     caloriesH = db.Column(db.FLOAT, nullable=False)
     proteinL = db.Column(db.FLOAT, nullable=False)
     proteinH = db.Column(db.FLOAT, nullable=False)
 
-    def __init__(self, uid, begin, end, type, caloriesL, caloriesH, proteinL=0, proteinH=0):
+    def __init__(self, uid, begin, end, plan_type, goal_weight, caloriesL, caloriesH, proteinL=0, proteinH=0):
         self.uid = uid
         self.begin = begin
         self.end = end
-        self.type = type
+        self.type = plan_type
+        self.goalWeight = goal_weight
         self.caloriesL = caloriesL
         self.caloriesH = caloriesH
         self.proteinL = proteinL
