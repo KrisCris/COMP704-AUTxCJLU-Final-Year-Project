@@ -2,9 +2,9 @@ from util.Planer.BodyChange import BodyChange
 from util.Planer.DailyParams import DailyParams
 import math
 
-
+RK4wt = [1, 2, 3, 4]
 class BodyModel(object):
-    def __init__(self, fat, lean, glycogen, decw, therm):
+    def __init__(self, fat=0, lean=0, glycogen=0, decw=0, therm=0):
         self.RK4wt = [1, 2, 3, 4]
         self.fat = fat or 0
         self.lean = lean or 0
@@ -12,7 +12,8 @@ class BodyModel(object):
         self.decw = decw or 0
         self.therm = therm or 0
 
-    def createFromBaseline(self, baseline):
+    @staticmethod
+    def createFromBaseline(baseline):
         return BodyModel(
             baseline.getFatWeight(),
             baseline.getLeanWeight(),
@@ -21,17 +22,19 @@ class BodyModel(object):
             baseline.getTherm()
         )
 
-    def projectFromBaseline(self, baseline, dailyParams, simlength):
-        loop = self.createFromBaseline(baseline)
+    @staticmethod
+    def projectFromBaseline(baseline, dailyParams, simlength):
+        loop = BodyModel.createFromBaseline(baseline)
 
         for i in range(simlength):
-            loop = self.RungeKatta(bodyModel=loop, baseline=baseline, dailyParams=dailyParams)
+            loop = BodyModel.RungeKatta(bodyModel=loop, baseline=baseline, dailyParams=dailyParams)
 
         return loop
 
-    def projectFromBaselineViaIntervention(self, baseline, intervention, simlength):
+    @staticmethod
+    def projectFromBaselineViaIntervention(baseline, intervention, simlength):
         dailyParams = DailyParams.createFromIntervention(intervention, baseline)
-        return self.projectFromBaseline(baseline=baseline, dailyParams=dailyParams, simlength=simlength)
+        return BodyModel.projectFromBaseline(baseline=baseline, dailyParams=dailyParams, simlength=simlength)
 
     def getWeight(self, baseline):
         weight = self.fat + self.lean + baseline.getGlycogenH2O(self.glycogen) + self.decw
@@ -55,7 +58,8 @@ class BodyModel(object):
 
         return BodyChange(df, dl, dg, dDecw, dtherm)
 
-    def RungeKatta(self, bodyModel, baseline, dailyParams):
+    @staticmethod
+    def RungeKatta(bodyModel, baseline, dailyParams):
         dt1 = bodyModel.dt(baseline, dailyParams)
         b2 = bodyModel.addchange(dt1, 0.5)
         dt2 = b2.dt(baseline, dailyParams)
@@ -63,7 +67,7 @@ class BodyModel(object):
         dt3 = b3.dt(baseline, dailyParams)
         b4 = bodyModel.addchange(dt3, 1.0)
         dt4 = b4.dt(baseline, dailyParams)
-        finaldt = bodyModel.avgdt_weighted(self.RK4wt, [dt1, dt2, dt3, dt4])
+        finaldt = bodyModel.avgdt_weighted(RK4wt, [dt1, dt2, dt3, dt4])
         finalstate = bodyModel.addchange(finaldt, 1.0)
 
         return finalstate
