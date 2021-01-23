@@ -14,6 +14,8 @@ class Plan(db.Model):
     caloriesH = db.Column(db.FLOAT, nullable=False)
     proteinL = db.Column(db.FLOAT, nullable=False)
     proteinH = db.Column(db.FLOAT, nullable=False)
+    achievedWeight = db.Column(db.FLOAT)
+    realEnd = db.Column(db.INTEGER)
     completed = db.Column(db.BOOLEAN, nullable=False, default=False)
 
     def __init__(self, uid, begin, end, plan_type, goal_weight, caloriesL, caloriesH, proteinL=0, proteinH=0):

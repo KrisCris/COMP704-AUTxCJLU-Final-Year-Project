@@ -104,7 +104,20 @@ def set_plan():
 def finish_plan():
     uid = request.form.get('uid')
     weight = request.form.get('weight')
-    pid = request.form.get('pid')
+    # pid = request.form.get('pid')
+
+    res = Plan.getCurrentPlanByUID(uid)
+
+    if res.count() > 1:
+        print('wrong plan number')
+
+    p = res.first()
+    if p:
+        p.realEnd = get_current_time()
+        p.achievedWeight = weight
+        p.completed = True
+        p.add()
+    return reply_json(1)
 
 
 @plan.route('get_plan', methods=['POST'])
