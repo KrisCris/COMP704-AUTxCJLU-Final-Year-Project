@@ -68,7 +68,7 @@ def set_plan():
     user.height = height
     user.add()
     # check old plan
-    old_plan = Plan.getCurrentPlanByID(uid).first()
+    old_plan = Plan.getCurrentPlanByUID(uid).first()
     if old_plan:
         return reply_json(-3, data={
             'pid': old_plan.id,
@@ -108,5 +108,17 @@ def finish_plan():
 
 
 @plan.route('get_plan', methods=['POST'])
+@require_login
 def get_plan():
-    pass
+    uid = request.form.get('uid')
+    p = Plan.getCurrentPlanByUID(uid).first()
+    if p:
+        return reply_json(1, data={
+            'pid': p.id,
+            'cl': p.caloriesL, 'ch': p.caloriesH,
+            'pl': p.proteinL, 'ph': p.proteinH,
+            'begin': p.begin, 'end': p.end,
+            'type': p.type, 'goal': p.goalWeight
+        })
+    else:
+        return reply_json(-6)

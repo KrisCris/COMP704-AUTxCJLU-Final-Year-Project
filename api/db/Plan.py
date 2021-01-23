@@ -36,5 +36,5 @@ class Plan(db.Model):
         db.session.commit()
 
     @staticmethod
-    def getCurrentPlanByID(uid):
+    def getCurrentPlanByUID(uid):
         return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True)
