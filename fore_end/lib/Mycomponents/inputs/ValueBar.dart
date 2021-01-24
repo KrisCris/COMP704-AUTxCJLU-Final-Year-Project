@@ -105,6 +105,9 @@ class ValueBar<T extends num> extends StatefulWidget
   }
 
   void changeMin(T min) {
+    if(min > maxVal){
+      min = maxVal;
+    }
     this.minVal.value = min;
   }
 
@@ -371,8 +374,13 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       int mapSize = widget.mapper.length;
       persent = this.nowIndex / (mapSize-1);
     } else {
-      persent = (widget.widgetValue.value - widget.minVal.value) /
-          (widget.maxVal - widget.minVal.value);
+      T denominator = widget.maxVal - widget.minVal.value;
+      if(denominator == 0){
+        persent = 1;
+      }else{
+        persent = (widget.widgetValue.value - widget.minVal.value) /
+            (widget.maxVal - widget.minVal.value);
+      }
     }
     double firstVal = this.barWidthAnimation.getValue();
     this.barWidthAnimation.initAnimation(
