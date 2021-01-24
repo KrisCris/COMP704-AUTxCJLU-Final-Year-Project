@@ -100,10 +100,11 @@ class GuidePage extends StatelessWidget {
               curve: Curves.fastOutSlowIn);
         });
         planPreview.setPlanType(planType);
-        planPreview.setCalories(
+        planPreview.setNutrition(
             (data["goalCal"] as int).floorToDouble(),
             (data["completedCal"] as int).floorToDouble(),
             (data["maintainCal"] as int).floorToDouble(),
+            data["protein_l"], data["protein_h"],
             data["low"]);
         ctl.animateTo(4 * ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);

@@ -32,37 +32,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       disabled: false,
       tapFunc: this.nextDo,
     );
-
-    // CardChooser noExercise = CardChooser<double>(
-    //   value: 1.3,
-    //   text: "I hardly do exercise.",
-    //   textSize: 14,
-    //   textColor: Colors.white,
-    //   backgroundColor: Color(0xFFD1BC2C),
-    //   borderRadius: 6,
-    //   width: 0.8,
-    //   height: 50,
-    // );
-    // CardChooser haveExercise = CardChooser<double>(
-    //   value: 1.55,
-    //   text: "I did exercise regularly.",
-    //   textSize: 14,
-    //   textColor: Colors.white,
-    //   backgroundColor: Color(0xFFD38F33),
-    //   borderRadius: 6,
-    //   width: 0.8,
-    //   height: 50,
-    // );
-    // CardChooser lotExercise = CardChooser<double>(
-    //   value: 1.8,
-    //   text: "I am professional athletes.",
-    //   textSize: 14,
-    //   textColor: Colors.white,
-    //   backgroundColor: Color(0xFFE66D32),
-    //   borderRadius: 6,
-    //   width: 0.8,
-    //   height: 50,
-    // );
     ValueBar age = ValueBar<int>(
       barThickness: 14,
       roundNum: 2,
