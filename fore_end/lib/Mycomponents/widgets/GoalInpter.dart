@@ -97,8 +97,7 @@ class GoalInputerState extends State<GoalInputer> {
   Widget getBackground() {
     return ClipRect(
       child: CustomPaint(
-        foregroundPainter: LinePainter(
-            color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+        foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
         child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
@@ -133,6 +132,7 @@ class GoalInputerState extends State<GoalInputer> {
       width: 0.8,
       maxVal: 365,
       minVal: 1,
+      adjustVal: 1,
       valueName:'',
       unit: 'Days',
       initVal: 30,
@@ -146,12 +146,12 @@ class GoalInputerState extends State<GoalInputer> {
     ValueBar weight = ValueBar<int>(
       barThickness: 20,
       width: 0.8,
-      maxVal: maxLoseWeight,
+      maxVal: maxLoseWeight.round(),
       unit: 'KG',
+      adjustVal: 1,
       minVal: 1,
       initVal: 3,
       barColor: Color(0xFFEB9D33),
-      effectColor: Color(0xFFECBC7B),
       borderThickness: 4,
       showValue: true,
       showAdjustButton: true,
@@ -167,7 +167,7 @@ class GoalInputerState extends State<GoalInputer> {
       widget.weightLose = weight.widgetValue.value;
       widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
       int newDay = ((weight.widgetValue.value*7000/maxDailyCalorie) as double).round();
-      day.changeMin(newDay.roundToDouble());
+      day.changeMin(newDay);
     });
     widget.dailyCostCalorie = (weight.widgetValue.value  * 7000)/day.widgetValue.value;
     widget.days = day.widgetValue.value;
@@ -221,6 +221,7 @@ class GoalInputerState extends State<GoalInputer> {
       barThickness: 20,
       width: 0.8,
       maxVal: 365,
+      adjustVal: 1,
       minVal: 1,
       valueName:'',
       unit: 'Days',
@@ -264,8 +265,8 @@ class GoalInputerState extends State<GoalInputer> {
   }
 
   Widget getContent() {
-    //0 -> 增肌  1 -> 减肥  2 -> 保持
-    if (widget.planType.value == 0) {
+    //1 -> 减肥  2 -> 保持 3 -> 增肌
+    if (widget.planType.value == 3) {
       return getBuildMuscle();
     } else if (widget.planType.value == 1) {
       return getLoseWeightSetting();

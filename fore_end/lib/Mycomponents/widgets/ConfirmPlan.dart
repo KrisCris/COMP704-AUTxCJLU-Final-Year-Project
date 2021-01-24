@@ -5,6 +5,7 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Mycomponents/text/ValueText.dart';
 
 class ConfirmPlan extends StatelessWidget {
   Function nextDo;
@@ -14,6 +15,8 @@ class ConfirmPlan extends StatelessWidget {
   int planTypeNum;
   double dailyCalories;
   double dailyCaloriesAfterDone;
+  double dailyProteinL;
+  double dailyProteinH;
   double keepCalories;
   bool isTooLow;
 
@@ -37,9 +40,11 @@ class ConfirmPlan extends StatelessWidget {
       this.planType = "none";
     }
   }
-  void setCalories(double goalCal, double goalMaintainCal, double maintainCal, bool low){
+  void setNutrition(double goalCal, double goalMaintainCal, double maintainCal, double proteinL, double proteinH,bool low){
     this.dailyCalories = goalCal;
     this.dailyCaloriesAfterDone = goalMaintainCal;
+    this.dailyProteinL = proteinL;
+    this.dailyProteinH = proteinH;
     this.keepCalories = maintainCal;
     this.isTooLow = low;
   }
@@ -67,13 +72,26 @@ class ConfirmPlan extends StatelessWidget {
       disabled: false,
       tapFunc: this.backDo,
     );
-
+    Widget isTooLow =Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+        TitleText(
+          text: "Your plan is " + (this.isTooLow?"unbalanced, you will eat not enough":"balanced"),
+          maxHeight: 50,
+          maxWidth: 300,
+          underLineLength: 0,
+          fontSize: 15,
+          lineWidth: 0,
+          underLineDistance: 8,
+        )
+      ],
+    );
     return Stack(
       children: [
         ClipRect(
           child: CustomPaint(
-            foregroundPainter: LinePainter(
-                color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+            foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
             child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
@@ -100,7 +118,7 @@ class ConfirmPlan extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -111,12 +129,13 @@ class ConfirmPlan extends StatelessWidget {
                     maxWidth: 300,
                     underLineLength: 0.795,
                     fontSize: 18,
-                    lineWidth: 5,
+                    lineWidth: 3,
                     underLineDistance: 8,
                   )
                 ],
               ),
               SizedBox(height: 30),
+              this.isTooLow?isTooLow:SizedBox(height: 0),
               this.getContent(),
               Expanded(child: (SizedBox())),
               Row(
@@ -143,32 +162,18 @@ class ConfirmPlan extends StatelessWidget {
       //TODO:返回保持身材情况的plan预览
     }else if(this.planTypeNum == 3){
       //TODO: 返回增肌身材情况的plan预览
+      return this.getBuildMuscle();
     }else{
 
     }
   }
-  Widget getLoseWeight(){
-    Widget isTooLow =Row(
+  Widget getBuildMuscle(){
+    Widget dailyCal =Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "Your plan is " + (this.isTooLow?"unbalanced, you will eat not enough":"balanced"),
-          maxHeight: 50,
-          maxWidth: 300,
-          underLineLength: 0,
-          fontSize: 15,
-          lineWidth: 0,
-          underLineDistance: 8,
-        )
-      ],
-    );
-    Widget daily =Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-        TitleText(
-          text: "You should eat less than " + this.dailyCalories.toString()+" Calories every day",
+          text: "To achieve the goal, the recommended daily calories  intake is around ",
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -177,28 +182,149 @@ class ConfirmPlan extends StatelessWidget {
           underLineDistance: 8,
         )
       ],
+    );
+    Widget dailyPro =Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+        TitleText(
+          text: "To achieve the goal, the recommended daily protein intake is around ",
+          maxHeight: 50,
+          maxWidth: 300,
+          underLineLength: 0,
+          fontSize: 15,
+          lineWidth: 5,
+          underLineDistance: 8,
+        )
+      ],
+    );
+    Widget dailyCalVal = ValueText<int>(
+      numUpper: this.dailyCalories.floor(),
+      unit: "KCal",
+      rowMainAxisAlignment: MainAxisAlignment.center,
+      valueFontSize: 23,
+      unitFontSize: 14,
+      fontColor: Color(0xFFE28800),
+    );
+    Widget dailyProVal = ValueText<int>(
+      numLower: this.dailyProteinL.floor(),
+      numUpper: this.dailyProteinH.floor(),
+      unit: "gram",
+      rowMainAxisAlignment: MainAxisAlignment.center,
+      valueFontSize: 23,
+      unitFontSize: 14,
+      fontColor: Color(0xFFE28800),
+    );
+    List<Widget> content = [];
+    content.addAll([
+      dailyCal,
+      SizedBox(height: 20),
+      Container(
+        width: ScreenTool.partOfScreenWidth(0.8),
+        height: 70,
+        margin: EdgeInsets.only(top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: Color(0xCCFFFFFF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: dailyCalVal,
+      ),
+      SizedBox(height: 20),
+      dailyPro,
+      SizedBox(height: 20),
+      Container(
+        width: ScreenTool.partOfScreenWidth(0.8),
+        height: 70,
+        margin: EdgeInsets.only(top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: Color(0xCCFFFFFF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: dailyProVal,
+      ),
+    ]);
+    return Column(
+        children: content
+    );
+  }
+  Widget getLoseWeight(){
+    Widget daily =Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+        TitleText(
+          text: "To achieve the goal, the recommended daily calories intake is around ",
+          maxHeight: 50,
+          maxWidth: 300,
+          underLineLength: 0,
+          fontSize: 15,
+          lineWidth: 5,
+          underLineDistance: 8,
+        )
+      ],
+    );
+    Widget dailyVal = ValueText<int>(
+      numUpper: this.dailyCalories.floor(),
+      unit: "KCal",
+      rowMainAxisAlignment: MainAxisAlignment.center,
+      valueFontSize: 23,
+      unitFontSize: 14,
+      fontColor: Color(0xFFE28800),
     );
     Widget done =Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "After complete your goal, you should not eat more than " + this.dailyCaloriesAfterDone.toString()+" Calories every day to maintian your weight",
-          maxHeight: 50,
+          text: "After complete your goal, to maintian your weight, the recommended daily calories intake is around",
+          maxHeight: 80,
           maxWidth: 300,
-          underLineLength: 0.795,
+          underLineLength: 0,
           fontSize: 15,
           lineWidth: 5,
           underLineDistance: 12,
         )
       ],
     );
+    Widget doneVal = ValueText<int>(
+      numUpper: this.dailyCaloriesAfterDone.floor(),
+      unit: "KCal",
+      rowMainAxisAlignment: MainAxisAlignment.center,
+      valueFontSize: 23,
+      unitFontSize: 14,
+      fontColor: Color(0xFFE28800),
+    );
+    List<Widget> content = [];
+    content.addAll([
+      daily,
+      SizedBox(height: 20),
+      Container(
+        width: ScreenTool.partOfScreenWidth(0.8),
+        height: 70,
+        margin: EdgeInsets.only(top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: Color(0xCCFFFFFF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: dailyVal,
+      ),
+      SizedBox(height: 20),
+      done,
+      SizedBox(height: 20),
+      Container(
+        width: ScreenTool.partOfScreenWidth(0.8),
+        height: 70,
+        margin: EdgeInsets.only(top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: Color(0xCCFFFFFF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: doneVal,
+      ),
+    ]);
+
     return Column(
-      children: [
-        isTooLow,
-        daily,
-        done
-      ],
+      children: content
     );
   }
 }
