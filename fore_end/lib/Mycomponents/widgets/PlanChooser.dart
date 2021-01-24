@@ -40,7 +40,6 @@ class PlanChooser extends StatelessWidget {
       text: "Build Muscle",
       textColor: Colors.white,
       textSize: 15,
-      paintColor: Color(0xFFB42626),
       backgroundColor: Color(0xFFF03838),
       width: ScreenTool.partOfScreenWidth(0.8),
       height: 80,

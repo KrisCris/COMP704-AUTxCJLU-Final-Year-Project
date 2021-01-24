@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DotPainter extends CustomPainter {
   Paint pen;
@@ -10,13 +11,12 @@ class DotPainter extends CustomPainter {
   double moveVal;
 
   DotPainter(
-      {@required Color color,
+      {Color color=Colors.black12,
       double k = 1,
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
-      double moveVal=0})
-      : assert(color != null) {
+      double moveVal=0}) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;

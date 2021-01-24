@@ -68,7 +68,7 @@ with ValueableWidgetMixIn<T>{
       IconData icon,
       @required String text,
       Color backgroundColor = Colors.white,
-      Color paintColor = Colors.redAccent,
+      Color paintColor = Colors.black26,
       Color textColor = Colors.black,
       double textSize = 12,
       int dotAnimationDuration = 800,
