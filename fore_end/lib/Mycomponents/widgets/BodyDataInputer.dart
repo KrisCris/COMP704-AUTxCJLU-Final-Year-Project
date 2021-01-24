@@ -79,6 +79,7 @@ class BodyDataInputer extends StatelessWidget {
       maxVal: 150,
       minVal: 30,
       initVal: 50,
+      adjustVal: 1,
       barColor: Color(0xFFBCA5D6),
       borderThickness: 4,
       showValue: true,

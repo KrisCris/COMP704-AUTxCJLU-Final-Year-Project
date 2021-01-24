@@ -7,6 +7,7 @@ import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
+import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtraBodyDataInputer extends StatelessWidget {
@@ -14,11 +15,11 @@ class ExtraBodyDataInputer extends StatelessWidget {
   double exerciseRatio;
   int age;
 
-  ExtraBodyDataInputer({this.nextDo}) {
-  }
+  ExtraBodyDataInputer({this.nextDo}) {}
   void setNextDo(Function f) {
     this.nextDo = f;
   }
+
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
@@ -28,40 +29,40 @@ class ExtraBodyDataInputer extends StatelessWidget {
       width: 0.8,
       height: 50,
       text: "Next Step",
-      disabled: true,
+      disabled: false,
       tapFunc: this.nextDo,
     );
 
-    CardChooser noExercise = CardChooser<double>(
-      value: 1.3,
-      text: "I hardly do exercise.",
-      textSize: 14,
-      textColor: Colors.white,
-      backgroundColor: Color(0xFFD1BC2C),
-      borderRadius: 6,
-      width: 0.8,
-      height: 50,
-    );
-    CardChooser haveExercise = CardChooser<double>(
-      value: 1.55,
-      text: "I did exercise regularly.",
-      textSize: 14,
-      textColor: Colors.white,
-      backgroundColor: Color(0xFFD38F33),
-      borderRadius: 6,
-      width: 0.8,
-      height: 50,
-    );
-    CardChooser lotExercise = CardChooser<double>(
-      value: 1.8,
-      text: "I am professional athletes.",
-      textSize: 14,
-      textColor: Colors.white,
-      backgroundColor: Color(0xFFE66D32),
-      borderRadius: 6,
-      width: 0.8,
-      height: 50,
-    );
+    // CardChooser noExercise = CardChooser<double>(
+    //   value: 1.3,
+    //   text: "I hardly do exercise.",
+    //   textSize: 14,
+    //   textColor: Colors.white,
+    //   backgroundColor: Color(0xFFD1BC2C),
+    //   borderRadius: 6,
+    //   width: 0.8,
+    //   height: 50,
+    // );
+    // CardChooser haveExercise = CardChooser<double>(
+    //   value: 1.55,
+    //   text: "I did exercise regularly.",
+    //   textSize: 14,
+    //   textColor: Colors.white,
+    //   backgroundColor: Color(0xFFD38F33),
+    //   borderRadius: 6,
+    //   width: 0.8,
+    //   height: 50,
+    // );
+    // CardChooser lotExercise = CardChooser<double>(
+    //   value: 1.8,
+    //   text: "I am professional athletes.",
+    //   textSize: 14,
+    //   textColor: Colors.white,
+    //   backgroundColor: Color(0xFFE66D32),
+    //   borderRadius: 6,
+    //   width: 0.8,
+    //   height: 50,
+    // );
     ValueBar age = ValueBar<int>(
       barThickness: 14,
       roundNum: 2,
@@ -78,23 +79,69 @@ class ExtraBodyDataInputer extends StatelessWidget {
       showAdjustButton: true,
       showBorder: false,
     );
-    age.setOnChange((){
+    ValueBar exerciseChoise = ValueBar<double>(
+      adjustVal: 1,
+      width: 0.8,
+      barThickness: 14,
+      minVal: 0,
+      maxVal: 100,
+      initVal: 1,
+      showValue: true,
+      showAdjustButton: true,
+      showBorder: false,
+      mapper: {
+        1.4: "very light",
+        1.5: "light",
+        1.7: "moderate",
+        1.9: "active",
+        2.1: "very active",
+        2.3: "heavy"
+      },
+      barColor: Color(0xFF824682),
+    );
+    CrossFadeText describeText = CrossFadeText(
+      text: "",
+      fontSize: 15,
+      fontColor: Colors.white,
+    );
+    exerciseChoise.setOnChange(() {
+      this.exerciseRatio = exerciseChoise.widgetValue.value;
+      if (exerciseChoise.widgetValue.value == 1.4) {
+        describeText.changeTo(
+            "Sitting at the computer most of the day, or sitting at a desk. Almost no activity at all.");
+      } else if (exerciseChoise.widgetValue.value == 1.5) {
+        describeText.changeTo(
+            "Light industrial work, sales or office work that comprises light activities. Walking, non-strenuous cycling or gardening approximately once a week.");
+      } else if (exerciseChoise.widgetValue.value == 1.7) {
+        describeText.changeTo(
+            "Regular activity at least once a week. Cleaning, kitchen staff, or delivering mail on foot or by bicycle.");
+      } else if (exerciseChoise.widgetValue.value == 1.9) {
+        describeText.changeTo(
+            "Regular activities more than once a week, e.g., intense walking, bicycling or sports.");
+      } else if (exerciseChoise.widgetValue.value == 2.1) {
+        describeText.changeTo("Strenuous activities several times a week.");
+      } else if (exerciseChoise.widgetValue.value == 2.3) {
+        describeText
+            .changeTo("Heavy industrial work, construction work or farming.");
+      }
+    });
+    age.setOnChange(() {
       this.age = age.getValue();
     });
     this.age = age.getValue();
-    CardChooserGroup<double> exerciseChoose = CardChooserGroup<double>(
-      initVal: -1,
-      cards: [noExercise, haveExercise,lotExercise],
-      direction: CardChooserGroupDirection.vertical,
-      mainAxisAlignment: MainAxisAlignment.center,
-      gap: 25.0,
-    );
-    exerciseChoose.addValueChangeListener((){
-      if(exerciseChoose.getValue() >= 0){
-        this.exerciseRatio = exerciseChoose.getValue();
-        nextButton.setDisabled(false);
-      }
-    });
+    // CardChooserGroup<double> exerciseChoose = CardChooserGroup<double>(
+    //   initVal: -1,
+    //   cards: [noExercise, haveExercise,lotExercise],
+    //   direction: CardChooserGroupDirection.vertical,
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   gap: 25.0,
+    // );
+    // exerciseChoose.addValueChangeListener((){
+    //   if(exerciseChoose.getValue() >= 0){
+    //     this.exerciseRatio = exerciseChoose.getValue();
+    //     nextButton.setDisabled(false);
+    //   }
+    // });
     return Stack(
       children: [
         this.getBackground(),
@@ -119,11 +166,12 @@ class ExtraBodyDataInputer extends StatelessWidget {
                     fontSize: 18,
                     lineWidth: 5,
                     underLineDistance: 8,
-                  )],
+                  )
+                ],
               ),
               SizedBox(height: 45),
               age,
-              SizedBox(height: 40),
+              SizedBox(height: 90),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -136,10 +184,23 @@ class ExtraBodyDataInputer extends StatelessWidget {
                     fontSize: 18,
                     lineWidth: 5,
                     underLineDistance: 8,
-                  )],
+                  )
+                ],
               ),
-              SizedBox(height: 40),
-              exerciseChoose,
+              SizedBox(height: 50),
+              exerciseChoise,
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+                  Container(
+                    width: ScreenTool.partOfScreenWidth(0.8),
+                    height: 100,
+                    child: describeText,
+                  ),
+                ],
+              ),
               Expanded(child: (SizedBox())),
               nextButton,
               SizedBox(height: 50),

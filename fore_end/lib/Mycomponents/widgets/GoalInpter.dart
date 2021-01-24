@@ -132,6 +132,7 @@ class GoalInputerState extends State<GoalInputer> {
       width: 0.8,
       maxVal: 365,
       minVal: 1,
+      adjustVal: 1,
       valueName:'',
       unit: 'Days',
       initVal: 30,
@@ -145,8 +146,9 @@ class GoalInputerState extends State<GoalInputer> {
     ValueBar weight = ValueBar<int>(
       barThickness: 20,
       width: 0.8,
-      maxVal: maxLoseWeight,
+      maxVal: maxLoseWeight.round(),
       unit: 'KG',
+      adjustVal: 1,
       minVal: 1,
       initVal: 3,
       barColor: Color(0xFFEB9D33),
@@ -165,7 +167,7 @@ class GoalInputerState extends State<GoalInputer> {
       widget.weightLose = weight.widgetValue.value;
       widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
       int newDay = ((weight.widgetValue.value*7000/maxDailyCalorie) as double).round();
-      day.changeMin(newDay.roundToDouble());
+      day.changeMin(newDay);
     });
     widget.dailyCostCalorie = (weight.widgetValue.value  * 7000)/day.widgetValue.value;
     widget.days = day.widgetValue.value;
