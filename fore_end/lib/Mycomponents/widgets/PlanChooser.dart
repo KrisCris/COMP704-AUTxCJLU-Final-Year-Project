@@ -104,7 +104,7 @@ class PlanChooser extends StatelessWidget {
         ClipRect(
           child: CustomPaint(
             foregroundPainter: LinePainter(
-                color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+                k: -1, lineWidth: 10, lineGap: 30),
             child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),

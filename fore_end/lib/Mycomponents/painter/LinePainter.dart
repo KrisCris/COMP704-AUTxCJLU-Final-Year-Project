@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class LinePainter extends CustomPainter {
   Paint pen;
@@ -11,12 +12,14 @@ class LinePainter extends CustomPainter {
   double xBias;
 
   LinePainter(
-      {@required Color color,
+      {Color color,
         double k = 1,
         double lineWidth = 8,
         double lineGap = 15,
-        double moveVal=0})
-      : assert(color != null) {
+        double moveVal=0}) {
+    if(color == null){
+      color =Colors.black12;
+    }
     this.lineWidth = lineWidth;
     this.lineGap = lineGap;
     this.k = k;

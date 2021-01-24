@@ -70,7 +70,6 @@ class GuidePage extends StatelessWidget {
       } else if (res.data["code"] == 1) {
         dynamic data = res.data['data'];
         planPreview.setNextDo(()async{
-          //TODO: 创建计划按钮的回调
           User u = User.getInstance();
           Response res = await Requests.setPlan({
             "uid":u.uid,
