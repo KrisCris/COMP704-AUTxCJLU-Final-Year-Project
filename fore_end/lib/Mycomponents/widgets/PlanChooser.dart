@@ -66,17 +66,14 @@ class PlanChooser extends StatelessWidget {
       borderRadius: 10,
     );
     addMuscle.setOnTap(() {
-      this.planType = 0;
       info.changeTo(
           "Eating more food with more protein and less carbohydrate. Sufficient exercise is the guarantee of gaining muscle");
     });
     loseWeight.setOnTap(() {
-      this.planType = 1;
       info.changeTo(
           "Eating less food, reduce the amount of carbohydrate and fat in the food, keep exercises to burn the fat in the body");
     });
     keep.setOnTap(() {
-      this.planType = 2;
       info.changeTo(
           "Eating as what general people eat, not eat less deliberately or eat too much");
     });
@@ -92,6 +89,7 @@ class PlanChooser extends StatelessWidget {
       gap: 20.0,
     );
     group.addValueChangeListener((){
+      this.planType = group.getValue();
       if(group.getValue() >=0){
         nextButton.setDisabled(false);
       }

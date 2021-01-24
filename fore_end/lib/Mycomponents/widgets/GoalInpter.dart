@@ -221,6 +221,7 @@ class GoalInputerState extends State<GoalInputer> {
       barThickness: 20,
       width: 0.8,
       maxVal: 365,
+      adjustVal: 1,
       minVal: 1,
       valueName:'',
       unit: 'Days',
@@ -264,8 +265,8 @@ class GoalInputerState extends State<GoalInputer> {
   }
 
   Widget getContent() {
-    //0 -> 增肌  1 -> 减肥  2 -> 保持
-    if (widget.planType.value == 0) {
+    //1 -> 减肥  2 -> 保持 3 -> 增肌
+    if (widget.planType.value == 3) {
       return getBuildMuscle();
     } else if (widget.planType.value == 1) {
       return getLoseWeightSetting();
