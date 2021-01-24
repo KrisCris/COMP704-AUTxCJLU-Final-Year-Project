@@ -37,7 +37,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       text: "I hardly do exercise.",
       textSize: 14,
       textColor: Colors.white,
-      paintColor: Color(0xFFB4A122),
       backgroundColor: Color(0xFFD1BC2C),
       borderRadius: 6,
       width: 0.8,
@@ -48,7 +47,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       text: "I did exercise regularly.",
       textSize: 14,
       textColor: Colors.white,
-      paintColor: Color(0xFFBD7E28),
       backgroundColor: Color(0xFFD38F33),
       borderRadius: 6,
       width: 0.8,
@@ -59,7 +57,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       text: "I am professional athletes.",
       textSize: 14,
       textColor: Colors.white,
-      paintColor: Color(0xFFCE602A),
       backgroundColor: Color(0xFFE66D32),
       borderRadius: 6,
       width: 0.8,
@@ -77,7 +74,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       initVal: 10,
       borderThickness: 4,
       barColor: Color(0xFF82BFFC),
-      effectColor: Color(0xFF4EA5FC),
       showValue: true,
       showAdjustButton: true,
       showBorder: false,
@@ -157,8 +153,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
   Widget getBackground() {
     return ClipRect(
       child: CustomPaint(
-        foregroundPainter: LinePainter(
-            color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+        foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
         child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),

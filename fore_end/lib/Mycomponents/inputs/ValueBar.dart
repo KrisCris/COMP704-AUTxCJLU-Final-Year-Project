@@ -61,7 +61,7 @@ class ValueBar<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
       this.borderColor = Colors.black,
       this.borderDistance = 0,
       Color barColor,
-      Color effectColor,
+      Color effectColor=Colors.black12,
       Color fontColor,
       this.blockWidth = 10,
       double minVal = 0,

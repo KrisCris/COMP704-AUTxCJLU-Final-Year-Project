@@ -97,8 +97,7 @@ class GoalInputerState extends State<GoalInputer> {
   Widget getBackground() {
     return ClipRect(
       child: CustomPaint(
-        foregroundPainter: LinePainter(
-            color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+        foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
         child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
@@ -151,7 +150,6 @@ class GoalInputerState extends State<GoalInputer> {
       minVal: 1,
       initVal: 3,
       barColor: Color(0xFFEB9D33),
-      effectColor: Color(0xFFECBC7B),
       borderThickness: 4,
       showValue: true,
       showAdjustButton: true,

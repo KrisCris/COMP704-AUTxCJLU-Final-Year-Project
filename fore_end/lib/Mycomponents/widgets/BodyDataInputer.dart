@@ -39,7 +39,6 @@ class BodyDataInputer extends StatelessWidget {
       text: "Male",
       textSize: 15,
       textColor: Colors.white,
-      paintColor: Color(0xFF2978B6),
       backgroundColor: Color(0xFF3594DD),
       borderRadius: 10,
       width: 0.35,
@@ -50,7 +49,6 @@ class BodyDataInputer extends StatelessWidget {
       text: "Female",
       textSize: 15,
       textColor: Colors.white,
-      paintColor: Color(0xFFE15F5F),
       backgroundColor: Color(0xFFFF7979),
       borderRadius: 10,
       width: 0.35,
@@ -68,7 +66,6 @@ class BodyDataInputer extends StatelessWidget {
       initVal: 1.65,
       borderThickness: 4,
       barColor: Colors.white,
-      effectColor: Color(0xFFBDBBBA),
       showValue: true,
       showAdjustButton: true,
       showBorder: false,
@@ -83,7 +80,6 @@ class BodyDataInputer extends StatelessWidget {
       minVal: 30,
       initVal: 50,
       barColor: Color(0xFFBCA5D6),
-      effectColor: Color(0xFFA88EC6),
       borderThickness: 4,
       showValue: true,
       showAdjustButton: true,
@@ -125,8 +121,7 @@ class BodyDataInputer extends StatelessWidget {
       children: [
         ClipRect(
           child: CustomPaint(
-            foregroundPainter: LinePainter(
-                color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
+            foregroundPainter: LinePainter( k: -1, lineWidth: 10, lineGap: 30),
             child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
