@@ -287,31 +287,52 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       double extra = widget.showAdjustButton
           ? (ValueBar.buttonSize + ValueBar.buttonGap) * 2
           : 0;
-      return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapDown: (TapDownDetails dt) {
-            if (dt.localPosition.dx >= 0 &&
-                dt.localPosition.dx <= ValueBar.buttonSize &&
-                dt.localPosition.dy >= 10 &&
-                dt.localPosition.dy <= (widget.barThickness + 20)) {
-              this.addValue(-1 * widget.adjustVal);
-            } else if (dt.localPosition.dx >=
-                    extra / 2 + widget.width + ValueBar.buttonGap &&
-                dt.localPosition.dx <= extra + widget.width &&
-                dt.localPosition.dy >= 10 &&
-                dt.localPosition.dy <= (widget.barThickness + 20)) {
-              this.addValue(widget.adjustVal);
-            }
-          },
-          child: Container(
+      // return GestureDetector(
+      //     behavior: HitTestBehavior.translucent,
+      //     onTapDown: (TapDownDetails dt) {
+      //       if (dt.localPosition.dx >= 0 &&
+      //           dt.localPosition.dx <= ValueBar.buttonSize &&
+      //           dt.localPosition.dy >= 10 &&
+      //           dt.localPosition.dy <= (widget.barThickness + 20)) {
+      //         this.addValue(-1 * widget.adjustVal);
+      //       } else if (dt.localPosition.dx >=
+      //               extra / 2 + widget.width + ValueBar.buttonGap &&
+      //           dt.localPosition.dx <= extra + widget.width &&
+      //           dt.localPosition.dy >= 10 &&
+      //           dt.localPosition.dy <= (widget.barThickness + 20)) {
+      //         this.addValue(widget.adjustVal);
+      //       }
+      //     },
+      return  Container(
               width: widget.width + extra,
               height: widget.barThickness + 30,
               child: Row(
                 children: [
-                  SizedBox(width: extra / 2),
+                   GestureDetector(
+                     behavior: HitTestBehavior.translucent,
+                      onTap: (){
+                        this.addValue(-1 * widget.adjustVal);
+                      },
+                      child: Container(
+                        width: ValueBar.buttonSize,
+                        height: widget.barThickness+10,
+                      ),
+                  ),
+                  SizedBox(width: ValueBar.buttonGap),
                   Stack(children: barInfo),
+                  SizedBox(width: ValueBar.buttonGap),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: (){
+                      this.addValue( widget.adjustVal);
+                    },
+                    child: Container(
+                      width: ValueBar.buttonSize,
+                      height: widget.barThickness+10,
+                    ),
+                  ),
                 ],
-              )));
+              ));
     } else {
       return Container(
         width: widget.width,

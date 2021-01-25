@@ -69,7 +69,7 @@ class ValueBarBackgroundPainter extends CustomPainter {
       double extra = (ValueBar.buttonSize-minusPainter.width)/2;
       minusPainter.paint(canvas, Offset(-ValueBar.buttonSize-ValueBar.buttonGap+extra,-4));
       extra = (ValueBar.buttonSize-addPainter.width)/2;
-      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extra,-2));
+      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extra,0));
       canvas.drawRRect(mRrect, this.pen);
       canvas.drawRRect(aRrect, this.pen);
     }
