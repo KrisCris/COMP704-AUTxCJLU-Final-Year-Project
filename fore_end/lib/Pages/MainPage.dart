@@ -35,7 +35,7 @@ class MainPage extends StatefulWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 120 + ScreenTool.partOfScreenHeight(0.025)),
-          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1),)
+          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1))
         ],
       ),
     );

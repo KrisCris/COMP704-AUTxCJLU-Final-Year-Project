@@ -44,7 +44,7 @@ class PlanNotifier extends StatelessWidget {
       barThickness: barThickness,
     );
     List<Widget> content = [
-      SizedBox(height: 35),
+      SizedBox(height: 40),
       Stack(
         children: [
           Row(
@@ -66,7 +66,7 @@ class PlanNotifier extends StatelessWidget {
         ],
       ),
     ];
-    if(p.planType == 1){
+    if(true){
       ValueBar protein = ValueBar<double>(
         minVal: 0.0,
         maxVal: p.dailyProteinUpperLimit,
@@ -87,7 +87,7 @@ class PlanNotifier extends StatelessWidget {
         barThickness: barThickness,
       );
       content.addAll([
-        SizedBox(height: 35),
+        SizedBox(height: 20),
         Stack(
           children: [
             Row(
