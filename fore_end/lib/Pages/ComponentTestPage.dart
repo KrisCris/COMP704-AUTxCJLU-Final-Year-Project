@@ -10,7 +10,7 @@ import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore
 import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanChooser.dart';
 import 'dart:math' as math;
 
-import 'package:fore_end/Mycomponents/widgets/PlanNotifier.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanNotifier.dart';
 
 // ignore: must_be_immutable
 class ComponentTestPage extends StatefulWidget {
@@ -39,10 +39,17 @@ class ComponentTestState extends State<ComponentTestPage>
 
   @override
   Widget build(BuildContext context) {
-    return BackGround(
-        sigmaY: 10,
-        sigmaX: 10,
-        opacity: 0.7,
-        child: PlanNotifier(width: 0.8, height: 100));
+    return Container(
+        color: Color(0xFF172632),
+        width: ScreenTool.partOfScreenWidth(1),
+        height: ScreenTool.partOfScreenHeight(1),
+        alignment: Alignment.center,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: 200,
+            maxWidth: ScreenTool.partOfScreenWidth(0.8)
+          ),
+          child: PlanNotifier(width: 0.8, height: 100,backgroundColor: Color(0xFFF4F4F5),)),
+        );
   }
 }

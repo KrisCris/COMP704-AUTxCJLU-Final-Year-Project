@@ -68,10 +68,10 @@ class ValueBarBackgroundPainter extends CustomPainter {
               )))..layout(minWidth: 0.0,maxWidth: double.infinity);
       double extraHor = (ValueBar.buttonSize-minusPainter.width)/2;
       double extraVer = (size.height-minusPainter.height)/2;
-      minusPainter.paint(canvas, Offset(-ValueBar.buttonSize-ValueBar.buttonGap+extraHor,-extraVer-2));
+      minusPainter.paint(canvas, Offset(-ValueBar.buttonSize-ValueBar.buttonGap+extraHor,extraVer));
       extraHor = (ValueBar.buttonSize-addPainter.width)/2;
       extraVer = (size.height-addPainter.height)/2;
-      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extraHor,extraVer+2));
+      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extraHor,extraVer));
       canvas.drawRRect(mRrect, this.pen);
       canvas.drawRRect(aRrect, this.pen);
     }
@@ -109,13 +109,7 @@ class ValueBarBackgroundPainter extends CustomPainter {
           bottomRight: Radius.circular(0));
       canvas.drawRRect(numberRrect, this.pen);
     }
-    if(this.showAdjustButton){
-      rrect = RRect.fromRectAndCorners(rect,
-          topLeft: Radius.circular(0),
-          topRight: Radius.circular(0),
-          bottomLeft: Radius.circular(radius[2]),
-          bottomRight: Radius.circular(radius[3]));
-    }else if(this.showNumber){
+     if(this.showNumber){
       if(this.position == ValuePosition.left){
         rrect = RRect.fromRectAndCorners(rect,
             topLeft: Radius.circular(0),
