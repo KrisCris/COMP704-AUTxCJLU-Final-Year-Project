@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/Mycomponents/widgets/BodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/ConfirmPlan.dart';
-import 'package:fore_end/Mycomponents/widgets/ExtraBodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/GoalInpter.dart';
-import 'package:fore_end/Mycomponents/widgets/PlanChooser.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/BodyDataInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ConfirmPlan.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtraBodyDataInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/GoalInpter.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
 
 import 'MainPage.dart';
 
