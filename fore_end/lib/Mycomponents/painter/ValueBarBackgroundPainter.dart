@@ -66,10 +66,12 @@ class ValueBarBackgroundPainter extends CustomPainter {
                 fontFamily: "Futura",
                 color: this.fontColor,
               )))..layout(minWidth: 0.0,maxWidth: double.infinity);
-      double extra = (ValueBar.buttonSize-minusPainter.width)/2;
-      minusPainter.paint(canvas, Offset(-ValueBar.buttonSize-ValueBar.buttonGap+extra,-4));
-      extra = (ValueBar.buttonSize-addPainter.width)/2;
-      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extra,0));
+      double extraHor = (ValueBar.buttonSize-minusPainter.width)/2;
+      double extraVer = (size.height-minusPainter.height)/2;
+      minusPainter.paint(canvas, Offset(-ValueBar.buttonSize-ValueBar.buttonGap+extraHor,-extraVer-2));
+      extraHor = (ValueBar.buttonSize-addPainter.width)/2;
+      extraVer = (size.height-addPainter.height)/2;
+      addPainter.paint(canvas, Offset(size.width+ValueBar.buttonGap+extraHor,extraVer+2));
       canvas.drawRRect(mRrect, this.pen);
       canvas.drawRRect(aRrect, this.pen);
     }
