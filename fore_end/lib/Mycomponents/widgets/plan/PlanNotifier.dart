@@ -38,7 +38,7 @@ class PlanNotifier extends StatelessWidget {
       roundNum: 1,
       initVal: 100,
       showBorder: false,
-      showAdjustButton: false,
+      showAdjustButton: true,
       showValue: true,
       unit: "/ " + p.dailyCaloriesUpperLimit.toString(),
       barColor: Color(0xFFAFEC71),

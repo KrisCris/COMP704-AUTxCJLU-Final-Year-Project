@@ -79,9 +79,6 @@ class ValueBar<T extends num> extends StatefulWidget
     this.minVal = ValueNotifier(minVal);
     this.maxVal = maxVal;
     this.valuePosition = valuePosition;
-    if (valuePosition != ValuePosition.center) {
-      showAdjustButton = false;
-    }
     this.showAdjustButton = showAdjustButton;
     if (this.showAdjustButton) {
       this.width -= (ValueBar.buttonSize + ValueBar.buttonGap) * 2;
