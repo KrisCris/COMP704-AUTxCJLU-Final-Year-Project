@@ -10,7 +10,7 @@ import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore
 import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanChooser.dart';
 import 'dart:math' as math;
 
-import 'package:fore_end/Mycomponents/widgets/PlanNotifier.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanNotifier.dart';
 
 // ignore: must_be_immutable
 class ComponentTestPage extends StatefulWidget {

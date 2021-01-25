@@ -63,14 +63,22 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   void dispose() {
-    this._ctl.dispose();
-    this.loadingCameraAnimation.dispose();
-    this.flashAnimation.dispose();
+    if(this._ctl != null){
+      this._ctl.dispose();
+    }
+    if(this.loadingCameraAnimation !=null){
+      this.loadingCameraAnimation.dispose();
+    }
+    if(this.flashAnimation != null){
+      this.flashAnimation.dispose();
+    }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (this._ctl == null) {
       widget.waitingText = "Waiting For Camera Launching...";
       return waitingForCameraWidget();

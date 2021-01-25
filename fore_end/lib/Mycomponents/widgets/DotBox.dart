@@ -42,7 +42,7 @@ class DotBox extends StatefulWidget{
       {double width = 300,
         double height = 200,
         Color backgroundColor = Colors.white,
-        Color paintColor = Colors.redAccent,
+        Color paintColor = Colors.black12,
         int dotAnimationDuration = 800,
         double dotGap = 15,
         this.child,
@@ -116,7 +116,6 @@ with TickerProviderStateMixin{
           borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
             width: widget._width,
-            height: widget._height,
             color: widget._backgroundColor,
             child: Stack(
               children: [
@@ -126,8 +125,7 @@ with TickerProviderStateMixin{
                       dotGap: widget._dotGap,
                       moveVal: this.dotMoveAnimation.getValue()),
                   child: Container(
-                    width: widget._width ,
-                    height: widget._height,
+                    width: widget._width,
                   ),
                 ),
                 Container(

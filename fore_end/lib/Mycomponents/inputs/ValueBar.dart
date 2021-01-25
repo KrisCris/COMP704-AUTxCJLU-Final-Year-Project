@@ -1,11 +1,8 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/BorderPainter.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/painter/ValueBarBackgroundPainter.dart';
@@ -17,7 +14,7 @@ class ValueBar<T extends num> extends StatefulWidget
     with ValueableWidgetMixIn<T> {
   static const double buttonSize = 20;
   static const double buttonGap = 10;
-
+  static const double backgroundExtraSpace = 5;
   double width;
   double barThickness;
   int roundNum;
@@ -219,11 +216,11 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             borderDistance: widget.borderDistance),
         child: Container(
           width: widget.width,
-          height: widget.barThickness + 10,
+          height: widget.barThickness + 2*ValueBar.backgroundExtraSpace,
           child: Align(
             alignment: Alignment.topLeft,
             child: Transform.translate(
-              offset: Offset(widget.borderThickness, 5),
+              offset: Offset(widget.borderThickness, ValueBar.backgroundExtraSpace),
               child: ClipRRect(
                   borderRadius: BorderRadius.only(
                       topLeft:
@@ -272,7 +269,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             margin: EdgeInsets.only(
                 left:
                     this.barWidthAnimation.getValue() + widget.borderThickness,
-                top: 5),
+                top: ValueBar.backgroundExtraSpace),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(2),
@@ -287,25 +284,9 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       double extra = widget.showAdjustButton
           ? (ValueBar.buttonSize + ValueBar.buttonGap) * 2
           : 0;
-      // return GestureDetector(
-      //     behavior: HitTestBehavior.translucent,
-      //     onTapDown: (TapDownDetails dt) {
-      //       if (dt.localPosition.dx >= 0 &&
-      //           dt.localPosition.dx <= ValueBar.buttonSize &&
-      //           dt.localPosition.dy >= 10 &&
-      //           dt.localPosition.dy <= (widget.barThickness + 20)) {
-      //         this.addValue(-1 * widget.adjustVal);
-      //       } else if (dt.localPosition.dx >=
-      //               extra / 2 + widget.width + ValueBar.buttonGap &&
-      //           dt.localPosition.dx <= extra + widget.width &&
-      //           dt.localPosition.dy >= 10 &&
-      //           dt.localPosition.dy <= (widget.barThickness + 20)) {
-      //         this.addValue(widget.adjustVal);
-      //       }
-      //     },
       return  Container(
               width: widget.width + extra,
-              height: widget.barThickness + 30,
+              height: widget.barThickness +  ValueBar.backgroundExtraSpace*2 + 20,
               child: Row(
                 children: [
                    GestureDetector(
@@ -315,7 +296,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                       },
                       child: Container(
                         width: ValueBar.buttonSize,
-                        height: widget.barThickness+10,
+                        height: widget.barThickness+2*ValueBar.backgroundExtraSpace,
                       ),
                   ),
                   SizedBox(width: ValueBar.buttonGap),
@@ -328,7 +309,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                     },
                     child: Container(
                       width: ValueBar.buttonSize,
-                      height: widget.barThickness+10,
+                      height: widget.barThickness+2*ValueBar.backgroundExtraSpace,
                     ),
                   ),
                 ],

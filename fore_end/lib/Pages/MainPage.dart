@@ -10,6 +10,7 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
 import 'AccountPage.dart';
@@ -31,9 +32,10 @@ class MainPage extends StatefulWidget {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("myDietPage"),
+          SizedBox(height: 120 + ScreenTool.partOfScreenHeight(0.025)),
+          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1),)
         ],
       ),
     );
@@ -109,19 +111,20 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
-        body: BackGround(
-            sigmaX: 2,
-            sigmaY: 2,
-            opacity: 0.39,
-            backgroundImage: "image/food.jpg",
-            color: Colors.white,
-            child: Builder(
+        body: Builder(
               builder: (BuildContext ctx) {
                 return Container(
                     alignment: Alignment.center,
                     height: ScreenTool.partOfScreenHeight(1),
                     child: Stack(
                       children: [
+                        ClipRect(
+                          child: Container(
+                            width: ScreenTool.partOfScreenWidth(1),
+                            height: ScreenTool.partOfScreenHeight(1),
+                            color: Color(0xFF172632),
+                          ),
+                        ),
                         widget.bodyContent,
                         Column(
                           children: [
@@ -137,7 +140,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       ],
                     ));
               },
-            )));
+            ));
   }
 
   Widget getAppBar() {
