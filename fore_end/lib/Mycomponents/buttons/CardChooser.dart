@@ -199,6 +199,7 @@ class CardChooserState extends State<CardChooser>
         style: TextStyle(
             fontSize: fontSizeAnimation.getValue(),
             color: widget._textColor,
+            fontFamily: "Futura",
             decoration: TextDecoration.none,
             fontWeight: FontWeight.bold)));
 

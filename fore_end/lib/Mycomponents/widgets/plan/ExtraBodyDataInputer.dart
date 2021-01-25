@@ -98,19 +98,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       this.age = age.getValue();
     });
     this.age = age.getValue();
-    // CardChooserGroup<double> exerciseChoose = CardChooserGroup<double>(
-    //   initVal: -1,
-    //   cards: [noExercise, haveExercise,lotExercise],
-    //   direction: CardChooserGroupDirection.vertical,
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   gap: 25.0,
-    // );
-    // exerciseChoose.addValueChangeListener((){
-    //   if(exerciseChoose.getValue() >= 0){
-    //     this.exerciseRatio = exerciseChoose.getValue();
-    //     nextButton.setDisabled(false);
-    //   }
-    // });
     return Stack(
       children: [
         this.getBackground(),
@@ -147,7 +134,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
                     text: "How Do You Exercise?",
-                    maxHeight: 20,
+                    maxHeight: 25,
                     maxWidth: 250,
                     underLineLength: 0.795,
                     fontSize: 18,
@@ -182,14 +169,11 @@ class ExtraBodyDataInputer extends StatelessWidget {
 
   Widget getBackground() {
     return ClipRect(
-      child: CustomPaint(
-        foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
-        child: Container(
+      child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
-          color: Color(0xFF234C82),
+          color: Color(0xFF172632)
         ),
-      ),
     );
   }
 
@@ -202,6 +186,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
             style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
+                fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.bold)),
       ],

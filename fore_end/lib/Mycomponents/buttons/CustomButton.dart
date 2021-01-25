@@ -342,6 +342,7 @@ class CustomButtonState extends State<CustomButton>
             style: TextStyle(
                 fontSize: widget.fontsize,
                 color: widget.textColor,
+                fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight:
                     widget.isBold ? FontWeight.bold : FontWeight.normal),
