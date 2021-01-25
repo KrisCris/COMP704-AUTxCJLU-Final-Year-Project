@@ -24,11 +24,13 @@ class ValueText<T extends num> extends StatelessWidget{
         Text(this._numLower.toString(),style: TextStyle(
           color: this.fontColor,
           fontSize: this.valueFontSize,
+          fontFamily: "Futura",
           decoration: TextDecoration.none,
         )),
         Text(" - ",style: TextStyle(
           color: this.fontColor,
           fontSize: this.valueFontSize+3,
+          fontFamily: "Futura",
           decoration: TextDecoration.none,
         ))
       ]);
@@ -37,12 +39,14 @@ class ValueText<T extends num> extends StatelessWidget{
       Text(this._numUpper.toString(),style: TextStyle(
         color: this.fontColor,
         fontSize: this.valueFontSize,
+        fontFamily: "Futura",
         decoration: TextDecoration.none,
       )),
       SizedBox(width: this.gap),
       Text(this.unit,style: TextStyle(
         color: this.fontColor,
         fontSize: this.unitFontSize,
+        fontFamily: "Futura",
         decoration: TextDecoration.none,
       ))
     ]);

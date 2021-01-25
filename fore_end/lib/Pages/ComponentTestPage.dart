@@ -6,8 +6,8 @@ import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/DroplinePainter.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/Mycomponents/widgets/BodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/PlanChooser.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/BodyDataInputer.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanChooser.dart';
 import 'dart:math' as math;
 
 import 'package:fore_end/Mycomponents/widgets/PlanNotifier.dart';

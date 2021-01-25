@@ -54,11 +54,13 @@ with TickerProviderStateMixin{
         firstChild: Text(widget.textA,style: TextStyle(
             fontSize: widget.fontSize,
             color: widget.fontColor,
+            fontFamily: "Futura",
             decoration: TextDecoration.none,
             fontWeight: FontWeight.normal)),
         secondChild:Text(widget.textB,style: TextStyle(
             fontSize: widget.fontSize,
             color: widget.fontColor,
+            fontFamily: "Futura",
             decoration: TextDecoration.none,
             fontWeight: FontWeight.normal),),
         crossFadeState: widget.showFirst.value?CrossFadeState.showFirst:CrossFadeState.showSecond,

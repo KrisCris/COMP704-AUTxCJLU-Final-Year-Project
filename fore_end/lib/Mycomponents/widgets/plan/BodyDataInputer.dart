@@ -121,14 +121,11 @@ class BodyDataInputer extends StatelessWidget {
     return Stack(
       children: [
         ClipRect(
-          child: CustomPaint(
-            foregroundPainter: LinePainter( k: -1, lineWidth: 10, lineGap: 30),
-            child: Container(
+          child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF234C82),
+              color: Color(0xFF172632)
             ),
-          ),
         ),
         Container(
           width: ScreenTool.partOfScreenWidth(1),
@@ -145,6 +142,7 @@ class BodyDataInputer extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontFamily: "Futura",
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold)),
                 ],
@@ -162,6 +160,7 @@ class BodyDataInputer extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
+                            fontFamily: "Futura",
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.normal)),
                   ),
@@ -174,7 +173,7 @@ class BodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
                     text: "Are You Male or Female ?",
-                    maxHeight: 20,
+                    maxHeight: 30,
                     maxWidth: 300,
                     underLineLength: 0.795,
                     fontSize: 18,
@@ -198,8 +197,8 @@ class BodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
                       text: "What Is Your Stature And Weight ?",
-                      maxWidth: 0.6,
-                      maxHeight: 40,
+                      maxWidth: 0.8,
+                      maxHeight: 35,
                       fontSize: 18,
                       lineWidth: 5,
                       underLineLength: 0.8,

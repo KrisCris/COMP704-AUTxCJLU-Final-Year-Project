@@ -97,14 +97,10 @@ class PlanChooser extends StatelessWidget {
     return Stack(
       children: [
         ClipRect(
-          child: CustomPaint(
-            foregroundPainter: LinePainter(
-                k: -1, lineWidth: 10, lineGap: 30),
-            child: Container(
+          child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF234C82),
-            ),
+              color: Color(0xFF172632),
           ),
         ),
         Container(
@@ -121,6 +117,7 @@ class PlanChooser extends StatelessWidget {
                   Text("Choose Your Plan",
                       style: TextStyle(
                           fontSize: 28,
+                          fontFamily: "Futura",
                           color: Colors.white,
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold)),
@@ -132,13 +129,12 @@ class PlanChooser extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
-                    width: ScreenTool.partOfScreenWidth(0.55),
-                    height: 80,
+                    width: ScreenTool.partOfScreenWidth(0.75),
+                    height: 65,
                     child: info,
                   ),
                 ],
               ),
-              SizedBox(height: 20),
               Expanded(
                   child: group
               ),

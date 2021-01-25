@@ -96,14 +96,11 @@ class GoalInputerState extends State<GoalInputer> {
 
   Widget getBackground() {
     return ClipRect(
-      child: CustomPaint(
-        foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
-        child: Container(
+      child:  Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
-          color: Color(0xFF234C82),
+          color:Color(0xFF172632)
         ),
-      ),
     );
   }
 
@@ -116,6 +113,7 @@ class GoalInputerState extends State<GoalInputer> {
             style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
+                fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.bold)),
       ],

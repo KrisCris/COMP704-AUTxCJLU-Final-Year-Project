@@ -90,14 +90,11 @@ class ConfirmPlan extends StatelessWidget {
     return Stack(
       children: [
         ClipRect(
-          child: CustomPaint(
-            foregroundPainter: LinePainter(k: -1, lineWidth: 10, lineGap: 30),
-            child: Container(
+          child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF234C82),
+              color: Color(0xFF172632),
             ),
-          ),
         ),
         Container(
           width: ScreenTool.partOfScreenWidth(1),
@@ -114,6 +111,7 @@ class ConfirmPlan extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
+                          fontFamily: "Futura",
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold)),
                 ],
@@ -125,7 +123,7 @@ class ConfirmPlan extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
                     text: "Your Plan is " + this.planType,
-                    maxHeight: 20,
+                    maxHeight: 25,
                     maxWidth: 300,
                     underLineLength: 0.795,
                     fontSize: 18,
