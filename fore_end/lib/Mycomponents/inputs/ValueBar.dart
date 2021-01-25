@@ -15,6 +15,9 @@ enum ValuePosition { left, center, right }
 
 class ValueBar<T extends num> extends StatefulWidget
     with ValueableWidgetMixIn<T> {
+  static const double buttonSize = 20;
+  static const double buttonGap = 10;
+
   double width;
   double barThickness;
   int roundNum;
@@ -83,6 +86,9 @@ class ValueBar<T extends num> extends StatefulWidget
       showAdjustButton = false;
     }
     this.showAdjustButton = showAdjustButton;
+    if (this.showAdjustButton) {
+      this.width -= (ValueBar.buttonSize + ValueBar.buttonGap) * 2;
+    }
     if (barColor == null) {
       barColor = Color(0xFF50DC96);
     }
@@ -105,7 +111,7 @@ class ValueBar<T extends num> extends StatefulWidget
   }
 
   void changeMin(T min) {
-    if(min > maxVal){
+    if (min > maxVal) {
       min = maxVal;
     }
     this.minVal.value = min;
@@ -247,7 +253,6 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
           ),
         ));
 
-    List<Widget> res = [];
     List<Widget> barInfo = [bar];
     if (widget.showDragHead) {
       barInfo.add(GestureDetector(
@@ -277,48 +282,43 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                 ]),
           )));
     }
-    res.add(Positioned(left: 0, bottom: 0, child: Stack(children: barInfo)));
 
     if (widget.showAdjustButton) {
-      Widget minusButton = Positioned(
-          left: 6,
-          top: 4,
-          child: CustomIconButton(
-            theme: MyTheme.blackAndWhite,
-            icon: FontAwesomeIcons.minus,
-            iconSize: 12,
-            backgroundOpacity: 1,
-            borderRadius: 2,
-            buttonSize: 17,
-            onClick: () {
-              addValue(-1 * widget.adjustVal);
-            },
-          ));
-      Widget addButton = Positioned(
-          right: 6,
-          top: 4,
-          child: CustomIconButton(
-            theme: MyTheme.blackAndWhite,
-            icon: FontAwesomeIcons.plus,
-            iconSize: 12,
-            backgroundOpacity: 1,
-            borderRadius: 2,
-            buttonSize: 17,
-            onClick: () {
-              addValue(widget.adjustVal);
-            },
-          ));
-      res.add(minusButton);
-      res.add(addButton);
+      double extra = widget.showAdjustButton
+          ? (ValueBar.buttonSize + ValueBar.buttonGap) * 2
+          : 0;
+      return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTapDown: (TapDownDetails dt) {
+            if (dt.localPosition.dx >= 0 &&
+                dt.localPosition.dx <= ValueBar.buttonSize &&
+                dt.localPosition.dy >= 10 &&
+                dt.localPosition.dy <= (widget.barThickness + 20)) {
+              this.addValue(-1 * widget.adjustVal);
+            } else if (dt.localPosition.dx >=
+                    extra / 2 + widget.width + ValueBar.buttonGap &&
+                dt.localPosition.dx <= extra + widget.width &&
+                dt.localPosition.dy >= 10 &&
+                dt.localPosition.dy <= (widget.barThickness + 20)) {
+              this.addValue(widget.adjustVal);
+            }
+          },
+          child: Container(
+              width: widget.width + extra,
+              height: widget.barThickness + 30,
+              child: Row(
+                children: [
+                  SizedBox(width: extra / 2),
+                  Stack(children: barInfo),
+                ],
+              )));
+    } else {
+      return Container(
+        width: widget.width,
+        height: widget.barThickness + 30,
+        child: Stack(children: barInfo),
+      );
     }
-    return Container(
-      width: widget.width,
-      height: widget.barThickness + 30,
-      child: Stack(children: res),
-    );
-    Stack(
-      children: res,
-    );
   }
 
   void addValue(T delta) {
@@ -372,12 +372,12 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     double persent = 0.0;
     if (widget.mapper != null) {
       int mapSize = widget.mapper.length;
-      persent = this.nowIndex / (mapSize-1);
+      persent = this.nowIndex / (mapSize - 1);
     } else {
       T denominator = widget.maxVal - widget.minVal.value;
-      if(denominator == 0){
+      if (denominator == 0) {
         persent = 1;
-      }else{
+      } else {
         persent = (widget.widgetValue.value - widget.minVal.value) /
             (widget.maxVal - widget.minVal.value);
       }
@@ -415,9 +415,10 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       int idx = 0, min = 0;
       T minVal = widget.mapper.keys.first;
       for (T val in widget.mapper.keys) {
-        double persentage_circle = idx/mapSize;
-        double persentage_min = min/mapSize;
-        if ((persentage - persentage_circle).abs() < (persentage - persentage_min).abs()) {
+        double persentage_circle = idx / mapSize;
+        double persentage_min = min / mapSize;
+        if ((persentage - persentage_circle).abs() <
+            (persentage - persentage_min).abs()) {
           min = idx;
           minVal = val;
         }
@@ -425,15 +426,15 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       }
       value = minVal;
     } else {
-      if(value is int){
-        value = widget.minVal.value + (persentage * (widget.maxVal - widget.minVal.value)).floor();
-      }else{
+      if (value is int) {
+        value = widget.minVal.value +
+            (persentage * (widget.maxVal - widget.minVal.value)).floor();
+      } else {
         value = NumUtil.getNumByValueDouble(
             widget.minVal.value +
                 persentage * (widget.maxVal - widget.minVal.value),
             widget.roundNum);
       }
-
     }
     widget.widgetValue.value = value;
     this.barWidthAnimation.initAnimation(dx, dx, 200, this, () {});
