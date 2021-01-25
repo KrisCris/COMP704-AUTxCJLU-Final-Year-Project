@@ -10,10 +10,12 @@ import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
 class PlanNotifier extends StatelessWidget {
   double width;
   double height;
+  double margin;
   Color backgroundColor;
   PlanNotifier(
       {@required double width,
       @required double height,
+        this.margin=20,
       this.backgroundColor = Colors.white}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
@@ -28,7 +30,7 @@ class PlanNotifier extends StatelessWidget {
       minVal: 0.0,
       maxVal: p.dailyCaloriesUpperLimit,
       adjustVal: 1.0,
-      width: 0.7,
+      width: this.width-2*margin,
       borderThickness: 6,
       showDragHead: false,
       valuePosition: ValuePosition.right,
@@ -44,7 +46,7 @@ class PlanNotifier extends StatelessWidget {
       barThickness: barThickness,
     );
     List<Widget> content = [
-      SizedBox(height: 40),
+      SizedBox(height: 20+margin),
       Stack(
         children: [
           Row(
@@ -71,7 +73,7 @@ class PlanNotifier extends StatelessWidget {
         minVal: 0.0,
         maxVal: p.dailyProteinUpperLimit,
         adjustVal: 1.0,
-        width: 0.7,
+        width: this.width-2*margin,
         borderThickness: 6,
         showDragHead: false,
         valuePosition: ValuePosition.right,
@@ -87,7 +89,7 @@ class PlanNotifier extends StatelessWidget {
         barThickness: barThickness,
       );
       content.addAll([
-        SizedBox(height: 20),
+        SizedBox(height: 20 + this.margin),
         Stack(
           children: [
             Row(
@@ -108,6 +110,7 @@ class PlanNotifier extends StatelessWidget {
             protein
           ],
         ),
+        SizedBox(height: this.margin)
       ]);
     }
     DotBox box = DotBox(

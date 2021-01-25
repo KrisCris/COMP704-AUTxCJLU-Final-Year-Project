@@ -317,7 +317,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     } else {
       return Container(
         width: widget.width,
-        height: widget.barThickness + 30,
+        height: widget.barThickness + 2*ValueBar.backgroundExtraSpace,
         child: Stack(children: barInfo),
       );
     }
