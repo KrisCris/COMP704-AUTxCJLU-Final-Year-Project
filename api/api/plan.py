@@ -72,13 +72,19 @@ def set_plan():
     # check old plan
     old_plan = Plan.getCurrentPlanByUID(uid).first()
     if old_plan:
-        return reply_json(-3, data={
-            'pid': old_plan.id,
-            'cl': old_plan.caloriesL, 'ch': old_plan.caloriesH,
-            'pl': old_plan.proteinL, 'ph': old_plan.proteinH,
-            'begin': old_plan.begin, 'end': old_plan.end,
-            'type': old_plan.type, 'goal': old_plan.goalWeight
-        })
+        if old_plan.type == 2:
+            old_plan.realEnd = get_current_time()
+            old_plan.achievedWeight = weight
+            old_plan.completed = True
+            old_plan.add()
+        else:
+            return reply_json(-3, data={
+                'pid': old_plan.id,
+                'cl': old_plan.caloriesL, 'ch': old_plan.caloriesH,
+                'pl': old_plan.proteinL, 'ph': old_plan.proteinH,
+                'begin': old_plan.begin, 'end': old_plan.end,
+                'type': old_plan.type, 'goal': old_plan.goalWeight
+            })
 
     # new plan
     new_plan = Plan(
@@ -144,7 +150,8 @@ def get_plan():
             'cl': p.caloriesL, 'ch': p.caloriesH,
             'pl': p.proteinL, 'ph': p.proteinH,
             'begin': p.begin, 'end': p.end,
-            'type': p.type, 'goal': p.goalWeight
+            'type': p.type, 'goal': p.goalWeight,
+            'hasFinished': False if p.realEnd is None else True
         })
     else:
         return reply_json(-6)
