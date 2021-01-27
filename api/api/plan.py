@@ -144,7 +144,8 @@ def get_plan():
             'cl': p.caloriesL, 'ch': p.caloriesH,
             'pl': p.proteinL, 'ph': p.proteinH,
             'begin': p.begin, 'end': p.end,
-            'type': p.type, 'goal': p.goalWeight
+            'type': p.type, 'goal': p.goalWeight,
+            'hasFinished': False if p.realEnd is None else True
         })
     else:
         return reply_json(-6)
