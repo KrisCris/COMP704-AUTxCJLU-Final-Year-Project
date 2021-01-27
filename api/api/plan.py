@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flasgger import swag_from
 
-from db import User, Plan
+from db import User, Plan, DailyConsumption
 from util.user import require_login
-from util.func import reply_json, get_current_time, get_future_time
+from util.func import reply_json, get_current_time, get_future_time, get_relative_days
 from util.Planer.CalsPlaner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
@@ -41,7 +41,6 @@ def query_plan():
         return reply_json(code=-2, msg='unachievable')
     if result == 'wrong type':
         return reply_json(code=-2, msg='wrong type')
-
 
     # protein calculation
     result['protein_l'] = result['completedCal'] / 7.7 * 0.22
@@ -178,8 +177,24 @@ def get_plan():
         return reply_json(-6)
 
 
-@plan.route('add_food_plan', methods=['POST'])
+@plan.route('consume_foods', methods=['POST'])
 @require_login
-def add_food_plan():
+def consume_foods():
     uid = request.form.get('uid')
-    pass
+    pid = request.form.get('pid')
+    # 1 = breakfast, 2 = lunch, 3 = dinner
+    type = request.form.get('type')
+    # a list that contains all the food and its corresponding info including proteins, calories, names.
+    foods_info = request.form.get('foods_info')
+    # TODO check the fids' type
+    p = Plan.getPlanByID(pid).first()
+
+    day = get_relative_days(p.begin, get_current_time())+1
+    for food_info in foods_info:
+        f = DailyConsumption(
+            uid=uid, pid=pid, type=type, fid=food_info[0], day=day,
+            name=food_info[1], calories=foods_info[2], protein=foods_info[3]
+        )
+
+        f.add()
+    return reply_json(1)

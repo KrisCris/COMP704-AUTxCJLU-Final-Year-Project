@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from flask import request, jsonify
 
@@ -31,3 +32,12 @@ def get_time_gap(old):
 
 def get_future_time(days):
     return int(time.time()+3600*24*days)
+
+
+def get_relative_days(base_day, day):
+    t1 = time.localtime(base_day)
+    t2 = time.localtime(day)
+    d1 = datetime.datetime(t1.tm_year,t1.tm_mon, t1.tm_mday)
+    d2 = datetime.datetime(t2.tm_year,t2.tm_mon, t2.tm_mday)
+    interval = d2 - d1
+    return interval.days
