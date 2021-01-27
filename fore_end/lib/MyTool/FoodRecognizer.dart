@@ -63,6 +63,7 @@ class FoodRecognizer{
             FoodBox(
               food: Food(name: position['name'], calorie: cal),
               picture: position['img'],
+              borderRadius: 5,
             )
         );
         Fluttertoast.showToast(

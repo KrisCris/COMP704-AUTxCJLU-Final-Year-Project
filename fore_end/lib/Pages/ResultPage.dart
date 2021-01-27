@@ -48,9 +48,7 @@ class ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     Widget header = Row(
       children: [
-        SizedBox(
-          width: ScreenTool.partOfScreenWidth(0.05)
-        ),
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
           text: "Your Foods Here",
           fontSize: 18,
@@ -59,35 +57,35 @@ class ResultPageState extends State<ResultPage> {
           underLineDistance: 3,
           maxHeight: 25,
           maxWidth: 200,
-          underLineLength:  ScreenTool.partOfScreenWidth(0.9),
+          underLineLength: ScreenTool.partOfScreenWidth(0.9),
         ),
-        Expanded(child:SizedBox()),
-        Icon(FontAwesomeIcons.times,color: Colors.white),
-        SizedBox(
-            width: ScreenTool.partOfScreenWidth(0.05)
-        ),
+        Expanded(child: SizedBox()),
+        Icon(FontAwesomeIcons.times, color: Colors.white),
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
-    Widget content = Expanded(
-        child: AnimatedCrossFade(
-            firstChild: this.getWaiting(),
-            secondChild: this.getResult(),
-            crossFadeState: widget.recognizer.isEmpty()
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            duration: Duration(milliseconds: 100)));
+    Widget content = AnimatedCrossFade(
+        firstChild: this.getWaiting(),
+        secondChild: this.getResult(),
+        crossFadeState: widget.recognizer.isEmpty()
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+        duration: Duration(milliseconds: 100));
+    if(widget.recognizer.isEmpty()){
+      content = Expanded(child: content);
+    }
 
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
       color: Color(0xFF172632),
-      child:  Column(
+      child: Column(
         children: [
           SizedBox(
             height: ScreenTool.partOfScreenHeight(0.05),
           ),
           header,
-          content
+         content,
         ],
       ),
     );
@@ -97,40 +95,51 @@ class ResultPageState extends State<ResultPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("No Recognized Foods Here",
-        style: TextStyle(
-          fontSize: 16,
-          decoration: TextDecoration.none,
-          color: Colors.white,
-          fontFamily: "Futura"
+        Container(
+          alignment: Alignment.center,
+          child: Text(
+            "No Recognized Foods Here",
+            style: TextStyle(
+                fontSize: 16,
+                decoration: TextDecoration.none,
+                color: Colors.white,
+                fontFamily: "Futura"),
+          ),
         ),
-        )
       ],
     );
   }
 
   Widget getResult() {
-    return NotificationListener(
-      onNotification: this.scrollNotification,
-        child: ListView(
-      shrinkWrap: true,
-      children: widget.recognizer.foods,
-    ));
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        child: NotificationListener(
+            onNotification: this.scrollNotification,
+            child: ListView(
+              shrinkWrap: true,
+              children: widget.recognizer.foods,
+            )),
+      ),
+    );
   }
 
-  bool scrollNotification(Notification notification){
+  bool scrollNotification(Notification notification) {
     ///通知类型
     switch (notification.runtimeType) {
       case ScrollStartNotification:
+
         ///在这里更新标识 刷新页面 不加载图片
         print("开始滚动");
         this.setAllPicDefault();
         break;
       case ScrollUpdateNotification:
+
         ///正在滚动
         break;
       case ScrollEndNotification:
         print("停止滚动");
+
         ///在这里更新标识 刷新页面 加载图片
         this.setAllPicEnable();
         break;
@@ -141,13 +150,14 @@ class ResultPageState extends State<ResultPage> {
     return true;
   }
 
-  void setAllPicDefault(){
-    for(FoodBox fb in widget.recognizer.foods){
+  void setAllPicDefault() {
+    for (FoodBox fb in widget.recognizer.foods) {
       fb.setShow(false);
     }
   }
+
   void setAllPicEnable() async {
-    for(FoodBox fb in widget.recognizer.foods){
+    for (FoodBox fb in widget.recognizer.foods) {
       await fb.setShow(true);
     }
   }

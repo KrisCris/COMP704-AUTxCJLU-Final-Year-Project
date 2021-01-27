@@ -51,7 +51,7 @@ class FoodBox extends StatefulWidget {
   FoodBox(
       {@required String picture = "",
       @required Food food,
-      double height = 70,
+      double height = 60,
       double detailedPaddingLeft = 30,
       double paddingLeft = 10,
       double paddingBottom = 50,
@@ -141,7 +141,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: widget.expandDuration),
       width: widget.width,
-      margin: EdgeInsets.only(bottom: 15,left: 5,right: 5),
+      margin: EdgeInsets.only(bottom: 15,left: ScreenTool.partOfScreenWidth(0.05),right: ScreenTool.partOfScreenWidth(0.05)),
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -214,11 +214,11 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       }
     }
     this.pic = Container(
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
           image: img,
           fit: BoxFit.cover,
@@ -233,7 +233,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       widget.food.name,
       style: TextStyle(
           decoration: TextDecoration.none,
-          fontSize: 35,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: "Futura",
           color: Colors.black),
@@ -277,7 +277,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
           child: Text(name,
               style: TextStyle(
                   decoration: TextDecoration.none,
-                  fontSize: 25,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   fontFamily: "Futura",
                   color: Colors.black)),
