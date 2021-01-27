@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     this._preCacheAllImage();
     return MaterialApp(
       home: CoverPage(),
+      // home: ComponentTestPage(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

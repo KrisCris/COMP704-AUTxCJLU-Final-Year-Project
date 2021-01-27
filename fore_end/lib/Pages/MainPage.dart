@@ -10,6 +10,7 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
@@ -35,7 +36,14 @@ class MainPage extends StatefulWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 120 + ScreenTool.partOfScreenHeight(0.025)),
-          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1))
+          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1)),
+          SizedBox(height: 20,),
+          Container(
+            width: ScreenTool.partOfScreenWidth(0.88),
+            height: 220,
+            child: MealListUI(),
+          ),
+
         ],
       ),
     );
