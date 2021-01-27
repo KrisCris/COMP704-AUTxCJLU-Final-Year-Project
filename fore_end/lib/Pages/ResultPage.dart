@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
@@ -61,7 +63,16 @@ class ResultPageState extends State<ResultPage> {
           underLineLength: ScreenTool.partOfScreenWidth(0.9),
         ),
         Expanded(child: SizedBox()),
-        Icon(FontAwesomeIcons.times, color: Colors.white),
+        CustomIconButton(
+            theme: MyTheme.WhiteAndBlack,
+            icon: FontAwesomeIcons.times,
+            iconSize: 23,
+            buttonSize: 35,
+            backgroundOpacity: 0,
+          onClick: (){
+              Navigator.pop(context);
+          },
+        ),
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
