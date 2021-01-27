@@ -115,15 +115,12 @@ class PlanNotifier extends StatelessWidget {
         SizedBox(height: this.margin)
       ]);
     }
-    DotBox box = DotBox(
+    DotColumn box = DotColumn(
       width: this.width,
       height: this.height,
       borderRadius: 6,
       backgroundColor: this.backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: content
-      ),
+      children: content
     );
     return box;
   }
