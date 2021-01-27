@@ -10,6 +10,7 @@ class DotPainter extends CustomPainter {
   double b;
   double dotGap;
   double moveVal;
+  BuildContext context;
 
   DotPainter(
       {Color color=Colors.black12,
@@ -17,6 +18,7 @@ class DotPainter extends CustomPainter {
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
+        this.context,
       double moveVal=0}) {
     this.dotGap = dotGap;
     this.k = k;
@@ -35,10 +37,19 @@ class DotPainter extends CustomPainter {
     double width = size.width;
     double height = size.height;
     if(width == 0){
-      width = ScreenTool.partOfScreenWidth(1);
+      if(this.context != null){
+        width = context.size.width;
+      }else{
+        width = ScreenTool.partOfScreenWidth(1);
+      }
     }
     if(height == 0){
-      height = width/2;
+      if(this.context != null){
+        height = context.size.height;
+      }else{
+        height = width;
+      }
+
     }
     configuredSize = new Size(width,height);
 
