@@ -370,7 +370,7 @@ class TakePhotoState extends State<TakePhotoPage>
       ],
       onClick: () async {
         Navigator.push(context,MaterialPageRoute(builder: (context){
-          return ResultPage();
+          return ResultPage(key: GlobalKey<ResultPageState>());
         }));
       },
     );

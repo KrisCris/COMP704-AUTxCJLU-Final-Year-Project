@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'dart:math' as math;
+
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 
 ///用于显示检测到食物后，展示食物数据的组件
 class FoodBox extends StatefulWidget {
@@ -48,20 +52,34 @@ class FoodBox extends StatefulWidget {
   ///展开详细内容的动画持续时间
   int expandDuration;
 
-  FoodBox(
-      {@required String picture = "",
-      @required Food food,
-      double height = 60,
-      double detailedPaddingLeft = 30,
-      double paddingLeft = 10,
-      double paddingBottom = 50,
-      double paddingTop = 0,
-      double paddingRight = 30,
-      int expandDuration = 150,
-      double borderRadius = 35,
-        bool shouldShowPic = false,
-      double width = 1})
-      : assert(food != null) {
+  ///是否可以被删除
+  bool couldRemove;
+
+  ///删除时执行的回调
+  Function removeFunc;
+
+  GlobalKey<FoodBoxState> key;
+  GlobalKey<RotateIconState> iconKey;
+  GlobalKey fadeKey;
+
+  FoodBox({
+    @required String picture = "",
+    @required Food food,
+    double height = 60,
+    double detailedPaddingLeft = 30,
+    double paddingLeft = 10,
+    double paddingBottom = 25,
+    double paddingTop = 0,
+    double paddingRight = 30,
+    int expandDuration = 150,
+    double borderRadius = 35,
+    bool shouldShowPic = false,
+    this.couldRemove = true,
+    this.removeFunc,
+    this.key,
+    double width = 1,
+  })  : assert(food != null),
+        super(key: key) {
     this.food = food;
     this.picture = picture;
     this.height = ScreenTool.partOfScreenHeight(height);
@@ -74,6 +92,12 @@ class FoodBox extends StatefulWidget {
     this.expandDuration = expandDuration;
     this.borderRadius = borderRadius;
     this.shouldShowPic = ValueNotifier(shouldShowPic);
+    this.iconKey = GlobalKey<RotateIconState>();
+    this.fadeKey = GlobalKey();
+  }
+
+  void setRemoveFunc(Function f) {
+    this.removeFunc = f;
   }
 
   @override
@@ -87,8 +111,8 @@ class FoodBox extends StatefulWidget {
   }
 }
 
-class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
-
+class FoodBoxState extends State<FoodBox>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   ///是否应该展开，主要用于辅助判断展开按钮的图标旋转动画方向
   bool shouldExpand = false;
 
@@ -96,9 +120,6 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   ///picType = 0 -> defaultPicutre
   ///picType = 1 -> photo
   int picType = 0;
-
-  ///控制按钮旋转角度的动画
-  TweenAnimation<double> angleAnimation = new TweenAnimation<double>();
 
   ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
@@ -108,7 +129,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   void didUpdateWidget(covariant FoodBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.shouldShowPic.addListener(() {
-      if(widget.shouldShowPic.value && mounted){
+      if (widget.shouldShowPic.value && mounted) {
         setState(() {});
       }
     });
@@ -117,15 +138,9 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   @override
   void initState() {
     super.initState();
-    //初始化动画
-    this.angleAnimation.initAnimation(0, math.pi, widget.expandDuration, this,
-            () {
-          setState(() {});
-        });
-
     //给监听器添加回调
     widget.shouldShowPic.addListener(() {
-      if(widget.shouldShowPic.value && mounted){
+      if (widget.shouldShowPic.value && mounted) {
         setState(() {});
       }
     });
@@ -141,7 +156,10 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: widget.expandDuration),
       width: widget.width,
-      margin: EdgeInsets.only(bottom: 15,left: ScreenTool.partOfScreenWidth(0.05),right: ScreenTool.partOfScreenWidth(0.05)),
+      margin: EdgeInsets.only(
+          bottom: 15,
+          left: ScreenTool.partOfScreenWidth(0.05),
+          right: ScreenTool.partOfScreenWidth(0.05)),
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -165,6 +183,7 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
         ),
         this.getHeader(),
         AnimatedCrossFade(
+            key: widget.fadeKey,
             firstChild: Container(
               height: 0.0,
             ),
@@ -195,21 +214,32 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   }
 
   Widget getFoodPic() {
-    if (this.pic != null){
-      if(widget.shouldShowPic.value && this.picType == 0){
-        this.pic = null;
-      }else{
-        return this.pic;
-      }
-    }else{
-      this.picType = 0;
-    }
-    ImageProvider img = null;
-    if(widget.shouldShowPic.value == false){
-      img = AssetImage(FoodBox.defaultPicturePath);
-    }else{
+    // if (this.pic != null) {
+    //   if (widget.shouldShowPic.value && this.picType == 0) {
+    //     this.pic = null;
+    //   } else {
+    //     return this.pic;
+    //   }
+    // } else {
+    //   this.picType = 0;
+    // }
+    Image img = null;
+    if (widget.shouldShowPic.value == false) {
+      img = Image.asset(
+        FoodBox.defaultPicturePath,
+        gaplessPlayback: true,
+        fit: BoxFit.cover,
+        width: 40,
+        height: 40,
+      );
+    } else {
       if (widget.picture != "" && widget.picture != null) {
-        img = MemoryImage(base64Decode(widget.picture));
+        img = Image.memory(
+          base64Decode(widget.picture),
+          gaplessPlayback: true,
+          fit: BoxFit.cover,
+          width: 40,
+          height: 40,);
         this.picType = 1;
       }
     }
@@ -219,11 +249,10 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(
-          image: img,
-          fit: BoxFit.cover,
-        ),
       ),
+      child: ClipOval(
+        child: img,
+      )
     );
     return this.pic;
   }
@@ -241,28 +270,51 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   }
 
   Widget getExpandIcon() {
-    return Transform.rotate(
-          angle: this.angleAnimation.getValue(),
-          child: Icon(
-            FontAwesomeIcons.chevronDown,
-            color: Colors.blue,
-          ),
-        );
+    return RotateIcon(
+        icon:  FontAwesomeIcons.chevronDown,
+        iconColor: Colors.blue,
+      key: widget.iconKey,
+      onTap: (){
+        if (this.shouldExpand) {
+          this.shouldExpand = false;
+        } else {
+          this.shouldExpand = true;
+        }
+        setState(() {});
+      },
+    );
   }
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    return Column(
-      children: [
-        this.propertyLine("calorie", widget.food.getCalorie()),
-        this.propertyLine("VC", "61mg"),
-        this.propertyLine("VD", "39mg"),
-        this.propertyLine("VD", "39mg"),
-        this.propertyLine("water", "721mg"),
+    List<Widget> col = [
+      this.propertyLine("calorie", widget.food.getCalorie()),
+      this.propertyLine("VC", "61mg"),
+      this.propertyLine("VD", "39mg"),
+      this.propertyLine("VD", "39mg"),
+      this.propertyLine("water", "721mg"),
+    ];
+    if (widget.couldRemove) {
+      col.addAll([
         SizedBox(
-          height: widget.paddingBottom,
-        )
-      ],
+          height: 25,
+        ),
+        CustomButton(
+          theme: MyTheme.blueStyle,
+          firstThemeState: ComponentThemeState.error,
+          text: "Remove",
+          width: 0.7,
+          tapFunc: () {
+            widget.removeFunc();
+          },
+        ),
+      ]);
+    }
+    col.add(SizedBox(
+      height: widget.paddingBottom,
+    ));
+    return Column(
+      children: col
     );
   }
 
@@ -301,11 +353,11 @@ class FoodBoxState extends State<FoodBox> with TickerProviderStateMixin,Automati
   void clickFunc() {
     if (this.shouldExpand) {
       this.shouldExpand = false;
-      this.angleAnimation.reverse();
     } else {
       this.shouldExpand = true;
-      this.angleAnimation.forward();
     }
+    (widget.iconKey.currentWidget as RotateIcon).rotate();
+    this.setState(() {});
   }
 
   @override

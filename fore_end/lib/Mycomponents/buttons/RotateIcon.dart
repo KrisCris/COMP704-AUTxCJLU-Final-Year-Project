@@ -24,6 +24,9 @@ class RotateIcon extends StatefulWidget {
   ///点击事件
   Function onTap;
 
+  ///是否旋转
+  ValueNotifier<bool> isRotate;
+
   RotateIcon(
       {Key key,
       this.onTap,
@@ -32,7 +35,13 @@ class RotateIcon extends StatefulWidget {
       this.rotateTime = 150,
       this.iconSize = 12,
       this.iconColor = Colors.blue})
-      : super(key: key);
+      : super(key: key){
+    this.isRotate = ValueNotifier(false);
+  }
+
+  void rotate(){
+    this.isRotate.value = !this.isRotate.value;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -48,8 +57,16 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
   bool fowardRotating = false;
 
   @override
+  void didUpdateWidget(covariant RotateIcon oldWidget) {
+    // TODO: implement didUpdateWidget
+    widget.isRotate = oldWidget.isRotate;
+  }
+  @override
   void initState() {
     super.initState();
+    widget.isRotate.addListener(() {
+      this.rotate();
+    });
     //初始化动画
     this.angleAnimation.initAnimation(0, widget.angle, widget.rotateTime, this,
         () {
@@ -79,6 +96,18 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
       this.fowardRotating = true;
       this.angleAnimation.forward();
     }
-    widget.onTap();
+    if(widget.onTap != null){
+      widget.onTap();
+    }
+  }
+
+  void rotate(){
+    if (this.fowardRotating) {
+      this.fowardRotating = false;
+      this.angleAnimation.reverse();
+    } else {
+      this.fowardRotating = true;
+      this.angleAnimation.forward();
+    }
   }
 }

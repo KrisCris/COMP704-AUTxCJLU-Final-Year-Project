@@ -12,12 +12,13 @@ class ResultPage extends StatefulWidget {
   String backgroundBase64;
   FoodRecognizer recognizer;
 
-  ResultPage({String backgroundBase64}) {
+  ResultPage({Key key, String backgroundBase64}) : super(key: key) {
     this.backgroundBase64 = backgroundBase64;
     if (backgroundBase64 == null) {
       this.backgroundBase64 = ResultPage.defaultBackground;
     }
     this.recognizer = FoodRecognizer.instance;
+    this.recognizer.setKey(key);
   }
   @override
   State<StatefulWidget> createState() {
@@ -64,17 +65,14 @@ class ResultPageState extends State<ResultPage> {
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
-    Widget content = AnimatedCrossFade(
-        firstChild: this.getWaiting(),
-        secondChild: this.getResult(),
-        crossFadeState: widget.recognizer.isEmpty()
-            ? CrossFadeState.showFirst
-            : CrossFadeState.showSecond,
-        duration: Duration(milliseconds: 100));
-    if(widget.recognizer.isEmpty()){
-      content = Expanded(child: content);
-    }
-
+    Widget content = Expanded(
+        child: AnimatedCrossFade(
+            firstChild: this.getWaiting(),
+            secondChild: this.getResult(),
+            crossFadeState: widget.recognizer.isEmpty()
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: Duration(milliseconds: 100)));
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
@@ -85,7 +83,7 @@ class ResultPageState extends State<ResultPage> {
             height: ScreenTool.partOfScreenHeight(0.05),
           ),
           header,
-         content,
+          content,
         ],
       ),
     );
@@ -111,17 +109,15 @@ class ResultPageState extends State<ResultPage> {
   }
 
   Widget getResult() {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Container(
-        child: NotificationListener(
-            onNotification: this.scrollNotification,
-            child: ListView(
-              shrinkWrap: true,
-              children: widget.recognizer.foods,
-            )),
-      ),
-    );
+    return NotificationListener(
+        onNotification: this.scrollNotification,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.recognizer.foods.length,
+          itemBuilder: (BuildContext context, int pos){
+            return widget.recognizer.foods[pos];
+          },
+        ));
   }
 
   bool scrollNotification(Notification notification) {
