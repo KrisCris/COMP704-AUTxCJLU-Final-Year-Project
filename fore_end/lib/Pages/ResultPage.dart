@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 
@@ -48,21 +49,22 @@ class ResultPageState extends State<ResultPage> {
     Widget header = Row(
       children: [
         SizedBox(
-          width: 15,
+          width: ScreenTool.partOfScreenWidth(0.05)
         ),
-        Expanded(
-            child: Text(
-          "RESULTS",
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Futura",
-              color: Colors.black),
-        )),
-        Icon(FontAwesomeIcons.times),
+        TitleText(
+          text: "Your Foods Here",
+          fontSize: 18,
+          fontColor: Colors.white,
+          dividerColor: Colors.white,
+          underLineDistance: 3,
+          maxHeight: 25,
+          maxWidth: 200,
+          underLineLength:  ScreenTool.partOfScreenWidth(0.9),
+        ),
+        Expanded(child:SizedBox()),
+        Icon(FontAwesomeIcons.times,color: Colors.white),
         SizedBox(
-          width: 10,
+            width: ScreenTool.partOfScreenWidth(0.05)
         ),
       ],
     );
@@ -75,25 +77,35 @@ class ResultPageState extends State<ResultPage> {
                 : CrossFadeState.showSecond,
             duration: Duration(milliseconds: 100)));
 
-    return BackGround(
-        sigmaX: 10,
-        sigmaY: 10,
-        opacity: 0.7,
-        child: Column(
-          children: [
-            SizedBox(
-              height: ScreenTool.partOfScreenHeight(0.05),
-            ),
-            header,
-            content
-          ],
-        ));
+    return Container(
+      width: ScreenTool.partOfScreenWidth(1),
+      height: ScreenTool.partOfScreenHeight(1),
+      color: Color(0xFF172632),
+      child:  Column(
+        children: [
+          SizedBox(
+            height: ScreenTool.partOfScreenHeight(0.05),
+          ),
+          header,
+          content
+        ],
+      ),
+    );
   }
 
   Widget getWaiting() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text("Waiting For Results...")],
+      children: [
+        Text("No Recognized Foods Here",
+        style: TextStyle(
+          fontSize: 16,
+          decoration: TextDecoration.none,
+          color: Colors.white,
+          fontFamily: "Futura"
+        ),
+        )
+      ],
     );
   }
 

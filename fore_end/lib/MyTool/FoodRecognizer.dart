@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 import 'Food.dart';
 import 'Req.dart';
@@ -63,12 +65,27 @@ class FoodRecognizer{
               picture: position['img'],
             )
         );
+        Fluttertoast.showToast(
+          msg: "Food Recognized Done",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.black26,
+          fontSize: 13,
+        );
       }
       if(FoodRecognizer.instance.onRecognizedDone != null){
         FoodRecognizer.instance.onRecognizedDone();
       }
     }else{
-      print("No Food Found, Asshole!");
+      Fluttertoast.showToast(
+        msg: "No Food Found",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.black45,
+        fontSize: 13,
+      );
     }
   }
   bool isEmpty(){

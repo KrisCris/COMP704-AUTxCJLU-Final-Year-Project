@@ -159,7 +159,6 @@ class ConfirmPlan extends StatelessWidget {
     }else if(this.planTypeNum == 2){
       //TODO:返回保持身材情况的plan预览
     }else if(this.planTypeNum == 3){
-      //TODO: 返回增肌身材情况的plan预览
       return this.getBuildMuscle();
     }else{
 
