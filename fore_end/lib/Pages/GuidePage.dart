@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/Mycomponents/widgets/BodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/ConfirmPlan.dart';
-import 'package:fore_end/Mycomponents/widgets/ExtraBodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/GoalInpter.dart';
-import 'package:fore_end/Mycomponents/widgets/PlanChooser.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/BodyDataInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ConfirmPlan.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtraBodyDataInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/GoalInpter.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
 
 import 'MainPage.dart';
 
@@ -70,7 +70,6 @@ class GuidePage extends StatelessWidget {
       } else if (res.data["code"] == 1) {
         dynamic data = res.data['data'];
         planPreview.setNextDo(()async{
-          //TODO: 创建计划按钮的回调
           User u = User.getInstance();
           Response res = await Requests.setPlan({
             "uid":u.uid,
@@ -101,10 +100,11 @@ class GuidePage extends StatelessWidget {
               curve: Curves.fastOutSlowIn);
         });
         planPreview.setPlanType(planType);
-        planPreview.setCalories(
+        planPreview.setNutrition(
             (data["goalCal"] as int).floorToDouble(),
             (data["completedCal"] as int).floorToDouble(),
             (data["maintainCal"] as int).floorToDouble(),
+            data["protein_l"], data["protein_h"],
             data["low"]);
         ctl.animateTo(4 * ScreenTool.partOfScreenWidth(1),
             duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);

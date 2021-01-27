@@ -36,6 +36,7 @@ class TitleText extends StatelessWidget {
             style: TextStyle(
                 fontSize: this.fontSize,
                 color: this.fontColor,
+                fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.bold)),
       ),

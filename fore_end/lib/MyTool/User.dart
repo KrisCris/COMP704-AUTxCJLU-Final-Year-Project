@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,8 @@ class User {
     _token = value;
   }
 
+  Plan get plan => _plan;
+
   Image getAvatar(double width, double height) {
     return Image.memory(
       base64Decode(this._avatar),
@@ -122,10 +125,10 @@ class User {
             startTime: res.data['data']['begin'],
             endTime: res.data['data']['end'],
             planType: res.data['data']['type'],
-            dailyCaloriesLowerLimit: res.data['data']['cl'],
-            dailyCaloriesUpperLimit: res.data['data']['ch'],
-            dailyProteinLowerLimit: res.data['data']['pl'],
-            dailyProteinUpperLimit: res.data['data']['ph']
+            dailyCaloriesLowerLimit: NumUtil.getNumByValueDouble(res.data['data']['cl'],1),
+            dailyCaloriesUpperLimit: NumUtil.getNumByValueDouble(res.data['data']['ch'],1),
+            dailyProteinLowerLimit: NumUtil.getNumByValueDouble(res.data['data']['pl'],1),
+            dailyProteinUpperLimit: NumUtil.getNumByValueDouble(res.data['data']['ph'],1)
         );
       }
       this.save();

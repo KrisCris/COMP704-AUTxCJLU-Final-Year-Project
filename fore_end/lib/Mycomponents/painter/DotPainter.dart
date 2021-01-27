@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/ScreenTool.dart';
 
 class DotPainter extends CustomPainter {
   Paint pen;
@@ -10,13 +12,12 @@ class DotPainter extends CustomPainter {
   double moveVal;
 
   DotPainter(
-      {@required Color color,
+      {Color color=Colors.black12,
       double k = 1,
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
-      double moveVal=0})
-      : assert(color != null) {
+      double moveVal=0}) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;
@@ -30,16 +31,27 @@ class DotPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     List<Offset> points = [];
+    Size configuredSize;
+    double width = size.width;
+    double height = size.height;
+    if(width == 0){
+      width = ScreenTool.partOfScreenWidth(1);
+    }
+    if(height == 0){
+      height = width/2;
+    }
+    configuredSize = new Size(width,height);
+
     double angle = math.atan(this.k);
     double xGap = this.dotGap * math.cos(angle);
     double yGap = this.dotGap * math.sin(angle);
     double xMove = this.moveVal * math.cos(angle);
     double yMove = this.moveVal * math.sin(angle);
-    for (double xbias = 0; xbias < size.width; xbias += 2 * xGap) {
+    for (double xbias = 0; xbias < configuredSize.width; xbias += 2 * xGap) {
       for (double x = -xGap + xbias + xMove, y = -yGap + yMove;
-          x <= size.width && y <= size.height;
+          x <= configuredSize.width && y <= configuredSize.height;
           x += xGap, y += yGap) {
-        points.add(Offset(x, size.height - y));
+        points.add(Offset(x, configuredSize.height - y));
       }
     }
     canvas.drawPoints(PointMode.points, points, this.pen);

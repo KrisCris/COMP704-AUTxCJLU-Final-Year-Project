@@ -40,7 +40,6 @@ class PlanChooser extends StatelessWidget {
       text: "Build Muscle",
       textColor: Colors.white,
       textSize: 15,
-      paintColor: Color(0xFFB42626),
       backgroundColor: Color(0xFFF03838),
       width: ScreenTool.partOfScreenWidth(0.8),
       height: 80,
@@ -51,7 +50,6 @@ class PlanChooser extends StatelessWidget {
       text: "Shed Weight",
       textColor: Colors.white,
       textSize: 15,
-      paintColor: Color(0xFF1E9666),
       backgroundColor: Color(0xFF36BF88),
       width: ScreenTool.partOfScreenWidth(0.8),
       height: 80,
@@ -62,24 +60,20 @@ class PlanChooser extends StatelessWidget {
       text: "Maintain",
       textColor: Colors.white,
       textSize: 15,
-      paintColor: Color(0xFF2978B6),
       backgroundColor: Color(0xFF3594DD),
       width: ScreenTool.partOfScreenWidth(0.8),
       height: 80,
       borderRadius: 10,
     );
     addMuscle.setOnTap(() {
-      this.planType = 0;
       info.changeTo(
           "Eating more food with more protein and less carbohydrate. Sufficient exercise is the guarantee of gaining muscle");
     });
     loseWeight.setOnTap(() {
-      this.planType = 1;
       info.changeTo(
           "Eating less food, reduce the amount of carbohydrate and fat in the food, keep exercises to burn the fat in the body");
     });
     keep.setOnTap(() {
-      this.planType = 2;
       info.changeTo(
           "Eating as what general people eat, not eat less deliberately or eat too much");
     });
@@ -95,6 +89,7 @@ class PlanChooser extends StatelessWidget {
       gap: 20.0,
     );
     group.addValueChangeListener((){
+      this.planType = group.getValue();
       if(group.getValue() >=0){
         nextButton.setDisabled(false);
       }
@@ -102,14 +97,10 @@ class PlanChooser extends StatelessWidget {
     return Stack(
       children: [
         ClipRect(
-          child: CustomPaint(
-            foregroundPainter: LinePainter(
-                color: Color(0xFF183F72), k: -1, lineWidth: 10, lineGap: 30),
-            child: Container(
+          child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF234C82),
-            ),
+              color: Color(0xFF172632),
           ),
         ),
         Container(
@@ -126,6 +117,7 @@ class PlanChooser extends StatelessWidget {
                   Text("Choose Your Plan",
                       style: TextStyle(
                           fontSize: 28,
+                          fontFamily: "Futura",
                           color: Colors.white,
                           decoration: TextDecoration.none,
                           fontWeight: FontWeight.bold)),
@@ -137,13 +129,12 @@ class PlanChooser extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
-                    width: ScreenTool.partOfScreenWidth(0.55),
-                    height: 80,
+                    width: ScreenTool.partOfScreenWidth(0.75),
+                    height: 65,
                     child: info,
                   ),
                 ],
               ),
-              SizedBox(height: 20),
               Expanded(
                   child: group
               ),
