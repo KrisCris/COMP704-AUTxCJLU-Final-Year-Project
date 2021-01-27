@@ -38,7 +38,8 @@ class PlanNotifier extends StatelessWidget {
       roundNum: 1,
       initVal: 100,
       showBorder: false,
-      showAdjustButton: true,
+      couldExpand: true,
+      showAdjustButton: false,
       showValue: true,
       unit: "/ " + p.dailyCaloriesUpperLimit.toString(),
       barColor: Color(0xFFAFEC71),
@@ -68,7 +69,7 @@ class PlanNotifier extends StatelessWidget {
         ],
       ),
     ];
-    if(true){
+    if(p.planType == 1){
       ValueBar protein = ValueBar<double>(
         minVal: 0.0,
         maxVal: p.dailyProteinUpperLimit,
@@ -82,6 +83,7 @@ class PlanNotifier extends StatelessWidget {
         initVal: 5,
         showBorder: false,
         showAdjustButton: false,
+        couldExpand: true,
         showValue: true,
         unit: "/ " + p.dailyProteinUpperLimit.toString(),
         barColor: Color(0xFF72DEEF),

@@ -2,6 +2,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/BorderPainter.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
@@ -25,6 +26,7 @@ class ValueBar<T extends num> extends StatefulWidget
   bool showBorder;
   bool showValue;
   bool showDragHead;
+  bool couldExpand;
   ValuePosition valuePosition;
   bool showAdjustButton;
   double borderDistance;
@@ -41,6 +43,7 @@ class ValueBar<T extends num> extends StatefulWidget
   Color barColor;
   Color effectColor;
   Color fontColor;
+  Color warningColor;
 
   ValueBar(
       {double width = 100,
@@ -59,12 +62,14 @@ class ValueBar<T extends num> extends StatefulWidget
       this.effectGap = 45,
       this.edgeEmpty,
       this.showValue = false,
+        this.couldExpand = false,
       bool showAdjustButton = false,
       this.showDragHead = true,
       this.borderColor = Colors.black,
       this.borderDistance = 0,
       Color barColor,
       Color effectColor = Colors.black12,
+        Color warningColor,
       Color fontColor,
       this.blockWidth = 10,
       @required T minVal,
@@ -89,6 +94,9 @@ class ValueBar<T extends num> extends StatefulWidget
     if (effectColor == null) {
       effectColor = Color(0xFF37BC79);
     }
+    if(warningColor == null){
+      warningColor = Color(0xFFFF0055);
+    }
     if (fontColor == null) {
       fontColor = Colors.white;
     }
@@ -96,9 +104,10 @@ class ValueBar<T extends num> extends StatefulWidget
       borderRadius_RT_RB_RT_RB = [0, 0, 0, 0];
     }
     this.borderRadius_LT_LB_RT_RB = borderRadius_RT_RB_RT_RB;
-    this.barColor = barColor;
-    this.effectColor = effectColor;
-    this.fontColor = fontColor;
+    this.barColor = CalculatableColor.transform(barColor);
+    this.effectColor = CalculatableColor.transform(effectColor);
+    this.fontColor = CalculatableColor.transform(fontColor);
+    this.warningColor = CalculatableColor.transform(warningColor);
   }
   void setOnChange(Function f) {
     this.onChange = f;
@@ -121,6 +130,9 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     with ValueableStateMixIn, TickerProviderStateMixin {
   TweenAnimation<double> moveAnimation;
   TweenAnimation<double> barWidthAnimation;
+  TweenAnimation<CalculatableColor> textColorAnimation;
+  TweenAnimation<CalculatableColor> barColorAnimation;
+
   bool needBarAnimation = true;
   double startDragX;
   int nowIndex;
@@ -129,6 +141,8 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
   void dispose() {
     moveAnimation.dispose();
     barWidthAnimation.dispose();
+    textColorAnimation.dispose();
+    barColorAnimation.dispose();
     super.dispose();
   }
 
@@ -156,7 +170,8 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     });
     this.moveAnimation = TweenAnimation<double>();
     this.barWidthAnimation = TweenAnimation<double>();
-
+    this.barColorAnimation = TweenAnimation<CalculatableColor>();
+    this.textColorAnimation = TweenAnimation<CalculatableColor>();
     this
         .barWidthAnimation
         .initAnimation(widget.blockWidth, widget.blockWidth, 200, this, () {
@@ -173,6 +188,9 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
         this.moveAnimation.forward();
       }
     });
+    this.textColorAnimation.initAnimation(widget.fontColor, widget.warningColor, 200, this, () {setState(() {});});
+    this.barColorAnimation.initAnimation(widget.barColor, widget.warningColor, 200, this, () {setState(() {
+    });});
     this.onChangeValue();
     super.initState();
   }
@@ -202,7 +220,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             showNumber: widget.showValue,
             position: widget.valuePosition,
             str: this.getDisplayValue(),
-            fontColor: widget.fontColor,
+            fontColor: this.textColorAnimation.getValue(),
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
@@ -240,7 +258,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                     child: Container(
                       width: this.barWidthAnimation.getValue(),
                       height: widget.barThickness,
-                      color: widget.barColor,
+                      color: this.barColorAnimation.getValue(),
                     ),
                   )),
             ),
@@ -351,7 +369,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     T after = widget.widgetValue.value + delta;
     if (after < widget.minVal.value) {
       after = widget.minVal.value;
-    } else if (after > widget.maxVal) {
+    } else if (after > widget.maxVal && !widget.couldExpand) {
       after = widget.maxVal;
     }
     if (widget.widgetValue.value is double) {
@@ -380,6 +398,14 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
         persent = (widget.widgetValue.value - widget.minVal.value) /
             (widget.maxVal - widget.minVal.value);
       }
+    }
+    if(persent > 1){
+      persent = 1;
+      this.textColorAnimation.forward();
+      this.barColorAnimation.forward();
+    }else{
+      this.textColorAnimation.reverse();
+      this.barColorAnimation.reverse();
     }
     double firstVal = this.barWidthAnimation.getValue();
     this.barWidthAnimation.initAnimation(
