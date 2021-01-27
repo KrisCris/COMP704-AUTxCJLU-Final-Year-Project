@@ -139,9 +139,9 @@ def finish_plan():
     return reply_json(1)
 
 
-@plan.route('get_plan', methods=['POST'])
+@plan.route('get_current_plan', methods=['POST'])
 @require_login
-def get_plan():
+def get_current_plan():
     uid = request.form.get('uid')
     p = Plan.getCurrentPlanByUID(uid).first()
     if p:
@@ -151,7 +151,20 @@ def get_plan():
             'pl': p.proteinL, 'ph': p.proteinH,
             'begin': p.begin, 'end': p.end,
             'type': p.type, 'goal': p.goalWeight,
-            'hasFinished': False if p.realEnd is None else True
         })
     else:
         return reply_json(-6)
+
+
+def get_plans():
+    pass
+
+
+def get_plan():
+    pass
+
+@plan.route('add_food_plan', methods=['POST'])
+@require_login
+def add_food_plan():
+    uid = request.form.get('uid')
+    pass
