@@ -12,6 +12,7 @@ import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
 import 'package:fore_end/Pages/ResultPage.dart';
 import 'package:fore_end/Pages/TestPicturePage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,19 +58,20 @@ class TakePhotoState extends State<TakePhotoPage>
       }
     });
     this.loadingCameraAnimation.beginAnimation();
-    this.flashAnimation.initAnimation(0.0, 0.0, 200, this, () {setState(() {
-    });});
+    this.flashAnimation.initAnimation(0.0, 0.0, 200, this, () {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    if(this._ctl != null){
+    if (this._ctl != null) {
       this._ctl.dispose();
     }
-    if(this.loadingCameraAnimation !=null){
+    if (this.loadingCameraAnimation != null) {
       this.loadingCameraAnimation.dispose();
     }
-    if(this.flashAnimation != null){
+    if (this.flashAnimation != null) {
       this.flashAnimation.dispose();
     }
 
@@ -204,98 +206,113 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget waitingForCameraWidget() {
     double marginHor = ScreenTool.partOfScreenWidth(0.2);
     double marginTop = ScreenTool.partOfScreenHeight(0.25);
-    Card card = new Card(
-      margin: EdgeInsets.fromLTRB(marginHor, marginTop, marginHor, marginTop),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    DotColumn card = new DotColumn(
+        width: 0.7,
+        borderRadius: 5,
         children: [
           SizedBox(
             height: 40,
           ),
           Transform.translate(
             offset: Offset(0, this.loadingCameraAnimation.getValue()),
-            child: Icon(FontAwesomeIcons.camera,
-                color: Colors.blueAccent, size: 40),
+            child:
+                Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
           ),
-          Text(
-            widget.waitingText,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Futura",
-                color: Colors.black),
+          Container(
+            height: 60,
+            width: ScreenTool.partOfScreenWidth(0.7),
+            child: Text(
+              widget.waitingText,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: Colors.black),
+            ),
           ),
           SizedBox(
             height: 40,
           ),
-        ],
-      ),
-    );
+    ]);
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
-      child: card,
+      height:ScreenTool.partOfScreenHeight(1),
+      color: Color(0xFF172632),
+      child: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: ScreenTool.partOfScreenHeight(0.25),
+            ),
+            card,
+            SizedBox(
+              height: ScreenTool.partOfScreenHeight(0.25),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget cameraWidget() {
     Size deviceSize = ScreenTool.pixSize;
-    double deviceRatio = deviceSize.width/deviceSize.height;
+    double deviceRatio = deviceSize.width / deviceSize.height;
     double previewRatio = this._ctl.value.aspectRatio;
     double scale = 1;
-    if(deviceRatio > previewRatio){
-        scale = deviceRatio/previewRatio;
-    }else{
-      scale = previewRatio/deviceRatio;
+    if (deviceRatio > previewRatio) {
+      scale = deviceRatio / previewRatio;
+    } else {
+      scale = previewRatio / deviceRatio;
     }
     Widget content = Stack(
-        children: [
-          Center(
-            child:Transform.scale(
-              scale: scale,
-              child: AspectRatio(
-                aspectRatio: this._ctl.value.aspectRatio,
-                child: CameraPreview(this._ctl),
-              ),
+      children: [
+        Center(
+          child: Transform.scale(
+            scale: scale,
+            child: AspectRatio(
+              aspectRatio: this._ctl.value.aspectRatio,
+              child: CameraPreview(this._ctl),
             ),
           ),
-          Opacity(
-            opacity: this.flashAnimation.getValue(),
-            child: Container(
-              color: Colors.grey,
+        ),
+        Opacity(
+          opacity: this.flashAnimation.getValue(),
+          child: Container(
+            color: Colors.grey,
+          ),
+        ),
+        Column(
+          children: [
+            SizedBox(height: ScreenTool.topPadding),
+            Row(
+              children: [
+                Expanded(child: SizedBox()),
+                this.getAlbumButton(),
+                SizedBox(width: 10),
+              ],
             ),
-          ),
-          Column(
-            children: [
-              SizedBox(height:ScreenTool.topPadding),
-              Row(
-                children: [
-                  Expanded(child: SizedBox()),
-                  this.getAlbumButton(),
-                  SizedBox(width: 10),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(child: SizedBox()),
-                  this.getResultButton(),
-                  SizedBox(width: 10),
-                ],
-              ),
-              Expanded(child: SizedBox()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  this.getPhotoButton()
-                ],
-              ),
-              SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
-            ],
-          ),
-        ],
-      );
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(child: SizedBox()),
+                this.getResultButton(),
+                SizedBox(width: 10),
+              ],
+            ),
+            Expanded(child: SizedBox()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [this.getPhotoButton()],
+            ),
+            SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
+          ],
+        ),
+      ],
+    );
     return content;
   }
 
@@ -320,10 +337,10 @@ class TakePhotoState extends State<TakePhotoPage>
         await _ctl.takePicture(this._path);
         this.startFlash();
         File pic = File(this._path);
-        Map<String,List<int>> res  = await this.pictureToBase64(pic);
+        Map<String, List<int>> res = await this.pictureToBase64(pic);
         pic.delete();
         var entry = res.entries.first;
-        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
+        FoodRecognizer.addFoodPic(entry.key, entry.value, res['rotate'][0]);
       },
     );
   }
@@ -346,9 +363,9 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-        Map<String,Uint8List> res = await this.pictureToBase64(image);
+        Map<String, Uint8List> res = await this.pictureToBase64(image);
         var entry = res.entries.first;
-        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
+        FoodRecognizer.addFoodPic(entry.key, entry.value, res['rotate'][0]);
       },
     );
   }
@@ -369,24 +386,30 @@ class TakePhotoState extends State<TakePhotoPage>
         )
       ],
       onClick: () async {
-        Navigator.push(context,MaterialPageRoute(builder: (context){
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ResultPage(key: GlobalKey<ResultPageState>());
         }));
       },
     );
   }
-  void startFlash(){
-    this.flashAnimation.initAnimation(0.5, 0, 300, this, () {setState(() {
-    });});
+
+  void startFlash() {
+    this.flashAnimation.initAnimation(0.5, 0, 300, this, () {
+      setState(() {});
+    });
     this.flashAnimation.beginAnimation();
   }
 
-  Future<Map<String,List<int>>> pictureToBase64(File f) async {
+  Future<Map<String, List<int>>> pictureToBase64(File f) async {
     Uint8List byteData = await f.readAsBytes();
     int rotateAngle = await this.getImageRotateAngular(byteData);
     String bs64 = base64Encode(byteData);
-    return {bs64:byteData,"rotate":[rotateAngle]};
+    return {
+      bs64: byteData,
+      "rotate": [rotateAngle]
+    };
   }
+
   Future<int> getImageRotateAngular(List<int> bytes) async {
     Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
     var orientation = tags['Orientation']; //获取该照片的拍摄方向
@@ -401,6 +424,7 @@ class TakePhotoState extends State<TakePhotoPage>
         return 0;
     }
   }
+
   @override
   bool get wantKeepAlive => true;
 }

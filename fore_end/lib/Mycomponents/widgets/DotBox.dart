@@ -4,7 +4,7 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 
-class DotBox extends StatefulWidget{
+class DotColumn extends StatefulWidget{
   ///卡片的宽度
   double _width;
 
@@ -33,25 +33,28 @@ class DotBox extends StatefulWidget{
   double _dotGap;
 
   ///子组件
-  Widget child;
+  List<Widget> children;
 
   ///被选中时执行的函数
   List<Function> _onTap;
 
-  DotBox(
+  DotColumn(
       {double width = 300,
         double height = 200,
-        Color backgroundColor = Colors.white,
+        Color backgroundColor,
         Color paintColor = Colors.black12,
         int dotAnimationDuration = 800,
         double dotGap = 15,
-        this.child,
+        this.children,
         double paddingLeft = 0,
         double paddingRight = 0,
         double borderRadius = 0,
         Function onTap}) {
     this._width = ScreenTool.partOfScreenWidth(width);
     this._height = ScreenTool.partOfScreenHeight(height);
+    if(backgroundColor == null){
+      backgroundColor = Color(0xFFF1F1F1);
+    }
     this._dotAnimationDuration = dotAnimationDuration;
     this._paddingLeft = paddingLeft;
     this._paddingRight = paddingRight;
@@ -67,16 +70,16 @@ class DotBox extends StatefulWidget{
   }
   @override
   State<StatefulWidget> createState() {
-    return new DotBoxState();
+    return new DotColumnState();
   }
 }
 
-class DotBoxState extends State<DotBox>
+class DotColumnState extends State<DotColumn>
 with TickerProviderStateMixin{
   TweenAnimation<double> dotMoveAnimation;
 
   @override
-  void didUpdateWidget(covariant DotBox oldWidget) {
+  void didUpdateWidget(covariant DotColumn oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
 
@@ -110,36 +113,41 @@ with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     List<Widget> rowContent = [];
     rowContent.add(SizedBox(width: widget._paddingLeft));
-    rowContent.add(widget.child);
+    rowContent.add(Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: widget.children,
+    ));
     rowContent.add(SizedBox(width: widget._paddingRight));
     Widget res = ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
-          child: Container(
-            width: widget._width,
-            color: widget._backgroundColor,
             child: Stack(
               children: [
+                Container(
+                  alignment: Alignment.center,
+                  color: widget._backgroundColor,
+                  width: widget._width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: rowContent,
+                  ),
+                ),
                 CustomPaint(
                   foregroundPainter: DotPainter(
                       color: widget._paintColor,
                       dotGap: widget._dotGap,
+                      context: context,
                       moveVal: this.dotMoveAnimation.getValue()),
                   child: Container(
                     width: widget._width,
                   ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: rowContent,
-                  ),
-                )
               ],
             ),
-          ),
         );
 
-    return res;
+    return Column(
+      children: [res],
+    );
   }
 }
