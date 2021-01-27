@@ -40,3 +40,7 @@ class Plan(db.Model):
     @staticmethod
     def getCurrentPlanByUID(uid):
         return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True)
+
+    @staticmethod
+    def getPlanByID(id):
+        return Plan.query.filter(Plan.id == id)
