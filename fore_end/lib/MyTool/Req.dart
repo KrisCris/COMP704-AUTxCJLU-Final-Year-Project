@@ -90,7 +90,7 @@ class Requests{
   static Future<Response> getPlan(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/get_plan",data: dt);
+    Response res = await dio.post("/plan/get_current_plan",data: dt);
     return res;
   }
 
