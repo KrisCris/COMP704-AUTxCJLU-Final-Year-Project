@@ -6,11 +6,11 @@ import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/painter/DroplinePainter.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/BodyDataInputer.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanChooser.dart';
+import 'package:fore_end/Mycomponents/widgets/MealList.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/BodyDataInputer.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
 import 'dart:math' as math;
-
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Mycomponents/widgets/plan/PlanNotifier.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 
 // ignore: must_be_immutable
 class ComponentTestPage extends StatefulWidget {
@@ -39,17 +39,18 @@ class ComponentTestState extends State<ComponentTestPage>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Color(0xFF172632),
-        width: ScreenTool.partOfScreenWidth(1),
-        height: ScreenTool.partOfScreenHeight(1),
-        alignment: Alignment.center,
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: 200,
-            maxWidth: ScreenTool.partOfScreenWidth(0.8)
-          ),
-          child: PlanNotifier(width: 0.8, height: 100,backgroundColor: Color(0xFFF4F4F5),)),
-        );
+   return  ListView(
+     scrollDirection: Axis.vertical,
+     children: <Widget>[
+       SizedBox(height: 50,),
+       Container(width: 100,height: 100,color: Colors.red,),
+       Container(width: 100,height: 50,color: Colors.blue,),
+       MealListUI(),
+       Container(width: 100,height: 50,color: Colors.blue,),
+       Container(width: 100,height: 100,color: Colors.red,),
+     ],
+
+   );
+
   }
 }

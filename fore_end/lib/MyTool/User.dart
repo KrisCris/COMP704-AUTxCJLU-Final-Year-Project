@@ -33,6 +33,15 @@ class User {
   String _avatar;
   bool _needGuide;
 
+  ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
+  ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
+  ///通过今天的日期时间获取服务器的数据，这需要用户在每次添加一个食物时，上传数据库并且记录上传的日期。
+  List<String> _breakfastMeals;
+  List<String> _lunchMeals;
+  List<String> _dinnerMeals;
+
+
+
   User._internal(
       {String username = User.defaultUsername,
       int age,
@@ -44,7 +53,15 @@ class User {
         bool needGuide,
       String avatar = User.defaultAvatar,
       String token,
-      String email}) {
+      String email,
+
+        ///下面是Simon新加的mealData属性
+      List<String> breakfastMeals,
+      List<String> lunchMeals,
+      List<String> dinnerMeals,
+
+
+      }) {
     this._userName = username;
     this._token = token;
     this._email = email;
@@ -55,6 +72,13 @@ class User {
     this._plan = plan;
     this._age = age;
     this._needGuide = needGuide;
+
+
+    ///下面是Simon新加的mealData属性
+    this._breakfastMeals=breakfastMeals;
+    this._lunchMeals=lunchMeals;
+    this._dinnerMeals=dinnerMeals;
+
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
@@ -88,6 +112,8 @@ class User {
     }
     return User._instance;
   }
+
+  List<String> get breakfastMeals => _breakfastMeals;
 
   double get bodyWeight => _bodyWeight;
 
@@ -236,6 +262,12 @@ class User {
   set avatar(String value) {
     _avatar = value;
   }
+
+  List<String> get beakfastMeals => _breakfastMeals;
+
+  List<String> get lunchMeals => _lunchMeals;
+
+  List<String> get dinnerMeals => _dinnerMeals;
 
   double get bodyHeight => _bodyHeight;
 }
