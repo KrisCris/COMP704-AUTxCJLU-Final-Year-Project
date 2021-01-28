@@ -3,14 +3,14 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
-class DotPainter extends CustomPainter {
+class DotPainter extends ContextPainter{
   Paint pen;
   double k;
   double b;
   double dotGap;
   double moveVal;
-  BuildContext context;
 
   DotPainter(
       {Color color=Colors.black12,
@@ -18,12 +18,13 @@ class DotPainter extends CustomPainter {
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
-        this.context,
+       BuildContext context,
       double moveVal=0}) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;
     this.moveVal = moveVal;
+    this.context = context;
     this.pen = Paint()
       ..color = color
       ..strokeCap = StrokeCap.round
