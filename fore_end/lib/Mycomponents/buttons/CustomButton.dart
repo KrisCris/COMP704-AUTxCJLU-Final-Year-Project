@@ -62,6 +62,9 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
   ///the color of flash cover
   CalculatableColor flashColor;
 
+  ///does the button have shadow
+  bool hasShadow;
+
   ///fluctuate duration
   int flucDura;
 
@@ -89,6 +92,7 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
         bool disabled = false,
         bool canChangeDisabled = true,
       this.radius = 30.0,
+        this.hasShadow = false,
       this.width = 120.0,
       this.height = 40.0,
       this.leftMargin = 0.0,
@@ -354,7 +358,19 @@ class CustomButtonState extends State<CustomButton>
             height: widget.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(widget.radius),
-                color: this.colorAnimation.getValue()),
+                color: this.colorAnimation.getValue(),
+                boxShadow: [
+                  widget.hasShadow?BoxShadow(
+                    blurRadius: 12, //阴影范围
+                    spreadRadius: 3, //阴影浓度
+                    color: Color(0x33000000), //阴影颜色
+                  ):BoxShadow(
+                    blurRadius: 0, //阴影范围
+                    spreadRadius: 0, //阴影浓度
+                    color: Color(0x33000000), //阴影颜色
+                  )
+                ]
+            ),
             margin: EdgeInsets.only(
                 left: widget.leftMargin,
                 right: widget.rightMargin,

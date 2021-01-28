@@ -10,6 +10,7 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/My.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
@@ -28,7 +29,7 @@ class MainPage extends StatefulWidget {
   MainState state;
   User user;
   MySearchBarDelegate searchBarDelegate;
-  CustomAppBar appBar;
+
   MainPage({@required User user, bool needSetPlan=false, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
@@ -46,9 +47,10 @@ class MainPage extends StatefulWidget {
     this.addPlanPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("addPlanPart"),
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          My()
         ],
       ),
     );
@@ -101,7 +103,6 @@ class MainPage extends StatefulWidget {
 class MainState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
-    widget.appBar = this.getAppBar();
     this.setNavigator();
     super.initState();
   }
@@ -141,13 +142,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
             ));
   }
 
-  Widget getAppBar() {
-    return CustomAppBar(
-      userAvatarContainer: this.getCircleAvatar(size: 45),
-      username: widget.user.userName,
-    );
-  }
-
   CustomDrawer getDrawer(BuildContext context) {
     Widget account = this.getAccount();
     Widget setting = this.getSetting();
@@ -182,26 +176,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       widthPercent: 1,
       children: drawerItems
     );
-  }
-
-  Widget getCircleAvatar({double size = 60}) {
-    return Container(
-        width: size,
-        height: size,
-        decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-                image: MemoryImage(widget.user.getAvatarBin()),
-                fit: BoxFit.cover),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 10, //阴影范围
-                spreadRadius: 1, //阴影浓度
-                color: Color(0x33000000), //阴影颜色
-              ),
-            ])
-        // child: , //增加文字等
-        );
   }
 
   Widget getAccount() {
