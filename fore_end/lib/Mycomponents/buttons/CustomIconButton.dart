@@ -37,6 +37,9 @@ class CustomIconButton extends StatefulWidget
   ///单位: 毫秒
   int angleDuration;
 
+  ///文字和icon的间距
+  double gap;
+
   ///由于部分ICON库的图标并不是位于中心，需要在垂直方向上进行微调
   ///该值表示向上偏移的量
   ///单位: 像素
@@ -75,6 +78,7 @@ class CustomIconButton extends StatefulWidget
         this.sizeChangeWhenClick = false,
       this.iconSize = 20,
       this.fontSize = 12,
+        this.gap = 0,
       this.buttonSize = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
@@ -208,6 +212,7 @@ class CustomIconButtonState extends State<CustomIconButton>
                   color: this.iconAndTextColorAnimation.getValue(),
                   size: this.iconSizeAnimation.getValue());
             }),
+        SizedBox(height: widget.gap),
         Offstage(
             offstage: widget.text == "" || widget.text == null,
             child: AnimatedBuilder(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -15,7 +16,7 @@ class PlanNotifier extends StatelessWidget {
   PlanNotifier(
       {@required double width,
       @required double height,
-        this.margin=20,
+      this.margin = 20,
       this.backgroundColor = Colors.white}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
@@ -30,7 +31,7 @@ class PlanNotifier extends StatelessWidget {
       minVal: 0.0,
       maxVal: p.dailyCaloriesUpperLimit,
       adjustVal: 1.0,
-      width: this.width-2*margin,
+      width: this.width - 2 * margin,
       borderThickness: 6,
       showDragHead: false,
       valuePosition: ValuePosition.right,
@@ -47,7 +48,7 @@ class PlanNotifier extends StatelessWidget {
       barThickness: barThickness,
     );
     List<Widget> content = [
-      SizedBox(height: 20+margin),
+      SizedBox(height: 20 + margin),
       Stack(
         children: [
           Row(
@@ -57,7 +58,7 @@ class PlanNotifier extends StatelessWidget {
                       0, -barThickness - ValueBar.backgroundExtraSpace * 2),
                   child: TitleText(
                     text: "Today's Calories",
-                    fontSize: 16,
+                    fontSize: 15,
                     underLineLength: 0,
                     maxHeight: 25,
                     maxWidth: 0.7,
@@ -69,12 +70,12 @@ class PlanNotifier extends StatelessWidget {
         ],
       ),
     ];
-    if(p.planType == 1){
+    if (p.planType == 1) {
       ValueBar protein = ValueBar<double>(
         minVal: 0.0,
         maxVal: p.dailyProteinUpperLimit,
         adjustVal: 1.0,
-        width: this.width-2*margin,
+        width: this.width - 2 * margin,
         borderThickness: 6,
         showDragHead: false,
         valuePosition: ValuePosition.right,
@@ -101,7 +102,7 @@ class PlanNotifier extends StatelessWidget {
                         0, -barThickness - ValueBar.backgroundExtraSpace * 2),
                     child: TitleText(
                       text: "Today's Protein",
-                      fontSize: 16,
+                      fontSize: 15,
                       underLineLength: 0,
                       maxHeight: 25,
                       maxWidth: 0.7,
@@ -116,12 +117,12 @@ class PlanNotifier extends StatelessWidget {
       ]);
     }
     DotColumn box = DotColumn(
-      width: this.width,
-      height: this.height,
-      borderRadius: 6,
-      backgroundColor: this.backgroundColor,
-      children: content
-    );
+        width: this.width,
+        height: this.height,
+        borderRadius: 6,
+        mainAxisAlignment: MainAxisAlignment.start,
+        backgroundColor: this.backgroundColor,
+        children: content);
     return box;
   }
 }

@@ -70,6 +70,7 @@ with ValueableWidgetMixIn<T>{
       Color backgroundColor = Colors.white,
       Color paintColor = Colors.black26,
       Color textColor = Colors.black,
+        bool isChosen = false,
       double textSize = 12,
       int dotAnimationDuration = 800,
       int sizeChangeAnimationDuration = 70,
@@ -100,7 +101,7 @@ with ValueableWidgetMixIn<T>{
     }
     this._dotGap = dotGap;
     this._borderRadius = borderRadius;
-    this._chosen = ValueNotifier<bool>(false);
+    this._chosen = ValueNotifier<bool>(isChosen);
     this.widgetValue = ValueNotifier<T>(value);
   }
   @override
