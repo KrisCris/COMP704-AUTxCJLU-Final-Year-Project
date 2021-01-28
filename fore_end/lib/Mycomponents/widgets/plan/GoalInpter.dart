@@ -269,7 +269,7 @@ class GoalInputerState extends State<GoalInputer> {
     } else if (widget.planType.value == 1) {
       return getLoseWeightSetting();
     } else {
-
+      return SizedBox(height: 0);
     }
   }
 

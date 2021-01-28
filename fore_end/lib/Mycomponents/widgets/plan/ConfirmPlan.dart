@@ -157,12 +157,57 @@ class ConfirmPlan extends StatelessWidget {
     if(this.planTypeNum == 1){
       return this.getLoseWeight();
     }else if(this.planTypeNum == 2){
-      //TODO:返回保持身材情况的plan预览
+      return this.getMaintain();
     }else if(this.planTypeNum == 3){
       return this.getBuildMuscle();
     }else{
 
     }
+  }
+  Widget getMaintain(){
+    Widget dailyCal =Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+        TitleText(
+          text: "To maintain your body shape, the recommended daily calories  intake is",
+          maxHeight: 60,
+          maxWidth: 300,
+          underLineLength: 0,
+          fontSize: 15,
+          lineWidth: 5,
+          underLineDistance: 8,
+        )
+      ],
+    );
+    Widget dailyCalVal = ValueText<int>(
+      numUpper: this.dailyCalories.floor(),
+      unit: "KCal",
+      rowMainAxisAlignment: MainAxisAlignment.center,
+      valueFontSize: 23,
+      unitFontSize: 14,
+      fontColor: Color(0xFFE28800),
+    );
+    List<Widget> content = [];
+    content.addAll([
+      dailyCal,
+      SizedBox(height: 20),
+      Container(
+        width: ScreenTool.partOfScreenWidth(0.8),
+        height: 70,
+        margin: EdgeInsets.only(top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: Color(0xCCFFFFFF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: dailyCalVal,
+      ),
+      SizedBox(height: 20),
+    ]);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+        children: content
+    );
   }
   Widget getBuildMuscle(){
     Widget dailyCal =Row(
