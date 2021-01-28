@@ -21,6 +21,8 @@ class User {
   static User _instance;
 
   String _token;
+  double _bodyWeight;
+  double _bodyHeight;
   int _uid;
   int _age;
   //male - 1, female - 2, other - 0
@@ -36,6 +38,8 @@ class User {
       int age,
       int gender,
       int uid,
+        double bodyWeight,
+        double bodyHeight,
         Plan plan,
         bool needGuide,
       String avatar = User.defaultAvatar,
@@ -44,6 +48,8 @@ class User {
     this._userName = username;
     this._token = token;
     this._email = email;
+    this._bodyWeight = bodyWeight;
+    this._bodyHeight = bodyHeight;
     this._uid = uid;
     this._gender = gender;
     this._plan = plan;
@@ -73,6 +79,8 @@ class User {
           username: pre.getString("userName"),
           email: pre.getString('email'),
           gender: pre.getInt('gender'),
+          bodyHeight: pre.getDouble("bodyHeight"),
+          bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
           plan:Plan.readLocal(),
           avatar: pre.getString("avatar"),
@@ -80,6 +88,8 @@ class User {
     }
     return User._instance;
   }
+
+  double get bodyWeight => _bodyWeight;
 
   String get token => _token;
   bool get needGuide => _needGuide;
@@ -112,6 +122,8 @@ class User {
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
+      this._bodyHeight = res.data['data']['height'];
+      this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
       res = await Requests.getPlan({
         "uid":this._uid,
@@ -126,6 +138,7 @@ class User {
             startTime: res.data['data']['begin'],
             endTime: res.data['data']['end'],
             planType: res.data['data']['type'],
+            goalWeight: res.data['data']['goal'],
             dailyCaloriesLowerLimit: NumUtil.getNumByValueDouble(res.data['data']['cl'],1),
             dailyCaloriesUpperLimit: NumUtil.getNumByValueDouble(res.data['data']['ch'],1),
             dailyProteinLowerLimit: NumUtil.getNumByValueDouble(res.data['data']['pl'],1),
@@ -144,6 +157,7 @@ class User {
         startTime: res.data['data']['begin'],
         endTime: res.data['data']['end'],
         planType: res.data['data']['type'],
+        goalWeight: res.data['data']['goal'],
         dailyCaloriesLowerLimit: res.data['data']['cl'],
         dailyCaloriesUpperLimit: res.data['data']['ch'],
         dailyProteinLowerLimit: res.data['data']['pl'],
@@ -157,6 +171,8 @@ class User {
     pre.setInt("uid", _uid);
     pre.setInt("gender", _gender);
     pre.setInt("age", _age);
+    pre.setDouble("bodyHeight", this._bodyHeight);
+    pre.setDouble("bodyWeight", this._bodyWeight);
     pre.setString("email", _email);
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
@@ -172,6 +188,8 @@ class User {
     pre.remove("uid");
     pre.remove("gender");
     pre.remove("age");
+    pre.remove("bodyHeight");
+    pre.remove("bodyWeight");
     pre.remove("email");
     pre.remove("userName");
     pre.remove("avatar");
@@ -218,4 +236,6 @@ class User {
   set avatar(String value) {
     _avatar = value;
   }
+
+  double get bodyHeight => _bodyHeight;
 }

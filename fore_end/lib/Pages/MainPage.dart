@@ -10,6 +10,7 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
@@ -34,7 +35,9 @@ class MainPage extends StatefulWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 120 + ScreenTool.partOfScreenHeight(0.025)),
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          GoalData(width: 0.85, height: 100,backgroundColor:Color(0xFFF1F1F1),),
+          SizedBox(height: 20),
           PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1))
         ],
       ),
@@ -57,7 +60,6 @@ class MainPage extends StatefulWidget {
       iconSize: 25,
       borderRadius: 10,
       onClick: () {
-        this.appBar.reverseTransparency();
         this.navigator.reverseOpacity();
       },
     );
@@ -70,7 +72,6 @@ class MainPage extends StatefulWidget {
       iconSize: 25,
       fontSize: 12,
       onClick: () {
-        this.appBar.startTransparency();
         this.navigator.beginOpacity();
       },
       navigatorCallback: () {
@@ -86,7 +87,6 @@ class MainPage extends StatefulWidget {
         iconSize: 25,
         fontSize: 12,
         onClick: () {
-          this.appBar.reverseTransparency();
           this.navigator.reverseOpacity();
         });
     this.user = user;
@@ -128,8 +128,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         widget.bodyContent,
                         Column(
                           children: [
-                            SizedBox(height: ScreenTool.partOfScreenHeight(0.025),),
-                            widget.appBar,
                             Expanded(child: SizedBox()),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

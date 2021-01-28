@@ -35,6 +35,9 @@ class DotColumn extends StatefulWidget{
   ///子组件
   List<Widget> children;
 
+  ///主轴对齐方式
+  MainAxisAlignment mainAxisAlignment;
+
   ///被选中时执行的函数
   List<Function> _onTap;
 
@@ -46,6 +49,7 @@ class DotColumn extends StatefulWidget{
         int dotAnimationDuration = 800,
         double dotGap = 15,
         this.children,
+        this.mainAxisAlignment = MainAxisAlignment.center,
         double paddingLeft = 0,
         double paddingRight = 0,
         double borderRadius = 0,
@@ -115,7 +119,7 @@ with TickerProviderStateMixin{
     rowContent.add(SizedBox(width: widget._paddingLeft));
     rowContent.add(Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: widget.mainAxisAlignment,
       children: widget.children,
     ));
     rowContent.add(SizedBox(width: widget._paddingRight));
@@ -124,7 +128,7 @@ with TickerProviderStateMixin{
             child: Stack(
               children: [
                 Container(
-                  alignment: Alignment.center,
+                  // alignment: Alignment.center,
                   color: widget._backgroundColor,
                   width: widget._width,
                   child: Row(
