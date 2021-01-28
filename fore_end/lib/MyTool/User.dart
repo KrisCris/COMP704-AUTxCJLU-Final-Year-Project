@@ -214,7 +214,11 @@ class User {
         dailyProteinUpperLimit: res.data['data']['ph']);
     this._plan.save();
   }
-
+  void saveMeal(){
+    this.meals.value.forEach((element) {
+      element.save();
+    });
+  }
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.setString("token", _token);
@@ -227,11 +231,7 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
-
-    this.meals.value.forEach((element) {
-      element.save();
-    });
-
+    this.saveMeal();
     if (this._plan != null) {
       this._plan.save();
     }

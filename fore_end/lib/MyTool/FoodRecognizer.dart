@@ -48,6 +48,7 @@ class FoodRecognizer{
       m.addFood(fb.food);
     }
     u.refreshMeal();
+    u.saveMeal();
     l.clear();
     FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
   }
