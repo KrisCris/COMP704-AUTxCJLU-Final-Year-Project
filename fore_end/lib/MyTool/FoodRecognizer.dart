@@ -25,6 +25,7 @@ class FoodRecognizer{
   ValueNotifier<Queue<RequestItem>> targetPicInfo;
   List<FoodBox> foods;
   Function onRecognizedDone;
+  GlobalKey relatedKey;
 
   static void addFoodPic(String targetPicBase64, Uint8List byte, int rotate){
     if(_instance == null) {
@@ -59,12 +60,18 @@ class FoodRecognizer{
         }else if(info['calories'] is double){
           cal = info['calories'];
         }
-        FoodRecognizer._instance.foods.add(
-            FoodBox(
-              food: Food(name: position['name'], calorie: cal),
-              picture: position['img'],
-            )
+        String name = position['name'];
+        FoodBox fd = FoodBox(
+          food: Food(name: name, calorie: cal),
+          picture: position['img'],
+          borderRadius: 5,
         );
+        fd.setRemoveFunc((){
+          List<FoodBox> list = FoodRecognizer._instance.foods;
+          FoodRecognizer._instance.foods.remove(fd);
+          FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
+        });
+        FoodRecognizer._instance.foods.add(fd);
         Fluttertoast.showToast(
           msg: "Food Recognized Done",
           toastLength: Toast.LENGTH_SHORT,
@@ -96,6 +103,9 @@ class FoodRecognizer{
   }
   void removeOnRecognizedDone(){
     this.onRecognizedDone = null;
+  }
+  void setKey(Key k){
+    this.relatedKey = k;
   }
 
 }

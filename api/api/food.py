@@ -30,8 +30,8 @@ def detect():
         # crop image based on results
         food_image = crop_image_by_coords_2(img, int(fr[0]), int(fr[1]), int(fr[2]), int(fr[3]))
 
-        image = Image.fromarray(cv2.cvtColor(food_image, cv2.COLOR_BGR2RGB))
-        image.show()
+        # image = Image.fromarray(cv2.cvtColor(food_image, cv2.COLOR_BGR2RGB))
+        # image.show()
 
         # to b64
         b64_fimg = img_to_b64(food_image)
