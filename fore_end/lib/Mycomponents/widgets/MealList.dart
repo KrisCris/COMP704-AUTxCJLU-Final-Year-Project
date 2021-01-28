@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 
-import 'MealListData.dart';
 
 
 ///statefulWidget组件可以随时更新变化的数据
 class MealListUI extends StatefulWidget {
+  Key key;
+  MealListUI({GlobalKey<MealListUIState> key}):super(key:key){
+    this.key = key;
+  }
   @override
-  _MealListUIState createState() => _MealListUIState();
+  MealListUIState createState() => MealListUIState();
 }
 
-class _MealListUIState extends State<MealListUI> {
-  List<MealsListData> mealsListData = MealsListData.tabIconsList;
+class MealListUIState extends State<MealListUI> {
+
+  @override
+  void didUpdateWidget(covariant MealListUI oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
   @override
   void initState() {
     super.initState();
@@ -20,6 +29,8 @@ class _MealListUIState extends State<MealListUI> {
 
   @override
   Widget build(BuildContext context) {
+    User u = User.getInstance();
+    u.setMealKey(widget.key);
     return
       Container(
           height: 200,
@@ -27,12 +38,12 @@ class _MealListUIState extends State<MealListUI> {
           // decoration: BoxDecoration(border: Border.all(color: Colors.white,width: 5),),
       child:
         ListView.builder(
-          itemCount: mealsListData.length,///一个listview里面item的个数，这里一日三餐有三个
+          itemCount: u.meals.value.length,///一个listview里面item的个数，这里一日三餐有三个
           itemExtent: 150, ///itemExtent是设置每个item的在滚动方向上面的宽度，水平就是宽度，垂直就是高度
           scrollDirection: Axis.horizontal, ///滚动的方向为水平滚动
           itemBuilder: (BuildContext context, int index) {
             return MealView(
-              mealsListData: mealsListData[index], ///按list里的个数来构建，上面已经初始化了
+              mealsListData: u.meals.value[index], ///按list里的个数来构建，上面已经初始化了
             );
           }
           ),
@@ -41,7 +52,7 @@ class _MealListUIState extends State<MealListUI> {
 }
 
 class MealView extends StatelessWidget {
-  final MealsListData mealsListData;
+  final Meal mealsListData;
 
   const MealView({Key key, this.mealsListData}) : super(key: key);
 
@@ -58,7 +69,7 @@ class MealView extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     // border: Border.all(),
-                    color: Colors.white,
+                    color: Color(0xFFF1F1F1),
                   ),
                   padding: const EdgeInsets.only(left: 20,top: 20,right: 20),  ///padding是控制内边距，对child有作用，这里是对里面的column起作用
                   // child: Padding(
@@ -68,11 +79,11 @@ class MealView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(mealsListData.mealsIcon,size: 30,color: Colors.blue,),
+                          Icon(mealsListData.getIcon(),size: 30,color: Colors.blue,),
                           SizedBox(height: 10,),
 
                           Text(  ///标题
-                            mealsListData.titleTxt,
+                            mealsListData.mealName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -90,7 +101,7 @@ class MealView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    mealsListData.meals.join('\n'),
+                                    mealsListData.listFoodsName(),
                                     overflow: TextOverflow.ellipsis,  ///设置文字溢出的处理方式，未验证有没有用
                                     style: TextStyle(
                                       decoration: TextDecoration.none,
@@ -113,7 +124,7 @@ class MealView extends StatelessWidget {
                                   padding:
                                   const EdgeInsets.only(left: 0, bottom: 5),
                                   child: Text(
-                                    mealsListData.kacl.toString(),
+                                    mealsListData.calculateTotalCalories().toString(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,

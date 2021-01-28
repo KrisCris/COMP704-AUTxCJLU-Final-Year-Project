@@ -5,8 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 import 'Food.dart';
+import 'Meal.dart';
 import 'Req.dart';
 import 'package:image/image.dart' as cropper;
 
@@ -39,7 +41,23 @@ class FoodRecognizer{
       rotate: rotate
     ));
   }
-
+  static void addFoodToMeal(Meal m){
+    User u = User.getInstance();
+    List<FoodBox> l = FoodRecognizer.instance.foods;
+    for(FoodBox fb in l){
+      m.addFood(fb.food);
+    }
+    u.refreshMeal();
+    l.clear();
+    FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
+  }
+  static void addFoodToMealName(String mealName){
+    User u = User.getInstance();
+    Meal m = u.getMealByName(mealName);
+    if(m != null){
+      FoodRecognizer.addFoodToMeal(m);
+    }
+  }
   static void _sendFoodRecognizeRequest(String bs64,Uint8List byte,int rotate) async{
     if(_instance == null) {
       print("Try recognize Food when Recognizer is not init yet");

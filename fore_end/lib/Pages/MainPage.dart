@@ -40,12 +40,12 @@ class MainPage extends StatefulWidget {
           SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
           GoalData(width: 0.85, height: 100,backgroundColor:Color(0xFFF1F1F1),),
           SizedBox(height: 20),
-          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1))
+          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1)),
           SizedBox(height: 20,),
           Container(
             width: ScreenTool.partOfScreenWidth(0.88),
             height: 220,
-            child: MealListUI(),
+            child: MealListUI(key:new GlobalKey<MealListUIState>()),
           ),
         ],
       ),
@@ -70,6 +70,9 @@ class MainPage extends StatefulWidget {
       borderRadius: 10,
       onClick: () {
         this.navigator.reverseOpacity();
+      },
+      navigatorCallback: (){
+        User.getInstance().refreshMeal();
       },
     );
     this.takePhotoButton = CustomIconButton(
