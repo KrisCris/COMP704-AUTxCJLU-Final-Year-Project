@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Focusable.dart';
 
@@ -62,7 +62,7 @@ class CustomIconButton extends StatefulWidget
   Function navigatorCallback;
 
   ///所属的navigator, 默认情况下为 [null]
-  CustomNavigator navi;
+  PaintedNavigator navi;
 
   ///按钮的阴影
   List<BoxShadow> shadows;
@@ -117,8 +117,8 @@ class CustomIconButton extends StatefulWidget
   }
 
   ///设置所属的navigator
-  ///参数 [nv] 是所属的 [CustomNavigator] 实例
-  void setParentNavigator(CustomNavigator nv) {
+  ///参数 [nv] 是所属的 [PaintedNavigator] 实例
+  void setParentNavigator(PaintedNavigator nv) {
     this.navi = nv;
   }
 
@@ -147,6 +147,13 @@ class CustomIconButtonState extends State<CustomIconButton>
     this.shadow = shadow;
   }
 
+  @override
+  void didUpdateWidget(covariant CustomIconButton oldWidget) {
+    // TODO: implement didUpdateWidget
+    widget.disabled = oldWidget.disabled;
+    widget.focus = oldWidget.focus;
+    super.didUpdateWidget(oldWidget);
+  }
   ///历史遗留问题, 不推荐在buiild函数中绑定state
   @override
   Widget build(BuildContext context) {
