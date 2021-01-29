@@ -5,6 +5,7 @@ import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
@@ -14,6 +15,9 @@ class ResultPage extends StatefulWidget {
   static const String defaultBackground = "image/fruit-main.jpg";
   String backgroundBase64;
   FoodRecognizer recognizer;
+  CustomButton breakfastButton;
+  CustomButton lunchButton;
+  CustomButton dinnerButoon;
 
   ResultPage({Key key, String backgroundBase64}) : super(key: key) {
     this.backgroundBase64 = backgroundBase64;
@@ -50,6 +54,43 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget breakfastButton= CustomButton(
+      text: "Breakfast",
+      isBold: true,
+      fontsize: 17,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.25),
+      theme: MyTheme.blueStyle,
+      tapFunc: () {
+        FoodRecognizer.addFoodToMealName("breakfast");
+      },
+    );
+
+    Widget lunchButton = CustomButton(
+      text: "Lunch",
+      isBold: true,
+      fontsize: 17,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.25),
+      theme: MyTheme.blueStyle,
+      tapFunc: () {
+        FoodRecognizer.addFoodToMealName("lunch");
+      },
+    );
+
+    Widget dinnerButton = CustomButton(
+      text: "Dinner",
+      isBold: true,
+      fontsize: 17,
+      bottomMargin: 20,
+      width: ScreenTool.partOfScreenWidth(0.25),
+      theme: MyTheme.blueStyle,
+      tapFunc: () {
+        FoodRecognizer.addFoodToMealName("dinner");
+      },
+    );
+
+
     Widget header = Row(
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
@@ -70,7 +111,7 @@ class ResultPageState extends State<ResultPage> {
             iconSize: 23,
             buttonSize: 35,
             backgroundOpacity: 0,
-          onClick: (){
+            onClick: (){
               Navigator.pop(context);
           },
         ),
@@ -85,6 +126,8 @@ class ResultPageState extends State<ResultPage> {
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
             duration: Duration(milliseconds: 100)));
+
+
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
@@ -96,6 +139,17 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,   ///spaceAround的效果是：第一个子控件和开始位置的距离和最后一个子控件和结束的距离是相等的，并且是其他子控件距离的一半
+              children: <Widget>[
+                breakfastButton,
+                lunchButton,
+                dinnerButton,
+              ]
+
+          ),
+
+
         ],
       ),
     );
