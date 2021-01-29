@@ -57,6 +57,7 @@ class ColorPainter extends ContextPainter {
 
   @override
   bool shouldRepaint(covariant ColorPainter oldDelegate) {
+    if(this.animation == null)return false;
     return this.animation.value != oldDelegate.animation.value;
   }
 }
