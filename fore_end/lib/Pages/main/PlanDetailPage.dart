@@ -11,6 +11,8 @@ class PlanDetailPage extends StatelessWidget{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          SizedBox(height: ScreenTool.partOfScreenHeight(100)),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
