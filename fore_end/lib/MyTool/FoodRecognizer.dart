@@ -81,8 +81,7 @@ class FoodRecognizer{
         }
         String name = position['name'];
         FoodBox fd = FoodBox(
-          food: Food(name: name, calorie: cal),
-          picture: position['img'],
+          food: Food(name: name, calorie: cal,picture: position['img']),
           borderRadius: 5,
         );
         fd.setRemoveFunc((){
