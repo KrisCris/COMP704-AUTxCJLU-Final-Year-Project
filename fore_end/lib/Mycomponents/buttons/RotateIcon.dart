@@ -79,7 +79,7 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
     return GestureDetector(
         onTap: this._innerOnTap,
         child: Transform.rotate(
-          angle: this.angleAnimation.getValue(),
+          angle: this.angleAnimation.value,
           child: Icon(
             widget.icon,
             color: Colors.blue,

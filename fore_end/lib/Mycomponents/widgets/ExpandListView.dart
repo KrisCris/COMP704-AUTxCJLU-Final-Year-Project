@@ -117,7 +117,7 @@ with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return  ClipRect(
-      clipper: this.activateClipper == 0 ? TopDownClipper(clipAnimation.getValue()) : DownTopClipper(clipAnimation.getValue()),
+      clipper: this.activateClipper == 0 ? TopDownClipper(clipAnimation.value) : DownTopClipper(clipAnimation.value),
       child: Container(
           width: widget.width,
           height: widget.height,

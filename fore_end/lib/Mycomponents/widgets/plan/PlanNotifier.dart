@@ -13,11 +13,14 @@ class PlanNotifier extends StatelessWidget {
   double height;
   double margin;
   Color backgroundColor;
+  Color effectColor;
   PlanNotifier(
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white}) {
+      this.backgroundColor = Colors.white,
+        this.effectColor
+      }) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
   }
@@ -62,7 +65,7 @@ class PlanNotifier extends StatelessWidget {
                     underLineLength: 0,
                     maxHeight: 25,
                     maxWidth: 0.7,
-                    fontColor: Color(0xFF5079AF),
+                    fontColor: Color(0xFFD1D1D1),
                   ))
             ],
           ),
@@ -106,7 +109,7 @@ class PlanNotifier extends StatelessWidget {
                       underLineLength: 0,
                       maxHeight: 25,
                       maxWidth: 0.7,
-                      fontColor: Color(0xFF5079AF),
+                      fontColor: Color(0xFFD1D1D1),
                     ))
               ],
             ),
@@ -122,6 +125,7 @@ class PlanNotifier extends StatelessWidget {
         borderRadius: 6,
         mainAxisAlignment: MainAxisAlignment.start,
         backgroundColor: this.backgroundColor,
+        paintColor: this.effectColor,
         children: content);
     return box;
   }

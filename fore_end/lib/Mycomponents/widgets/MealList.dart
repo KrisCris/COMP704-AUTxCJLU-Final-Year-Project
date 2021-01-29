@@ -9,7 +9,11 @@ import 'package:fore_end/MyTool/User.dart';
 ///statefulWidget组件可以随时更新变化的数据
 class MealListUI extends StatelessWidget {
   Key key;
-  MealListUI(){
+  Color backgroundColor;
+  Color textColor;
+  Color unitColor;
+  Color iconColor;
+  MealListUI({this.backgroundColor = Colors.white,this.textColor=Colors.white,this.unitColor=Colors.white,this.iconColor = Colors.white}){
     this.key = key;
   }
   @override
@@ -26,6 +30,10 @@ class MealListUI extends StatelessWidget {
             scrollDirection: Axis.horizontal, ///滚动的方向为水平滚动
             itemBuilder: (BuildContext context, int index) {
               return MealView(
+                textColor:textColor,
+                unitColor:unitColor,
+                iconColor:iconColor,
+                backgroundColor: this.backgroundColor,
                 mealsListData: u.meals.value[index], ///按list里的个数来构建，上面已经初始化了
                 key: u.meals.value[index].key,
               );
@@ -37,7 +45,13 @@ class MealListUI extends StatelessWidget {
 
 class MealView extends StatefulWidget {
   final Meal mealsListData;
-  const MealView({this.mealsListData, Key key}) : super(key: key);
+  final Color backgroundColor;
+  final Color textColor;
+  final Color unitColor;
+  final Color iconColor;
+  const MealView({  this.textColor,
+    this.unitColor,
+    this.iconColor,this.mealsListData, this.backgroundColor, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -63,7 +77,7 @@ class MealViewState extends State<MealView>{
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 // border: Border.all(),
-                color: Color(0xFFF1F1F1),
+                color: widget.backgroundColor,
               ),
               padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
 
@@ -76,7 +90,7 @@ class MealViewState extends State<MealView>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Icon(
-                      widget.mealsListData.getIcon(), size: 30, color: Colors.blue,),
+                      widget.mealsListData.getIcon(), size: 30, color: widget.iconColor,),
                     SizedBox(height: 10,),
 
                     Text(
@@ -89,7 +103,7 @@ class MealViewState extends State<MealView>{
                         fontFamily: "Futura",
                         fontSize: 18,
                         letterSpacing: 0.2,
-                        color: Colors.blue,
+                        color: widget.textColor,
                       ),
                     ),
                     Expanded(
@@ -112,7 +126,7 @@ class MealViewState extends State<MealView>{
                                 fontFamily: "Futura",
                                 fontSize: 12,
                                 letterSpacing: 0.2,
-                                color: Colors.blue,
+                                color: widget.textColor,
                               ),
                             ),
                           ],
@@ -135,7 +149,7 @@ class MealViewState extends State<MealView>{
                                 fontFamily: "Futura",
                                 fontSize: 24,
                                 letterSpacing: 0.1,
-                                color: Colors.blue,
+                                color:widget.textColor,
                               ),
                             ),
                           ),
@@ -151,7 +165,7 @@ class MealViewState extends State<MealView>{
                                 fontFamily: "Futura",
                                 fontSize: 15,
                                 letterSpacing: 0.2,
-                                color: Colors.black,
+                                color: widget.unitColor,
                               ),
                             ),
                           ),

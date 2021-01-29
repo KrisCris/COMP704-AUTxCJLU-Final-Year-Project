@@ -69,6 +69,7 @@ class CustomIconButton extends StatefulWidget
 
   ///按钮按下时，是否需要播放图标尺寸变化动画
   bool sizeChangeWhenClick;
+  bool backgroundColorChange;
 
   CustomIconButton(
       {
@@ -76,6 +77,7 @@ class CustomIconButton extends StatefulWidget
       @required this.icon,
       this.text = "",
         this.sizeChangeWhenClick = false,
+        this.backgroundColorChange = true,
       this.iconSize = 20,
       this.fontSize = 12,
         this.gap = 0,
@@ -189,9 +191,13 @@ class CustomIconButtonState extends State<CustomIconButton>
     }
 
     //各种动画的初始化
+    bool colorSet = widget.focus.value;
+    if(widget.backgroundColorChange == false){
+      colorSet = false;
+    }
     this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(widget.focus.value),
-        this.getBackgroundColor(widget.focus.value), 150, this, () {
+        this.getBackgroundColor(colorSet),
+        this.getBackgroundColor(colorSet), 150, this, () {
       setState(() {});
     });
     this.iconAndTextColorAnimation.initAnimation(
@@ -216,8 +222,8 @@ class CustomIconButtonState extends State<CustomIconButton>
             animation: this.iconAndTextColorAnimation.ctl,
             builder: (BuildContext context, Widget child) {
               return Icon(widget.icon,
-                  color: this.iconAndTextColorAnimation.getValue(),
-                  size: this.iconSizeAnimation.getValue());
+                  color: this.iconAndTextColorAnimation.value,
+                  size: this.iconSizeAnimation.value);
             }),
         SizedBox(height: widget.gap),
         Offstage(
@@ -232,7 +238,7 @@ class CustomIconButtonState extends State<CustomIconButton>
                         fontSize: widget.fontSize,
                         fontWeight: FontWeight.bold,
                         fontFamily: "Futura",
-                        color: this.iconAndTextColorAnimation.getValue()),
+                        color: this.iconAndTextColorAnimation.value),
                   );
                 })),
         SizedBox(height: widget.adjustHeight)
@@ -275,7 +281,7 @@ class CustomIconButtonState extends State<CustomIconButton>
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.borderRadius),
-                  color: this.backgroundColorAnimation.getValue(),
+                  color: this.backgroundColorAnimation.value,
                   boxShadow: this.shadow),
               child: child,
             );
@@ -333,13 +339,16 @@ class CustomIconButtonState extends State<CustomIconButton>
   ///聚焦时需要执行的动画变化
   @override
   void setFocus() {
-    this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(false),
-        this.getBackgroundColor(true),
-        200,
-        this, () {
-      setState(() {});
-    });
+    if(widget.backgroundColorChange){
+      this.backgroundColorAnimation.initAnimation(
+          this.getBackgroundColor(false),
+          this.getBackgroundColor(true),
+          200,
+          this, () {
+        setState(() {});
+      });
+      this.backgroundColorAnimation.beginAnimation();
+    }
     this.iconAndTextColorAnimation.initAnimation(
         getIconAndTextColor(false,null),
         getIconAndTextColor(true,null),
@@ -347,20 +356,22 @@ class CustomIconButtonState extends State<CustomIconButton>
         this, () {
       setState(() {});
     });
-    this.backgroundColorAnimation.beginAnimation();
     this.iconAndTextColorAnimation.beginAnimation();
   }
 
   ///取消聚焦时，需要执行的动画变化
   @override
   void setUnFocus() {
-    this.backgroundColorAnimation.initAnimation(
-        this.getBackgroundColor(true),
-        this.getBackgroundColor(false),
-        200,
-        this, () {
-      setState(() {});
-    });
+    if(widget.backgroundColorChange){
+      this.backgroundColorAnimation.initAnimation(
+          this.getBackgroundColor(true),
+          this.getBackgroundColor(false),
+          200,
+          this, () {
+        setState(() {});
+      });
+      this.backgroundColorAnimation.beginAnimation();
+    }
     this.iconAndTextColorAnimation.initAnimation(
         getIconAndTextColor(true,null),
         getIconAndTextColor(false,null),
@@ -368,7 +379,7 @@ class CustomIconButtonState extends State<CustomIconButton>
         this, () {
       setState(() {});
     });
-    this.backgroundColorAnimation.beginAnimation();
+
     this.iconAndTextColorAnimation.beginAnimation();
   }
 }

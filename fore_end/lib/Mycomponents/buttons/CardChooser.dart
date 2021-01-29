@@ -198,7 +198,7 @@ class CardChooserState extends State<CardChooser>
     rowContent.add(Text(widget._text,
         textDirection: TextDirection.ltr,
         style: TextStyle(
-            fontSize: fontSizeAnimation.getValue(),
+            fontSize: fontSizeAnimation.value,
             color: widget._textColor,
             fontFamily: "Futura",
             decoration: TextDecoration.none,
@@ -221,8 +221,8 @@ class CardChooserState extends State<CardChooser>
         child: ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
-            width: widget._width * sizeChangeAnimation.getValue(),
-            height: widget._height * sizeChangeAnimation.getValue(),
+            width: widget._width * sizeChangeAnimation.value,
+            height: widget._height * sizeChangeAnimation.value,
             color: widget._backgroundColor,
             child: Stack(
               children: [
@@ -230,10 +230,10 @@ class CardChooserState extends State<CardChooser>
                   foregroundPainter: DotPainter(
                       color: widget._paintColor,
                       dotGap: widget._dotGap,
-                      moveVal: this.dotMoveAnimation.getValue()),
+                      moveAnimation: this.dotMoveAnimation),
                   child: Container(
-                    width: widget._width * sizeChangeAnimation.getValue(),
-                    height: widget._height * sizeChangeAnimation.getValue(),
+                    width: widget._width * sizeChangeAnimation.value,
+                    height: widget._height * sizeChangeAnimation.value,
                   ),
                 ),
                 Container(

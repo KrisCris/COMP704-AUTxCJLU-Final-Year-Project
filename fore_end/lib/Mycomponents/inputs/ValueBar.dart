@@ -220,7 +220,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             showNumber: widget.showValue,
             position: widget.valuePosition,
             str: this.getDisplayValue(),
-            fontColor: this.textColorAnimation.getValue(),
+            fontColor: this.textColorAnimation.value,
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
@@ -254,11 +254,11 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                         color: widget.effectColor,
                         lineWidth: widget.effectThickness,
                         lineGap: widget.effectGap,
-                        moveVal: this.moveAnimation.getValue()),
+                        moveVal: this.moveAnimation.value),
                     child: Container(
-                      width: this.barWidthAnimation.getValue(),
+                      width: this.barWidthAnimation.value,
                       height: widget.barThickness,
-                      color: this.barColorAnimation.getValue(),
+                      color: this.barColorAnimation.value,
                     ),
                   )),
             ),
@@ -283,7 +283,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             height: widget.barThickness,
             margin: EdgeInsets.only(
                 left:
-                    this.barWidthAnimation.getValue() + widget.borderThickness,
+                    this.barWidthAnimation.value + widget.borderThickness,
                 top: ValueBar.backgroundExtraSpace),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -407,7 +407,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       this.textColorAnimation.reverse();
       this.barColorAnimation.reverse();
     }
-    double firstVal = this.barWidthAnimation.getValue();
+    double firstVal = this.barWidthAnimation.value;
     this.barWidthAnimation.initAnimation(
         firstVal,
         (widget.width - 2 * widget.borderThickness - widget.blockWidth) *

@@ -153,18 +153,18 @@ class CustomNavigatorState extends State<CustomNavigator>
         ),
         builder: (BuildContext context, Widget child) {
           return Container(
-              width: this.lengthChange.getValue(),
+              width: this.lengthChange.value(),
               height: widget.height,
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
               decoration: new BoxDecoration(
                   color: widget.backgroundColor
-                      .withOpacity(this.backgroundOpacity.getValue()),
+                      .withOpacity(this.backgroundOpacity.value()),
                   borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: this.shadowSize.getValue(), //阴影范围
-                      spreadRadius: this.shadowDense.getValue(), //阴影浓度
+                      blurRadius: this.shadowSize.value(), //阴影范围
+                      spreadRadius: this.shadowDense.value(), //阴影浓度
                       color: Color(0x33000000), //阴影颜色
                     ),
                   ]),
@@ -176,7 +176,7 @@ class CustomNavigatorState extends State<CustomNavigator>
       child: container,
       builder: (BuildContext context, Widget child) {
         return Transform.translate(
-          offset: Offset(this.positionChange.getValue(), 0),
+          offset: Offset(this.positionChange.value(), 0),
           child: child,
         );
       },

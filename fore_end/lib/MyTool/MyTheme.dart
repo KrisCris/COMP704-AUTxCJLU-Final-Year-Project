@@ -12,14 +12,6 @@ enum ComponentThemeState{
 
 class MyTheme {
 
-  // final Color unfocusedColor;
-  // final Color disabledColor;
-  // final Color errorColor;
-  // final Color focusedColor;
-  // final Color warningColor;
-  // final Color completeColor;
-  // final Color textColorDark;
-  // final Color textColorLight;
   Map<ComponentThemeState,Color> themeMap;
   Map<ComponentReactState,Color> reactMap;
   Color darkTextColor;

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
@@ -10,7 +11,7 @@ class DotPainter extends ContextPainter{
   double k;
   double b;
   double dotGap;
-  double moveVal;
+  final TweenAnimation<double> moveAnimation;
 
   DotPainter(
       {Color color=Colors.black12,
@@ -19,11 +20,10 @@ class DotPainter extends ContextPainter{
       double dotSize = 8,
       double dotGap = 15,
        BuildContext context,
-      double moveVal=0}) {
+      this.moveAnimation}):super(repaint: moveAnimation) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;
-    this.moveVal = moveVal;
     this.context = context;
     this.pen = Paint()
       ..color = color
@@ -53,12 +53,15 @@ class DotPainter extends ContextPainter{
 
     }
     configuredSize = new Size(width,height);
-
+    double moveVal = 0;
+    if(this.moveAnimation != null){
+      moveVal = moveAnimation.value;
+    }
     double angle = math.atan(this.k);
     double xGap = this.dotGap * math.cos(angle);
     double yGap = this.dotGap * math.sin(angle);
-    double xMove = this.moveVal * math.cos(angle);
-    double yMove = this.moveVal * math.sin(angle);
+    double xMove = moveVal * math.cos(angle);
+    double yMove = moveVal * math.sin(angle);
     for (double xbias = 0; xbias < configuredSize.width; xbias += 2 * xGap) {
       for (double x = -xGap + xbias + xMove, y = -yGap + yMove;
           x <= configuredSize.width && y <= configuredSize.height;
@@ -70,7 +73,10 @@ class DotPainter extends ContextPainter{
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant DotPainter oldDelegate) {
+    if(oldDelegate.moveAnimation == null){
+      return false;
+    }
+    return oldDelegate.moveAnimation.value != this.moveAnimation.value;
   }
 }

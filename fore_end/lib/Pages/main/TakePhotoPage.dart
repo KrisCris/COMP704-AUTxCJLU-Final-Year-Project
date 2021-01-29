@@ -214,7 +214,7 @@ class TakePhotoState extends State<TakePhotoPage>
             height: 40,
           ),
           Transform.translate(
-            offset: Offset(0, this.loadingCameraAnimation.getValue()),
+            offset: Offset(0, this.loadingCameraAnimation.value),
             child:
                 Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
           ),
@@ -280,7 +280,7 @@ class TakePhotoState extends State<TakePhotoPage>
           ),
         ),
         Opacity(
-          opacity: this.flashAnimation.getValue(),
+          opacity: this.flashAnimation.value,
           child: Container(
             color: Colors.grey,
           ),

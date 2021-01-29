@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/rendering/custom_paint.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
 class ColorPainter extends ContextPainter {
@@ -11,7 +12,7 @@ class ColorPainter extends ContextPainter {
   double rightExtra;
   double topExtra;
   double bottomExtra;
-
+  TweenAnimation animation;
   ColorPainter(
       {Color color,
       this.borderRadius,
@@ -19,8 +20,9 @@ class ColorPainter extends ContextPainter {
       this.rightExtra = 0,
       this.topExtra = 0,
       this.leftExtra = 0,
+        this.animation,
       BuildContext context,
-      ContextPainter contextPainter}) {
+      ContextPainter contextPainter}):super(repaint: animation){
     this.context = context;
     this.nextPainter = contextPainter;
     if (this.nextPainter != null) {
@@ -54,7 +56,7 @@ class ColorPainter extends ContextPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant ColorPainter oldDelegate) {
+    return this.animation.value != oldDelegate.animation.value;
   }
 }

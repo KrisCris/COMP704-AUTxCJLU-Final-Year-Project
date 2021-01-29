@@ -153,7 +153,7 @@ class CustomTextButtonState extends State<CustomTextButton>
                       decoration: TextDecoration.none,
                       fontSize: widget.fontsize,
                       fontFamily: "Futura",
-                      color: this.animation.getValue()),
+                      color: this.animation.value),
                   recognizer: recog
               ));
         });

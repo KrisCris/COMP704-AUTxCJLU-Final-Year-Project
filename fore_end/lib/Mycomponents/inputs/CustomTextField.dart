@@ -526,11 +526,11 @@ class CustomTextFieldState extends State<CustomTextField>
         child: this.getInputField(),
         builder: (BuildContext context, Widget child) {
           return Visibility(
-              visible: this.lengthAnimation.getValue() == 0 ? false : true,
+              visible: this.lengthAnimation.value == 0 ? false : true,
               child: Transform.translate(
                 offset: Offset(this.calculatePosition(), 0),
                 child: Container(
-                    width: this.lengthAnimation.getValue(),
+                    width: this.lengthAnimation.value,
                     margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
                     child: child),
               ));
@@ -552,7 +552,7 @@ class CustomTextFieldState extends State<CustomTextField>
       maxLines: 1,
       style: TextStyle(fontSize: 18),
       autofocus: widget.isAutoFocus,
-      cursorColor: colorAnimation.getValue(),
+      cursorColor: colorAnimation.value,
       cursorWidth: 2,
       maxLength: widget.maxlength,
       onEditingComplete: () {
@@ -565,25 +565,25 @@ class CustomTextFieldState extends State<CustomTextField>
         //下划线的设置
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-              color: colorAnimation.getValue(),
-              width: this.underlineWidthAnimation.getValue()),
+              color: colorAnimation.value,
+              width: this.underlineWidthAnimation.value),
         ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-              color: colorAnimation.getValue(),
-              width: this.underlineWidthAnimation.getValue()),
+              color: colorAnimation.value,
+              width: this.underlineWidthAnimation.value),
         ),
         disabledBorder: UnderlineInputBorder(
           borderSide: BorderSide.none,
         ),
         errorBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
+                color: colorAnimation.value,
+                width: this.underlineWidthAnimation.value)),
         focusedErrorBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
+                color: colorAnimation.value,
+                width: this.underlineWidthAnimation.value)),
 
         //文本框基本属性
         hintText: widget.placeholder,
@@ -603,8 +603,8 @@ class CustomTextFieldState extends State<CustomTextField>
                 this.isCorrect
                     ? FontAwesomeIcons.checkCircle
                     : FontAwesomeIcons.timesCircle,
-                color: this.colorAnimation.getValue(),
-                size: this.suffixSizeAnimation.getValue())),
+                color: this.colorAnimation.value,
+                size: this.suffixSizeAnimation.value)),
       ),
       obscureText: widget.inputType == InputFieldType.password,
     );
@@ -617,10 +617,10 @@ class CustomTextFieldState extends State<CustomTextField>
     if (widget.sizeChangeMode == 0)
       return 0;
     else if (widget.sizeChangeMode == 1) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return -(gap / 2);
     } else if (widget.sizeChangeMode == 2) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return gap / 2;
     }
   }
@@ -674,7 +674,7 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setDisabled() {
     //进入禁用状态，直接从当前颜色变化到disable状态
-    this.colorAnimation.initAnimation(this.colorAnimation.getValue(),
+    this.colorAnimation.initAnimation(this.colorAnimation.value,
         widget.theme.getDisabledColor(), colorChangeDura, this, () {
       setState(() {});
     });
@@ -688,7 +688,7 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setEnabled() {
     //可用状态，从当前颜色回到theme控制的颜色
-    this.colorAnimation.initAnimation(this.colorAnimation.getValue(),
+    this.colorAnimation.initAnimation(this.colorAnimation.value,
         widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });

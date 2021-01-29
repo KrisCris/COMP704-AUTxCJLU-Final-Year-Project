@@ -12,7 +12,7 @@ import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
-import 'package:fore_end/Pages/main/ThirdPage.dart';
+import 'package:fore_end/Pages/main/PlanDetailPage.dart';
 import '../AccountPage.dart';
 
 class MainPage extends StatefulWidget {
@@ -94,7 +94,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                               children: [
                                 new TakePhotoPage(key: this.photoKey),
                                 new DietPage(),
-                                new ThirdPage(),
+                                new PlanDetailPage(),
                               ]),
                         ),
                       ],
@@ -212,10 +212,11 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     CustomIconButton myDietButton = CustomIconButton(
       key: this.buttonKey[1],
       theme: MyTheme.blueAndWhite,
-      icon: FontAwesomeIcons.utensils,
+      icon: FontAwesomeIcons.solidCircle,
+      backgroundColorChange: false,
       backgroundOpacity: 0.0,
       buttonSize: 30,
-      iconSize: 15,
+      iconSize: 10,
       borderRadius: 10,
       onClick: () {
       },
@@ -227,6 +228,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       key: this.buttonKey[0],
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
+      backgroundColorChange: false,
       backgroundOpacity: 0.0,
       buttonSize: 30,
       borderRadius: 10,
@@ -242,11 +244,12 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     CustomIconButton addPlanButton = CustomIconButton(
         key: this.buttonKey[2],
         theme: MyTheme.blueAndWhite,
-        icon: FontAwesomeIcons.folderPlus,
+        icon: FontAwesomeIcons.solidCircle,
+        backgroundColorChange: false,
         backgroundOpacity: 0.0,
         borderRadius: 10,
         buttonSize: 30,
-        iconSize: 15,
+        iconSize: 10,
         fontSize: 12,
         onClick: () {
         });
