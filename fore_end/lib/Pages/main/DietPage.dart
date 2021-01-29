@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
@@ -22,6 +24,21 @@ class DietPageState extends State<DietPage>{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PaintedTextField(
+                backgroundColor: Colors.white10,
+                hint: "search foods",
+                icon: FontAwesomeIcons.search,
+                borderRadius: 5,
+                paddingLeft: 10,
+                width: 0.95,
+              )
+            ],
+          ),
+          SizedBox(height: ScreenTool.partOfScreenHeight(50)),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

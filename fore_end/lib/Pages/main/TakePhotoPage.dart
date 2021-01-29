@@ -288,27 +288,33 @@ class TakePhotoState extends State<TakePhotoPage>
         Column(
           children: [
             SizedBox(height: ScreenTool.topPadding),
-            Row(
-              children: [
-                Expanded(child: SizedBox()),
-                this.getAlbumButton(),
-                SizedBox(width: 10),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(child: SizedBox()),
-                this.getResultButton(),
-                SizedBox(width: 10),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Expanded(child: SizedBox()),
+            //     this.getAlbumButton(),
+            //     SizedBox(width: 10),
+            //   ],
+            // ),
+            // SizedBox(height: 10),
+            // Row(
+            //   children: [
+            //     Expanded(child: SizedBox()),
+            //     this.getResultButton(),
+            //     SizedBox(width: 10),
+            //   ],
+            // ),
             Expanded(child: SizedBox()),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [this.getPhotoButton()],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(width: 50),
+                this.getAlbumButton(),
+                this.getPhotoButton(),
+                this.getResultButton(),
+                SizedBox(width: 50),
+              ],
             ),
-            SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
+            SizedBox(height: ScreenTool.partOfScreenHeight(0.05))
           ],
         ),
       ],
@@ -324,7 +330,7 @@ class TakePhotoState extends State<TakePhotoPage>
       adjustHeight: 2.5,
       sizeChangeWhenClick: true,
       buttonSize: 45,
-      backgroundOpacity: 1,
+      backgroundOpacity: 0.5,
       borderRadius: 45,
       shadows: [
         BoxShadow(
@@ -351,7 +357,7 @@ class TakePhotoState extends State<TakePhotoPage>
       icon: FontAwesomeIcons.image,
       iconSize: 34,
       buttonSize: 45,
-      backgroundOpacity: 1,
+      backgroundOpacity: 0.5,
       borderRadius: 10,
       shadows: [
         BoxShadow(
@@ -376,7 +382,7 @@ class TakePhotoState extends State<TakePhotoPage>
       icon: FontAwesomeIcons.appleAlt,
       iconSize: 34,
       buttonSize: 45,
-      backgroundOpacity: 1,
+      backgroundOpacity: 0.5,
       borderRadius: 10,
       shadows: [
         BoxShadow(

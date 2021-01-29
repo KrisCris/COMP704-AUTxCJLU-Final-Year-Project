@@ -65,37 +65,21 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         color: Color(0xFF172632),
                       ),
                     ),
+                    TabBarView(
+                      //physics: new NeverScrollableScrollPhysics(),
+                        controller: ctl,
+                        children: [
+                          new TakePhotoPage(key: this.photoKey),
+                          new DietPage(),
+                          new PlanDetailPage(),
+                        ]),
                     Column(
                       children: [
                         SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            PaintedTextField(
-                              backgroundColor: Colors.white10,
-                              hint: "search foods",
-                              icon: FontAwesomeIcons.search,
-                              borderRadius: 5,
-                              paddingLeft: 10,
-                              width: 0.95,
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 60),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [this.setNavigator()],
-                        ),
-                        SizedBox(height: 10),
-                        Expanded(
-                          child: TabBarView(
-                              //physics: new NeverScrollableScrollPhysics(),
-                              controller: ctl,
-                              children: [
-                                new TakePhotoPage(key: this.photoKey),
-                                new DietPage(),
-                                new PlanDetailPage(),
-                              ]),
                         ),
                       ],
                     )
