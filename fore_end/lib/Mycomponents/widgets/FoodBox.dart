@@ -22,9 +22,6 @@ class FoodBox extends StatefulWidget {
   ///该组件展示的食物
   Food food;
 
-  ///食物的图片
-  String picture;
-
   ///未显示详情时，组件的高度
   double height;
 
@@ -63,7 +60,6 @@ class FoodBox extends StatefulWidget {
   GlobalKey fadeKey;
 
   FoodBox({
-    @required String picture = "",
     @required Food food,
     double height = 60,
     double detailedPaddingLeft = 30,
@@ -81,7 +77,6 @@ class FoodBox extends StatefulWidget {
   })  : assert(food != null),
         super(key: key) {
     this.food = food;
-    this.picture = picture;
     this.height = ScreenTool.partOfScreenHeight(height);
     this.width = ScreenTool.partOfScreenWidth(width);
     this.detailedPaddingLeft = detailedPaddingLeft;
@@ -224,24 +219,22 @@ class FoodBoxState extends State<FoodBox>
     //   this.picType = 0;
     // }
     Image img = null;
-    if (widget.shouldShowPic.value == false) {
+    if (widget.shouldShowPic.value == false || widget.food.picture == null) {
       img = Image.asset(
-        FoodBox.defaultPicturePath,
+        Food.defaultPicturePath,
         gaplessPlayback: true,
         fit: BoxFit.cover,
         width: 40,
         height: 40,
       );
     } else {
-      if (widget.picture != "" && widget.picture != null) {
         img = Image.memory(
-          base64Decode(widget.picture),
+          base64Decode(widget.food.picture),
           gaplessPlayback: true,
           fit: BoxFit.cover,
           width: 40,
           height: 40,);
         this.picType = 1;
-      }
     }
     this.pic = Container(
       width: 40,

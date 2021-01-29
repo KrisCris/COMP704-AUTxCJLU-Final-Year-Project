@@ -7,6 +7,7 @@ import 'package:fore_end/MyTool/CalculatableColor.dart';
 import 'package:fore_end/MyTool/MyCounter.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
@@ -16,7 +17,7 @@ enum InputFieldType { email, password, text, verifyCode }
 
 ///自定义的输入框
 class CustomTextField extends StatefulWidget
-    with ThemeWidgetMixIn,DisableWidgetMixIn,ValueableWidgetMixIn<String> {
+    with ThemeWidgetMixIn, DisableWidgetMixIn, ValueableWidgetMixIn<String> {
   ///常量，聚焦和不聚焦的时候，下划线的厚度
   static final double WIDTH_TF_FOCUSED = ScreenTool.partOfScreenHeight(3);
   static final double WIDTH_TF_UNFOCUSED = ScreenTool.partOfScreenHeight(2);
@@ -89,6 +90,9 @@ class CustomTextField extends StatefulWidget
   ///表现暂时不稳定，不推荐使用
   List<Function> doWhenCouldfocus;
 
+  ///背景的颜色
+  Color backgroundColor;
+
   ///下一个聚焦的Node
   final FocusNode next;
 
@@ -125,22 +129,23 @@ class CustomTextField extends StatefulWidget
     this.isAutoCheck = true,
     this.isAutoFocus = false,
     this.isAutoChangeState = true,
-    this.disableSuffix=false,
+    this.disableSuffix = false,
     this.errorText = "input error",
     this.helpText = "",
     this.isFirstFocusDoFunction = false,
     @required MyTheme theme,
     this.width = 0.5,
-    this.bottomPadding=0,
+    this.bottomPadding = 0,
     this.ulFocusedWidth,
     this.ulDefaultWidth,
     this.defaultContent = "",
     this.firstThemeState = ComponentThemeState.normal,
     this.maxlength,
-    this.textAlign=TextAlign.left,
+    this.textAlign = TextAlign.left,
     this.onCorrect,
     this.onError,
     this.onEmpty,
+    this.backgroundColor = Colors.transparent,
     this.onNotEmpty,
     this.next,
     this.sizeChangeMode = 0,
@@ -195,7 +200,7 @@ class CustomTextField extends StatefulWidget
 
   ///进行聚焦
   ///参数 [context] 为进行聚焦时的上下文
-  void focus(BuildContext context){
+  void focus(BuildContext context) {
     FocusScope.of(context).requestFocus(this._focusNode);
   }
 
@@ -268,8 +273,7 @@ class CustomTextField extends StatefulWidget
   ///历史遗留问题，不推荐用这种方式保存State的引用
   @override
   State<StatefulWidget> createState() {
-    this.st = new CustomTextFieldState(
-        this.firstThemeState);
+    this.st = new CustomTextFieldState(this.firstThemeState);
     return this.st;
   }
 
@@ -281,12 +285,10 @@ class CustomTextField extends StatefulWidget
 
   ///设置输入框的值
   @override
-  void setValue(String s){
+  void setValue(String s) {
     this._inputcontroller.text = s;
   }
 }
-
-
 
 ///CustomTextField的State类
 ///混入了 [TickerProviderStateMixin] 用于控制动画
@@ -295,7 +297,6 @@ class CustomTextField extends StatefulWidget
 ///
 class CustomTextFieldState extends State<CustomTextField>
     with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn {
-
   ///控制颜色变化的动画
   TweenAnimation<CalculatableColor> colorAnimation =
       TweenAnimation<CalculatableColor>();
@@ -335,9 +336,7 @@ class CustomTextFieldState extends State<CustomTextField>
   ///上一次输入的内容
   String prev = "";
 
-  CustomTextFieldState(
-      ComponentThemeState the)
-      : super() {
+  CustomTextFieldState(ComponentThemeState the) : super() {
     this.themeState = the;
   }
 
@@ -346,23 +345,18 @@ class CustomTextFieldState extends State<CustomTextField>
   void didUpdateWidget(covariant CustomTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
     this.widgetBinding();
-
   }
+
   @override
   void initState() {
     super.initState();
     this.firstWidth = widget.width;
     //初始化输入控制器
-    widget._inputcontroller = TextEditingController.fromValue(
-        TextEditingValue(
-          text: widget.defaultContent,
-          selection: TextSelection.fromPosition(
-              TextPosition(
-              affinity: TextAffinity.downstream,
-              offset: widget.defaultContent.length)
-          )
-        )
-    );
+    widget._inputcontroller = TextEditingController.fromValue(TextEditingValue(
+        text: widget.defaultContent,
+        selection: TextSelection.fromPosition(TextPosition(
+            affinity: TextAffinity.downstream,
+            offset: widget.defaultContent.length))));
     this.prev = widget.defaultContent;
     //初始化颜色
     this.initColor();
@@ -377,8 +371,10 @@ class CustomTextFieldState extends State<CustomTextField>
       setState(() {});
     });
     double suffixValue = 25;
-    if(widget.disableSuffix)suffixValue = 0;
-    this.suffixSizeAnimation.initAnimation(0.0, suffixValue, sizeChangeDura, this, () {
+    if (widget.disableSuffix) suffixValue = 0;
+    this
+        .suffixSizeAnimation
+        .initAnimation(0.0, suffixValue, sizeChangeDura, this, () {
       setState(() {});
     });
 
@@ -388,19 +384,16 @@ class CustomTextFieldState extends State<CustomTextField>
 
   ///初始化颜色动画的颜色
   void initColor() {
-      this.colorAnimation.initAnimation(
-          widget.theme.getDisabledColor(),
-          widget.theme.getDisabledColor(),
-          colorChangeDura,
-          this, () {
-        setState(() {});
-      });
+    this.colorAnimation.initAnimation(widget.theme.getDisabledColor(),
+        widget.theme.getDisabledColor(), colorChangeDura, this, () {
+      setState(() {});
+    });
     this.colorAnimation.beginAnimation();
   }
 
   ///绑定widget相关的监听器，函数等内容
   ///当发生didUpdateWidget时，需要执行该函数
-  void widgetBinding(){
+  void widgetBinding() {
     //添加监听器
     for (Function f in widget.listenerList) {
       widget.addListener(f);
@@ -421,8 +414,8 @@ class CustomTextFieldState extends State<CustomTextField>
         this.setFocus();
         //如果设定了第一次聚焦需要执行函数，则按要求执行
         //TODO: 这里并没有判断第一次聚焦，而是聚焦时内容为空，需要进一步修改
-        if(widget.isFirstFocusDoFunction){
-          if(widget._inputcontroller.text.isEmpty){
+        if (widget.isFirstFocusDoFunction) {
+          if (widget._inputcontroller.text.isEmpty) {
             widget.onEmpty();
           }
         }
@@ -454,7 +447,7 @@ class CustomTextFieldState extends State<CustomTextField>
                   this.suffixSizeAnimation.beginAnimation();
                 }
                 //若没有设定isAutoCheck，则不执行后续内容
-                if(!widget.isAutoCheck) return;
+                if (!widget.isAutoCheck) return;
 
                 //进行输入正确性检测,检测正确的情况
                 if (FormatChecker.check(
@@ -497,10 +490,9 @@ class CustomTextFieldState extends State<CustomTextField>
       }
     });
 
-
     widget._inputcontroller.addListener(() {
       if (this.prev == widget._inputcontroller.text) return;
-      if(this.prev == "" && widget.onNotEmpty != null){
+      if (this.prev == "" && widget.onNotEmpty != null) {
         widget.onNotEmpty();
       }
       this.prev = widget._inputcontroller.text;
@@ -513,6 +505,7 @@ class CustomTextFieldState extends State<CustomTextField>
     });
     this.initDisableListener(widget.disabled);
   }
+
   @override
   void dispose() {
     if (this.continuousInputChecker != null) {
@@ -533,13 +526,14 @@ class CustomTextFieldState extends State<CustomTextField>
         child: this.getInputField(),
         builder: (BuildContext context, Widget child) {
           return Visibility(
-              visible: this.lengthAnimation.getValue() == 0 ? false : true,
+              visible: this.lengthAnimation.value == 0 ? false : true,
               child: Transform.translate(
-                  offset: Offset(this.calculatePosition(), 0),
-                  child: Container(
-                      width: this.lengthAnimation.getValue(),
-                      margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      child: child)));
+                offset: Offset(this.calculatePosition(), 0),
+                child: Container(
+                    width: this.lengthAnimation.value,
+                    margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: child),
+              ));
         });
     return vis;
   }
@@ -558,7 +552,7 @@ class CustomTextFieldState extends State<CustomTextField>
       maxLines: 1,
       style: TextStyle(fontSize: 18),
       autofocus: widget.isAutoFocus,
-      cursorColor: colorAnimation.getValue(),
+      cursorColor: colorAnimation.value,
       cursorWidth: 2,
       maxLength: widget.maxlength,
       onEditingComplete: () {
@@ -571,24 +565,25 @@ class CustomTextFieldState extends State<CustomTextField>
         //下划线的设置
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-              color: colorAnimation.getValue(),
-              width: this.underlineWidthAnimation.getValue()),
+              color: colorAnimation.value,
+              width: this.underlineWidthAnimation.value),
         ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-              color: colorAnimation.getValue(),
-              width: this.underlineWidthAnimation.getValue()),
+              color: colorAnimation.value,
+              width: this.underlineWidthAnimation.value),
         ),
         disabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,),
+          borderSide: BorderSide.none,
+        ),
         errorBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
+                color: colorAnimation.value,
+                width: this.underlineWidthAnimation.value)),
         focusedErrorBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-                color: colorAnimation.getValue(),
-                width: this.underlineWidthAnimation.getValue())),
+                color: colorAnimation.value,
+                width: this.underlineWidthAnimation.value)),
 
         //文本框基本属性
         hintText: widget.placeholder,
@@ -596,7 +591,8 @@ class CustomTextFieldState extends State<CustomTextField>
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,
         errorText: this.isCorrect ||
-                (!this.isCorrect && widget._inputcontroller.text.isEmpty) || widget.disabled.value
+                (!this.isCorrect && widget._inputcontroller.text.isEmpty) ||
+                widget.disabled.value
             ? null
             : widget.errorText,
 
@@ -607,8 +603,8 @@ class CustomTextFieldState extends State<CustomTextField>
                 this.isCorrect
                     ? FontAwesomeIcons.checkCircle
                     : FontAwesomeIcons.timesCircle,
-                color: this.colorAnimation.getValue(),
-                size: this.suffixSizeAnimation.getValue())),
+                color: this.colorAnimation.value,
+                size: this.suffixSizeAnimation.value)),
       ),
       obscureText: widget.inputType == InputFieldType.password,
     );
@@ -621,10 +617,10 @@ class CustomTextFieldState extends State<CustomTextField>
     if (widget.sizeChangeMode == 0)
       return 0;
     else if (widget.sizeChangeMode == 1) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return -(gap / 2);
     } else if (widget.sizeChangeMode == 2) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return gap / 2;
     }
   }
@@ -633,11 +629,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   ComponentThemeState setCorrect() {
     ComponentThemeState stt = super.setCorrect();
-    this.colorAnimation.initAnimation(
-        widget.theme.getThemeColor(stt),
-        widget.theme.getThemeColor(this.themeState),
-        colorChangeDura,
-        this, () {
+    this.colorAnimation.initAnimation(widget.theme.getThemeColor(stt),
+        widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -648,11 +641,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   ComponentThemeState setError() {
     ComponentThemeState stt = super.setError();
-    this.colorAnimation.initAnimation(
-        widget.theme.getThemeColor(stt),
-        widget.theme.getThemeColor(this.themeState),
-        colorChangeDura,
-        this, () {
+    this.colorAnimation.initAnimation(widget.theme.getThemeColor(stt),
+        widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -662,11 +652,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   ComponentThemeState setNormal() {
     ComponentThemeState stt = super.setNormal();
-    this.colorAnimation.initAnimation(
-        widget.theme.getThemeColor(stt),
-        widget.theme.getThemeColor(this.themeState),
-        colorChangeDura,
-        this, () {
+    this.colorAnimation.initAnimation(widget.theme.getThemeColor(stt),
+        widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -676,11 +663,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   ComponentThemeState setWarning() {
     ComponentThemeState stt = super.setWarning();
-    this.colorAnimation.initAnimation(
-        widget.theme.getThemeColor(stt),
-        widget.theme.getThemeColor(this.themeState),
-        colorChangeDura,
-        this, () {
+    this.colorAnimation.initAnimation(widget.theme.getThemeColor(stt),
+        widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -690,10 +674,10 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setDisabled() {
     //进入禁用状态，直接从当前颜色变化到disable状态
-    this.colorAnimation.initAnimation(this.colorAnimation.getValue(),
+    this.colorAnimation.initAnimation(this.colorAnimation.value,
         widget.theme.getDisabledColor(), colorChangeDura, this, () {
-          setState(() {});
-        });
+      setState(() {});
+    });
     this.colorAnimation.beginAnimation();
     //禁用状态下，下划线和尾部图标全部回缩
     this.underlineWidthAnimation.reverse();
@@ -704,11 +688,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setEnabled() {
     //可用状态，从当前颜色回到theme控制的颜色
-    this.colorAnimation.initAnimation(
-        this.colorAnimation.getValue(),
-        widget.theme.getThemeColor(this.themeState),
-        colorChangeDura,
-        this, () {
+    this.colorAnimation.initAnimation(this.colorAnimation.value,
+        widget.theme.getThemeColor(this.themeState), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -721,7 +702,7 @@ class CustomTextFieldState extends State<CustomTextField>
   }
 
   ///设置聚焦状态的动画播放
-  void setFocus(){
+  void setFocus() {
     //进入聚焦状态，correct和error状态都不进行变化，只有normal状态进行变化
     if (this.themeState == ComponentThemeState.normal) {
       this.colorAnimation.initAnimation(
@@ -737,7 +718,7 @@ class CustomTextFieldState extends State<CustomTextField>
   }
 
   ///设置失去焦点状态的动画播放
-  void setUnFocus(){
+  void setUnFocus() {
     //进入非聚焦状态，correct和error状态都不进行变化，只有normal状态进行变化
     if (this.themeState == ComponentThemeState.normal) {
       this.colorAnimation.initAnimation(
@@ -762,7 +743,6 @@ class FormatChecker {
   factory FormatChecker() => _getInstance();
   static FormatChecker get instance => _getInstance();
   static FormatChecker _instance;
-
 
   FormatChecker._internal() {
     mapper = new Map<InputFieldType, Function(String)>();

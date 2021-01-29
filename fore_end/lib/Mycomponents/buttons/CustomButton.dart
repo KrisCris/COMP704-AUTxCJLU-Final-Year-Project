@@ -323,7 +323,7 @@ class CustomButtonState extends State<CustomButton>
         builder: (BuildContext context, Widget child) {
           return Transform.translate(
               offset: Offset(
-                  this.fluctuateAnimation.getValue() + this.calculatePosition(),
+                  this.fluctuateAnimation.value + this.calculatePosition(),
                   0),
               child: child);
         });
@@ -354,11 +354,11 @@ class CustomButtonState extends State<CustomButton>
         ),
         builder: (BuildContext context, Widget child) {
           return Container(
-            width: this.lengthAnimation.getValue(),
+            width: this.lengthAnimation.value,
             height: widget.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(widget.radius),
-                color: this.colorAnimation.getValue(),
+                color: this.colorAnimation.value,
                 boxShadow: [
                   widget.hasShadow?BoxShadow(
                     blurRadius: 12, //阴影范围
@@ -386,7 +386,7 @@ class CustomButtonState extends State<CustomButton>
         animation: this.lengthAnimation.ctl,
         builder: (BuildContext context, Widget child) {
           return Container(
-            width: this.lengthAnimation.getValue(),
+            width: this.lengthAnimation.value,
             height: widget.height,
             margin: EdgeInsets.only(
                 left: widget.leftMargin,
@@ -404,7 +404,7 @@ class CustomButtonState extends State<CustomButton>
         child: container,
         builder: (BuildContext context, Widget child) {
           return Opacity(
-            opacity: this.flashAnimation.getValue(),
+            opacity: this.flashAnimation.value,
             child: child,
           );
         });
@@ -418,10 +418,10 @@ class CustomButtonState extends State<CustomButton>
     if (widget.sizeChangeMode == 0)
       return 0;
     else if (widget.sizeChangeMode == 1) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return -(gap / 2);
     } else if (widget.sizeChangeMode == 2) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return gap / 2;
     }
   }

@@ -93,7 +93,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
               bottom: -25,
               left: 5,
               child: ClipRect(
-                  clipper: new RightLeftClipper(lengthAnimation.getValue()),
+                  clipper: new RightLeftClipper(lengthAnimation.value()),
                   child: this.createInput())),
           Positioned(right: 12, child: this.createSuffix()),
         ],

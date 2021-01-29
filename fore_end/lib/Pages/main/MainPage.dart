@@ -5,30 +5,26 @@ import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
-import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
+import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
-import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
-import 'package:fore_end/Mycomponents/widgets/MealList.dart';
-import 'package:fore_end/Mycomponents/widgets/My.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
+import 'package:fore_end/Mycomponents/widgets/navigator/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
-import 'package:fore_end/Pages/main/ThirdPage.dart';
+import 'package:fore_end/Pages/main/PlanDetailPage.dart';
 import '../AccountPage.dart';
 
 class MainPage extends StatefulWidget {
-  MainState state;
   User user;
 
-  MainPage({@required User user, bool needSetPlan=false, Key key}) : super(key: key) {
+  MainPage({@required User user, bool needSetPlan = false, Key key})
+      : super(key: key) {
     this.user = user;
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = new MainState();
-    return this.state;
+    return new MainState();
   }
 }
 
@@ -46,7 +42,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>()
     ];
-    this.ctl = TabController(length: 3, vsync: this);
+    this.ctl = TabController(length: 3, vsync: this,initialIndex: 1);
     super.initState();
   }
 
@@ -56,40 +52,57 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
         body: Builder(
-              builder: (BuildContext ctx) {
-                return Container(
-                    alignment: Alignment.center,
-                    height: ScreenTool.partOfScreenHeight(1),
-                    child: Stack(
+          builder: (BuildContext ctx) {
+            return Container(
+                alignment: Alignment.center,
+                height: ScreenTool.partOfScreenHeight(1),
+                child: Stack(
+                  children: [
+                    ClipRect(
+                      child: Container(
+                        width: ScreenTool.partOfScreenWidth(1),
+                        height: ScreenTool.partOfScreenHeight(1),
+                        color: Color(0xFF172632),
+                      ),
+                    ),
+                    Column(
                       children: [
-                        ClipRect(
-                          child: Container(
-                            width: ScreenTool.partOfScreenWidth(1),
-                            height: ScreenTool.partOfScreenHeight(1),
-                            color: Color(0xFF172632),
-                          ),
-                        ),
-                        TabBarView(
-                            physics: new NeverScrollableScrollPhysics(),
-                            controller: ctl,
-                            children: [
-                              new DietPage(),
-                              new TakePhotoPage(key:this.photoKey),
-                              new ThirdPage(),
-                            ]),
-                        Column(
+                        SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(child: SizedBox()),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [this.setNavigator()],
+                            PaintedTextField(
+                              backgroundColor: Colors.white10,
+                              hint: "search foods",
+                              icon: FontAwesomeIcons.search,
+                              borderRadius: 5,
+                              paddingLeft: 10,
+                              width: 0.95,
                             )
                           ],
-                        )
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [this.setNavigator()],
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: TabBarView(
+                              //physics: new NeverScrollableScrollPhysics(),
+                              controller: ctl,
+                              children: [
+                                new TakePhotoPage(key: this.photoKey),
+                                new DietPage(),
+                                new PlanDetailPage(),
+                              ]),
+                        ),
                       ],
-                    ));
-              },
-            ));
+                    )
+                  ],
+                ));
+          },
+        ));
   }
 
   CustomDrawer getDrawer(BuildContext context) {
@@ -122,10 +135,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         height: 15,
       ),
     ];
-    return CustomDrawer(
-      widthPercent: 1,
-      children: drawerItems
-    );
+    return CustomDrawer(widthPercent: 1, children: drawerItems);
   }
 
   Widget getAccount() {
@@ -145,10 +155,10 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               color: Colors.black)),
     );
   }
+
   Widget getSetting() {
     return ListTile(
-      onTap: () {
-      },
+      onTap: () {},
       title: Text("SETTINGS",
           style: TextStyle(
               decoration: TextDecoration.none,
@@ -158,6 +168,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               color: Colors.black)),
     );
   }
+
   Widget getAboutUs() {
     return ListTile(
       title: Text("ABOUT US",
@@ -169,6 +180,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               color: Colors.black)),
     );
   }
+
   Widget getLogOut() {
     return CustomIconButton(
       icon: FontAwesomeIcons.signOutAlt,
@@ -185,47 +197,44 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  CustomNavigator setNavigator() {
+  PaintedNavigator setNavigator() {
     List<CustomIconButton> buttons = this.getButtons();
-    CustomNavigator navigator = new CustomNavigator(
-      key: this.navigatorKey,
+    PaintedNavigator navigator = new PaintedNavigator(
       buttons: buttons,
       controller: ctl,
-      opacity: 0.25,
       width: ScreenTool.partOfScreenWidth(0.85),
-      height: ScreenTool.partOfScreenHeight(0.08),
+      height: 30,
     );
     return navigator;
   }
-  List<CustomIconButton> getButtons(){
+
+  List<CustomIconButton> getButtons() {
     CustomIconButton myDietButton = CustomIconButton(
-      key: this.buttonKey[0],
+      key: this.buttonKey[1],
       theme: MyTheme.blueAndWhite,
-      icon: FontAwesomeIcons.utensils,
+      icon: FontAwesomeIcons.solidCircle,
+      backgroundColorChange: false,
       backgroundOpacity: 0.0,
-      buttonSize: 65,
-      iconSize: 25,
+      buttonSize: 30,
+      iconSize: 10,
       borderRadius: 10,
       onClick: () {
-        this.navigatorKey.currentState.reverseOpacity();
-        // this.navigator.reverseOpacity();
       },
-      navigatorCallback: (){
+      navigatorCallback: () {
         User.getInstance().refreshMeal();
       },
     );
     CustomIconButton takePhotoButton = CustomIconButton(
-      key: this.buttonKey[1],
+      key: this.buttonKey[0],
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
+      backgroundColorChange: false,
       backgroundOpacity: 0.0,
-      buttonSize: 65,
+      buttonSize: 30,
       borderRadius: 10,
-      iconSize: 25,
+      iconSize: 15,
       fontSize: 12,
       onClick: () {
-        this.navigatorKey.currentState.beginOpacity();
-        // this.navigator.beginOpacity();
       },
       navigatorCallback: () {
         this.photoKey.currentState.getCamera();
@@ -235,20 +244,15 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     CustomIconButton addPlanButton = CustomIconButton(
         key: this.buttonKey[2],
         theme: MyTheme.blueAndWhite,
-        icon: FontAwesomeIcons.folderPlus,
+        icon: FontAwesomeIcons.solidCircle,
+        backgroundColorChange: false,
         backgroundOpacity: 0.0,
         borderRadius: 10,
-        buttonSize: 65,
-        iconSize: 25,
+        buttonSize: 30,
+        iconSize: 10,
         fontSize: 12,
         onClick: () {
-          this.navigatorKey.currentState.reverseOpacity();
-          // this.navigator.reverseOpacity();
         });
-    return [
-      myDietButton,
-      takePhotoButton,
-      addPlanButton
-    ];
+    return [takePhotoButton, myDietButton,addPlanButton];
   }
 }

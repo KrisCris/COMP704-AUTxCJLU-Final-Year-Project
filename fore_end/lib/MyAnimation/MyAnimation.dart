@@ -1,13 +1,16 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/FluctuateTween.dart';
 
-abstract class MyAnimation<T>{
+abstract class MyAnimation<T> implements ValueListenable<T>{
   AnimationController ctl;
   Animation animation;
   bool isFinish;
-  T getValue() => animation.value;
+
+  @override
+  T get value => animation.value;
   MyAnimation(){}
   void initAnimation(T Start, T tweenEnd, int duration, TickerProvider tk,VoidCallback listener);
   void addListener(VoidCallback listener);
@@ -111,7 +114,12 @@ class TweenAnimation<T> implements MyAnimation<T>{
     if(this.ctl == null)return;
     this.ctl.dispose();
   }
-  T getValue() {
+  @override
+  T get value {
     return animation.value;
+  }
+
+  @override
+  void removeListener(void Function() listener) {
   }
 }
