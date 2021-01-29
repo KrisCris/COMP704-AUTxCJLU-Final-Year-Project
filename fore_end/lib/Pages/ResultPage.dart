@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/Picker_Tool.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -35,6 +36,7 @@ class ResultPage extends StatefulWidget {
 
 class ResultPageState extends State<ResultPage> {
   bool scrolling = false;
+  var mealsName = ['breakfast', 'lunch','dinner'];
 
   @override
   void initState() {
@@ -54,42 +56,49 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget breakfastButton= CustomButton(
-      text: "Breakfast",
-      isBold: true,
-      fontsize: 17,
-      bottomMargin: 20,
-      width: ScreenTool.partOfScreenWidth(0.25),
-      theme: MyTheme.blueStyle,
-      tapFunc: () {
-        FoodRecognizer.addFoodToMealName("breakfast");
+
+    ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
+    Widget addMealTextButton =GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        child: Text(
+          "Add foods to Meal？",
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Futura',
+            color: MyTheme.blackAndWhite.lightTextColor,
+            decoration: TextDecoration.none,
+          ),
+
+
+        ),
+      ),
+      onTap: (){
+        ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
+        ///
+        double cal = 0;
+        widget.recognizer.foods.forEach((fd) {
+          cal += fd.food.calorie;
+        });
+
+        String totalCalories=cal.toString();
+        JhPickerTool.showStringPicker(context,
+            title: 'Total: '+totalCalories+ ' Kcal',
+            normalIndex: 0,
+            isChangeColor: true,
+            data: this.mealsName, clickCallBack: (int index, var item) {
+              if(item=="breakfast"){
+                FoodRecognizer.addFoodToMealName("breakfast");
+              }else if(item=="lunch"){
+                FoodRecognizer.addFoodToMealName("lunch");
+              }else if(item=="dinner"){
+                FoodRecognizer.addFoodToMealName("dinner");
+              }
+            });
+
+
       },
     );
-
-    Widget lunchButton = CustomButton(
-      text: "Lunch",
-      isBold: true,
-      fontsize: 17,
-      bottomMargin: 20,
-      width: ScreenTool.partOfScreenWidth(0.25),
-      theme: MyTheme.blueStyle,
-      tapFunc: () {
-        FoodRecognizer.addFoodToMealName("lunch");
-      },
-    );
-
-    Widget dinnerButton = CustomButton(
-      text: "Dinner",
-      isBold: true,
-      fontsize: 17,
-      bottomMargin: 20,
-      width: ScreenTool.partOfScreenWidth(0.25),
-      theme: MyTheme.blueStyle,
-      tapFunc: () {
-        FoodRecognizer.addFoodToMealName("dinner");
-      },
-    );
-
 
     Widget header = Row(
       children: [
@@ -139,15 +148,7 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,   ///spaceAround的效果是：第一个子控件和开始位置的距离和最后一个子控件和结束的距离是相等的，并且是其他子控件距离的一半
-              children: <Widget>[
-                breakfastButton,
-                lunchButton,
-                dinnerButton,
-              ]
-
-          ),
+          addMealTextButton,
 
 
         ],

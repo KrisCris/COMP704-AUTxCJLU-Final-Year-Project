@@ -11,7 +11,7 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/Pages/main/MainPage.dart';
+import 'package:fore_end/Pages/main/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 import 'GuidePage.dart';
