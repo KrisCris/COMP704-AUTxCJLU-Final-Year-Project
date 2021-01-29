@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/Mycomponents/widgets/MealList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Food.dart';
@@ -13,6 +14,7 @@ class Meal{
     "dinner":FontAwesomeIcons.apple
   };
   String mealName;
+  GlobalKey<MealViewState> key;
   List<Food> foods;
 
   Meal({this.mealName, String encoded}){
@@ -21,8 +23,11 @@ class Meal{
     }else{
       this.foods = [];
     }
+    key = GlobalKey<MealViewState>();
   }
-  Meal.object({this.mealName, this.foods});
+  Meal.object({this.mealName, this.foods}){
+    key = GlobalKey<MealViewState>();
+  }
 
 
   void addFood(Food fd){

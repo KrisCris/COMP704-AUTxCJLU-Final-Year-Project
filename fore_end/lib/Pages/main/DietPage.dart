@@ -28,7 +28,7 @@ class DietPageState extends State<DietPage>{
           Container(
             width: ScreenTool.partOfScreenWidth(0.88),
             height: 220,
-            child: MealListUI(key:new GlobalKey<MealListUIState>()),
+            child: MealListUI(),
           ),
         ],
       ),
