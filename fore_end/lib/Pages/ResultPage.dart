@@ -57,7 +57,7 @@ class ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
 
-    ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
+    ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字 ====参考中间的提示文字
     Widget addMealTextButton =GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
@@ -75,7 +75,7 @@ class ResultPageState extends State<ResultPage> {
       ),
       onTap: (){
         ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
-        ///
+        ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
         double cal = 0;
         widget.recognizer.foods.forEach((fd) {
           cal += fd.food.calorie;
@@ -148,7 +148,7 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
-          addMealTextButton,
+          widget.recognizer.isEmpty()? Container():addMealTextButton,  ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
 
 
         ],
