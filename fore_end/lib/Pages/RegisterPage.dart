@@ -16,7 +16,7 @@ import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import 'GuidePage.dart';
-import 'MainPage.dart';
+import 'main/MainPage.dart';
 import 'WelcomePage.dart';
 
 void main() {

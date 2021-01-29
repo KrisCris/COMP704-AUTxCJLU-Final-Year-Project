@@ -97,7 +97,12 @@ class User {
     }
   }
   void refreshMeal(){
-    this.meals.value = List.from(this.meals.value);
+    if(this.mealKey == null || this.mealKey.currentState == null)return;
+    if(this.mealKey.currentState.mounted){
+      this.mealKey.currentState.setState(() {
+
+      });
+    }
   }
   bool hasMealName(String s){
     for(Meal m in this.meals.value){

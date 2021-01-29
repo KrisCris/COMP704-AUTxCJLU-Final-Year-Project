@@ -8,7 +8,7 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 
-import 'MainPage.dart';
+import 'main/MainPage.dart';
 
 class CoverPage extends StatefulWidget {
   @override
