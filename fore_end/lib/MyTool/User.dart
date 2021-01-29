@@ -89,6 +89,20 @@ class User {
       }
     }
   }
+  int getTodayCaloriesIntake(){
+    int cal = 0;
+    for(Meal m in meals.value){
+      cal += m.calculateTotalCalories();
+    }
+    return cal;
+  }
+  int getTodayProteinIntake(){
+    int pro = 0;
+    for(Meal m in meals.value){
+      pro += m.calculateTotalCalories();
+    }
+    return pro;
+  }
   void refreshMeal(){
     for(Meal m in meals.value){
       State st = m.key.currentState;

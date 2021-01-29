@@ -27,22 +27,22 @@ class PlanNotifier extends StatelessWidget {
     User u = User.getInstance();
     Plan p = u.plan;
     double barThickness = 15;
-    ValueBar calories = ValueBar<double>(
-      minVal: 0.0,
-      maxVal: p.dailyCaloriesUpperLimit,
-      adjustVal: 1.0,
+    ValueBar calories = ValueBar<int>(
+      minVal: 0,
+      maxVal: p.dailyCaloriesUpperLimit.floor(),
+      adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,
       showDragHead: false,
       valuePosition: ValuePosition.right,
       borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
       roundNum: 1,
-      initVal: 100,
+      initVal: u.getTodayCaloriesIntake(),
       showBorder: false,
       couldExpand: true,
       showAdjustButton: false,
       showValue: true,
-      unit: "/ " + p.dailyCaloriesUpperLimit.toString(),
+      unit: "/ " + p.dailyCaloriesUpperLimit.floor().toString(),
       barColor: Color(0xFFAFEC71),
       fontColor: Color(0xFF5079AF),
       barThickness: barThickness,
@@ -71,22 +71,22 @@ class PlanNotifier extends StatelessWidget {
       ),
     ];
     if (p.planType == 1) {
-      ValueBar protein = ValueBar<double>(
-        minVal: 0.0,
-        maxVal: p.dailyProteinUpperLimit,
-        adjustVal: 1.0,
+      ValueBar protein = ValueBar<int>(
+        minVal: 0,
+        maxVal: p.dailyProteinUpperLimit.floor(),
+        adjustVal: 1,
         width: this.width - 2 * margin,
         borderThickness: 6,
         showDragHead: false,
         valuePosition: ValuePosition.right,
         borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
         roundNum: 1,
-        initVal: 5,
+        initVal: u.getTodayProteinIntake(),
         showBorder: false,
         showAdjustButton: false,
         couldExpand: true,
         showValue: true,
-        unit: "/ " + p.dailyProteinUpperLimit.toString(),
+        unit: "/ " + p.dailyProteinUpperLimit.floor().toString(),
         barColor: Color(0xFF72DEEF),
         fontColor: Color(0xFF5079AF),
         barThickness: barThickness,

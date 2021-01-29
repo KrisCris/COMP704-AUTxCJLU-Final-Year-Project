@@ -36,15 +36,7 @@ class LinePainter extends ContextPainter {
   void paint(Canvas canvas, Size size) {
     double angle = math.atan(k);
     double extraHeight = math.sin(angle)* this.lineWidth/k;
-    double newHeight = size.height;
-    double newWidth = size.width;
-    if(size.height == 0){
-      newHeight = this.context.size.height;
-    }
-    if(size.width == 0){
-      newWidth = this.context.size.width;
-    }
-    size = new Size(newWidth,newHeight);
+    size = this.adjustSize(size);
     if(k > 0){
       for(double x = -(size.height/this.k + this.lineWidth) + this.moveVal;(x-size.height/k)<=size.width;x+=this.lineGap){
         Offset startPoint = Offset(x,0-extraHeight);
