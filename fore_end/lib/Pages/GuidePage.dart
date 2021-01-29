@@ -10,7 +10,7 @@ import 'package:fore_end/Mycomponents/widgets/plan/ExtraBodyDataInputer.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalInpter.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
 
-import 'MainPage.dart';
+import 'main/MainPage.dart';
 
 class GuidePage extends StatefulWidget {
   @override

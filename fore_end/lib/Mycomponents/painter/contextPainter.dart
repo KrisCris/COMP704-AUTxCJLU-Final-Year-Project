@@ -11,10 +11,14 @@ abstract class ContextPainter extends CustomPainter{
     double height = size.height;
     double width = size.width;
     if(height == 0){
-      height = context.size.height;
+      if(context != null){
+        height = context.size.height;
+      }
     }
     if(width == 0){
-      width = context.size.width;
+      if(context != null){
+        width = context.size.width;
+      }
     }
     return new Size(width,height);
   }

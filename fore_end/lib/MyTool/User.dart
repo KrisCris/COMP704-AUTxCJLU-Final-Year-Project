@@ -36,8 +36,6 @@ class User {
   String _avatar;
   bool _needGuide;
 
-  GlobalKey<MealListUIState> mealKey;
-
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
   ///通过今天的日期时间获取服务器的数据，这需要用户在每次添加一个食物时，上传数据库并且记录上传的日期。
@@ -76,12 +74,7 @@ class User {
     ];
     this.meals.value.forEach((element) {element.read();});
     this.meals.addListener(() {
-      if(this.mealKey == null || this.mealKey.currentState == null)return;
-      if(this.mealKey.currentState.mounted){
-        this.mealKey.currentState.setState(() {
 
-        });
-      }
     });
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
@@ -96,8 +89,28 @@ class User {
       }
     }
   }
+  int getTodayCaloriesIntake(){
+    int cal = 0;
+    for(Meal m in meals.value){
+      cal += m.calculateTotalCalories();
+    }
+    return cal;
+  }
+  int getTodayProteinIntake(){
+    int pro = 0;
+    for(Meal m in meals.value){
+      pro += m.calculateTotalCalories();
+    }
+    return pro;
+  }
   void refreshMeal(){
-    this.meals.value = List.from(this.meals.value);
+    for(Meal m in meals.value){
+      State st = m.key.currentState;
+      if(st != null && st.mounted){
+        st.setState(() {
+        });
+      }
+    }
   }
   bool hasMealName(String s){
     for(Meal m in this.meals.value){
@@ -115,9 +128,7 @@ class User {
     }
     return null;
   }
-  void setMealKey(GlobalKey<MealListUIState> k){
-    this.mealKey = k;
-  }
+
   ///从本地文件读取用户信息
   static User getInstance() {
     if (User._instance == null) {

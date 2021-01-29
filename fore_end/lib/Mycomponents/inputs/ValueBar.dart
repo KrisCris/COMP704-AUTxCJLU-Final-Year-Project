@@ -174,7 +174,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.textColorAnimation = TweenAnimation<CalculatableColor>();
     this
         .barWidthAnimation
-        .initAnimation(widget.blockWidth, widget.blockWidth, 200, this, () {
+        .initAnimation(0, 0, 200, this, () {
       setState(() {});
     });
     this.moveAnimation.initAnimation(0.0, widget.effectGap, 800, this, () {

@@ -5,7 +5,7 @@ import 'MyTool/User.dart';
 import 'Pages/AccountPage.dart';
 import 'Pages/GuidePage.dart';
 import 'Pages/LoginPage.dart';
-import 'Pages/MainPage.dart';
+import 'Pages/main/MainPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
 

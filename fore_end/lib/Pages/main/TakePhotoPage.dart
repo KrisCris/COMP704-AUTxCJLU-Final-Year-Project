@@ -22,7 +22,7 @@ class TakePhotoPage extends StatefulWidget {
   TakePhotoState state;
   CameraDescription camera;
   String waitingText;
-  TakePhotoPage() {}
+  TakePhotoPage({Key key}):super(key:key) {}
 
   @override
   State<StatefulWidget> createState() {

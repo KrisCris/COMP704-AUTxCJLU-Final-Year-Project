@@ -33,13 +33,14 @@ class CustomNavigator extends StatefulWidget {
   CustomNavigatorState state;
 
   CustomNavigator({
+    Key key,
     this.width,
     this.height,
     this.opacity = 1,
     this.backgroundColor = Colors.white,
     this.controller,
     List<CustomIconButton> buttons,
-  }) {
+  }):super(key:key) {
     this.buttons = buttons;
     //遍历数组，设置对应按钮所属的导航器
     for (CustomIconButton bt in this.buttons) {

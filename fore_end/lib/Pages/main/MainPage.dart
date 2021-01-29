@@ -6,8 +6,6 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/MealList.dart';
@@ -15,92 +13,16 @@ import 'package:fore_end/Mycomponents/widgets/My.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
-import 'package:fore_end/Pages/TakePhotoPage.dart';
-import 'AccountPage.dart';
+import 'package:fore_end/Pages/main/DietPage.dart';
+import 'package:fore_end/Pages/main/TakePhotoPage.dart';
+import 'package:fore_end/Pages/main/ThirdPage.dart';
+import '../AccountPage.dart';
 
 class MainPage extends StatefulWidget {
-  Widget myDietPart;
-  TakePhotoPage takePhotoPart;
-  Widget addPlanPart;
-  CustomIconButton myDietButton;
-  CustomIconButton takePhotoButton;
-  CustomIconButton addPlanButton;
-  CustomNavigator navigator;
-  Widget bodyContent;
   MainState state;
   User user;
-  MySearchBarDelegate searchBarDelegate;
 
   MainPage({@required User user, bool needSetPlan=false, Key key}) : super(key: key) {
-    this.myDietPart = new Container(
-      width: ScreenTool.partOfScreenWidth(1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-          GoalData(width: 0.85, height: 100,backgroundColor:Color(0xFFF1F1F1),),
-          SizedBox(height: 20),
-          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1)),
-          SizedBox(height: 20,),
-          Container(
-            width: ScreenTool.partOfScreenWidth(0.88),
-            height: 220,
-            child: MealListUI(key:new GlobalKey<MealListUIState>()),
-          ),
-        ],
-      ),
-    );
-    this.takePhotoPart = new TakePhotoPage();
-    this.addPlanPart = new Container(
-      width: ScreenTool.partOfScreenWidth(1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-          My()
-        ],
-      ),
-    );
-    this.myDietButton = CustomIconButton(
-      theme: MyTheme.blueAndWhite,
-      icon: FontAwesomeIcons.utensils,
-      backgroundOpacity: 0.0,
-      buttonSize: 65,
-      iconSize: 25,
-      borderRadius: 10,
-      onClick: () {
-        this.navigator.reverseOpacity();
-      },
-      navigatorCallback: (){
-        User.getInstance().refreshMeal();
-      },
-    );
-    this.takePhotoButton = CustomIconButton(
-      theme: MyTheme.blueAndWhite,
-      icon: FontAwesomeIcons.camera,
-      backgroundOpacity: 0.0,
-      buttonSize: 65,
-      borderRadius: 10,
-      iconSize: 25,
-      fontSize: 12,
-      onClick: () {
-        this.navigator.beginOpacity();
-      },
-      navigatorCallback: () {
-        this.takePhotoPart.getCamera();
-      },
-    );
-    this.addPlanButton = CustomIconButton(
-        theme: MyTheme.blueAndWhite,
-        icon: FontAwesomeIcons.folderPlus,
-        backgroundOpacity: 0.0,
-        borderRadius: 10,
-        buttonSize: 65,
-        iconSize: 25,
-        fontSize: 12,
-        onClick: () {
-          this.navigator.reverseOpacity();
-        });
     this.user = user;
   }
   @override
@@ -111,9 +33,20 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> with TickerProviderStateMixin {
+  GlobalKey<TakePhotoState> photoKey;
+  List<GlobalKey<CustomIconButtonState>> buttonKey;
+  GlobalKey<CustomNavigatorState> navigatorKey;
+  TabController ctl;
   @override
   void initState() {
-    this.setNavigator();
+    photoKey = new GlobalKey<TakePhotoState>();
+    navigatorKey = new GlobalKey<CustomNavigatorState>();
+    buttonKey = [
+      new GlobalKey<CustomIconButtonState>(),
+      new GlobalKey<CustomIconButtonState>(),
+      new GlobalKey<CustomIconButtonState>()
+    ];
+    this.ctl = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -136,13 +69,20 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                             color: Color(0xFF172632),
                           ),
                         ),
-                        widget.bodyContent,
+                        TabBarView(
+                            physics: new NeverScrollableScrollPhysics(),
+                            controller: ctl,
+                            children: [
+                              new DietPage(),
+                              new TakePhotoPage(key:this.photoKey),
+                              new ThirdPage(),
+                            ]),
                         Column(
                           children: [
                             Expanded(child: SizedBox()),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [widget.navigator],
+                              children: [this.setNavigator()],
                             )
                           ],
                         )
@@ -245,37 +185,70 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  TabController getTabController() {
-    if (widget.navigator != null) {
-      return widget.navigator.getController();
-    }
-    return TabController(length: 3, vsync: this);
-  }
-
-  void setNavigator() {
-    List<CustomIconButton> buttons = [
-      widget.myDietButton,
-      widget.takePhotoButton,
-      widget.addPlanButton,
-    ];
-    TabController ctl = TabController(length: buttons.length, vsync: this);
-    if (widget.navigator != null) {
-      ctl = widget.navigator.getController();
-    }
-    widget.navigator = new CustomNavigator(
+  CustomNavigator setNavigator() {
+    List<CustomIconButton> buttons = this.getButtons();
+    CustomNavigator navigator = new CustomNavigator(
+      key: this.navigatorKey,
       buttons: buttons,
       controller: ctl,
       opacity: 0.25,
       width: ScreenTool.partOfScreenWidth(0.85),
       height: ScreenTool.partOfScreenHeight(0.08),
     );
-    widget.bodyContent = TabBarView(
-        physics: new NeverScrollableScrollPhysics(),
-        controller: ctl,
-        children: [
-          widget.myDietPart,
-          widget.takePhotoPart,
-          widget.addPlanPart,
-        ]);
+    return navigator;
+  }
+  List<CustomIconButton> getButtons(){
+    CustomIconButton myDietButton = CustomIconButton(
+      key: this.buttonKey[0],
+      theme: MyTheme.blueAndWhite,
+      icon: FontAwesomeIcons.utensils,
+      backgroundOpacity: 0.0,
+      buttonSize: 65,
+      iconSize: 25,
+      borderRadius: 10,
+      onClick: () {
+        this.navigatorKey.currentState.reverseOpacity();
+        // this.navigator.reverseOpacity();
+      },
+      navigatorCallback: (){
+        User.getInstance().refreshMeal();
+      },
+    );
+    CustomIconButton takePhotoButton = CustomIconButton(
+      key: this.buttonKey[1],
+      theme: MyTheme.blueAndWhite,
+      icon: FontAwesomeIcons.camera,
+      backgroundOpacity: 0.0,
+      buttonSize: 65,
+      borderRadius: 10,
+      iconSize: 25,
+      fontSize: 12,
+      onClick: () {
+        this.navigatorKey.currentState.beginOpacity();
+        // this.navigator.beginOpacity();
+      },
+      navigatorCallback: () {
+        this.photoKey.currentState.getCamera();
+        // this.takePhotoPart.getCamera();
+      },
+    );
+    CustomIconButton addPlanButton = CustomIconButton(
+        key: this.buttonKey[2],
+        theme: MyTheme.blueAndWhite,
+        icon: FontAwesomeIcons.folderPlus,
+        backgroundOpacity: 0.0,
+        borderRadius: 10,
+        buttonSize: 65,
+        iconSize: 25,
+        fontSize: 12,
+        onClick: () {
+          this.navigatorKey.currentState.reverseOpacity();
+          // this.navigator.reverseOpacity();
+        });
+    return [
+      myDietButton,
+      takePhotoButton,
+      addPlanButton
+    ];
   }
 }
