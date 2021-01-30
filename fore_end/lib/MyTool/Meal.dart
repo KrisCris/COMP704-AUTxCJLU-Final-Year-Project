@@ -4,7 +4,7 @@ import 'package:fore_end/Mycomponents/widgets/MealList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Food.dart';
-import 'LocalDataManager.dart';
+import 'util/LocalDataManager.dart';
 
 class Meal{
   static const IconData defaultIcon = FontAwesomeIcons.coffee;

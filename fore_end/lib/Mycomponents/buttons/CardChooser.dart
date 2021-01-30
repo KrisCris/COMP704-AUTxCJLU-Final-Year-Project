@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 import 'package:fore_end/interface/Valueable.dart';
 

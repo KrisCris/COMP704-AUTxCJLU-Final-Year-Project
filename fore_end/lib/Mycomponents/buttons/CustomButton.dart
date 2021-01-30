@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 

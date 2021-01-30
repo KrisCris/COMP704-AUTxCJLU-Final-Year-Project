@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
 class DotPainter extends ContextPainter{

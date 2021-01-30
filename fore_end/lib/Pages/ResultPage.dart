@@ -2,13 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 
 class ResultPage extends StatefulWidget {
