@@ -342,6 +342,7 @@ class FoodBoxState extends State<FoodBox>
   }
 
   void clickFunc() {
+
     if (this.shouldExpand) {
       this.shouldExpand = false;
     } else {
