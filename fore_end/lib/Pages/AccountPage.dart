@@ -269,6 +269,8 @@ class PageState extends State<AccountPage> {
         newGender=0;
       }
 
+      JhPickerTool.setInitialState();
+
       JhPickerTool.showStringPicker(context,
           title: 'Gender',
           normalIndex: newGender,
