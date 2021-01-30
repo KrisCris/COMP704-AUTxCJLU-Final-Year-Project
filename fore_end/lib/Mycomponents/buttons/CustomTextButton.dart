@@ -5,12 +5,11 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/interface/Disable.dart';
-import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
 
 class CustomTextButton extends StatefulWidget
-    with ThemeWidgetMixIn, DisableWidgetMixIn, ValueableWidgetMixIn<String>{
+    with DisableWidgetMixIn, ValueableWidgetMixIn<String>{
   ///文字的尺寸
   double fontsize;
 
@@ -41,20 +40,20 @@ class CustomTextButton extends StatefulWidget
       {this.fontsize = 16,
         bool disabled = false,
         bool canChangeDisable = true,
+        Color textColor,
+        Color clickColor,
         this.ignoreTap = false,
         this.autoReturnColor = true,
         Function tapUpFunc,
-        @required MyTheme theme,
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
-      this.theme = theme;
+      this.textColor = MyTheme.convert(ThemeColorName.NormalText,color:textColor);
+      this.clickColor = MyTheme.convert(ThemeColorName.HighLightText,color:clickColor);
       this.tapUpFunc = tapUpFunc==null?(){}:tapUpFunc;
       this.widgetValue = ValueNotifier<String>(text);
       this.disabled = ValueNotifier(disabled);
       this.canChangeDisable = canChangeDisable;
-      this.textColor = this.theme.darkTextColor;
-      this.clickColor = this.theme.getReactColor(ComponentReactState.focused);
   }
 
   @override
@@ -70,12 +69,10 @@ class CustomTextButton extends StatefulWidget
 ///混入了 [ValueableStateMixIn] 用于控制控件的输出值
 ///
 class CustomTextButtonState extends State<CustomTextButton>
-    with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn,ValueableStateMixIn<String> {
+    with TickerProviderStateMixin, DisableStateMixIn,ValueableStateMixIn<String> {
   TweenAnimation<CalculatableColor> animation = new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
-  CustomTextButtonState(){
-    this.themeState = ComponentThemeState.normal;
-  }
+
   @override
   void initState() {
     super.initState();
@@ -85,8 +82,8 @@ class CustomTextButtonState extends State<CustomTextButton>
     this.initDisableListener(widget.disabled);
     //初始化动画效果
     this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        widget.theme.getReactColor(ComponentReactState.focused),
+        widget.textColor,
+        widget.clickColor,
         widget.colorChangeDura, this, null);
     //点击完毕后，颜色从高亮恢复正常
     if(widget.autoReturnColor) {
@@ -97,16 +94,6 @@ class CustomTextButtonState extends State<CustomTextButton>
           }
         }
       });
-      //状态变化后，重置点击变色动画
-      this.animation.addStatusListener((status) {
-        if(status == AnimationStatus.completed){
-          widget.textColor = widget.theme.getThemeColor(this.themeState);
-          // this.animation.initAnimation(widget.textColor, widget.clickColor,
-          //     widget.colorChangeDura, this, () { setState(() {});});
-        }
-      });
-    }else{
-      widget.textColor = widget.theme.getThemeColor(this.themeState);
     }
   }
   @override
@@ -159,71 +146,6 @@ class CustomTextButtonState extends State<CustomTextButton>
         });
   }
 
-  @override
-  void setReactState(ComponentReactState rea) {
-    //textButton don't have focus/disable state, so do nothing
-  }
-
-  ///设置correct状态时的动画变化，返回旧的主题状态
-  @override
-  ComponentThemeState setCorrect() {
-    ComponentThemeState stt = super.setCorrect();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        newColor,
-        widget.colorChangeDura,
-        this, () {setState((){});});
-    this.animation.beginAnimation();
-    return stt;
-  }
-
-  ///设置error状态时的动画变化，返回旧的主题状态
-  @override
-  ComponentThemeState setError() {
-    ComponentThemeState stt =super.setError();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        newColor,
-        widget.colorChangeDura,
-        this, () {setState((){});});
-    this.animation.beginAnimation();
-    return stt;
-  }
-
-  ///设置normal状态时的动画变化，返回旧的主题状态
-  @override
-  ComponentThemeState setNormal() {
-    ComponentThemeState stt =super.setNormal();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        newColor,
-        widget.colorChangeDura,
-        this, () {setState((){});});
-    this.animation.beginAnimation();
-    return stt;
-  }
-
-  ///设置warning状态时的动画变化，返回旧的主题状态
-  @override
-  ComponentThemeState setWarning() {
-    ComponentThemeState stt =super.setWarning();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        newColor,
-        widget.colorChangeDura,
-        this, () {setState((){});});
-    this.animation.beginAnimation();
-    return stt;
-  }
-
   ///ValueableStateMixIn的抽象函数, value发生变化时，进行组件刷新
   @override
   void onChangeValue() {
@@ -234,8 +156,8 @@ class CustomTextButtonState extends State<CustomTextButton>
   @override
   void setDisabled() {
     this.animation.initAnimation(
-        CalculatableColor.transform(widget.textColor),
-        widget.theme.getDisabledColor(),
+        widget.textColor,
+        MyTheme.convert(ThemeColorName.DisableText),
         widget.colorChangeDura,
         this, () {setState((){});});
     this.animation.beginAnimation();
@@ -245,10 +167,19 @@ class CustomTextButtonState extends State<CustomTextButton>
   @override
   void setEnabled() {
     this.animation.initAnimation(
-        widget.theme.getDisabledColor(),
-        CalculatableColor.transform(widget.textColor),
+        MyTheme.convert(ThemeColorName.DisableText),
+        widget.textColor,
         widget.colorChangeDura,
         this, () {setState((){});});
+    this.animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        this.animation.initAnimation(
+            widget.textColor,
+            widget.clickColor,
+            widget.colorChangeDura, this, null);
+        this.animation.popStatusListener();
+      }
+    });
     this.animation.beginAnimation();
   }
 }
