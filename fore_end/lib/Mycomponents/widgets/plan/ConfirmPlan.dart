@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/text/ValueText.dart';
 

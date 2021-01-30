@@ -9,7 +9,7 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 import 'Food.dart';
 import 'Meal.dart';
-import 'Req.dart';
+import 'util/Req.dart';
 import 'package:image/image.dart' as cropper;
 
 class FoodRecognizer{

@@ -2,7 +2,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/FluctuateTween.dart';
+
 
 abstract class MyAnimation<T> implements ValueListenable<T>{
   AnimationController ctl;
