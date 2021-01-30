@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/LocalDataManager.dart';
 import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/Req.dart';
 import 'package:fore_end/Mycomponents/widgets/MealList.dart';
@@ -35,6 +36,7 @@ class User {
   String _email;
   String _avatar;
   bool _needGuide;
+  int _theme;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
@@ -48,6 +50,7 @@ class User {
     int uid,
     double bodyWeight,
     double bodyHeight,
+    int theme,
     Plan plan,
     bool needGuide,
     String avatar = User.defaultAvatar,
@@ -64,7 +67,7 @@ class User {
     this._plan = plan;
     this._age = age;
     this._needGuide = needGuide;
-
+    this._theme = theme;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -112,6 +115,13 @@ class User {
       }
     }
   }
+  static bool isInit(){
+    return User._instance == null;
+  }
+  MyTheme getNowTheme(){
+    return MyTheme.getTheme(themeCode: this._theme);
+  }
+
   bool hasMealName(String s){
     for(Meal m in this.meals.value){
       if(s == m.mealName){
@@ -142,6 +152,7 @@ class User {
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
+          theme: pre.getInt("theme"),
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
           needGuide: pre.getBool("needSetPlan"));
@@ -150,7 +161,7 @@ class User {
   }
 
   double get bodyWeight => _bodyWeight;
-
+  int get themeCode => _theme;
   String get token => _token;
   bool get needGuide => _needGuide;
   set token(String value) {
@@ -242,6 +253,7 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
+    pre.setInt("theme", this._theme);
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();
