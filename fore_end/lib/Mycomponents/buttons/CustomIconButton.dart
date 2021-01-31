@@ -349,4 +349,5 @@ class CustomIconButtonState extends State<CustomIconButton>
 
     this.iconAndTextColorAnimation.beginAnimation();
   }
+
 }

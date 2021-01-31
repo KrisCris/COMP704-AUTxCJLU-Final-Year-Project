@@ -428,4 +428,14 @@ class CustomButtonState extends State<CustomButton>
     });
     this.colorAnimation.beginAnimation();
   }
+
+  @override
+  void initDisabled() {
+    this.setDisabled();
+  }
+
+  @override
+  void initEnabled() {
+   this.setEnabled();
+  }
 }
