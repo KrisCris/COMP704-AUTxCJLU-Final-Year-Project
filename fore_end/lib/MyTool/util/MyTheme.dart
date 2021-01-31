@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
 enum ComponentThemeState{
@@ -12,14 +12,6 @@ enum ComponentThemeState{
 
 class MyTheme {
 
-  // final Color unfocusedColor;
-  // final Color disabledColor;
-  // final Color errorColor;
-  // final Color focusedColor;
-  // final Color warningColor;
-  // final Color completeColor;
-  // final Color textColorDark;
-  // final Color textColorLight;
   Map<ComponentThemeState,Color> themeMap;
   Map<ComponentReactState,Color> reactMap;
   Color darkTextColor;

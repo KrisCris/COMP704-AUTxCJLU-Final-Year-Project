@@ -2,14 +2,16 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
-class DotPainter extends CustomPainter {
+class DotPainter extends ContextPainter{
   Paint pen;
   double k;
   double b;
   double dotGap;
-  double moveVal;
+  final TweenAnimation<double> moveAnimation;
 
   DotPainter(
       {Color color=Colors.black12,
@@ -17,11 +19,12 @@ class DotPainter extends CustomPainter {
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
-      double moveVal=0}) {
+       BuildContext context,
+      this.moveAnimation}):super(repaint: moveAnimation) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;
-    this.moveVal = moveVal;
+    this.context = context;
     this.pen = Paint()
       ..color = color
       ..strokeCap = StrokeCap.round
@@ -35,18 +38,30 @@ class DotPainter extends CustomPainter {
     double width = size.width;
     double height = size.height;
     if(width == 0){
-      width = ScreenTool.partOfScreenWidth(1);
+      if(this.context != null){
+        width = context.size.width;
+      }else{
+        width = ScreenTool.partOfScreenWidth(1);
+      }
     }
     if(height == 0){
-      height = width/2;
+      if(this.context != null){
+        height = context.size.height;
+      }else{
+        height = width;
+      }
+
     }
     configuredSize = new Size(width,height);
-
+    double moveVal = 0;
+    if(this.moveAnimation != null){
+      moveVal = moveAnimation.value;
+    }
     double angle = math.atan(this.k);
     double xGap = this.dotGap * math.cos(angle);
     double yGap = this.dotGap * math.sin(angle);
-    double xMove = this.moveVal * math.cos(angle);
-    double yMove = this.moveVal * math.sin(angle);
+    double xMove = moveVal * math.cos(angle);
+    double yMove = moveVal * math.sin(angle);
     for (double xbias = 0; xbias < configuredSize.width; xbias += 2 * xGap) {
       for (double x = -xGap + xbias + xMove, y = -yGap + yMove;
           x <= configuredSize.width && y <= configuredSize.height;
@@ -58,7 +73,10 @@ class DotPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant DotPainter oldDelegate) {
+    if(oldDelegate.moveAnimation == null){
+      return false;
+    }
+    return oldDelegate.moveAnimation.value != this.moveAnimation.value;
   }
 }

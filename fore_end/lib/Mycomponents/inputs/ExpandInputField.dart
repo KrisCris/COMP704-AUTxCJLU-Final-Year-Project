@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/clipper/RightLeftClipper.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
@@ -93,7 +93,7 @@ class ExpandInputFieldState extends State<ExpandInputField>
               bottom: -25,
               left: 5,
               child: ClipRect(
-                  clipper: new RightLeftClipper(lengthAnimation.getValue()),
+                  clipper: new RightLeftClipper(lengthAnimation.value()),
                   child: this.createInput())),
           Positioned(right: 12, child: this.createSuffix()),
         ],

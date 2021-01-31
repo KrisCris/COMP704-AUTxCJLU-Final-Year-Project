@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/Picker_Tool.dart';
-import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Picker_Tool.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
@@ -268,6 +268,8 @@ class PageState extends State<AccountPage> {
       }else if(genderItem.getValue()=="Male"){
         newGender=0;
       }
+
+      JhPickerTool.setInitialState();
 
       JhPickerTool.showStringPicker(context,
           title: 'Gender',

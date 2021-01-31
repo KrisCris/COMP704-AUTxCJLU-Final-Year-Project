@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
-import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
-import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
@@ -22,6 +20,8 @@ class ExtraBodyDataInputer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User u = User.getInstance();
+
     CustomButton nextButton = CustomButton(
       theme: MyTheme.blueStyle,
       radius: 5,
@@ -41,7 +41,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
       width: 0.8,
       maxVal: 100,
       minVal: 1,
-      initVal: 10,
+      initVal: u.age == null?18:u.age,
       borderThickness: 4,
       barColor: Color(0xFF82BFFC),
       showValue: true,

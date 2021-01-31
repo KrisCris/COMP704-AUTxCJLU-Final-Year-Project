@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
-import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class BodyDataInputer extends StatelessWidget {
@@ -23,6 +23,7 @@ class BodyDataInputer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User u = User.getInstance();
     CustomButton nextButton = CustomButton(
       theme: MyTheme.blueStyle,
       radius: 5,
@@ -37,6 +38,7 @@ class BodyDataInputer extends StatelessWidget {
     CardChooser male = CardChooser<int>(
       value: 5,
       text: "Male",
+      isChosen: u.gender == null?false:u.gender == 1?true:false,
       textSize: 15,
       textColor: Colors.white,
       backgroundColor: Color(0xFF3594DD),
@@ -48,6 +50,7 @@ class BodyDataInputer extends StatelessWidget {
       value: -161,
       text: "Female",
       textSize: 15,
+      isChosen:  u.gender == null?false:u.gender == 2?true:false,
       textColor: Colors.white,
       backgroundColor: Color(0xFFFF7979),
       borderRadius: 10,
@@ -63,7 +66,7 @@ class BodyDataInputer extends StatelessWidget {
       unit: "m",
       maxVal: 2.50,
       minVal: 1.00,
-      initVal: 1.65,
+      initVal: u.bodyHeight == null?1.65:u.bodyHeight,
       borderThickness: 4,
       barColor: Colors.white,
       showValue: true,
@@ -78,7 +81,7 @@ class BodyDataInputer extends StatelessWidget {
       unit: "KG",
       maxVal: 150,
       minVal: 30,
-      initVal: 50,
+      initVal: u.bodyWeight == null?50:u.bodyWeight,
       adjustVal: 1,
       barColor: Color(0xFFBCA5D6),
       borderThickness: 4,

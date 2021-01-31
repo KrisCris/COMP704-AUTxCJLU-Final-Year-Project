@@ -2,8 +2,8 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/BorderPainter.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/painter/ValueBarBackgroundPainter.dart';
@@ -174,7 +174,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.textColorAnimation = TweenAnimation<CalculatableColor>();
     this
         .barWidthAnimation
-        .initAnimation(widget.blockWidth, widget.blockWidth, 200, this, () {
+        .initAnimation(0, 0, 200, this, () {
       setState(() {});
     });
     this.moveAnimation.initAnimation(0.0, widget.effectGap, 800, this, () {
@@ -220,7 +220,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             showNumber: widget.showValue,
             position: widget.valuePosition,
             str: this.getDisplayValue(),
-            fontColor: this.textColorAnimation.getValue(),
+            fontColor: this.textColorAnimation.value,
             color: Color(0x77AAAAAA)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
@@ -254,11 +254,11 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
                         color: widget.effectColor,
                         lineWidth: widget.effectThickness,
                         lineGap: widget.effectGap,
-                        moveVal: this.moveAnimation.getValue()),
+                        moveVal: this.moveAnimation.value),
                     child: Container(
-                      width: this.barWidthAnimation.getValue(),
+                      width: this.barWidthAnimation.value,
                       height: widget.barThickness,
-                      color: this.barColorAnimation.getValue(),
+                      color: this.barColorAnimation.value,
                     ),
                   )),
             ),
@@ -283,7 +283,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             height: widget.barThickness,
             margin: EdgeInsets.only(
                 left:
-                    this.barWidthAnimation.getValue() + widget.borderThickness,
+                    this.barWidthAnimation.value + widget.borderThickness,
                 top: ValueBar.backgroundExtraSpace),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -407,7 +407,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       this.textColorAnimation.reverse();
       this.barColorAnimation.reverse();
     }
-    double firstVal = this.barWidthAnimation.getValue();
+    double firstVal = this.barWidthAnimation.value;
     this.barWidthAnimation.initAnimation(
         firstVal,
         (widget.width - 2 * widget.borderThickness - widget.blockWidth) *
