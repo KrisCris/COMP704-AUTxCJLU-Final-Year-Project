@@ -20,7 +20,7 @@ class Welcome extends StatelessWidget {
               decoration: TextDecoration.none,
               fontSize: 50.0,
               fontFamily: "Futura",
-              color: Colors.black),
+              color: MyTheme.convert(ThemeColorName.HeaderText)),
         ),
         SizedBox(height: 60.0),
         CustomButton(
@@ -55,12 +55,9 @@ class Welcome extends StatelessWidget {
         tapFunc: () {
           Navigator.pushNamed(context, "register");
         });
-    return  BackGround(
-          sigmaX: 15.0,
-          sigmaY: 15.0,
-          backgroundImage: "image/fruit-main.jpg",
-          color: Colors.white,
-          opacity: 0.79,
-          child: col);
+    return  Container(
+      color: MyTheme.convert(ThemeColorName.PageBackground),
+      child: col,
+    );
   }
 }

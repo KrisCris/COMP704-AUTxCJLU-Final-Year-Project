@@ -284,7 +284,7 @@ class CustomButtonState extends State<CustomButton>
   Widget build(BuildContext context) {
     GestureDetector gesture = GestureDetector(
         onDoubleTap: () {
-          if (widget.disabled.value || !this.disableChangeDone) return;
+          if (widget.disabled.value) return;
 
           if (widget.doubleTapFunc != null) {
             widget.doubleTapFunc();
@@ -294,7 +294,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapDown: (TapDownDetails tpd) {
-          if (widget.disabled.value || !this.disableChangeDone) {
+          if (widget.disabled.value) {
             this.fluctuateAnimation.forward();
           } else if (this.disableChangeDone) {
             this.isTap = true;
@@ -302,7 +302,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapUp: (TapUpDetails tpu) {
-          if (widget.disabled.value || !this.disableChangeDone) {
+          if (widget.disabled.value) {
             return;
           }
           this.isTap = false;
@@ -312,7 +312,7 @@ class CustomButtonState extends State<CustomButton>
           }
         },
         onTapCancel: () {
-          if (widget.disabled.value || !this.disableChangeDone) return;
+          if (widget.disabled.value) return;
 
           this.isTap = false;
           this.transparentAnimation.reverseAnimation();
@@ -405,7 +405,6 @@ class CustomButtonState extends State<CustomButton>
   ///设置变成disable状态时播放的动画
   @override
   void setDisabled() {
-    this.disableChangeDone = false;
     this.colorAnimation.initAnimation(
         widget.bgColor,
         MyTheme.convert(ThemeColorName.DisabledButton),

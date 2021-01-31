@@ -538,7 +538,7 @@ class CustomTextFieldState extends State<CustomTextField>
       focusNode: widget._focusNode,
       controller: widget._inputcontroller,
       maxLines: 1,
-      style: TextStyle(fontSize: 18),
+      style: TextStyle(fontSize: 18,color: MyTheme.convert(ThemeColorName.NormalText)),
       autofocus: widget.isAutoFocus,
       cursorColor: colorAnimation.value,
       cursorWidth: 2,

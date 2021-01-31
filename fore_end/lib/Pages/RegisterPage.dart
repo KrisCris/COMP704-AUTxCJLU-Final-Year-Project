@@ -162,7 +162,7 @@ class Register extends StatelessWidget {
 
     this.emailTextField.addListener(() {
       String contentWhenClickButton = this.verifyTextField.getContentWhenClickButton();
-      if (contentWhenClickButton.isEmpty) return;
+      if (contentWhenClickButton == null||contentWhenClickButton.isEmpty) return;
 
       if (this.emailTextField.getValue() != emailWhenClickButton) {
         if (this.nextButton.isEnable()) {

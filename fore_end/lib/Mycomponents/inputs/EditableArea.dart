@@ -63,7 +63,7 @@ class EditableArea extends StatelessWidget {
         width: this.width,
         height: this.height,
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: MyTheme.convert(ThemeColorName.ComponentBackground),
             borderRadius: BorderRadius.all(Radius.circular(this.borderRadius)),
             boxShadow: [
               BoxShadow(
