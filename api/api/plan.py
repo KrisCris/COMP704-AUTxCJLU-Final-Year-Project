@@ -195,6 +195,5 @@ def consume_foods():
             uid=uid, pid=pid, type=type, fid=food_info[0], day=day,
             name=food_info[1], calories=foods_info[2], protein=foods_info[3]
         )
-
         f.add()
     return reply_json(1)

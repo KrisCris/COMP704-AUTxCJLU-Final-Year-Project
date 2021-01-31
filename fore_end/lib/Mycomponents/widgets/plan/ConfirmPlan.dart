@@ -50,7 +50,6 @@ class ConfirmPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
       width: 0.35,
@@ -61,9 +60,8 @@ class ConfirmPlan extends StatelessWidget {
     );
 
     CustomButton backButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       fontsize: 15,
       width: 0.35,
       height: 50,

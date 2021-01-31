@@ -64,7 +64,7 @@ class ResultPageState extends State<ResultPage> {
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'Futura',
-            color: MyTheme.blackAndWhite.lightTextColor,
+            color: MyTheme.convert(ThemeColorName.NormalText),
             decoration: TextDecoration.none,
           ),
 
@@ -113,7 +113,6 @@ class ResultPageState extends State<ResultPage> {
         ),
         Expanded(child: SizedBox()),
         CustomIconButton(
-            theme: MyTheme.WhiteAndBlack,
             icon: FontAwesomeIcons.times,
             iconSize: 23,
             buttonSize: 35,

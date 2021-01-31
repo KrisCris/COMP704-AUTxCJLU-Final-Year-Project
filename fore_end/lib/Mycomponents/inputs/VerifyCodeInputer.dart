@@ -155,7 +155,6 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
         width: widget.width,
         height: 50,
         radius: 8,
-        theme: MyTheme.blueStyle,
         disabled: true,
         sizeChangeMode: 2,
         tapFunc: ()async {
@@ -185,7 +184,6 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
       placeholder: widget.placeHolder,
       isAutoChangeState: false,
       inputType: InputFieldType.verifyCode,
-      theme: MyTheme.blueStyleForInput,
       width: 0,
       sizeChangeMode: 0,
       onCorrect: () async {

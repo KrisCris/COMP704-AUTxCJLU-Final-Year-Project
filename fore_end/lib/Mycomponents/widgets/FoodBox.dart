@@ -291,8 +291,7 @@ class FoodBoxState extends State<FoodBox>
           height: 25,
         ),
         CustomButton(
-          theme: MyTheme.blueStyle,
-          firstThemeState: ComponentThemeState.error,
+          firstColorName: ThemeColorName.Error,
           text: "Remove",
           width: 0.7,
           tapFunc: () {

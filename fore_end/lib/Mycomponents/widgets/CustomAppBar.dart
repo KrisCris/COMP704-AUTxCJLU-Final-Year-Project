@@ -103,7 +103,6 @@ class CustomAppBarState extends State<CustomAppBar>
             children: [
               SizedBox(height: 5),
               CustomIconButton(
-                theme: MyTheme.blueStyle,
                 icon: FontAwesomeIcons.doorOpen,
                 gap: 7,
                 text: "Log out",

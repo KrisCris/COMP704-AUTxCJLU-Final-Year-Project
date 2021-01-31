@@ -48,7 +48,7 @@ class PlanDetailPage extends StatelessWidget {
                 maxHeight: 30,
               ),
               Expanded(child: SizedBox()),
-              CustomTextButton("Change Plan",autoReturnColor: true, fontsize: 15,theme: MyTheme.blueStyle),
+              CustomTextButton("Change Plan",autoReturnColor: true, fontsize: 15),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),

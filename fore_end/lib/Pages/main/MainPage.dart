@@ -167,7 +167,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   Widget getLogOut() {
     return CustomIconButton(
       icon: FontAwesomeIcons.signOutAlt,
-      theme: MyTheme.blackAndWhite,
       backgroundOpacity: 0,
       iconSize: 30,
       onClick: () {
@@ -194,7 +193,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   List<CustomIconButton> getButtons() {
     CustomIconButton myDietButton = CustomIconButton(
       key: this.buttonKey[1],
-      theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.solidCircle,
       backgroundColorChange: false,
       backgroundOpacity: 0.0,
@@ -209,7 +207,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
     CustomIconButton takePhotoButton = CustomIconButton(
       key: this.buttonKey[0],
-      theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
       backgroundColorChange: false,
       backgroundOpacity: 0.0,
@@ -226,7 +223,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
     CustomIconButton addPlanButton = CustomIconButton(
         key: this.buttonKey[2],
-        theme: MyTheme.blueAndWhite,
         icon: FontAwesomeIcons.solidCircle,
         backgroundColorChange: false,
         backgroundOpacity: 0.0,
