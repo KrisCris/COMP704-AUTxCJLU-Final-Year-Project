@@ -29,8 +29,7 @@ class Login extends StatelessWidget {
       leftMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       tapFunc: () {
         Navigator.pop(context);
       },
@@ -41,7 +40,6 @@ class Login extends StatelessWidget {
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
-      theme: MyTheme.blueStyle,
       disabled: true,
       width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () async {
@@ -55,7 +53,6 @@ class Login extends StatelessWidget {
     this.emailField = CustomTextField(
       placeholder: "Email address",
       // keyboardAction: TextInputAction.next,
-      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -69,7 +66,6 @@ class Login extends StatelessWidget {
     );
     this.passwordField = CustomTextField(
       placeholder: "Password",
-      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {

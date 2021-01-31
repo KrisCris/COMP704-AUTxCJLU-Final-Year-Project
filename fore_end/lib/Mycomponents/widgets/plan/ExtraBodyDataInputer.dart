@@ -23,7 +23,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
     User u = User.getInstance();
 
     CustomButton nextButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
       width: 0.8,

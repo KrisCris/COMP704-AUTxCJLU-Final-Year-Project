@@ -29,21 +29,19 @@ class AccountPage extends StatefulWidget {
   bool visible = true;
   PageState state;
 
-
   String getUserGender(int i) {
     if (i == 0) {
       return "Male";
-    } else if(i==1){
+    } else if (i == 1) {
       return "Female";
     }
-      return null;
+    return null;
   }
 
   int setGender(String gender) {
     if (gender == "Male")
       return 0;
-    else if(gender== "Female")
-      return 1;
+    else if (gender == "Female") return 1;
     return null;
   }
 
@@ -67,11 +65,9 @@ class AccountPage extends StatefulWidget {
 class PageState extends State<AccountPage> {
   EditableArea basicInfoEditableArea;
 
-
   @override
   Widget build(BuildContext context) {
     this.basicInfoEditableArea = EditableArea(
-        theme: MyTheme.blueStyle,
         width: 0.7,
         height: 320,
         title: "Basic information",
@@ -80,11 +76,9 @@ class PageState extends State<AccountPage> {
           this.getUserNameItem(),
           this.getAgeItem(),
           this.getGenderItem(context),
+        ]);
 
-        ]
-    );
-
-    this.basicInfoEditableArea.onEditComplete= () async {
+    this.basicInfoEditableArea.onEditComplete = () async {
       User user = User.getInstance();
       List<String> basicInfo = new List<String>();
       basicInfo = this.basicInfoEditableArea.getAllValue();
@@ -113,77 +107,68 @@ class PageState extends State<AccountPage> {
       // Navigator.pop(context);
     };
 
-
     return FlutterEasyLoading(
         child: Scaffold(
-            body: ListView(
-              children: <Widget>[
-                //Account Page的最上面标题
-                Container(
-                  // margin: EdgeInsets.all(20),
-                  margin:
-                  EdgeInsets.fromLTRB(
-                      ScreenTool.partOfScreenWidth(20), 20, 10, 10),
-                  child: Text(
-                    "ACCOUNT INFO",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 35,
-                      fontFamily: "Futura",
+            body: Stack(
+            children: [
+              Container(
+                width: ScreenTool.partOfScreenWidth(1),
+                height: ScreenTool.partOfScreenHeight(1),
+                color: MyTheme.convert(ThemeColorName.PageBackground),
+              ),
+              ListView(
+                children: <Widget>[
+                  //Account Page的最上面标题
+                  Container(
+                    // margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.fromLTRB(
+                        ScreenTool.partOfScreenWidth(20), 20, 10, 10),
+                    child: Text(
+                      "ACCOUNT INFO",
+                      style: TextStyle(
+                        color: MyTheme.convert(ThemeColorName.HeaderText),
+                        fontSize: 35,
+                        fontFamily: "Futura",
+                      ),
                     ),
                   ),
-                ),
 
-
-                SizedBox(
-                  height: 10,
-                ),
-
-                EditableArea(
-                    theme: MyTheme.blueStyle,
-                    width: 0.7,
-                    height: 190,
-                    title: "Account information",
-                    displayContent: [
-                      this.getEmailItem(),
-                      this.getPwdItem(context),
-                    ]
-                ),
-
-                SizedBox(
-                  height: 10,
-                ),
-
-                this.basicInfoEditableArea,
-
-
-                SizedBox(
-                  height: 10,
-                ),
-
-                OutlineButton(
-                  child: Text("Back MainPage"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            )
-        )
-    );
+                  SizedBox(
+                    height: 10,
+                  ),
+                  EditableArea(
+                      width: 0.7,
+                      height: 190,
+                      title: "Account information",
+                      displayContent: [
+                        this.getEmailItem(),
+                        this.getPwdItem(context),
+                      ]),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  this.basicInfoEditableArea,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  OutlineButton(
+                    child: Text("Back MainPage"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              )
+            ],
+    )));
   }
 
-
-
-
-
-  Widget getEmailItem(){
-    SettingItem item =new SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.envelope),
+  Widget getEmailItem() {
+    SettingItem item = new SettingItem(
+      leftIcon: Icon(FontAwesomeIcons.envelope,color: MyTheme.convert(ThemeColorName.NormalIcon),),
       leftText: "Email",
       rightComponent: CustomTextButton(
         widget.user.email,
-        theme: MyTheme.blueStyle,
       ),
       disabled: true,
       canChangeDisabled: false,
@@ -192,10 +177,11 @@ class PageState extends State<AccountPage> {
     return item;
   }
 
-  Widget getPwdItem(BuildContext context){
+  Widget getPwdItem(BuildContext context) {
     SettingItem item = SettingItem(
       leftIcon: Icon(
         FontAwesomeIcons.key,
+        color: MyTheme.convert(ThemeColorName.NormalIcon),
         size: 23,
       ),
       leftText: "Password",
@@ -203,27 +189,23 @@ class PageState extends State<AccountPage> {
       canChangeDisabled: true,
       rightComponent: CustomTextButton(
         "******",
-        theme: MyTheme.blueStyle,
         ignoreTap: true,
         autoReturnColor: false,
       ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UpdatePwdPage();}
-            ));
+          return UpdatePwdPage();
+        }));
       },
     );
 
     return item;
   }
 
-
-
-
   Widget getAvatarItem() {
     User u = User.getInstance();
     SettingItem item = SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.userCircle),
+      leftIcon: Icon(FontAwesomeIcons.userCircle,color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: "Profile Photo",
       rightComponent: ValueableImage(
         base64: u.avatar,
@@ -239,7 +221,7 @@ class PageState extends State<AccountPage> {
         return;
       } else {
         widget.imageSource = await widget.pictureToBase64(image);
-        u.avatar=widget.imageSource;
+        u.avatar = widget.imageSource;
         item.setValue(u.avatar);
       }
     };
@@ -249,12 +231,11 @@ class PageState extends State<AccountPage> {
 
   Widget getGenderItem(BuildContext context) {
     SettingItem genderItem = SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.transgender),
+      leftIcon: Icon(FontAwesomeIcons.transgender,color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: "Gender",
       disabled: true,
       rightComponent: CustomTextButton(
         widget.getUserGender(widget.user.gender),
-        theme: MyTheme.blueStyle,
         ignoreTap: true,
         autoReturnColor: false,
       ),
@@ -263,10 +244,10 @@ class PageState extends State<AccountPage> {
     genderItem.onTap = () {
       User user = User.getInstance();
       int newGender;
-      if(genderItem.getValue()=="Female"){
-        newGender=1;
-      }else if(genderItem.getValue()=="Male"){
-        newGender=0;
+      if (genderItem.getValue() == "Female") {
+        newGender = 1;
+      } else if (genderItem.getValue() == "Male") {
+        newGender = 0;
       }
 
       JhPickerTool.setInitialState();
@@ -276,10 +257,10 @@ class PageState extends State<AccountPage> {
           normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
         genderItem.setValue(item);
-        if(item=="Male"){
-          user.gender=0;
-        }else if(item=="Female"){
-          user.gender=1;
+        if (item == "Male") {
+          user.gender = 0;
+        } else if (item == "Female") {
+          user.gender = 1;
         }
       });
     };
@@ -289,7 +270,7 @@ class PageState extends State<AccountPage> {
 
   Widget getUserNameItem() {
     return SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.user),
+      leftIcon: Icon(FontAwesomeIcons.user,color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: "Username",
       text: widget.user.userName,
       inputFieldWidth: 0.45,
@@ -299,7 +280,7 @@ class PageState extends State<AccountPage> {
 
   Widget getAgeItem() {
     return SettingItem(
-      leftIcon: Icon(Icons.calendar_today),
+      leftIcon: Icon(Icons.calendar_today,color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: "Age",
       text: widget.user.age.toString(),
       inputFieldWidth: 0.45,

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 class CalculatableColor extends Color {
   static const CalculatableColor white = CalculatableColor(0xFFFFFFFF);
-
   const CalculatableColor(int value) : super(value);
   static CalculatableColor transform(Color clr){
     return CalculatableColor(clr.value);

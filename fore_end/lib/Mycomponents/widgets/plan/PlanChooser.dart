@@ -25,7 +25,6 @@ class PlanChooser extends StatelessWidget {
       fontColor: Colors.white,
     );
     CustomButton nextButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
       width: 0.8,

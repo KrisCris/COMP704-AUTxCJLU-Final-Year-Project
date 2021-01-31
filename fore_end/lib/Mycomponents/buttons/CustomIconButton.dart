@@ -8,10 +8,9 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Focusable.dart';
-import 'package:fore_end/interface/Themeable.dart';
 
 class CustomIconButton extends StatefulWidget
-    with ThemeWidgetMixIn, DisableWidgetMixIn, FocusableWidgetMixIn{
+    with DisableWidgetMixIn, FocusableWidgetMixIn{
   ///显示的ICON图标
   IconData icon;
 
@@ -72,7 +71,6 @@ class CustomIconButton extends StatefulWidget
 
   CustomIconButton(
       {
-        @required MyTheme theme,
       @required this.icon,
       this.text = "",
         this.sizeChangeWhenClick = false,
@@ -92,16 +90,12 @@ class CustomIconButton extends StatefulWidget
         Key key,
       this.navigatorCallback})
       : super(key:key) {
-    this.theme = theme;
     this.disabled = new ValueNotifier<bool>(disabled);
     this.focus = new ValueNotifier<bool>(focus);
   }
   @override
   State<StatefulWidget> createState() {
-    this.state = new CustomIconButtonState(
-        ComponentThemeState.normal,
-        this.shadows
-    );
+    this.state = new CustomIconButtonState();
     return this.state;
   }
 
@@ -132,21 +126,13 @@ class CustomIconButton extends StatefulWidget
 ///混入了 [FocusableStateMixIn] 用于控制Focus状态
 ///
 class CustomIconButtonState extends State<CustomIconButton>
-    with ThemeStateMixIn, TickerProviderStateMixin,DisableStateMixIn,FocusableStateMixIn {
+    with TickerProviderStateMixin,DisableStateMixIn,FocusableStateMixIn {
   TweenAnimation<CalculatableColor> backgroundColorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<double> iconSizeAnimation = TweenAnimation<double>();
-  List<BoxShadow> shadow;
   bool disabled = false;
-
-  CustomIconButtonState(
-      ComponentThemeState the, List<BoxShadow> shadow)
-      : super() {
-    this.themeState = the;
-    this.shadow = shadow;
-  }
 
   @override
   void didUpdateWidget(covariant CustomIconButton oldWidget) {
@@ -281,7 +267,7 @@ class CustomIconButtonState extends State<CustomIconButton>
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   color: this.backgroundColorAnimation.value,
-                  boxShadow: this.shadow),
+                  boxShadow: widget.shadows),
               child: child,
             );
           },
@@ -294,37 +280,19 @@ class CustomIconButtonState extends State<CustomIconButton>
     double opacity = widget.backgroundOpacity;
     if (isFocus) {
       opacity = 1.0;
-      return widget.theme.getFocusedColor().withOpacity(opacity);
     }
-    return widget.theme.getThemeColor(this.themeState).withOpacity(opacity);
+    return MyTheme.convert(ThemeColorName.Button).withOpacity(opacity);
   }
 
   ///计算图标和文字颜色
-  ///当前设计中，背景色和图标颜色相反
   CalculatableColor getIconAndTextColor(bool isFocus, bool isDisabled) {
     if (isFocus) {
-      return widget.theme.getThemeColor(this.themeState);
+      return MyTheme.convert(ThemeColorName.HightLightIcon);
     }else{
-      return widget.theme.getFocusedColor();
+      return MyTheme.convert(ThemeColorName.NormalIcon);
     }
   }
 
-  ///ThemeStateMixIn的抽象函数，暂不需要实现
-  @override
-  ComponentThemeState setCorrect() {
-  }
-  ///ThemeStateMixIn的抽象函数，暂不需要实现
-  @override
-  ComponentThemeState setError() {
-  }
-  ///ThemeStateMixIn的抽象函数，暂不需要实现
-  @override
-  ComponentThemeState setNormal() {
-  }
-  ///ThemeStateMixIn的抽象函数，暂不需要实现
-  @override
-  ComponentThemeState setWarning() {
-  }
   ///DisableStateMixIn的抽象函数，暂不需要实现
   @override
   void setEnabled() {
@@ -381,4 +349,5 @@ class CustomIconButtonState extends State<CustomIconButton>
 
     this.iconAndTextColorAnimation.beginAnimation();
   }
+
 }

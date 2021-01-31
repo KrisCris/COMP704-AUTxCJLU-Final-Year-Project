@@ -137,7 +137,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
         Expanded(child: SizedBox()),
         CustomIconButton(
           icon: FontAwesomeIcons.times,
-          theme: MyTheme.blackAndWhite,
           backgroundOpacity: 0,
           iconSize: 30,
           onClick: (){
