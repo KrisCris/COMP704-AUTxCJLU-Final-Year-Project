@@ -146,7 +146,9 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
-          widget.recognizer.isEmpty()? Container():addMealTextButton,  ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
+          ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
+          widget.recognizer.isEmpty()? Container():addMealTextButton,
+
 
 
         ],

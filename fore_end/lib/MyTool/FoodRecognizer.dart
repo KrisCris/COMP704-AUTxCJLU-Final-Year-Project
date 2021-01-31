@@ -52,13 +52,41 @@ class FoodRecognizer{
     l.clear();
     FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
   }
-  static void addFoodToMealName(String mealName){
+  ///这里是按照三餐的名字保存记录，上传服务器和本地保存
+  static void addFoodToMealName(String mealName) async{
     User u = User.getInstance();
     Meal m = u.getMealByName(mealName);
+    int mealsType=mealName=="breakfast"? 1 : {mealName=="lunch"?2:3};
     if(m != null){
       FoodRecognizer.addFoodToMeal(m);
+      List<List> totalFoodInfo;
+      for(Food food in m.foods){
+        int foodId=0;
+        List singleFoodInfo;
+        ///现在fid就是食物在数据库里的id，现在还没有这个数据。。
+        //singleFoodInfo.add(foodId);
+        singleFoodInfo.add(food.name);
+        singleFoodInfo.add(food.calorie);
+        singleFoodInfo.add(food.protein);
+        totalFoodInfo.add(singleFoodInfo);
+        foodId++;
+      }
+      Response res = await Requests.consumeFoods({
+        "uid": u.uid,
+        "pid": u.plan.id,
+        "type": mealsType,
+        "foods_info":totalFoodInfo,
+      });
+
+      if (res.data["code"] == 1) {
+        print("保存成功");
+        print(res.data);
+      }else {
+        print("保存失败");
+      }
     }
   }
+
   static void _sendFoodRecognizeRequest(String bs64,Uint8List byte,int rotate) async{
     if(_instance == null) {
       print("Try recognize Food when Recognizer is not init yet");
