@@ -59,11 +59,11 @@ class FoodRecognizer{
     int mealsType=mealName=="breakfast"? 1 : {mealName=="lunch"?2:3};
     if(m != null){
       FoodRecognizer.addFoodToMeal(m);
-      List<List> totalFoodInfo;
+      List<List> totalFoodInfo=new List<List>();
       for(Food food in m.foods){
         int foodId=0;
-        List singleFoodInfo;
-        ///现在fid就是食物在数据库里的id，现在还没有这个数据。。
+        List singleFoodInfo=[];
+        ///现在fid就是食物在数据库里的id，现在还没有这个数据，等数据库有了再写上去
         //singleFoodInfo.add(foodId);
         singleFoodInfo.add(food.name);
         singleFoodInfo.add(food.calorie);
