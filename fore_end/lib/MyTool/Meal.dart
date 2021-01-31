@@ -45,9 +45,12 @@ class Meal{
     SharedPreferences pre = LocalDataManager.pre;
     pre.remove(this.mealName);
   }
-  void read(){
-    SharedPreferences pre = LocalDataManager.pre;
-    this.addFoodWithString(pre.getString(this.mealName));
+  void read({SharedPreferences pre}){
+    SharedPreferences preLocal = LocalDataManager.pre;
+    if(preLocal == null){
+      preLocal = pre;
+    }
+    this.addFoodWithString(preLocal.getString(this.mealName));
   }
   IconData getIcon(){
     if(Meal.mealIcon.containsKey(this.mealName)){

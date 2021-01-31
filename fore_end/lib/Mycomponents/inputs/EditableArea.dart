@@ -11,8 +11,7 @@ import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
 ///用于统一修改可变值组件的区域
-class EditableArea extends StatelessWidget
-    with ThemeWidgetMixIn {
+class EditableArea extends StatelessWidget {
 
   ///区域内显示的组件
   List<Widget> displayContent;
@@ -38,9 +37,6 @@ class EditableArea extends StatelessWidget
   ///区域的标题
   String title;
 
-  ///第一次渲染时候的主题状态
-  ComponentThemeState the;
-
   EditableArea(
       {Key key,
       @required MyTheme theme,
@@ -52,14 +48,12 @@ class EditableArea extends StatelessWidget
         @required this.onEditComplete,
       this.title = ""})
       : super(key: key) {
-    this.theme = theme;
     if (this.width <= 1) {
       this.width = ScreenTool.partOfScreenWidth(this.width);
     }
     if (this.height <= 1) {
       this.height = ScreenTool.partOfScreenHeight(this.height);
     }
-    this.the = ComponentThemeState.normal;
     this._disableAll();
   }
 
@@ -94,7 +88,7 @@ class EditableArea extends StatelessWidget
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
                     fontSize: 17,
-                    color: this.theme.getThemeColor(this.the),
+                    color: MyTheme.convert(ThemeColorName.HeaderText),
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.bold)),
           ),
@@ -115,7 +109,6 @@ class EditableArea extends StatelessWidget
   CustomIconButton getEditButton(BuildContext context) {
     this.editButton = CustomIconButton(
       disabled: false,
-      theme: MyTheme.blueStyle,
       icon: FontAwesomeIcons.edit,
       backgroundOpacity: 0,
       iconSize: 25,

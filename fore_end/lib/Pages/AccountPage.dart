@@ -71,7 +71,6 @@ class PageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     this.basicInfoEditableArea = EditableArea(
-        theme: MyTheme.blueStyle,
         width: 0.7,
         height: 320,
         title: "Basic information",
@@ -140,7 +139,6 @@ class PageState extends State<AccountPage> {
                 ),
 
                 EditableArea(
-                    theme: MyTheme.blueStyle,
                     width: 0.7,
                     height: 190,
                     title: "Account information",
@@ -183,7 +181,6 @@ class PageState extends State<AccountPage> {
       leftText: "Email",
       rightComponent: CustomTextButton(
         widget.user.email,
-        theme: MyTheme.blueStyle,
       ),
       disabled: true,
       canChangeDisabled: false,
@@ -203,7 +200,6 @@ class PageState extends State<AccountPage> {
       canChangeDisabled: true,
       rightComponent: CustomTextButton(
         "******",
-        theme: MyTheme.blueStyle,
         ignoreTap: true,
         autoReturnColor: false,
       ),
@@ -254,7 +250,6 @@ class PageState extends State<AccountPage> {
       disabled: true,
       rightComponent: CustomTextButton(
         widget.getUserGender(widget.user.gender),
-        theme: MyTheme.blueStyle,
         ignoreTap: true,
         autoReturnColor: false,
       ),

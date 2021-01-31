@@ -39,7 +39,6 @@ class PaintedTextField extends StatelessWidget {
     ];
     if(this.icon != null){
       content.add(CustomIconButton(
-        theme: MyTheme.blueStyle,
         icon: this.icon,
         iconSize: 18,
         buttonSize: 25,

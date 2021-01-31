@@ -46,7 +46,6 @@ class Register extends StatelessWidget {
     this.emailTextField = CustomTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
-      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
@@ -84,7 +83,6 @@ class Register extends StatelessWidget {
     this.confirmPasswordTextField = CustomTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "re-enter the password",
@@ -117,7 +115,6 @@ class Register extends StatelessWidget {
       placeholder: 'password',
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
@@ -144,7 +141,6 @@ class Register extends StatelessWidget {
       placeholder: 'Nick name',
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
-      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "please input your nick name",
       maxlength: 30,
@@ -184,8 +180,7 @@ class Register extends StatelessWidget {
       leftMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       tapFunc: () {
         Navigator.pop(context);
       },
@@ -198,7 +193,6 @@ class Register extends StatelessWidget {
       rightMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
     );
 
     nextButton.tapFunc = () async {

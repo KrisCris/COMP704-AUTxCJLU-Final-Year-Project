@@ -36,7 +36,6 @@ class SettingItem extends StatefulWidget
       this.rightComponent = CustomTextField(
         disabled: disabled,
         canChangeDisabled: canChangeDisabled,
-        theme: MyTheme.blueStyleForInput,
         defaultContent: text,
         ulDefaultWidth: 0,
         width: this.inputFieldWidth,

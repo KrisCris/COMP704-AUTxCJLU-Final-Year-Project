@@ -6,11 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/LocalDataManager.dart';
-import 'file:///E:/phpstudy_pro/WWW/Food-detection-based-mobile-diet-keeper/fore_end/lib/MyTool/util/Req.dart';
-import 'package:fore_end/Mycomponents/widgets/MealList.dart';
+import 'package:fore_end/MyTool/util/LocalDataManager.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Food.dart';
 import 'Meal.dart';
 import 'Plan.dart';
 
@@ -75,7 +73,9 @@ class User {
       new Meal(mealName: "lunch"),
       new Meal(mealName: "dinner")
     ];
-    this.meals.value.forEach((element) {element.read();});
+    for(Meal m in this.meals.value){
+      m.read();
+    }
     this.meals.addListener(() {
 
     });
@@ -152,7 +152,7 @@ class User {
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
-          theme: pre.getInt("theme"),
+          theme: 0,
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
           needGuide: pre.getBool("needSetPlan"));

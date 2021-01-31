@@ -10,7 +10,8 @@ enum ThemeColorName {
   Warning,Success,Error,
   PageBackground,ComponentBackground,
   NormalText,HeaderText,HighLightText,DisableText,WithIconText,
-  NormalIcon,HightLightIcon,DisableIcon,
+  NormalIcon,DarkIcon, HightLightIcon,DisableIcon,
+  Textfield,HighLightTextField,
   Button,HighLightButton,DisabledButton,
   TransparentShadow
 }
@@ -31,8 +32,12 @@ class MyTheme {
   final Color textWithIconColor;
 
   final Color normalIconColor;
+  final Color darkIconColor;
   final Color highLightIconColor;
   final Color disabledIconColor;
+
+  final Color textFieldColor;
+  final Color highLightTextFieldColor;
 
   final Color buttonColor;
   final Color buttonHighLightColor;
@@ -48,6 +53,7 @@ class MyTheme {
       this.componentBackgroundColor,
       this.normalTextColor,
       this.normalIconColor,
+        this.darkIconColor,
       this.headerTextColor,
       this.highLightIconColor,
       this.highLightTextColor,
@@ -55,6 +61,8 @@ class MyTheme {
       this.textWithIconColor,
       this.disabledIconColor,
       this.disabledTextColor,
+        this.highLightTextFieldColor,
+        this.textFieldColor,
       this.buttonDisabledColor,
       this.buttonColor,
       this.transparentShadowColor});
@@ -72,8 +80,11 @@ class MyTheme {
       disabledTextColor: CalculatableColor(0xFF999999),
       textWithIconColor: CalculatableColor(0xFFF1F1F1),
       normalIconColor: CalculatableColor(0xFFF1F1F1),
+      darkIconColor: CalculatableColor(0xFF266EC0),
       highLightIconColor: CalculatableColor(0xFF266EC0),
       disabledIconColor: CalculatableColor(0xFF999999),
+      textFieldColor: CalculatableColor(0xFF999999),
+      highLightTextFieldColor: CalculatableColor(0xFF266EC0),
       buttonColor: CalculatableColor(0xFF266EC0),
       buttonHighLightColor: CalculatableColor(0xFF4F8ED6),
       buttonDisabledColor: CalculatableColor(0xFF999999),
@@ -145,6 +156,12 @@ class MyTheme {
 
       case ThemeColorName.DisableIcon:
         return theme.disabledIconColor;
+
+      case ThemeColorName.Textfield:
+        return theme.textFieldColor;
+
+      case ThemeColorName.HighLightTextField:
+        return theme.highLightTextFieldColor;
 
       case ThemeColorName.Button:
         return theme.buttonColor;

@@ -30,7 +30,6 @@ class Welcome extends StatelessWidget {
             height: 55.0,
             radius: 30.0,
             sizeChangeMode: 2,
-            theme: MyTheme.blueStyle,
             isBold: true,
             tapFunc: () {
               Navigator.pushNamed(context, "register");
@@ -39,7 +38,6 @@ class Welcome extends StatelessWidget {
         CustomTextButton(
           "Already have account?",
           fontsize: 16.0,
-          theme: MyTheme.blueStyle,
           tapUpFunc: () {
             Navigator.pushNamed(context, "login");
           },
@@ -53,7 +51,6 @@ class Welcome extends StatelessWidget {
         height: 55.0,
         radius: 30.0,
         sizeChangeMode: 2,
-        theme: MyTheme.blueStyle,
         isBold: true,
         tapFunc: () {
           Navigator.pushNamed(context, "register");

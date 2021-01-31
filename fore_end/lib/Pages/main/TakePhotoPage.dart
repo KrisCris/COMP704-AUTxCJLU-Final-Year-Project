@@ -322,7 +322,6 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getPhotoButton() {
     return new CustomIconButton(
-      theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.circle,
       iconSize: 38,
       adjustHeight: 2.5,
@@ -351,7 +350,6 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getAlbumButton() {
     return new CustomIconButton(
-      theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.image,
       iconSize: 34,
       buttonSize: 45,
@@ -376,7 +374,6 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getResultButton() {
     return new CustomIconButton(
-      theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.appleAlt,
       iconSize: 34,
       buttonSize: 45,

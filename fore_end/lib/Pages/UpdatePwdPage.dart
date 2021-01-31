@@ -59,7 +59,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
   Widget build(BuildContext context) {
 
     this.saveButton= CustomButton(
-      theme: MyTheme.blueStyle,
       text: "SAVE",
       width: 100,
       height: 40,
@@ -68,7 +67,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     this.emailTextField=CustomTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
-      theme: MyTheme.blueStyle,
       // autoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
@@ -97,7 +95,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       placeholder: 'Old password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 7 length",
       maxlength: 30,
@@ -119,7 +116,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       placeholder: 'New password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyle,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 7 length",
       maxlength: 30,
@@ -148,7 +144,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       helpText: "re-enter the password",
       // next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyle,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
 
@@ -187,7 +182,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       rightMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
-      theme: MyTheme.blueStyle,
       tapFunc: (){
         Navigator.pop(context);
       },
@@ -200,7 +194,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       rightMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
-      theme: MyTheme.blueStyle,
     );
 
     nextButton.tapFunc = () async {
