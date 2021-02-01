@@ -107,6 +107,12 @@ class User {
     }
     return pro;
   }
+  bool updateBodyData({double weight, double height}){
+    if(weight != null)this._bodyWeight = weight;
+    if(height != null)this._bodyHeight = height;
+    //TODO:后端接口更新身体数据
+
+  }
   void refreshMeal(){
     for(Meal m in meals.value){
       State st = m.key.currentState;
@@ -194,7 +200,7 @@ class User {
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
-      this._bodyHeight = res.data['data']['height'];
+      this._bodyHeight = res.data['data']['height']/100;
       this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
@@ -320,4 +326,19 @@ class User {
   }
 
   double get bodyHeight => _bodyHeight;
+}
+
+class BodyChangeLog{
+  int time;
+  int weight;
+  int height;
+
+  BodyChangeLog({this.time, this.weight, this.height});
+
+  String getTime(){
+    return DateUtil.formatDate(
+        DateTime.fromMillisecondsSinceEpoch(this.time),
+        format: "MM-dd"
+    );
+  }
 }

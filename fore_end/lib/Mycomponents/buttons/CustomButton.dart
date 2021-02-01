@@ -244,15 +244,6 @@ class CustomButtonState extends State<CustomButton>
         widget.width, widget.width, widget.lengthDura, this, (){setState(() {
 
         });});
-
-    //颜色动画执行完毕后，更新当前的背景色。
-    //历史遗留问题，不建议在State中更改Widget的某些属性
-    // this.colorAnimation.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //     widget.bgColor = widget.theme.getThemeColor(this.themeState);
-    //   }
-    // });
-
     //控制抖动动画次数，每次抖动的偏移量
     this.fluctuateAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -277,6 +268,7 @@ class CustomButtonState extends State<CustomButton>
     this.colorAnimation.dispose();
     this.lengthAnimation.dispose();
     this.fluctuateAnimation.dispose();
+    this.transparentAnimation.dispose();
     super.dispose();
   }
 

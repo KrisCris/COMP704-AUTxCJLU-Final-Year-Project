@@ -13,6 +13,9 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
 import 'main/MainPage.dart';
 
 class GuidePage extends StatefulWidget {
+  bool firstTime;
+  GuidePage({this.firstTime = true});
+
   @override
   State<StatefulWidget> createState() {
    return GuidePageState();
@@ -102,7 +105,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
       dynamic data = res.data['data'];
       planPreview.setNextDo(()async{
         User u = User.getInstance();
-        Response res = await Requests.setPlan({
+        Response res = await this.finishOldPlan();
+        res = await Requests.setPlan({
           "uid":u.uid,
           "token":u.token,
           "height": bodyHeight*100,
@@ -116,11 +120,14 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
           "maintCalories": (data["completedCal"] as int)
         });
         if(res.data['code'] == 1){
-
           u.setPlan(res);
-          Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-            return new MainPage(user:u);
-          }),(ct)=>false);
+          if(widget.firstTime){
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new MainPage(user:u);
+            }),(ct)=>false);
+          }else{
+            Navigator.pop(context);
+          }
         }else{
           //TODO:创建计划失败的情况
         }
@@ -140,5 +147,14 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
       ctl.animateTo(4,
           duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
     }
+  }
+
+  Future<Response> finishOldPlan() async {
+    User u = User.getInstance();
+    Response res = await Requests.finishPlan({
+      "uid":u.uid,
+      "token":u.token,
+    });
+    return res;
   }
 }

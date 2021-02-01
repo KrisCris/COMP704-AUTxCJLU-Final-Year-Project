@@ -73,7 +73,7 @@ class PlanNotifier extends StatelessWidget {
         ],
       ),
     ];
-    if (p.planType == 1) {
+    if (p.planType == 3) {
       ValueBar protein = ValueBar<int>(
         minVal: 0,
         maxVal: p.dailyProteinUpperLimit.floor(),
@@ -116,9 +116,9 @@ class PlanNotifier extends StatelessWidget {
             protein
           ],
         ),
-        SizedBox(height: this.margin)
       ]);
     }
+    content.add(SizedBox(height: this.margin));
     DotColumn box = DotColumn(
         width: this.width,
         height: this.height,
