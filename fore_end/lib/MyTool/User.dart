@@ -326,3 +326,18 @@ class User {
 
   double get bodyHeight => _bodyHeight;
 }
+
+class BodyChangeLog{
+  int time;
+  int weight;
+  int height;
+
+  BodyChangeLog({this.time, this.weight, this.height});
+
+  String getTime(){
+    return DateUtil.formatDate(
+        DateTime.fromMillisecondsSinceEpoch(this.time),
+        format: "MM-dd"
+    );
+  }
+}

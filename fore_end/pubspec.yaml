@@ -24,6 +24,7 @@ environment:
 dependencies:
   keyboard_avoider: ^0.1.2
   font_awesome_flutter: 8.10.0
+  syncfusion_flutter_charts: ^18.4.39
   dio: ^3.0.10
   path_provider: ^1.6.22
   cookie_jar: ^1.0.0
