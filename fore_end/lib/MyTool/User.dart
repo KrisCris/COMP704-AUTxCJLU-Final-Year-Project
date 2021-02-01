@@ -106,6 +106,12 @@ class User {
     }
     return pro;
   }
+  bool updateBodyData({double weight, double height}){
+    if(weight != null)this._bodyWeight = weight;
+    if(height != null)this._bodyHeight = height;
+    //TODO:后端接口更新身体数据
+
+  }
   void refreshMeal(){
     for(Meal m in meals.value){
       State st = m.key.currentState;

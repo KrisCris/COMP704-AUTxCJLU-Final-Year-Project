@@ -8,6 +8,7 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
+import 'package:fore_end/Pages/UpdateBody.dart';
 
 class PlanDetailPage extends StatelessWidget {
   @override
@@ -83,6 +84,24 @@ class PlanDetailPage extends StatelessWidget {
                 maxWidth: 0.475,
                 maxHeight: 30,
               ),
+              Expanded(child: SizedBox()),
+              CustomTextButton(
+                "Update weight",
+                autoReturnColor: true,
+                fontsize: 15,
+                tapUpFunc: (){
+                  showDialog<Null>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return new UpdateBody();
+                    },
+                  ).then((val) {
+                    print(val);
+                  });
+                },
+              ),
+              SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),
           SizedBox(height: 10),
