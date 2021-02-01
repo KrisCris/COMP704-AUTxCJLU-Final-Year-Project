@@ -8,12 +8,13 @@ import '../User.dart';
 import 'LocalDataManager.dart';
 enum ThemeColorName {
   Warning,Success,Error,
-  PageBackground,ComponentBackground,
+  NormalBackground,PageBackground,ComponentBackground,
   NormalText,HeaderText,HighLightText,DisableText,WithIconText,
   NormalIcon,DarkIcon, HightLightIcon,DisableIcon,
   Textfield,HighLightTextField,
   Button,HighLightButton,DisabledButton,
-  TransparentShadow
+  TransparentShadow,
+  PickerToolBackground,PickerToolText,
 }
 
 class MyTheme {
@@ -22,6 +23,7 @@ class MyTheme {
   final Color successColor;
   final Color errorColor;
 
+  final Color normalBackgroundColor;
   final Color pageBackgroundColor;
   final Color componentBackgroundColor;
 
@@ -45,6 +47,9 @@ class MyTheme {
 
   final Color transparentShadowColor;
 
+  final Color pickerToolBackgroundColor;
+  final Color pickerToolTextColor;
+
   const MyTheme(
       {this.warningColor,
       this.successColor,
@@ -65,30 +70,41 @@ class MyTheme {
         this.textFieldColor,
       this.buttonDisabledColor,
       this.buttonColor,
-      this.transparentShadowColor});
+      this.transparentShadowColor,
+      this.pickerToolBackgroundColor,
+      this.pickerToolTextColor,
+      this.normalBackgroundColor,
+
+      });
 
   static const AVAILABLE_THEME = [MyTheme.DARK_BLUE_THEME];
   static const DARK_BLUE_THEME = MyTheme(
-      errorColor: CalculatableColor(0xFFA30D0D),
-      successColor: CalculatableColor(0xFF099926),
-      warningColor: CalculatableColor(0xFFCBBC01),
-      pageBackgroundColor: CalculatableColor(0xFF172632),
-      componentBackgroundColor: CalculatableColor(0xFF1F405A),
-      normalTextColor: CalculatableColor(0xFFF1F1F1),
-      headerTextColor: CalculatableColor(0xFFF1F1F1),
-      highLightTextColor: CalculatableColor(0xFF266EC0),
-      disabledTextColor: CalculatableColor(0xFF999999),
-      textWithIconColor: CalculatableColor(0xFFF1F1F1),
-      normalIconColor: CalculatableColor(0xFFF1F1F1),
-      darkIconColor: CalculatableColor(0xFF266EC0),
-      highLightIconColor: CalculatableColor(0xFF266EC0),
-      disabledIconColor: CalculatableColor(0xFF999999),
-      textFieldColor: CalculatableColor(0xFF999999),
-      highLightTextFieldColor: CalculatableColor(0xFF266EC0),
-      buttonColor: CalculatableColor(0xFF266EC0),
-      buttonHighLightColor: CalculatableColor(0xFF4F8ED6),
-      buttonDisabledColor: CalculatableColor(0xFF999999),
-      transparentShadowColor: CalculatableColor(0x1AFFFFFF));
+    ///Color 代替CalculatableColor就是可以直接的显示颜色
+      errorColor: CalculatableColor(0xFFA30D0D),  ///红
+      successColor: CalculatableColor(0xFF099926),  ///绿
+      warningColor: CalculatableColor(0xFFCBBC01),  ///黄
+      pageBackgroundColor: CalculatableColor(0xFF172632),  ///深蓝
+      componentBackgroundColor: CalculatableColor(0xFF1F405A),  ///浅蓝
+      normalTextColor: CalculatableColor(0xFFF1F1F1),  ///白
+      headerTextColor: CalculatableColor(0xFFF1F1F1),  ///白
+      highLightTextColor: CalculatableColor(0xFF266EC0),  ///蓝
+      disabledTextColor: CalculatableColor(0xFF999999),  ///灰色
+      textWithIconColor: CalculatableColor(0xFFF1F1F1),  ///白
+      normalIconColor: CalculatableColor(0xFFF1F1F1),  ///白
+      darkIconColor: CalculatableColor(0xFF266EC0),  ///蓝
+      highLightIconColor: CalculatableColor(0xFF266EC0),  ///蓝
+      disabledIconColor: CalculatableColor(0xFF999999),  ///灰
+      textFieldColor: CalculatableColor(0xFF999999),  ///灰
+      highLightTextFieldColor: CalculatableColor(0xFF266EC0),  ///蓝
+      buttonColor: CalculatableColor(0xFF266EC0),  ///蓝
+      buttonHighLightColor: CalculatableColor(0xFF4F8ED6),  ///浅蓝
+      buttonDisabledColor: CalculatableColor(0xFF999999),  ///灰
+      transparentShadowColor: CalculatableColor(0x1AFFFFFF),  ///深灰
+      pickerToolBackgroundColor: CalculatableColor(0xFF057d9f),  ///青蓝
+      pickerToolTextColor:CalculatableColor(0xFF323232),  ///黑
+      normalBackgroundColor:CalculatableColor(0xFFF1F1F1),  ///白
+
+  );
   static MyTheme getTheme({int themeCode}) {
     //不提供主题编号，则从当前用户信息中获取编号
     if(themeCode == null){
@@ -174,6 +190,15 @@ class MyTheme {
 
       case ThemeColorName.TransparentShadow:
         return theme.transparentShadowColor;
+
+      case ThemeColorName.PickerToolBackground:
+        return theme.pickerToolBackgroundColor;
+
+      case ThemeColorName.PickerToolText:
+        return theme.pickerToolTextColor;
+
+      case ThemeColorName.NormalBackground:
+        return theme.normalBackgroundColor;
 
       default:
         print("ThemeColorName error: "+ name.toString());

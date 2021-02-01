@@ -104,8 +104,8 @@ class ResultPageState extends State<ResultPage> {
         TitleText(
           text: "Your Foods Here",
           fontSize: 18,
-          fontColor: Colors.white,
-          dividerColor: Colors.white,
+          fontColor: MyTheme.convert(ThemeColorName.NormalText),
+          dividerColor: MyTheme.convert(ThemeColorName.NormalText),
           underLineDistance: 3,
           maxHeight: 25,
           maxWidth: 200,
@@ -166,7 +166,7 @@ class ResultPageState extends State<ResultPage> {
             style: TextStyle(
                 fontSize: 16,
                 decoration: TextDecoration.none,
-                color: Colors.white,
+                color: MyTheme.convert(ThemeColorName.NormalText),
                 fontFamily: "Futura"),
           ),
         ),

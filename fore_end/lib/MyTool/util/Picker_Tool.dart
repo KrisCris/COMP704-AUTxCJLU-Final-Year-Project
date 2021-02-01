@@ -1,26 +1,27 @@
 
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:date_format/date_format.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 
 
 const double _kPickerHeight=216.0;
 const double _kItemHeigt=40.0;
-const Color _kBtnColor=Color(0xFF323232);
-const Color _kTitleColor=Color(0xFF787878);
+// const Color _kBtnColor=Color(0xFF323232);
+// const Color _kTitleColor=Color(0xFF787878);
+Color _kBtnColor=MyTheme.convert(ThemeColorName.PickerToolText);
+Color _kTitleColor=MyTheme.convert(ThemeColorName.PickerToolText);
 const double _kTextFontSize=17.0;
 
 ///通过mealTheme来改变布局颜色，目前就是默认的白黑和下面的暗色系，true为暗色系
 ///目前这个组件用于 修改性别  和  选择添加食物到一日三餐
 bool mealTheme=false;
-Color cancelAndConfirmColor=Colors.white;
-Color titleColor=Colors.white;
-Color bottomBackgroundColor=Color(0xFF057d9f);
-Color upBackgroundColor=Color(0xFF3D9AD1);
-Color itemTextColor=Colors.white;
+Color cancelAndConfirmColor=MyTheme.convert(ThemeColorName.NormalText);
+Color titleColor=MyTheme.convert(ThemeColorName.NormalText);
+Color bottomBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
+Color upBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
+Color itemTextColor=MyTheme.convert(ThemeColorName.NormalText);
 
 
 typedef _StringClickCallBack=void Function(int selectIndex,Object selectStr);
@@ -91,8 +92,8 @@ class JhPickerTool{
     new Picker(
 
         ///修改背景颜色，通过mealTheme? xxx : xxx 判断，下面也是一样，所有的颜色都是下面修改
-        headercolor: mealTheme?upBackgroundColor:Colors.white,
-        backgroundColor:mealTheme?bottomBackgroundColor:Colors.white,
+        headercolor: mealTheme?upBackgroundColor:MyTheme.convert(ThemeColorName.NormalBackground),
+        backgroundColor:mealTheme?bottomBackgroundColor:MyTheme.convert(ThemeColorName.NormalBackground),
 
         adapter: adapter,
         title: new Text(title??"Please Select",style: TextStyle(color: mealTheme?titleColor: _kTitleColor,fontSize: _kTextFontSize),),
@@ -104,7 +105,7 @@ class JhPickerTool{
         textAlign: TextAlign.right,
         itemExtent: _kItemHeigt,
         height: _kPickerHeight,
-        selectedTextStyle: TextStyle(color: mealTheme? itemTextColor:Colors.black),
+        selectedTextStyle: TextStyle(color: mealTheme? itemTextColor:_kBtnColor),
         onConfirm: clickCallBack
     ).showModal(context);
   }
