@@ -23,7 +23,16 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
         List<Function> onChange,
       this.gap = 0}) {
     this.widgetValue = ValueNotifier(initVal);
+    if(onChange == null){
+      this.onChangeValue = [];
+    }else{
+      this.onChangeValue = onChange;
+    }
+    this.initValueListener();
     for (CardChooser cd in cards) {
+      if(cd.isChosen()){
+        this.setValue(cd.getValue());
+      }
       cd.setOnTap(() {
         for (CardChooser cho in cards) {
           if (cho == cd) continue;
@@ -31,12 +40,6 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
         }
         this.setValue(cd.getValue());
       });
-      if(onChange == null){
-        this.onChangeValue = [];
-      }else{
-        this.onChangeValue = onChange;
-      }
-      this.initValueListener();
     }
   }
 

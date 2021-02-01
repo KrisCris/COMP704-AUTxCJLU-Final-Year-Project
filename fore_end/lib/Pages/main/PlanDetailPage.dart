@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -6,6 +7,9 @@ import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
+import 'package:fore_end/Pages/GuidePage.dart';
+import 'package:fore_end/Pages/UpdateBody.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlanDetailPage extends StatelessWidget {
   @override
@@ -48,7 +52,18 @@ class PlanDetailPage extends StatelessWidget {
                 maxHeight: 30,
               ),
               Expanded(child: SizedBox()),
-              CustomTextButton("Change Plan",autoReturnColor: true, fontsize: 15),
+              CustomTextButton(
+                "Change Plan",
+                autoReturnColor: true,
+                fontsize: 15,
+                tapUpFunc: () {
+                  Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                    return GuidePage(
+                      firstTime: false,
+                    );
+                  }));
+                },
+              ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),
@@ -72,26 +87,78 @@ class PlanDetailPage extends StatelessWidget {
                 maxWidth: 0.475,
                 maxHeight: 30,
               ),
+              Expanded(child: SizedBox()),
+              CustomTextButton(
+                "Update weight",
+                autoReturnColor: true,
+                fontsize: 15,
+                tapUpFunc: () {
+                  showDialog<Null>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return new UpdateBody();
+                    },
+                  ).then((val) {
+                    print(val);
+                  });
+                },
+              ),
+              SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),
           SizedBox(height: 10),
           //TODO: 体重折线图
           DotColumn(
             width: 0.95,
-            mainAxisAlignment: MainAxisAlignment.center,
             borderRadius: 6,
-            backgroundColor: Color(0xFF1F405A),
             children: [
-              SizedBox(height: 40),
-              Text(
-                "Here will be the line graph of body weight",
-                style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFD1D1D1),
-                    fontFamily: "Futura"),
+              SizedBox(height: 10),
+              SfCartesianChart(
+                primaryXAxis: CategoryAxis(
+                  axisLine: AxisLine(
+                    width: 1,
+                    color: MyTheme.convert(ThemeColorName.NormalText),
+                  )
+                ),
+                primaryYAxis: NumericAxis(
+                    labelFormat: '{value}KG',
+                    axisLine: AxisLine(width: 0),
+                    majorTickLines: MajorTickLines(color: Colors.transparent)),
+                trackballBehavior: TrackballBehavior(
+                  lineType: TrackballLineType.vertical, //纵向选择指示器
+                  activationMode: ActivationMode.singleTap,
+                  enable: true,
+                  tooltipAlignment: ChartAlignment.near, //工具提示位置(顶部)
+                  shouldAlwaysShow: true, //跟踪球始终显示(纵向选择指示器)
+                  tooltipDisplayMode:
+                  TrackballDisplayMode.groupAllPoints, //工具提示模式(全部分组)
+                  lineColor: MyTheme.convert(ThemeColorName.NormalText),
+                ),
+                //打开工具提示
+                series: <LineSeries<BodyChangeLog,String>>[
+                  LineSeries<BodyChangeLog,String>(
+                    xAxisName: "Time",
+                    yAxisName: "Weight(KG)",
+                    name: "Body Weight",
+                      dataSource: <BodyChangeLog>[
+                        BodyChangeLog(time:1611874156990,weight:68,height: 174),
+                        BodyChangeLog(time:1611974156990,weight:70,height: 174),
+                        BodyChangeLog(time:1612074156990,weight:69,height: 174),
+                        BodyChangeLog(time:1612174156990,weight:71,height: 174),
+                      ],
+                      xValueMapper: (BodyChangeLog log, _)=> log.getTime(),
+                      yValueMapper: (BodyChangeLog log, _)=> log.weight,
+                      dataLabelSettings: DataLabelSettings(
+                          isVisible: true,
+                        textStyle: TextStyle(
+                          color: MyTheme.convert(ThemeColorName.NormalText)
+                        )
+                      ),
+                      markerSettings: MarkerSettings(isVisible: true)
+                  )
+                ],
               ),
-              SizedBox(height: 40),
             ],
           ),
         ],

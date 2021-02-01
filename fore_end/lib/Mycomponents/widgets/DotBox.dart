@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
@@ -58,7 +59,7 @@ class DotColumn extends StatefulWidget{
     this._width = ScreenTool.partOfScreenWidth(width);
     this._height = ScreenTool.partOfScreenHeight(height);
     if(backgroundColor == null){
-      backgroundColor = Color(0xFFF1F1F1);
+      backgroundColor = MyTheme.convert(ThemeColorName.ComponentBackground);
     }
     this._dotAnimationDuration = dotAnimationDuration;
     this._paddingLeft = paddingLeft;
@@ -113,13 +114,17 @@ with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     List<Widget> rowContent = [];
-    rowContent.add(SizedBox(width: widget._paddingLeft));
+    if(widget._paddingLeft != 0){
+      rowContent.add(SizedBox(width: widget._paddingLeft));
+    }
     rowContent.add(Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: widget.mainAxisAlignment,
       children: widget.children,
     ));
-    rowContent.add(SizedBox(width: widget._paddingRight));
+    if(widget._paddingRight != 0){
+      rowContent.add(SizedBox(width: widget._paddingRight));
+    }
     Widget res = ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
             child: Stack(
