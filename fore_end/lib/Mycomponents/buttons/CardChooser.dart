@@ -118,6 +118,10 @@ with ValueableWidgetMixIn<T>{
   void setUnChosen() {
     this._chosen.value = false;
   }
+
+  bool isChosen(){
+    return this._chosen.value;
+  }
 }
 
 class CardChooserState extends State<CardChooser>
@@ -174,6 +178,10 @@ class CardChooserState extends State<CardChooser>
   }
 
   void initChosenNotifier() {
+    if(widget._chosen.value){
+      fontSizeAnimation.beginAnimation();
+      dotMoveAnimation.beginAnimation();
+    }
     widget._chosen.addListener(() {
       if (widget._chosen.value == false) {
         dotMoveAnimation.stop();

@@ -91,6 +91,7 @@ class GoalData extends StatelessWidget {
         ],
       ),
     ));
+    return weight;
   }
   List<Widget> getLoseWeight(User u){
     List<Widget> weight = [];

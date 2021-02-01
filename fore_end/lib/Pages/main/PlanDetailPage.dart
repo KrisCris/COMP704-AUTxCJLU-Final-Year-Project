@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -6,6 +7,7 @@ import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
+import 'package:fore_end/Pages/GuidePage.dart';
 
 class PlanDetailPage extends StatelessWidget {
   @override
@@ -48,7 +50,16 @@ class PlanDetailPage extends StatelessWidget {
                 maxHeight: 30,
               ),
               Expanded(child: SizedBox()),
-              CustomTextButton("Change Plan",autoReturnColor: true, fontsize: 15),
+              CustomTextButton(
+                  "Change Plan",
+                  autoReturnColor: true,
+                  fontsize: 15,
+                  tapUpFunc: (){
+                    Navigator.push(context, new MaterialPageRoute(builder: (ctx){
+                      return GuidePage(firstTime: false,);
+                    }));
+                  },
+              ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),

@@ -193,7 +193,7 @@ class User {
       this._userName = res.data['data']['nickname'];
       this._avatar = res.data['data']['avatar'];
       this._email = res.data['data']['email'];
-      this._bodyHeight = res.data['data']['height'];
+      this._bodyHeight = res.data['data']['height']/100;
       this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
