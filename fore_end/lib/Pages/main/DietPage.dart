@@ -4,8 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/MealList.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
+import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 
 class DietPage extends StatefulWidget{

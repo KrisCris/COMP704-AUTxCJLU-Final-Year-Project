@@ -6,7 +6,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
-import 'package:fore_end/Mycomponents/widgets/ExpandListView.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 
 ///自定义的AppBar，显示一些基本信息
