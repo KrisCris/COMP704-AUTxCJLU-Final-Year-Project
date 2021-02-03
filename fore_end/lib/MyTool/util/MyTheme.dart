@@ -114,8 +114,10 @@ class MyTheme {
     }
     //若用户未被初始化，则从本地文件中读取存储的编号
     if (themeCode == null) {
-      SharedPreferences pre = LocalDataManager.pre;
-      themeCode = pre.getInt("theme");
+      if(LocalDataManager.isInit()){
+        SharedPreferences pre = LocalDataManager.pre;
+        themeCode = pre.getInt("theme");
+      }
     }
     //若无存储的主题编号，则默认使用第一个主题
     if (themeCode == null) {

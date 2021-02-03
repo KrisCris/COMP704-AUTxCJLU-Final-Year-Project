@@ -123,7 +123,7 @@ class User {
     }
   }
   static bool isInit(){
-    return User._instance == null;
+    return User._instance != null;
   }
   MyTheme getNowTheme(){
     return MyTheme.getTheme(themeCode: this._theme);

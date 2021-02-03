@@ -8,4 +8,7 @@ class LocalDataManager{
       pre = await SharedPreferences.getInstance();
     }
   }
+  static bool isInit(){
+    return pre != null;
+  }
 }

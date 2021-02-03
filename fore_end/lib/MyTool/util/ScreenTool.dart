@@ -14,9 +14,18 @@ class ScreenTool{
     }
 
     static double partOfScreenWidth(double part){
+      if(part == null){
+        print("part of Screen width received a null part value");
+        return part;
+      }
       return part>1 ? part : pixSize.width * part;
     }
+
     static double partOfScreenHeight(double part){
+      if(part == null){
+        print("part of Screen Height received a null part value");
+        return part;
+      }
       return part>1 ? part : pixSize.height * part;
     }
 }
