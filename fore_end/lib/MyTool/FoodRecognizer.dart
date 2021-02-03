@@ -52,6 +52,7 @@ class FoodRecognizer{
     l.clear();
     FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
   }
+
   ///这里是按照三餐的名字保存记录，上传服务器和本地保存
   static void addFoodToMealName(String mealName) async{
     User u = User.getInstance();
@@ -61,20 +62,19 @@ class FoodRecognizer{
       FoodRecognizer.addFoodToMeal(m);
       List<List> totalFoodInfo=new List<List>();
       for(Food food in m.foods){
-        int foodId=0;
+        int foodId=food.id;
         List singleFoodInfo=[];
         ///现在fid就是食物在数据库里的id，现在还没有这个数据，等数据库有了再写上去
-        //singleFoodInfo.add(foodId);
+        singleFoodInfo.add(foodId);
         singleFoodInfo.add(food.name);
         singleFoodInfo.add(food.calorie);
         singleFoodInfo.add(food.protein);
         totalFoodInfo.add(singleFoodInfo);
-        foodId++;
       }
       Response res = await Requests.consumeFoods({
         "uid": u.uid,
         "pid": u.plan.id,
-        "type": mealsType,
+        "type": mealsType.toString(),
         "foods_info":totalFoodInfo,
       });
 
@@ -102,14 +102,61 @@ class FoodRecognizer{
         var position = r['basic'];
         var info = r['info'];
         double cal = 0;
+        double fat= 0;
+        double cholesterol= 0;
+        double cellulose= 0;
+        double protein= 0;
+        double carbohydrate= 0;
+        int foodID=info['id'];
+        int foodCategory=info['category'];
+
+
         if(info['calories'] is int){
           cal = (info['calories'] as int).toDouble();
         }else if(info['calories'] is double){
           cal = info['calories'];
         }
+        if(info['carbohydrate'] is int){
+          carbohydrate = (info['carbohydrate'] as int).toDouble();
+        }else if(info['carbohydrate'] is double){
+          carbohydrate = info['carbohydrate'];
+        }
+
+        if(info['fat'] is int){
+          fat = (info['fat'] as int).toDouble();
+        }else if(info['fat'] is double){
+          fat = info['fat'];
+        }
+        if(info['protein'] is int){
+          protein = (info['protein'] as int).toDouble();
+        }else if(info['protein'] is double){
+          protein = info['protein'];
+        }
+        if(info['cholesterol'] is int){
+          cholesterol = (info['cholesterol'] as int).toDouble();
+        }else if(info['cholesterol'] is double){
+          cholesterol = info['cholesterol'];
+        }
+        if(info['cellulose'] is int){
+          cellulose = (info['cellulose'] as int).toDouble();
+        }else if(info['cellulose'] is double){
+          cellulose = info['cellulose'];
+        }
+
         String name = position['name'];
         FoodBox fd = FoodBox(
-          food: Food(name: name, calorie: cal,picture: position['img']),
+          food: Food(
+            name: name,
+            id: foodID,
+            category: foodCategory,
+            picture: position['img'],
+            calorie: cal,
+            protein: protein,
+            fat: fat,
+            carbohydrate: carbohydrate,
+            cellulose: cellulose,
+            cholesterol: cholesterol,
+          ),
           borderRadius: 5,
         );
         fd.setRemoveFunc((){

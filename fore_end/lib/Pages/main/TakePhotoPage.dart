@@ -365,7 +365,9 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-        Map<String, Uint8List> res = await this.pictureToBase64(image);
+        // Map<String, Uint8List> res = await this.pictureToBase64(image);
+        ///这里改为了和拍照一样的Map
+        Map<String, List<int>> res = await this.pictureToBase64(image);
         var entry = res.entries.first;
         FoodRecognizer.addFoodPic(entry.key, entry.value, res['rotate'][0]);
       },

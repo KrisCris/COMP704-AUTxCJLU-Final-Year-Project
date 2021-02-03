@@ -7,6 +7,7 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'dart:math' as math;
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 
 ///用于显示检测到食物后，展示食物数据的组件
@@ -110,12 +111,36 @@ class FoodBoxState extends State<FoodBox>
   bool shouldExpand = false;
 
   ///图片类型，0表示使用默认图片，1表示使用拍摄获得的照片
-  ///picType = 0 -> defaultPicutre
+  ///picType = 0 -> defaultPicture
   ///picType = 1 -> photo
   int picType = 0;
 
   ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
+
+
+  ///全局重量 点击按钮刷新组件
+  int foodWeight =1;
+
+  ///增加和减少重量
+  void plusWeight(){
+    setState(() {
+      foodWeight++;
+      widget.food.setWeight(foodWeight);
+    });
+
+  }
+  void minusWeight(){
+    setState(() {
+      if(foodWeight>1){
+        foodWeight--;
+        widget.food.setWeight(foodWeight);
+      }
+    });
+
+  }
+
+
 
   ///父组件更新时，重新为监听器添加回调
   @override
@@ -279,25 +304,59 @@ class FoodBoxState extends State<FoodBox>
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
     List<Widget> col = [
-      this.propertyLine("calorie", widget.food.getCalorie()),
-      this.propertyLine("VC", "61mg"),
-      this.propertyLine("VD", "39mg"),
-      this.propertyLine("VD", "39mg"),
-      this.propertyLine("water", "721mg"),
+      this.propertyLine("Calorie", widget.food.getCalorie()),
+      this.propertyLine("Fat", widget.food.getFat()),
+      this.propertyLine("Protein", widget.food.getProtein()),
+      this.propertyLine("Carbohydrate", widget.food.getCarbohydrate()),
+      this.propertyLine("Weight", foodWeight.toString()+"00g"),
     ];
     if (widget.couldRemove) {
       col.addAll([
         SizedBox(
-          height: 25,
+          height: 10,
         ),
-        CustomButton(
-          firstColorName: ThemeColorName.Error,
-          text: "Remove",
-          width: 0.7,
-          tapFunc: () {
-            widget.removeFunc();
-          },
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            CustomButton(
+              firstColorName: ThemeColorName.Error,
+              text: "Remove",
+              width: 0.35,
+              tapFunc: () {
+                widget.removeFunc();
+              },
+            ),
+            Row(
+              children: [
+                ///customIconButton在按下的时候没有动画效果
+                CustomIconButton(
+                  icon: FontAwesomeIcons.minus,
+                  buttonSize: 40,
+                  onClick: (){
+                    print("按下了减少按钮");
+                    minusWeight();
+
+                  },
+                ),
+
+                SizedBox(width: 20,),
+                CustomIconButton(
+                  sizeChangeWhenClick: true,
+                    icon: FontAwesomeIcons.plus,
+                  buttonSize: 40,
+                  onClick: (){
+                    print("按下了增加按钮");
+                    plusWeight();
+
+                  },
+                ),
+
+              ],
+            ),
+
+          ],
+        )
+
       ]);
     }
     col.add(SizedBox(

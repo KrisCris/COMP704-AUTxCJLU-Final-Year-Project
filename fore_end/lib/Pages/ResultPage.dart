@@ -74,9 +74,10 @@ class ResultPageState extends State<ResultPage> {
       onTap: (){
         ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
         ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
+        ///这里还可以计算总的其他营养数据 比如protein
         double cal = 0;
         widget.recognizer.foods.forEach((fd) {
-          cal += fd.food.calorie;
+          cal += fd.food.calorie*fd.food.weight;
         });
 
         String totalCalories=cal.toString();
@@ -88,7 +89,7 @@ class ResultPageState extends State<ResultPage> {
               if(item=="breakfast"){
                 FoodRecognizer.addFoodToMealName("breakfast");
               }else if(item=="lunch"){
-                FoodRecognizer.addFoodToMealName("lunch");
+                FoodRecognizer.addFoodToMealName("lunch");   ///添加到午餐会报错
               }else if(item=="dinner"){
                 FoodRecognizer.addFoodToMealName("dinner");
               }

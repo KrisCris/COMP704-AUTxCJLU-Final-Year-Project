@@ -71,20 +71,23 @@ class Meal{
     }
     return res;
   }
+  ///这里为什么返回int
   int calculateTotalCalories(){
     double cal = 0;
     this.foods.forEach((fd) {
-      cal += fd.calorie;
+      cal += fd.calorie*fd.weight; ///要乘以用户设置的重量，默认weight为1
     });
     return cal.floor();
   }
   int calculateTotalProtein(){
     double pro = 0;
     this.foods.forEach((fd) {
-      pro += fd.protein;
+      pro += fd.protein*fd.weight;
     });
     return pro.floor();
   }
+
+  ///food类又增加了许多其他的东西，不知道现在匹配方法够不够
   String _encode(){
     String res = "";
     for(Food fd in foods){
