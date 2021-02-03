@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
+import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 import 'Food.dart';
 import 'Meal.dart';
 import 'util/Req.dart';

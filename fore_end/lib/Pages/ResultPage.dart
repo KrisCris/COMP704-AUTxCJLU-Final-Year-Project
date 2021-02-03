@@ -8,7 +8,7 @@ import 'package:fore_end/MyTool/util/Picker_Tool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
+import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 
 class ResultPage extends StatefulWidget {
   static const String defaultBackground = "image/fruit-main.jpg";

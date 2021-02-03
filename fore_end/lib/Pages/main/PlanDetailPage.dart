@@ -5,7 +5,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/UpdateBody.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/Mycomponents/widgets/MealList.dart';
+import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Food.dart';

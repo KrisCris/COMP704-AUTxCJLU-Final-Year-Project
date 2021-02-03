@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 
 class GoalData extends StatelessWidget {
   double width;
