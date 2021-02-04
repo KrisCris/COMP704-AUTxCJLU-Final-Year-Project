@@ -415,6 +415,9 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Future<int> getImageRotateAngular(List<int> bytes) async {
     Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
+    if(tags == null){
+      return 0;
+    }
     var orientation = tags['Orientation']; //获取该照片的拍摄方向
     switch (orientation) {
       case 3:
