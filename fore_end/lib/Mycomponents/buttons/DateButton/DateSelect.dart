@@ -6,8 +6,9 @@ import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
 class DateSelect extends StatelessWidget {
   double width;
   double height;
+  Function onChangeDate;
   GlobalKey<DateButtonState> childKey;
-  DateSelect({this.width,this.height,String debugLabel="Default DateButton"}){
+  DateSelect({this.width,this.height,this.onChangeDate, String debugLabel="Default DateButton"}){
     this.childKey = GlobalKey<DateButtonState>(debugLabel: debugLabel);
   }
   int getDate(){
