@@ -8,7 +8,7 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
-import 'package:fore_end/Pages/UpdateBody.dart';
+import 'package:fore_end/Pages/account/UpdateBody.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlanDetailPage extends StatelessWidget {

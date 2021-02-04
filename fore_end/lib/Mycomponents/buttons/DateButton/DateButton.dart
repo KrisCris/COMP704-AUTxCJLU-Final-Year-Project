@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
-class DateButton extends StatefulWidget with ValueableWidgetMixIn<int> {
+import '../CustomIconButton.dart';
+
+class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
   ///宽度
   double width;
   ///高度
@@ -20,8 +23,9 @@ class DateButton extends StatefulWidget with ValueableWidgetMixIn<int> {
   ///按钮样式，不设置则使用默认配置
   BoxDecoration decoration;
   ///当日期变化时触发的回调函数
-  Function onChangeDate;
-  DateButton(
+  Function(int newDate) onChangeDate;
+
+  DateSelect(
       {double width,
       double height,
         this.paddingHorizontal=0,
@@ -55,15 +59,19 @@ class DateButton extends StatefulWidget with ValueableWidgetMixIn<int> {
 
   @override
   State<StatefulWidget> createState() {
-    return new DateButtonState();
+    return new DateSelectState();
   }
 }
 
-class DateButtonState extends State<DateButton> with ValueableStateMixIn {
+class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
   @override
-  void didUpdateWidget(covariant DateButton oldWidget) {
+  void didUpdateWidget(covariant DateSelect oldWidget) {
     widget.widgetValue = oldWidget.widgetValue;
     super.didUpdateWidget(oldWidget);
+  }
+
+  int getTime(){
+    return widget.widgetValue.value;
   }
 
   @override
@@ -73,25 +81,49 @@ class DateButtonState extends State<DateButton> with ValueableStateMixIn {
   }
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () async {
-          final DateTime date = await showDatePicker(
-            context: context,
-            initialDate: DateTime.fromMillisecondsSinceEpoch(widget.widgetValue.value),
-            firstDate: widget.beginTime,
-            lastDate: widget.lastTime,
-          );
-          if (date == null) return;
-          widget.widgetValue.value = date.millisecondsSinceEpoch;
-        },
-        child: Container(
-          width: widget.width,
-          height: widget.height,
-          padding: EdgeInsets.fromLTRB(widget.paddingHorizontal, 0, widget.paddingHorizontal, 0),
-          decoration: widget.decoration,
-          alignment: Alignment.center,
-          child: Text(this.convertToStr(), style: widget.style),
-        ));
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomIconButton(
+            icon: FontAwesomeIcons.chevronLeft,
+            backgroundOpacity: 0,
+            onClick: (){
+              this.minusDay();
+            },
+          ),
+          GestureDetector(
+              onTap: () async {
+                final DateTime date = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.fromMillisecondsSinceEpoch(widget.widgetValue.value),
+                  firstDate: widget.beginTime,
+                  lastDate: widget.lastTime,
+                );
+                if (date == null) return;
+                widget.widgetValue.value = date.millisecondsSinceEpoch;
+              },
+              child: Container(
+                width: widget.width,
+                height: widget.height,
+                padding: EdgeInsets.fromLTRB(widget.paddingHorizontal, 0, widget.paddingHorizontal, 0),
+                decoration: widget.decoration,
+                alignment: Alignment.center,
+                child: Text(this.convertToStr(), style: widget.style),
+              )),
+          CustomIconButton(
+            icon: FontAwesomeIcons.chevronRight,
+            backgroundOpacity: 0,
+            onClick: (){
+              this.addDay();
+            },
+          ),
+        ],
+      ),
+    );
   }
   void _modifyDat({int day=1}){
     DateTime dt =DateTime.fromMillisecondsSinceEpoch(widget.widgetValue.value).add(Duration(days: day));
@@ -108,7 +140,7 @@ class DateButtonState extends State<DateButton> with ValueableStateMixIn {
   @override
   void onChangeValue() {
     if(widget.onChangeDate != null){
-      widget.onChangeDate();
+      widget.onChangeDate(widget.widgetValue.value);
     }
     setState(() {});
   }
