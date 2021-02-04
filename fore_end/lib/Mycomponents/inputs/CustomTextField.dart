@@ -575,6 +575,16 @@ class CustomTextFieldState extends State<CustomTextField>
 
         //文本框基本属性
         hintText: widget.placeholder,
+        hintStyle: TextStyle(
+          fontFamily: "Futura",
+          color: MyTheme.convert(ThemeColorName.NormalText),
+          decoration: TextDecoration.none
+        ),
+        helperStyle: TextStyle(
+            fontFamily: "Futura",
+            color: MyTheme.convert(ThemeColorName.NormalText),
+            decoration: TextDecoration.none
+        ),
         contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, widget.bottomPadding),
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,

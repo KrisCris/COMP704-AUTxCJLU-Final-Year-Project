@@ -15,9 +15,9 @@ class UpdatePwdPage extends StatefulWidget {
   UpdatePasswordPageState createState() => UpdatePasswordPageState();
 }
 
-
 class UpdatePasswordPageState extends State<UpdatePwdPage> {
   // FocusNode focusNode = new FocusNode();
+  static const double leftRightGap = 0.1;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -31,15 +31,15 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
   CustomTextField oldPasswordTextField;
   VerifyCodeInputer verifyTextField;
 
-  bool verifySuccess= false;
-  bool oldPasswordDone=false;
+  bool verifySuccess = false;
+  bool oldPasswordDone = false;
   bool passwordDone = false;
   bool repasswordDone = false;
   String currentPassword;
   CustomButton nextButton;
   CustomButton backButton;
 
-  User user=User.getInstance();
+  User user = User.getInstance();
 
   @override
   void initState() {
@@ -51,20 +51,17 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     // String email = emailController.text;
   }
 
-    Future<void> _confirm() async {
-
-  }
+  Future<void> _confirm() async {}
 
   @override
   Widget build(BuildContext context) {
-
-    this.saveButton= CustomButton(
+    this.saveButton = CustomButton(
       text: "SAVE",
       width: 100,
       height: 40,
     );
 
-    this.emailTextField=CustomTextField(
+    this.emailTextField = CustomTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
       // autoChangeState: false,
@@ -80,39 +77,39 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       },
     );
 
-    this.emailTextField.onCorrect=(){
-      if(this.emailTextField.getValue()==this.user.email){
+    this.emailTextField.onCorrect = () {
+      if (this.emailTextField.getValue() == this.user.email) {
         this.verifyTextField.setButtonDisabled(false);
         this.emailTextField.setCorrect();
       }
     };
 
-
-
-
-    this.oldPasswordTextField= CustomTextField(
-
+    this.oldPasswordTextField = CustomTextField(
       placeholder: 'Old password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 7 length",
       maxlength: 30,
-      onCorrect: (){
-        this.oldPasswordDone=true;
+      onCorrect: () {
+        this.oldPasswordDone = true;
       },
-
-
     );
 
     this.verifyTextField = VerifyCodeInputer(
       transVerifyType: true,
-      onCheckSuccess: (){ this.nextButton.setDisabled(false); this.verifySuccess=true;},
-      onCheckFailed: (){this.nextButton.setDisabled(true);},
+      onCheckSuccess: () {
+        this.nextButton.setDisabled(false);
+        this.verifySuccess = true;
+      },
+      onCheckFailed: () {
+        this.nextButton.setDisabled(true);
+      },
+      width: 1-leftRightGap*2,
       emailField: this.emailTextField,
     );
 
-    this.pwdOneTextField=CustomTextField(
+    this.pwdOneTextField = CustomTextField(
       placeholder: 'New password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
@@ -123,13 +120,16 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       onCorrect: () {
         this.passwordDone = true;
         if (this.pwdTwoTextField.getValue() !=
-            this.pwdOneTextField.getValue() &&
+                this.pwdOneTextField.getValue() &&
             !this.pwdTwoTextField.isEmpty()) {
           this.pwdTwoTextField.setError();
           this.repasswordDone = false;
           this.nextButton.setDisabled(true);
         }
-        if (this.passwordDone && this.repasswordDone&&this.verifySuccess&&this.oldPasswordDone) {
+        if (this.passwordDone &&
+            this.repasswordDone &&
+            this.verifySuccess &&
+            this.oldPasswordDone) {
           this.nextButton.setDisabled(false);
         }
       },
@@ -139,7 +139,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       },
     );
 
-    this.pwdTwoTextField=CustomTextField(
+    this.pwdTwoTextField = CustomTextField(
       placeholder: 'Confirm password',
       helpText: "re-enter the password",
       // next: this.confirmPasswordTextField.getFocusNode(),
@@ -154,14 +154,17 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
           //correct
           this.repasswordDone = true;
           this.pwdTwoTextField.setCorrect();
-          if (this.passwordDone  && this.repasswordDone&&this.verifySuccess&this.oldPasswordDone) {
+          if (this.passwordDone &&
+              this.repasswordDone &&
+              this.verifySuccess & this.oldPasswordDone) {
             this.nextButton.setDisabled(false);
           }
         } else {
           this.repasswordDone = false;
           this.pwdTwoTextField.setError();
           this.nextButton.setDisabled(true);
-          this.pwdTwoTextField.setErrorText("two password different");  //bug有一个就是如果先输入pwdTwo的密码再输入pwdOne会显示不一样，就是这个验证的顺序问题，回头可能要改
+          this.pwdTwoTextField.setErrorText(
+              "two password different"); //bug有一个就是如果先输入pwdTwo的密码再输入pwdOne会显示不一样，就是这个验证的顺序问题，回头可能要改
         }
       },
       onError: () {
@@ -170,10 +173,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
         this.nextButton.setDisabled(true);
         this.pwdTwoTextField.setErrorText("two password different");
       },
-
     );
-
-
 
     this.backButton = CustomButton(
       disabled: false,
@@ -182,7 +182,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       rightMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
-      tapFunc: (){
+      tapFunc: () {
         Navigator.pop(context);
       },
     );
@@ -197,11 +197,18 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     nextButton.tapFunc = () async {
-      User user= User.getInstance();
-      String oldPassword=oldPasswordTextField.getValue();
-      String newPassword=pwdTwoTextField.getValue();
-      print("目前的四个信息分别是： "+ user.uid.toString()+"  "+ user.token+"  "+ oldPassword+ "  "+ newPassword);
-      try{
+      User user = User.getInstance();
+      String oldPassword = oldPasswordTextField.getValue();
+      String newPassword = pwdTwoTextField.getValue();
+      print("目前的四个信息分别是： " +
+          user.uid.toString() +
+          "  " +
+          user.token +
+          "  " +
+          oldPassword +
+          "  " +
+          newPassword);
+      try {
         Response res = await Requests.modifyPassword({
           "uid": user.uid,
           "token": user.token,
@@ -209,30 +216,36 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
           "new_password": newPassword,
         });
 
-        print("目前的四个信息分别是： "+ user.uid.toString()+"  "+ user.token+"  "+ oldPassword+ "  "+ newPassword);
+        print("目前的四个信息分别是： " +
+            user.uid.toString() +
+            "  " +
+            user.token +
+            "  " +
+            oldPassword +
+            "  " +
+            newPassword);
 
         if (res.data['code'] == 1) {
           print("密码修改成功!!!!!!!");
           EasyLoading.showSuccess("Change success!",
               duration: Duration(milliseconds: 2000));
         }
-        if (res.data['code'] == -1 ) {
+        if (res.data['code'] == -1) {
           print("Login Required");
         }
-        if (res.data['code'] == -2 ) {
+        if (res.data['code'] == -2) {
           print("Wrong Username or Password");
         }
-        if (res.data['code'] == -4 ) {
+        if (res.data['code'] == -4) {
           print("Code Expired");
         }
-        if (res.data['code'] == -6 ) {
+        if (res.data['code'] == -6) {
           print("User Not Exist");
         }
         if (res.data['code'] == -8) {
           print("Code Check Required");
         }
-
-      } on DioError catch(e){
+      } on DioError catch (e) {
         print("Exception when change password\n");
         print(e.toString());
       }
@@ -240,16 +253,14 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       // Navigator.pop(context);
     };
 
-
-
-
     return FlutterEasyLoading(
-      child: Scaffold(
-        body: ListView(
-            children: <Widget>[
-              Container(
+      child: Container(
+        color: MyTheme.convert(ThemeColorName.PageBackground),
+        child: ListView(
+          children: <Widget>[
+            Container(
               // margin: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(60,20,10,10),
+              margin: EdgeInsets.fromLTRB(60, 20, 10, 10),
               child: Text(
                 "Change login PASSWORD",
                 style: TextStyle(
@@ -257,66 +268,64 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
                   fontSize: 35,
                   fontFamily: "Futura",
                 ),
-                ),
               ),
-
-              SizedBox( height:  20,),
-
-              Container(
-                decoration: BoxDecoration(
-                    // border: Border.all(),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  // border: Border.all(),
                   ),
-                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-                child:this.emailTextField,
-              ),
-              Container(
-                decoration: BoxDecoration(
+              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              child: this.emailTextField,
+            ),
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
+                this.verifyTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(0.1))
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
                   // border: Border.all(),
-                ),
-                padding: EdgeInsets.fromLTRB(20, 1, 1, 10),
-                child:this.verifyTextField,
-              ),
-              Container(
-                decoration: BoxDecoration(
+                  ),
+              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              child: this.oldPasswordTextField,
+            ),
+            Container(
+              decoration: BoxDecoration(
                   // border: Border.all(),
-                ),
-                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-                child:this.oldPasswordTextField,
-              ),
-              Container(
-                decoration: BoxDecoration(
+                  ),
+              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              child: this.pwdOneTextField,
+            ),
+            Container(
+              decoration: BoxDecoration(
                   // border: Border.all(),
-                ),
-                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-                child:this.pwdOneTextField,
-              ),
-              Container(
-                decoration: BoxDecoration(
+                  ),
+              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              child: this.pwdTwoTextField,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              decoration: BoxDecoration(
                   // border: Border.all(),
-                ),
-                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-                child:this.pwdTwoTextField,
+                  ),
+              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              child: Row(
+                children: [
+                  this.backButton,
+                  this.nextButton,
+                ],
               ),
-              SizedBox(height: 30,),
-
-              Container(
-                decoration: BoxDecoration(
-                  // border: Border.all(),
-                ),
-                padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-                child:Row(
-                  children: [
-                    this.backButton,
-                    this.nextButton,
-                  ],
-                ),
-              ),
-
-            ],
-          ),
+            ),
+          ],
         ),
-
+      ),
     );
   }
 }
-
