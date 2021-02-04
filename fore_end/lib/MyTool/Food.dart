@@ -6,7 +6,6 @@ class Food {
   String name;
   ///Food ID 在数据库里的ID
   int id;
-
   ///服务器里面的category好像是String类型  所以我不太确定
   int category;
   ///目前的营养物质一共有6种
