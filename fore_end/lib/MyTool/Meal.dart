@@ -98,6 +98,7 @@ class Meal {
     for (Food fd in foods) {
       res += fd.name + "-";
       res += fd.id.toString() + "-";
+      res += fd.weight.toString()+"-";
       res += fd.calorie.toString() + "-";
       res += fd.protein.toString() + "-";
       res += fd.fat.toString() + "-";
@@ -117,12 +118,13 @@ class Meal {
       result.add(Food(
         name: food[0],
         id: int.parse(food[1]),
-        calorie: double.parse(food[2]),
-        protein: double.parse(food[3]),
-        fat: double.parse(food[4]),
-        cholesterol: double.parse(food[5]),
-        carbohydrate: double.parse(food[6]),
-        cellulose: double.parse(food[7]),
+        weight: int.parse(food[2]),
+        calorie: double.parse(food[3]),
+        protein: double.parse(food[4]),
+        fat: double.parse(food[5]),
+        cholesterol: double.parse(food[6]),
+        carbohydrate: double.parse(food[7]),
+        cellulose: double.parse(food[8]),
       ));
     }
     return result;

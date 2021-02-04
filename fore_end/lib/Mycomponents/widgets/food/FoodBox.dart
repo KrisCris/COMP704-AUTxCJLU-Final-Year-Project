@@ -335,7 +335,6 @@ class FoodBoxState extends State<FoodBox>
                   onClick: (){
                     print("按下了减少按钮");
                     minusWeight();
-
                   },
                 ),
 

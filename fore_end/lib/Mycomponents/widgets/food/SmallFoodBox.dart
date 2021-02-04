@@ -71,9 +71,9 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
                 padding: EdgeInsets.only(top: 0),
                 children: [
                   Text(widget.food.name, style: widget.style),
-                  Text("Calorie: " + widget.food.calorie.toString() + "Kcal",
+                  Text("Calorie: " + widget.food.getCalories().toString() + "Kcal",
                       style: widget.figureStyle),
-                  Text("Protein: " + widget.food.protein.toString() + "mg",
+                  Text("Protein: " + widget.food.getProtein().toString() + "mg",
                       style: widget.figureStyle),
                 ],
               )
