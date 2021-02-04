@@ -38,11 +38,13 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
     Image img = widget.food.picture == null?Image.asset(
       Food.defaultPicturePath,
       fit: BoxFit.cover,
+      gaplessPlayback: true,
       width: widget.pictureSize,
       height: widget.pictureSize,
     ):Image.memory(
       base64Decode(widget.food.picture),
       fit: BoxFit.cover,
+      gaplessPlayback: true,
       width: widget.pictureSize,
       height: widget.pictureSize,
     );

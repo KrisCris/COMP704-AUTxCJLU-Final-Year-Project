@@ -35,6 +35,9 @@ class TweenAnimation<T> implements MyAnimation<T>{
     this.isFinish = false;
     this.completeTime = 0;
     this.tween = new Tween<T>(begin: tweenStart, end: tweenEnd);
+    if(this.ctl != null){
+      this.ctl.dispose();
+    }
     this.ctl = new AnimationController(
         duration: Duration(milliseconds: duration), vsync: tk
     );

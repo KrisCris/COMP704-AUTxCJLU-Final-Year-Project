@@ -140,7 +140,10 @@ class FoodBoxState extends State<FoodBox>
 
   }
 
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   ///父组件更新时，重新为监听器添加回调
   @override
