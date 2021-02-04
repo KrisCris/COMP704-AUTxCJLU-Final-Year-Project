@@ -335,6 +335,8 @@ class FoodBoxState extends State<FoodBox>
                 CustomIconButton(
                   icon: FontAwesomeIcons.minus,
                   buttonSize: 40,
+                  sizeChangeWhenClick: true,
+                  backgroundSizeChange: true,
                   onClick: (){
                     print("按下了减少按钮");
                     minusWeight();
@@ -344,6 +346,7 @@ class FoodBoxState extends State<FoodBox>
                 SizedBox(width: 20,),
                 CustomIconButton(
                   sizeChangeWhenClick: true,
+                  backgroundSizeChange: true,
                     icon: FontAwesomeIcons.plus,
                   buttonSize: 40,
                   onClick: (){

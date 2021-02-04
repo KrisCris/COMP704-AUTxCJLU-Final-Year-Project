@@ -67,6 +67,8 @@ class CustomIconButton extends StatefulWidget
 
   ///按钮按下时，是否需要播放图标尺寸变化动画
   bool sizeChangeWhenClick;
+  bool backgroundSizeChange;
+
   bool backgroundColorChange;
 
   CustomIconButton(
@@ -74,6 +76,7 @@ class CustomIconButton extends StatefulWidget
       @required this.icon,
       this.text = "",
         this.sizeChangeWhenClick = false,
+        this.backgroundSizeChange = false,
         this.backgroundColorChange = true,
       this.iconSize = 20,
       this.fontSize = 12,
@@ -132,6 +135,7 @@ class CustomIconButtonState extends State<CustomIconButton>
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<double> iconSizeAnimation = TweenAnimation<double>();
+  TweenAnimation<double> backgourndSizeAnimation = TweenAnimation<double>();
   bool disabled = false;
 
   @override
@@ -197,6 +201,13 @@ class CustomIconButtonState extends State<CustomIconButton>
       res -= 5;
     }
     this.iconSizeAnimation.initAnimation(widget.iconSize, res, 100, this, () {setState(() {});});
+    if(widget.backgroundSizeChange){
+      res = widget.buttonSize - 5;
+    }else{
+      res = widget.buttonSize;
+    }
+    this.backgourndSizeAnimation.initAnimation(widget.buttonSize, res, 100, this, () {setState(() {
+    });});
   }
 
   Widget get IconText {
@@ -252,17 +263,23 @@ class CustomIconButtonState extends State<CustomIconButton>
         },
         onTapDown: (TapDownDetails details){
           this.iconSizeAnimation.forward();
+          this.backgourndSizeAnimation.forward();
         },
         onTapUp: (TapUpDetails details){
           this.iconSizeAnimation.reverse();
+          this.backgourndSizeAnimation.reverse();
+        },
+        onTapCancel: (){
+          this.iconSizeAnimation.reverse();
+          this.backgourndSizeAnimation.reverse();
         },
         child: AnimatedBuilder(
           animation: this.backgroundColorAnimation.ctl,
           child: this.IconText,
           builder: (BuildContext context, Widget child) {
             return Container(
-              width: widget.buttonSize,
-              height: widget.buttonSize,
+              width: this.backgourndSizeAnimation.value,
+              height: this.backgourndSizeAnimation.value,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.borderRadius),
