@@ -34,7 +34,7 @@ class TakePhotoPage extends StatefulWidget {
 }
 
 class TakePhotoState extends State<TakePhotoPage>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin,WidgetsBindingObserver {
   CameraController _ctl;
   Future<void> _initDone;
   bool _hasCamera = true;
@@ -45,6 +45,7 @@ class TakePhotoState extends State<TakePhotoPage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     this.loadingCameraAnimation.initAnimation(0.0, -10.0, 1000, this, () {
       setState(() {});
     });
@@ -72,7 +73,7 @@ class TakePhotoState extends State<TakePhotoPage>
     if (this.flashAnimation != null) {
       this.flashAnimation.dispose();
     }
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -98,6 +99,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("nowState: "+state.toString());
     // App state changed before we got the chance to initialize.
     if (this._ctl == null || !this._ctl.value.isInitialized) {
       return;
