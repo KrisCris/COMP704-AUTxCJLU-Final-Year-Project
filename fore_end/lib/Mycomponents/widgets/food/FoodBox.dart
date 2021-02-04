@@ -304,10 +304,10 @@ class FoodBoxState extends State<FoodBox>
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
     List<Widget> col = [
-      this.propertyLine("Calorie", widget.food.getCalorie()),
-      this.propertyLine("Fat", widget.food.getFat()),
-      this.propertyLine("Protein", widget.food.getProtein()),
-      this.propertyLine("Carbohydrate", widget.food.getCarbohydrate()),
+      this.propertyLine("Calorie", widget.food.getCaloriePerUnit()),
+      this.propertyLine("Fat", widget.food.getFatPerUnit()),
+      this.propertyLine("Protein", widget.food.getProteinPerUnit()),
+      this.propertyLine("Carbohydrate", widget.food.getCarbohydratePerUnit()),
       this.propertyLine("Weight", foodWeight.toString()+"00g"),
     ];
     if (widget.couldRemove) {
@@ -335,7 +335,6 @@ class FoodBoxState extends State<FoodBox>
                   onClick: (){
                     print("按下了减少按钮");
                     minusWeight();
-
                   },
                 ),
 

@@ -6,7 +6,6 @@ class Food {
   String name;
   ///Food ID 在数据库里的ID
   int id;
-
   ///服务器里面的category好像是String类型  所以我不太确定
   int category;
   ///目前的营养物质一共有6种
@@ -41,31 +40,42 @@ class Food {
     this.weight=1,
   });
 
-  String getCalorie(){
-    return calorie.toString() + "Kcal";
+  String getCaloriePerUnit(){
+    return calorie.toString() + "Kcal/100g";
   }
-
-  String getProtein(){
-    return protein.toString() + "g";
+  int getCalories(){
+    return (calorie*weight).floor();
   }
-
-  String getFat(){
-    return fat.toString() + "g";
+  String getProteinPerUnit(){
+    return protein.toString() + "g/100g";
   }
-
-  String getCholesterol(){
-    return cholesterol.toString() + "mg";
+  int getProtein(){
+    return (protein*weight).floor();
   }
-
-  String getCarbohydrate(){
-    return carbohydrate.toString() + "mg";
+  String getFatPerUnit(){
+    return fat.toString() + "g/100g";
   }
-
-  String getCellulose(){
-    return cellulose.toString()+"mg";
+  int getFat(){
+    return (fat*weight).floor();
   }
-
-
+  String getCholesterolPerUnit(){
+    return cholesterol.toString() + "mg/100g";
+  }
+  int getCholesterol(){
+    return (cholesterol*weight).floor();
+  }
+  String getCarbohydratePerUnit(){
+    return carbohydrate.toString() + "mg/100g";
+  }
+  int getCarbohydrate(){
+    return (carbohydrate*weight).floor();
+  }
+  String getCellulosePerUnit(){
+    return cellulose.toString()+"mg/100g";
+  }
+  int getCellulose(){
+    return (cellulose*weight).floor();
+  }
   String getWeight(){
     return weight.toString() + "00g";
   }

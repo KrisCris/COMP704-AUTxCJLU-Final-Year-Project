@@ -12,11 +12,12 @@ class DateButton extends StatefulWidget with ValueableWidgetMixIn<int> {
   DateTime beginTime;
   TextStyle style;
   BoxDecoration decoration;
-
+  Function onChangeDate;
   DateButton(
       {double width,
       double height,
         this.paddingHorizontal=0,
+        this.onChangeDate,
       TextStyle style,
       BoxDecoration decoration,
       DateTime lastTime, DateTime beginTime,
@@ -93,6 +94,9 @@ class DateButtonState extends State<DateButton> with ValueableStateMixIn {
   }
   @override
   void onChangeValue() {
+    if(widget.onChangeDate != null){
+      widget.onChangeDate();
+    }
     setState(() {});
   }
 
