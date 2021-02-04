@@ -12,7 +12,7 @@ import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
 import 'package:fore_end/Pages/main/PlanDetailPage.dart';
-import '../AccountPage.dart';
+import '../account/AccountPage.dart';
 
 class MainPage extends StatefulWidget {
   User user;
