@@ -79,9 +79,7 @@ class Meal {
   int calculateTotalCalories() {
     double cal = 0;
     this.foods.forEach((fd) {
-      cal += fd.calorie * fd.weight;
-
-      ///要乘以用户设置的重量，默认weight为1
+      cal += fd.getCalories();
     });
     return cal.floor();
   }
@@ -89,7 +87,7 @@ class Meal {
   int calculateTotalProtein() {
     double pro = 0;
     this.foods.forEach((fd) {
-      pro += fd.protein * fd.weight;
+      pro += fd.getProtein();
     });
     return pro.floor();
   }
