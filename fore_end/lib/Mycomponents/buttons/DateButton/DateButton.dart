@@ -12,6 +12,8 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
   double width;
   ///高度
   double height;
+  ///按钮的边界大小
+  double buttonMargin;
   ///文字部分距离按钮左右边界的距离
   double paddingHorizontal;
   ///时间选择范围的最后一天
@@ -30,6 +32,7 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
       double height,
         this.paddingHorizontal=0,
         this.onChangeDate,
+        this.buttonMargin = 55,
       TextStyle style,
       BoxDecoration decoration,
       DateTime lastTime, DateTime beginTime,
@@ -90,6 +93,7 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
         children: [
           CustomIconButton(
             icon: FontAwesomeIcons.chevronLeft,
+            buttonSize: widget.buttonMargin,
             backgroundOpacity: 0,
             onClick: (){
               this.minusDay();
@@ -107,7 +111,7 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
                 widget.widgetValue.value = date.millisecondsSinceEpoch;
               },
               child: Container(
-                width: widget.width,
+                width: widget.width-2*widget.buttonMargin,
                 height: widget.height,
                 padding: EdgeInsets.fromLTRB(widget.paddingHorizontal, 0, widget.paddingHorizontal, 0),
                 decoration: widget.decoration,
@@ -116,6 +120,7 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
               )),
           CustomIconButton(
             icon: FontAwesomeIcons.chevronRight,
+            buttonSize: widget.buttonMargin,
             backgroundOpacity: 0,
             onClick: (){
               this.addDay();
