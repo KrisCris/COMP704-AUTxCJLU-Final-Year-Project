@@ -79,12 +79,8 @@ class Login extends StatelessWidget {
     );
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: BackGround(
-          sigmaX: 15,
-          sigmaY: 15,
-          opacity: 0.79,
-          backgroundImage: "image/fruit-main.jpg",
-          color: Colors.white,
+      body: Container(
+          color: MyTheme.convert(ThemeColorName.PageBackground),
           child: this.LoginUI)
     );
   }
@@ -104,7 +100,7 @@ class Login extends StatelessWidget {
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
                     fontFamily: "Futura",
-                    color: Colors.black)),
+                    color: MyTheme.convert(ThemeColorName.HeaderText))),
           ),
           SizedBox(height: ScreenTool.partOfScreenHeight(0.08)),
           this.emailField,

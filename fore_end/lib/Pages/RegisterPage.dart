@@ -305,11 +305,8 @@ class Register extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BackGround(
-          sigmaY: 15,
-          sigmaX: 15,
-          color: Colors.white,
-          opacity: 0.79,
+      body: Container(
+          color: MyTheme.convert(ThemeColorName.PageBackground),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,7 +322,7 @@ class Register extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                         fontFamily: "Futura",
-                        color: Colors.black),
+                        color: MyTheme.convert(ThemeColorName.HeaderText)),
                   ),
                 ),
                 listScrool,
