@@ -256,6 +256,9 @@ class CustomIconButtonState extends State<CustomIconButton>
         onTapUp: (TapUpDetails details){
           this.iconSizeAnimation.reverse();
         },
+        onTapCancel: (){
+          this.iconSizeAnimation.reverse();
+        },
         child: AnimatedBuilder(
           animation: this.backgroundColorAnimation.ctl,
           child: this.IconText,

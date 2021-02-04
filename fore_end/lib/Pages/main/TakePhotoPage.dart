@@ -104,7 +104,7 @@ class TakePhotoState extends State<TakePhotoPage>
     if (this._ctl == null || !this._ctl.value.isInitialized) {
       return;
     }
-    if (state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused) {
       this._ctl?.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (this._ctl != null) {

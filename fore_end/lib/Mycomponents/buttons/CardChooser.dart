@@ -215,6 +215,9 @@ class CardChooserState extends State<CardChooser>
         onTapDown: (TapDownDetails dt) {
           this.sizeChangeAnimation.beginAnimation();
         },
+        onTapCancel: (){
+          this.sizeChangeAnimation.reverse();
+        },
         onTapUp: (TapUpDetails dt) {
           widget._chosen.value = true;
           if (widget._onTap.isNotEmpty) {
