@@ -57,7 +57,7 @@ class FoodRecognizer{
   static void addFoodToMealName(String mealName) async{
     User u = User.getInstance();
     Meal m = u.getMealByName(mealName);
-    int mealsType=mealName=="breakfast"? 1 : {mealName=="lunch"?2:3};
+    int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
     if(m != null){
       FoodRecognizer.addFoodToMeal(m);
       List<List> totalFoodInfo=new List<List>();
