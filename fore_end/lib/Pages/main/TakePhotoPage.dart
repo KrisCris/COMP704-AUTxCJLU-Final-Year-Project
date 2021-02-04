@@ -328,6 +328,7 @@ class TakePhotoState extends State<TakePhotoPage>
       iconSize: 38,
       adjustHeight: 2.5,
       sizeChangeWhenClick: true,
+      backgroundSizeChange: false,
       buttonSize: 45,
       backgroundOpacity: 0.5,
       borderRadius: 45,
