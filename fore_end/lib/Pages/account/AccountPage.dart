@@ -8,6 +8,7 @@ import 'package:fore_end/MyTool/util/Picker_Tool.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
@@ -117,21 +118,36 @@ class PageState extends State<AccountPage> {
                 color: MyTheme.convert(ThemeColorName.PageBackground),
               ),
               ListView(
+                // padding: EdgeInsets.only(),
                 children: <Widget>[
                   //Account Page的最上面标题
-                  Container(
-                    // margin: EdgeInsets.all(20),
-                    margin: EdgeInsets.fromLTRB(
-                        ScreenTool.partOfScreenWidth(20), 20, 10, 10),
-                    child: Text(
-                      "ACCOUNT INFO",
-                      style: TextStyle(
-                        color: MyTheme.convert(ThemeColorName.HeaderText),
-                        fontSize: 35,
-                        fontFamily: "Futura",
+                  Row(
+                    children: [
+                      SizedBox(width: 10,),
+                      GestureDetector(
+
+                        child: Icon(FontAwesomeIcons.arrowAltCircleLeft,size: 35,color: MyTheme.convert(ThemeColorName.NormalIcon),),
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
                       ),
-                    ),
+
+                      Container(
+                        // margin: EdgeInsets.all(20),
+                        margin: EdgeInsets.fromLTRB(20, 18, 10, 10),
+                        child: Text(
+                          "ACCOUNT INFO",
+                          style: TextStyle(
+                            color: MyTheme.convert(ThemeColorName.HeaderText),
+                            fontSize: 32,
+                            fontFamily: "Futura",
+                          ),
+                        ),
+                      ),
+
+                    ],
                   ),
+
 
                   SizedBox(
                     height: 10,
@@ -151,12 +167,7 @@ class PageState extends State<AccountPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  OutlineButton(
-                    child: Text("Back MainPage"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                 
                 ],
               )
             ],

@@ -179,8 +179,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       disabled: false,
       text: "Back",
       isBold: true,
-      rightMargin: 20,
-      bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
       tapFunc: () {
         Navigator.pop(context);
@@ -191,8 +189,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       disabled: true,
       text: "Save",
       isBold: true,
-      rightMargin: 20,
-      bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
     );
 
@@ -256,67 +252,69 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     return FlutterEasyLoading(
       child: Container(
         color: MyTheme.convert(ThemeColorName.PageBackground),
-        child: ListView(
+        child: Column(
+
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
           children: <Widget>[
             Container(
-              // margin: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(60, 20, 10, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.15),
+              margin: EdgeInsets.only(top: 35),
               child: Text(
-                "Change login PASSWORD",
+                "Change Login PASSWORD",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: MyTheme.convert(ThemeColorName.NormalText),
                   fontSize: 35,
                   fontFamily: "Futura",
                 ),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(top: 10,bottom: 10),
               child: this.emailTextField,
             ),
-            Row(
-              children: [
-                SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                this.verifyTextField,
-                SizedBox(width: ScreenTool.partOfScreenWidth(0.1))
-              ],
-            ),
+
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.07),
+              // margin: EdgeInsets.only(top: 10,),
+
+              // padding: EdgeInsets.only(top: 5),
+
+              child: this.verifyTextField,
+            ),
+
+            Container(
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(bottom: 10),
               child: this.oldPasswordTextField,
             ),
+
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(bottom: 10),
               child: this.pwdOneTextField,
             ),
+
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(bottom: 10),
               child: this.pwdTwoTextField,
             ),
-            SizedBox(
-              height: 30,
-            ),
+
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(top: 10,bottom: 10),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   this.backButton,
                   this.nextButton,

@@ -75,12 +75,13 @@ class ResultPageState extends State<ResultPage> {
         ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
         ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
         ///这里还可以计算总的其他营养数据 比如protein
-        double cal = 0;
+        int cal = 0;
         widget.recognizer.foods.forEach((fd) {
-          cal += fd.food.calorie*fd.food.weight;
+          cal += (fd.food.calorie*fd.food.weight).toInt();
         });
-
+        ///转为Int显示
         String totalCalories=cal.toString();
+
         JhPickerTool.showStringPicker(context,
             title: 'Total: '+totalCalories+ ' Kcal',
             normalIndex: 0,
