@@ -5,6 +5,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Mycomponents/widgets/food/BarChartSample.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';

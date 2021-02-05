@@ -5,6 +5,7 @@ import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
+import 'package:fore_end/Mycomponents/widgets/food/BarChartSample.dart';
 import 'package:fore_end/Mycomponents/widgets/food/DetailedMealList.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
@@ -38,14 +39,8 @@ class ComponentTestState extends State<ComponentTestPage>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
-      child: Center(
-        child: DetailedMealList(
-          meal: Meal(mealName: "breakfast",encoded:"Rice-237-12,Pork-419-58,lettus-64-1"),
-          width: 0.9,
-          dragAreaHeight: 50,
-        )
-      )
+      margin: EdgeInsets.only(top: 40,bottom: 350,left: 10,right: 10),
+      child: BarChartSample1(),
     );
   }
 }

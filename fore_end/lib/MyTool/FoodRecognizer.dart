@@ -60,7 +60,8 @@ class FoodRecognizer{
     int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
     if(m != null){
       FoodRecognizer.addFoodToMeal(m);
-      List<List> totalFoodInfo=new List<List>();
+      // List<List> totalFoodInfo=new List<List>();
+      List totalFoodInfo=[];
       for(Food food in m.foods){
         int foodId=food.id;
         List singleFoodInfo=[];
