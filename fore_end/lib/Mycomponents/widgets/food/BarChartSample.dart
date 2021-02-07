@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 
 class CaloriesBarChart extends StatefulWidget {
   DateTime mealTime;
-
+  ///今天的日期
   DateTime today = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
 
   String weekDayOfToday=DateFormat('EEEE').format(DateTime.now());
@@ -31,22 +31,29 @@ class CaloriesBarChart extends StatefulWidget {
   DateTime sundayDate;
 
   bool isMondayDate=false;
-  bool isTuesdayDate=true;
+  bool isTuesdayDate=false;
   bool isWednesdayDate=false;
   bool isThursdayDate=false;
   bool isFridayDate=false;
   bool isSaturdayDate=false;
   bool isSundayDate=false;
 
+
+  double mondayData=0;
+  double tuesdayData=0;
+  double wednesdayData=0;
+  double thursdayData=0;
+  double fridayData=0;
+  double saturdayData=0;
+  double sundayData=0;
+
   double width;
-  ///高度
   double height;
 
   CaloriesBarChart(
     { Key key,
       double width=0.95,
       double height=300,
-
     }):super(key:key){
       this.width=ScreenTool.partOfScreenWidth(this.width);
       this.height=this.height;
@@ -59,71 +66,83 @@ class CaloriesBarChart extends StatefulWidget {
 class CaloriesBarChartState extends State<CaloriesBarChart> {
   final Color barBackgroundColor = const Color(0xff72d8bf);
   final Duration animDuration = const Duration(milliseconds: 250);
-
   int touchedIndex;
 
-
-  ///设定新的时间 ，就重新刷新新的界面
-  ///1.获取今天的日期，然后转化为星期几，比如是今天是星期三，就把除了星期三的今天都更新
-  ///2.再把对应的星期的颜色变成绿色，默认其他数值为0
-  ///3.如果日期选择器改变了时间，就把选择的日期的对应星期几突出显示，并且
   void judgeDate({DateTime time}){
-    time = time ?? widget.mealTime;
+    // time = time ?? widget.mealTime;
     DateTime nowCurrent = DateTime.now();
     DateTime today = DateTime(nowCurrent.year,nowCurrent.month,nowCurrent.day);
     DateTime settingDay = DateTime(time.year,time.month,time.day);
 
-
     if(settingDay.compareTo(today) == 0){
-      User u = User.getInstance();
-      if(mounted){
-        setState(() {});
-      }
+      ///如果就是今天 就不做操作
+    }else{
+      ///不知道setting为今天的日期后 再setState会不会与today冲突？
+      String weekDayOfSetting=DateFormat('EEEE').format(settingDay);
+      this.calculateDate(weekDayOfSetting);
     }
   }
 
-  ///获取之前几天的数据可以根据服务器接口来获取卡路里。
+  ///根据今天，获取之前几天的数据可以根据服务器接口来获取卡路里。
   void calculateDate(String todayWeek){
+    int mondayIndex;
     switch(todayWeek){
       case 'Monday':
         widget.isMondayDate=true;
-        print("22");
+        ///暂时设置一个假的，等有接口，直接根据今天的日期去算 使用add(-1)方法
+        widget.mondayData=1000;
+        mondayIndex=1;
+        print("星期一只需要获取星期一的数据，其他全设置为0");
         break;
 
       case 'Tuesday':
-        print("22");
         widget.isTuesdayDate=true;
+        mondayIndex=-1;
         break;
 
       case 'Wednesday':
-        print("22");
         widget.isWednesdayDate=true;
-
+        mondayIndex=-2;
         break;
 
       case 'Thursday':
         print("22");
         widget.isThursdayDate=true;
+        mondayIndex=-3;
         break;
 
       case 'Friday':
         print("22");
         widget.isFridayDate=true;
+        mondayIndex=-4;
         break;
 
       case 'Saturday':
         print("22");
         widget.isSaturdayDate=true;
+        mondayIndex=-5;
         break;
 
       case 'Sunday':
         print("22");
         widget.isSundayDate=true;
+        mondayIndex=-6;
         break;
 
       default:
         print('calculateDate  none');
     }
+    ///计算其他六天的日期
+    widget.mondayDate=widget.today.add(Duration(days: mondayIndex));
+    widget.tuesdayDate=widget.today.add(Duration(days: mondayIndex+1));
+    widget.wednesdayDate=widget.today.add(Duration(days: mondayIndex+2));
+    widget.thursdayDate=widget.today.add(Duration(days: mondayIndex+3));
+    widget.fridayDate=widget.today.add(Duration(days: mondayIndex+4));
+    widget.saturdayDate=widget.today.add(Duration(days: mondayIndex+5));
+    widget.sundayDate=widget.today.add(Duration(days: mondayIndex+6));
+
+    ///计算其他六天的卡路里，通过后台接口
+    widget.mondayData=100;
 
   }
 
@@ -150,7 +169,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
-                // mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Text(
                     'History Daily Calories',
@@ -179,6 +197,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
                       lastTime: DateTime.now(),
                       onChangeDate: (int newDate){
                         this.judgeDate(time:DateTime.fromMillisecondsSinceEpoch(newDate));
+                        ///这里选择好新的日期后 设置今天的日期为新的日期
                       },
                     ),],
                   ),
@@ -196,7 +215,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   BarChartGroupData makeGroupData(
       int x,
       double y, {
-        ///条形柱的颜色  和  宽度
         bool isTouched = false,
         Color barColor = const Color(0xffED9055),
         // Color todayColor= const Color(0xffE05067),
@@ -248,6 +266,9 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
   ///按下时提示框里面的提示文字，可以显示 日期 + Kcal
   BarChartData mainBarData() {
+    ///先初始化数据
+    this.calculateDate(widget.weekDayOfToday);
+    ///再构建
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
