@@ -59,7 +59,9 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(width: 5),
           ClipRRect(
+            borderRadius: BorderRadius.circular(5),
             child: img
           ),
           SizedBox(width: 5),
