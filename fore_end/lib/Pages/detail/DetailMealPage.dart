@@ -86,7 +86,7 @@ class DetailMealPageState extends State<DetailMealPage> {
           )
         ],
       ),
-      SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
+      SizedBox(height:20)
     ];
     if(this.meal == null || this.meal.length == 0){
       col.add(
@@ -113,12 +113,12 @@ class DetailMealPageState extends State<DetailMealPage> {
         Expanded(child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List<Widget>.generate(this.meal.length, (index){
-            return DetailedMealList(meal: this.meal[index],width: 0.9);
+            return DetailedMealList(meal: this.meal[index],width: 0.9,height: 140,dragAreaHeight: 80,);
           }),
         ))
       );
       col.addAll([
-        SizedBox(height: ScreenTool.partOfScreenHeight(0.1)),
+        SizedBox(height: 20),
         TitleText(text: "Total Calories: "+totalCal.toString()+" Kcal",maxWidth: 0.9,),
         SizedBox(height: 20)
       ]);

@@ -519,7 +519,6 @@ class CustomTextFieldState extends State<CustomTextField>
                 offset: Offset(this.calculatePosition(), 0),
                 child: Container(
                     width: this.lengthAnimation.value,
-                    margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
                     child: child),
               ));
         });
