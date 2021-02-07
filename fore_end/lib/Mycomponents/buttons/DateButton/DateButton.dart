@@ -20,6 +20,8 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
   DateTime lastTime;
   ///时间选择范围的第一天
   DateTime beginTime;
+  ///时间选择范围的初始显示时间
+  DateTime initTime;
   ///文字样式,不设置则使用默认配置
   TextStyle style;
   ///按钮样式，不设置则使用默认配置
@@ -35,12 +37,14 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
         this.buttonMargin = 55,
       TextStyle style,
       BoxDecoration decoration,
-      DateTime lastTime, DateTime beginTime,
+      DateTime lastTime, DateTime beginTime,DateTime initTime,
         Key key
       }):super(key:key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
-    this.widgetValue = new ValueNotifier<int>(DateTime.now().millisecondsSinceEpoch);
+    this.initTime = initTime ?? DateTime.now();
+    this.initTime = DateTime(this.initTime.year,this.initTime.month,this.initTime.day);
+    this.widgetValue = new ValueNotifier<int>(this.initTime.millisecondsSinceEpoch);
     //style为null,则使用后面的默认项目，否则使用style
     this.style = style ??
         TextStyle(
