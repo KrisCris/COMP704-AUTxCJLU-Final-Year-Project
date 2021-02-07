@@ -18,6 +18,7 @@ class UpdatePwdPage extends StatefulWidget {
 class UpdatePasswordPageState extends State<UpdatePwdPage> {
   // FocusNode focusNode = new FocusNode();
   static const double leftRightGap = 0.1;
+  static const double componentWidth = 0.8;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -66,7 +67,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       inputType: InputFieldType.email,
       // autoChangeState: false,
       errorText: "Wrong email address!",
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: componentWidth,
+      disableSuffix: true,
       helpText: "Please input correct email!",
       maxlength: 30,
       onError: () {
@@ -88,7 +90,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       placeholder: 'Old password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: componentWidth,
       helpText: "At least 7 length",
       maxlength: 30,
       onCorrect: () {
@@ -113,7 +115,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       placeholder: 'New password',
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: componentWidth,
       helpText: "At least 7 length",
       maxlength: 30,
 
@@ -145,7 +147,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       // next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       isAutoChangeState: false,
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: componentWidth,
 
       maxlength: 30,
       onCorrect: () {
@@ -271,44 +273,42 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
                 ),
               ),
             ),
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.8),
-              height: ScreenTool.partOfScreenHeight(0.1),
-              margin: EdgeInsets.only(top: 10,bottom: 10),
-              child: this.emailTextField,
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.emailTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.8),
-              height: ScreenTool.partOfScreenHeight(0.07),
-              // margin: EdgeInsets.only(top: 10,),
-
-              // padding: EdgeInsets.only(top: 5),
-
-              child: this.verifyTextField,
+            SizedBox(height: 10),
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.verifyTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.8),
-              height: ScreenTool.partOfScreenHeight(0.1),
-              margin: EdgeInsets.only(bottom: 10),
-              child: this.oldPasswordTextField,
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.oldPasswordTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.8),
-              height: ScreenTool.partOfScreenHeight(0.1),
-              margin: EdgeInsets.only(bottom: 10),
-              child: this.pwdOneTextField,
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.pwdOneTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-
-            Container(
-              width: ScreenTool.partOfScreenWidth(0.8),
-              height: ScreenTool.partOfScreenHeight(0.1),
-              margin: EdgeInsets.only(bottom: 10),
-              child: this.pwdTwoTextField,
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.pwdTwoTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-
             Container(
               width: ScreenTool.partOfScreenWidth(0.8),
               height: ScreenTool.partOfScreenHeight(0.1),
