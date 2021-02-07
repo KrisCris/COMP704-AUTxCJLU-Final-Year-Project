@@ -40,7 +40,7 @@ class ComponentTestState extends State<ComponentTestPage>
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 40,bottom: 350,left: 10,right: 10),
-      child: BarChartSample1(),
+      child: CaloriesBarChart(),
     );
   }
 }
