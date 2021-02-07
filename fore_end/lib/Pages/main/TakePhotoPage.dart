@@ -288,21 +288,6 @@ class TakePhotoState extends State<TakePhotoPage>
         Column(
           children: [
             SizedBox(height: ScreenTool.topPadding),
-            // Row(
-            //   children: [
-            //     Expanded(child: SizedBox()),
-            //     this.getAlbumButton(),
-            //     SizedBox(width: 10),
-            //   ],
-            // ),
-            // SizedBox(height: 10),
-            // Row(
-            //   children: [
-            //     Expanded(child: SizedBox()),
-            //     this.getResultButton(),
-            //     SizedBox(width: 10),
-            //   ],
-            // ),
             Expanded(child: SizedBox()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -319,7 +304,9 @@ class TakePhotoState extends State<TakePhotoPage>
         ),
       ],
     );
-    return content;
+    return ClipRect(
+      child: content,
+    );
   }
 
   Widget getPhotoButton() {

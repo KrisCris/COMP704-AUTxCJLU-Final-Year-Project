@@ -149,6 +149,10 @@ class User {
   static User getInstance() {
     if (User._instance == null) {
       SharedPreferences pre = LocalDataManager.pre;
+      if(pre == null){
+        print("Local Data Manager has not been initialized yet! User info getting failed!");
+        return null;
+      }
       User._instance = User._internal(
           token: pre.getString('token'),
           uid: pre.getInt('uid'),

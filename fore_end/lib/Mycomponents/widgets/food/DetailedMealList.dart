@@ -72,7 +72,7 @@ class DetailedMealList extends StatelessWidget{
                       itemCount: this.meal.foods.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext ctx, int idx){
-                        return SmallFoodBox(food: this.meal.foods[idx]);
+                        return SmallFoodBox(food: this.meal.foods[idx],pictureSize: this.dragAreaHeight-10,);
                       },
                     ),
                   )
