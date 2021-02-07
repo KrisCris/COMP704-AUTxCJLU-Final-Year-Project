@@ -57,7 +57,9 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
 
     //开始时间和结束时间若为null，使用默认项目
     this.beginTime = beginTime ?? DateTime(2021, 1, 1);
+    this.beginTime = DateTime(this.beginTime.year,this.beginTime.month,this.beginTime.day);
     this.lastTime = lastTime ?? DateTime(2021, 12, 1);
+    this.lastTime = DateTime(this.lastTime.year,this.lastTime.month,this.lastTime.day);
   }
 
   @override
