@@ -12,8 +12,10 @@ class PlanDetail(db.Model):
     caloriesH = db.Column(db.FLOAT, nullable=False)
     proteinL = db.Column(db.FLOAT, nullable=False)
     proteinH = db.Column(db.FLOAT, nullable=False)
+    activityLevel = db.Column(db.FLOAT, nullable=False)
+    ext = db.Column(db.INTEGER, comment='extension')
 
-    def __init__(self, pid, weight, caloriesL, caloriesH, proteinL, proteinH):
+    def __init__(self, pid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext):
         self.pid = pid
         self.time = get_current_time()
         self.weight = weight
@@ -21,6 +23,8 @@ class PlanDetail(db.Model):
         self.caloriesH = caloriesH
         self.proteinL = proteinL
         self.proteinH = proteinH
+        self.activityLevel = activeLevel
+        self.ext = ext
 
     def add(self):
         db.session.add(self)
@@ -38,3 +42,7 @@ class PlanDetail(db.Model):
             data = {'time': p.time, 'weight': p.weight}
             weight_arr.append(data)
         return weight_arr
+
+    @staticmethod
+    def getLatest(pid) -> 'PlanDetail':
+        return PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc()).first()

@@ -48,9 +48,9 @@ class User(db.Model):
         db.session.commit()
 
     @staticmethod
-    def getUserByID(id):
+    def getUserByID(id) -> 'User':
         return User.query.get(id)
 
     @staticmethod
-    def getUserByEmail(email):
+    def getUserByEmail(email) -> 'User':
         return User.query.filter(User.email == email).first()

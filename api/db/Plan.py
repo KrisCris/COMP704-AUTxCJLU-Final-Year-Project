@@ -35,8 +35,8 @@ class Plan(db.Model):
         return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True).order_by(Plan.id.desc())
 
     @staticmethod
-    def getPlanByID(id):
-        return Plan.query.filter(Plan.id == id).first()
+    def getPlanByID(pid) -> 'Plan':
+        return Plan.query.filter(Plan.id == pid).first()
 
     def finish(self, weight, time=get_current_time()):
         self.realEnd = time
