@@ -68,29 +68,31 @@ def set_plan():
     # db
     user = User.getUserByID(uid)
 
-    # check old plan
+    # check unfinished previous plan
     old_plan = Plan.getUnfinishedPlanByUID(uid).first()
     if old_plan:
         if old_plan.type == 2:
-            old_plan.realEnd = get_current_time()
-            old_plan.achievedWeight = weight
-            old_plan.completed = True
-            old_plan.add()
+            old_plan.finish(weight=weight)
         else:
             return reply_json(-3)
 
     # new plan
-    new_plan = Plan(
+    newPlan = Plan(
         uid=uid,
-        begin=get_current_time(), end=get_future_time(duration), plan_type=plan_type,
-        goal_weight=goal_weight,
+        begin=get_current_time(), end=get_future_time(duration),
+        plan_type=plan_type,
+        goal_weight=goal_weight
+    )
+    newPlanDetail = PlanDetail(
+        pid=newPlan.id,
+        weight=weight,
         caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
         caloriesH=round(calories * 1.05),
         proteinL=maintCalories / 7.7 * 0.22,
         proteinH=maintCalories / 7.7 * 0.32
     )
-    newPlanDetail = PlanDetail()
-    new_plan.add()
+    newPlan.add()
+    newPlanDetail.add()
 
     # update user data
     user.age = age
@@ -103,11 +105,11 @@ def set_plan():
     return reply_json(
         1,
         data={
-            'pid': new_plan.id,
-            'cl': new_plan.caloriesL, 'ch': new_plan.caloriesH,
-            'pl': new_plan.proteinL, 'ph': new_plan.proteinH,
-            'begin': new_plan.begin, 'end': new_plan.end,
-            'type': new_plan.type, 'goal': new_plan.goalWeight
+            'pid': newPlan.id,
+            'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+            'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+            'begin': newPlan.begin, 'end': newPlan.end,
+            'type': newPlan.type, 'goal': newPlan.goalWeight
         }
     )
 
@@ -145,10 +147,6 @@ def get_current_plan():
         })
     else:
         return reply_json(-6)
-
-
-def get_plans():
-    pass
 
 
 @plan.route('get_plan', methods=['POST'])

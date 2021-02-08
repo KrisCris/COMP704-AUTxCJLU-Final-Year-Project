@@ -29,3 +29,12 @@ class PlanDetail(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def getWeightChangeArray(pid):
+        plans = PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc())
+        weight_arr = []
+        for p in plans:
+            data = {'time': p.time, 'weight': p.weight}
+            weight_arr.append(data)
+        return weight_arr
