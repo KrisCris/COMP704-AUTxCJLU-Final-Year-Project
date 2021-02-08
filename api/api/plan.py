@@ -265,13 +265,13 @@ def update_body_info():
         }
 
     elif p.type == 2:
-        # calibrate weight using type.1
+        # calibrate weight using type.1, 14 days to lose weight.
         result = calc_calories(
             age=u.age,
             height=u.height,
             weight=u.weight,
             pal=pal,
-            time=14,
+            time=28,
             goalWeight=p.goalWeight,
             gender=True if u.gender == 1 else False,
             type=1
@@ -288,7 +288,8 @@ def update_body_info():
             ext=None
         )
         newPlanDetail.add()
-
+        
+        # if -2, means the weight gained too much... Should change the plan instead
         if result == 'unachievable' or result.get('low'):
             return reply_json(-2)
 
@@ -302,6 +303,7 @@ def update_body_info():
         }
 
     elif p.type == 3:
+        # calories calculated from current weight to support muscle gain
         result = calc_calories(
             age=u.age,
             height=u.height,
@@ -312,7 +314,9 @@ def update_body_info():
             gender=True if u.gender == 1 else False,
             type=3
         )
+        # calories for maintain this weight
         maintCals = result.get('maintainCal')
+
         newPlanDetail = PlanDetail(
             pid=p.id,
             weight=weight,
