@@ -69,7 +69,7 @@ def set_plan():
     user = User.getUserByID(uid)
 
     # check old plan
-    old_plan = Plan.getCurrentPlanByUID(uid).first()
+    old_plan = Plan.getUnfinishedPlanByUID(uid).first()
     if old_plan:
         if old_plan.type == 2:
             old_plan.realEnd = get_current_time()
@@ -134,7 +134,7 @@ def finish_plan():
 @require_login
 def get_current_plan():
     uid = request.form.get('uid')
-    p = Plan.getCurrentPlanByUID(uid).first()
+    p = Plan.getUnfinishedPlanByUID(uid).first()
     if p:
         return reply_json(1, data={
             'pid': p.id,

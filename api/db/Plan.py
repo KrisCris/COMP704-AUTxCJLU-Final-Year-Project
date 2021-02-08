@@ -31,8 +31,8 @@ class Plan(db.Model):
         db.session.commit()
 
     @staticmethod
-    def getCurrentPlanByUID(uid):
-        return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True)
+    def getUnfinishedPlanByUID(uid):
+        return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True).order_by(Plan.id.desc())
 
     @staticmethod
     def getPlanByID(id):
