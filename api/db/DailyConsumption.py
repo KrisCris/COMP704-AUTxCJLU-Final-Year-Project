@@ -1,4 +1,5 @@
 from db.db import db
+from util.func import get_current_time
 
 
 class DailyConsumption(db.Model):
@@ -10,11 +11,13 @@ class DailyConsumption(db.Model):
     fid = db.Column(db.INTEGER, db.ForeignKey('food.id'), nullable=False)
     type = db.Column(db.INTEGER, nullable=False, comment='1=breakfast, 2=lunch, 3=dinner')
     day = db.Column(db.INTEGER, nullable=False, comment='relative days since the plan began')
+    time = db.Column(db.INTEGER)
     name = db.Column(db.VARCHAR(256), comment='easier way to query food name...')
     calories = db.Column(db.FLOAT, comment='easier way to query calories')
     protein = db.Column(db.FLOAT, comment='easier way to query protein')
+    img = db.Column(db.Text(16777216))
 
-    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None):
+    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, time=get_current_time()):
         self.uid = uid
         self.pid = pid
         self.fid = fid
@@ -23,6 +26,7 @@ class DailyConsumption(db.Model):
         self.name = name
         self.calories = calories
         self.protein = protein
+        self.time = time
 
     def add(self):
         db.session.add(self)

@@ -10,24 +10,16 @@ class Plan(db.Model):
     end = db.Column(db.INTEGER, nullable=False)
     type = db.Column(db.INTEGER, nullable=False)
     goalWeight = db.Column(db.FLOAT)
-    caloriesL = db.Column(db.FLOAT, nullable=False)
-    caloriesH = db.Column(db.FLOAT, nullable=False)
-    proteinL = db.Column(db.FLOAT, nullable=False)
-    proteinH = db.Column(db.FLOAT, nullable=False)
     achievedWeight = db.Column(db.FLOAT)
     realEnd = db.Column(db.INTEGER)
     completed = db.Column(db.BOOLEAN, nullable=False, default=False)
 
-    def __init__(self, uid, begin, end, plan_type, goal_weight, caloriesL, caloriesH, proteinL=0, proteinH=0):
+    def __init__(self, uid, begin, end, plan_type, goal_weight):
         self.uid = uid
         self.begin = begin
         self.end = end
         self.type = plan_type
         self.goalWeight = goal_weight
-        self.caloriesL = caloriesL
-        self.caloriesH = caloriesH
-        self.proteinL = proteinL
-        self.proteinH = proteinH
 
     def add(self):
         db.session.add(self)
