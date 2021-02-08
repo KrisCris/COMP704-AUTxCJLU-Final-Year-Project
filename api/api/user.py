@@ -255,20 +255,3 @@ def modify_basic_info():
 
     u.add()
     return func.reply_json(1)
-
-
-@user.route('update_body_info', methods=['POST'])
-@func.require_login
-def update_body_info():
-    uid = request.form.get('uid')
-    height = None if 'height' in request.form.keys() else request.form.get('height')
-    weight = None if 'weight' in request.form.keys() else request.form.get('weight')
-
-    u = User.getUserByID(uid)
-    u.height = height if height else u.height
-    u.weight = weight if weight else u.weight
-
-    # TODO update plan and return the future calories and protein intake
-
-    u.add()
-    return func.reply_json(1, data={'calories': 0, 'protein': 0})

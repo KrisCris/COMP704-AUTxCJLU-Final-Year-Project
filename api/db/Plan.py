@@ -1,4 +1,5 @@
 from db.db import db
+from util.func import get_current_time
 
 
 class Plan(db.Model):
@@ -35,4 +36,10 @@ class Plan(db.Model):
 
     @staticmethod
     def getPlanByID(id):
-        return Plan.query.filter(Plan.id == id)
+        return Plan.query.filter(Plan.id == id).first()
+
+    def finish(self, weight, time=get_current_time()):
+        self.realEnd = time
+        self.achievedWeight = weight
+        self.completed = True
+        self.add()

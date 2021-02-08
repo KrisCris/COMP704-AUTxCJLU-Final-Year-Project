@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flasgger import swag_from
 
-from db import User, Plan, DailyConsumption
+from db import User, Plan, DailyConsumption, PlanDetail
 from util.user import require_login
 from util.func import reply_json, get_current_time, get_future_time, get_relative_days
 from util.Planer.CalsPlaner import calc_calories
@@ -77,13 +77,7 @@ def set_plan():
             old_plan.completed = True
             old_plan.add()
         else:
-            return reply_json(-3, data={
-                'pid': old_plan.id,
-                'cl': old_plan.caloriesL, 'ch': old_plan.caloriesH,
-                'pl': old_plan.proteinL, 'ph': old_plan.proteinH,
-                'begin': old_plan.begin, 'end': old_plan.end,
-                'type': old_plan.type, 'goal': old_plan.goalWeight
-            })
+            return reply_json(-3)
 
     # new plan
     new_plan = Plan(
@@ -95,6 +89,7 @@ def set_plan():
         proteinL=maintCalories / 7.7 * 0.22,
         proteinH=maintCalories / 7.7 * 0.32
     )
+    newPlanDetail = PlanDetail()
     new_plan.add()
 
     # update user data
@@ -120,22 +115,19 @@ def set_plan():
 @plan.route('finish_plan', methods=['POST'])
 @require_login
 def finish_plan():
-    uid = request.form.get('uid')
     weight = request.form.get('weight')
-    # pid = request.form.get('pid')
+    pid = request.form.get('pid')
 
-    res = Plan.getCurrentPlanByUID(uid)
-
-    if res.count() > 1:
-        print('wrong plan number')
-
-    p = res.first()
+    # no more search by uid. completely eliminate unfinished plan.
+    p = Plan.getPlanByID(pid)
     if p:
-        p.realEnd = get_current_time()
-        p.achievedWeight = weight
-        p.completed = True
-        p.add()
-    return reply_json(1)
+        if not p.completed:
+            p.finish(weight=weight)
+            return reply_json(1)
+        else:
+            return reply_json(-3, msg='Already finished')
+    else:
+        return reply_json(-6)
 
 
 @plan.route('get_current_plan', methods=['POST'])
@@ -163,7 +155,7 @@ def get_plans():
 @require_login
 def get_plan():
     pid = request.form.get('pid')
-    p = Plan.getPlanByID(pid).first()
+    p = Plan.getPlanByID(pid)
     if p:
         return reply_json(1, data={
             'pid': p.id,
@@ -186,10 +178,10 @@ def consume_foods():
     type = request.form.get('type')
     # a list that contains all the food and its corresponding info including proteins, calories, names.
     foods_info = request.form.get('foods_info')
-    # TODO check the fids' type
-    p = Plan.getPlanByID(pid).first()
+    # TODO check the food_info's type
+    p = Plan.getPlanByID(pid)
 
-    day = get_relative_days(p.begin, get_current_time())+1
+    day = get_relative_days(p.begin, get_current_time()) + 1
     for food_info in foods_info:
         f = DailyConsumption(
             uid=uid, pid=pid, type=type, fid=food_info[0], day=day,
@@ -197,3 +189,20 @@ def consume_foods():
         )
         f.add()
     return reply_json(1)
+
+
+@plan.route('update_body_info', methods=['POST'])
+@require_login
+def update_body_info():
+    uid = request.form.get('uid')
+    height = None if 'height' in request.form.keys() else request.form.get('height')
+    weight = None if 'weight' in request.form.keys() else request.form.get('weight')
+
+    u = User.getUserByID(uid)
+    u.height = height if height else u.height
+    u.weight = weight if weight else u.weight
+
+    # TODO update plan and return the future calories and protein intake
+
+    u.add()
+    return reply_json(1, data={'calories': 0, 'protein': 0})

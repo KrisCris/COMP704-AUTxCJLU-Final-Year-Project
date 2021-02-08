@@ -30,7 +30,6 @@ def detect():
         f = Food.searchByName(fr[5])
         f_db = {}
         if f:
-            pass
             f_db['id'] = f.id
             f_db['name'] = f.name
             f_db['category'] = f.category
