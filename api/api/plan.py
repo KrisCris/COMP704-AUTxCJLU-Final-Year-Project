@@ -138,13 +138,14 @@ def finish_plan():
 @require_login
 def get_current_plan():
     uid = request.form.get('uid')
-    p = Plan.getUnfinishedPlanByUID(uid).first()
-    # TODO fix
+    p: 'Plan' = Plan.getUnfinishedPlanByUID(uid).first()
+    planDetail = PlanDetail.getLatest(p.id)
     if p:
         return reply_json(1, data={
             'pid': p.id,
-            'cl': p.caloriesL, 'ch': p.caloriesH,
-            'pl': p.proteinL, 'ph': p.proteinH,
+            'cl': planDetail.caloriesL, 'ch': planDetail.caloriesH,
+            'pl': planDetail.proteinL, 'ph': planDetail.proteinH,
+            'ext': planDetail.ext,
             'begin': p.begin, 'end': p.end,
             'type': p.type, 'goal': p.goalWeight,
         })
@@ -157,12 +158,13 @@ def get_current_plan():
 def get_plan():
     pid = request.form.get('pid')
     p = Plan.getPlanByID(pid)
-    # TODO fix
+    planDetail = PlanDetail.getLatest(p.id)
     if p:
         return reply_json(1, data={
             'pid': p.id,
-            'cl': p.caloriesL, 'ch': p.caloriesH,
-            'pl': p.proteinL, 'ph': p.proteinH,
+            'cl': planDetail.caloriesL, 'ch': planDetail.caloriesH,
+            'pl': planDetail.proteinL, 'ph': planDetail.proteinH,
+            'ext': planDetail.ext,
             'begin': p.begin, 'end': p.end,
             'type': p.type, 'goal': p.goalWeight,
             'hasFinished': False if p.realEnd is None else True
