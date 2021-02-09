@@ -97,7 +97,17 @@ class FoodRecognizer{
       "food_b64":bs64,
       "rotation":rotate
     });
-
+    if(res == null){
+      Fluttertoast.showToast(
+        msg: "please check your internet connection",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.black45,
+        fontSize: 13,
+      );
+      return;
+    }
     if(res.data['code']== 1){
       for(dynamic r in res.data['data']){
         var position = r['basic'];

@@ -197,6 +197,10 @@ class User {
   Future<int> synchronize() async {
     Response res =
         await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
+    if(res == null){
+      return 2;
+    }
+
     if (res.data['code'] == 1) {
       this._age = res.data['data']['age'];
       this._gender = res.data['data']['gender'];
