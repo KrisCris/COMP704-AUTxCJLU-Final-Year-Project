@@ -78,6 +78,7 @@ class CoverState extends State<CoverPage> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){
                 User u = User.getInstance();
+                u.isOffline = false;
                 if(u.needGuide){
                   return GuidePage();
                 }else{
@@ -93,6 +94,7 @@ class CoverState extends State<CoverPage> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){
                 User u = User.getInstance();
+                u.isOffline = true;
                 if(u.needGuide){
                   return GuidePage();
                 }else{
@@ -113,56 +115,6 @@ class CoverState extends State<CoverPage> {
   @override
   Widget build(BuildContext context) {
     return this.getPage(this.hintString);
-    return FutureBuilder(
-        future: this.attemptLogin(),
-        builder: (context, snapShot) {
-          if (snapShot.hasData) {
-            int resCode = snapShot.data;
-            if(resCode == 0){
-              Future.delayed(Duration(milliseconds: 1500),(){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){return new Welcome();}),
-                        (route){return route==null;}
-                );
-              });
-              return this.getPage("welcome to here!");
-            }else if(resCode == 1){
-              Future.delayed(Duration(milliseconds: 1000),(){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){
-                      User u = User.getInstance();
-                      if(u.needGuide){
-                        return GuidePage();
-                      }else{
-                        return new MainPage(user: u);
-                      }
-                    }),
-                    (route){return route==null;}
-                );
-              });
-              return this.getPage("Auto login...");
-            } else if(resCode == 2){
-              Future.delayed(Duration(milliseconds: 1000),(){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){
-                      User u = User.getInstance();
-                      if(u.needGuide){
-                        return GuidePage();
-                      }else{
-                        return new MainPage(user: u);
-                      }
-                    }),
-                        (route){return route==null;}
-                );
-              });
-              return this.getPage("offline mode login...");
-            }else{
-              return this.getPage("Checking login state...");
-            }
-          } else {
-            return this.getPage("Checking login state...");
-          }
-        });
   }
 
   Future<int> attemptLogin() async {
