@@ -255,7 +255,7 @@ def update_body_info():
         )
         newPlanDetail.add()
 
-        planData={
+        planData = {
             'pid': p.id,
             'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
             'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
@@ -288,7 +288,7 @@ def update_body_info():
             ext=None
         )
         newPlanDetail.add()
-        
+
         # if -2, means the weight gained too much... Should change the plan instead
         if result == 'unachievable' or result.get('low'):
             return reply_json(-2)
@@ -337,6 +337,24 @@ def update_body_info():
             'type': p.type, 'goal': p.goalWeight,
         }
 
-
     u.add()
     return reply_json(1, data=planData)
+
+
+@plan.route('get_weight_trend', methods=['POST'])
+@require_login
+def get_weight_trend():
+    uid = request.form.get('uid')
+    begin = request.form.get('begin')
+    end = request.form.get('end')
+
+    trend = PlanDetail.getWeightTrendInPeriod(uid=uid, begin=begin, end=end)
+    return reply_json(1, data={'trend': trend})
+
+
+@plan.route('get_plan_weight_trend', methods=['POST'])
+@require_login
+def get_plan_weight_trend():
+    pid = request.form.get('pid')
+    trend = PlanDetail.getWeightTrendInPlan(pid)
+    return reply_json(1, data={'trend': trend})

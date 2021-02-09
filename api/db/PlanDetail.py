@@ -1,3 +1,4 @@
+from db import Plan
 from db.db import db
 from util.func import get_current_time
 
@@ -5,6 +6,7 @@ from util.func import get_current_time
 class PlanDetail(db.Model):
     __tablename__ = 'planDetail'
     id = db.Column(db.INTEGER, primary_key=True, unique=True, nullable=True, autoincrement=True)
+    uid = db.Column(db.INTEGER, db.ForeignKey('user.id'))
     pid = db.Column(db.INTEGER, db.ForeignKey('plan.id'))
     time = db.Column(db.INTEGER, nullable=True)
     weight = db.Column(db.FLOAT)
@@ -15,8 +17,9 @@ class PlanDetail(db.Model):
     activityLevel = db.Column(db.FLOAT, nullable=False)
     ext = db.Column(db.INTEGER, comment='extension')
 
-    def __init__(self, pid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext):
+    def __init__(self, pid, uid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext):
         self.pid = pid
+        self.uid = uid
         self.time = get_current_time()
         self.weight = weight
         self.caloriesL = caloriesL
@@ -35,11 +38,21 @@ class PlanDetail(db.Model):
         db.session.commit()
 
     @staticmethod
-    def getWeightChangeArray(pid):
-        plans = PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc())
+    def getWeightTrendInPlan(pid):
+        plans = PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.asc())
         weight_arr = []
         for p in plans:
             data = {'time': p.time, 'weight': p.weight}
+            weight_arr.append(data)
+        return weight_arr
+
+    @staticmethod
+    def getWeightTrendInPeriod(uid, begin, end):
+        plans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(PlanDetail.time <= end).order_by(PlanDetail.time.asc())
+        weight_arr = []
+        for p in plans:
+            pType = Plan.getPlanByID(p.pid).type
+            data = {'time': p.time, 'weight': p.weight, 'type':pType}
             weight_arr.append(data)
         return weight_arr
 
