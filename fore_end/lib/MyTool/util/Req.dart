@@ -21,6 +21,7 @@ class Req {
     dio.options.baseUrl = baseUrl;
     dio.options.connectTimeout = connectOut;
     dio.options.receiveTimeout = receiveOut;
+
   }
   static Dio _getInstance() {
     if (_instance == null) {
