@@ -20,9 +20,10 @@ class User(db.Model):
     last_code_sent = db.Column(db.INTEGER, nullable=False, comment='timestamp the last time server sent a auth_code')
     code_check = db.Column(db.INTEGER, server_default=db.FetchedValue())
     guide = db.Column(db.BOOLEAN)
+    register_date = db.Column(db.INTEGER)
 
     def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(), nickname='', password='',
-                 group=0, token='', code_check=0, guide=1):
+                 group=0, token='', code_check=0, guide=1, register_date=get_current_time()):
         self.email = email
         self.nickname = nickname
         self.password = password
@@ -36,6 +37,7 @@ class User(db.Model):
         self.height = height
         self.code_check = code_check
         self.guide = guide
+        self.register_date = register_date
 
     def add(self):
         db.session.add(self)
@@ -46,9 +48,9 @@ class User(db.Model):
         db.session.commit()
 
     @staticmethod
-    def getUserByID(id):
+    def getUserByID(id) -> 'User':
         return User.query.get(id)
 
     @staticmethod
-    def getUserByEmail(email):
+    def getUserByEmail(email) -> 'User':
         return User.query.filter(User.email == email).first()

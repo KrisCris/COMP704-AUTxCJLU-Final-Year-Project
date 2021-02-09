@@ -7,7 +7,7 @@ class Food(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = db.Column(db.VARCHAR(255), unique=True, nullable=False, comment='food name')
     category = db.Column(db.ForeignKey('category.id'), index=True, comment='food category, details in category table.')
-    image = db.Column(db.VARCHAR(255), server_default='', comment='image for a food')
+    image = db.Column(db.Text(16777216), comment='image for a food')
     calories = db.Column(db.FLOAT)
     fat = db.Column(db.FLOAT)
     carbohydrate = db.Column(db.FLOAT)

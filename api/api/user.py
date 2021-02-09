@@ -57,6 +57,8 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
+            from util.func import get_current_time
+            u.register_date = get_current_time()
             User.add(u)
     return func.reply_json(1)
 
@@ -220,7 +222,8 @@ def get_basic_info():
         'age': u.age,
         'needGuide': u.guide,
         'weight': u.weight,
-        'height': u.height
+        'height': u.height,
+        'register_date': u.register_date
     })
 
 
@@ -252,16 +255,3 @@ def modify_basic_info():
 
     u.add()
     return func.reply_json(1)
-
-# @user.route('modify_avatar', methods=['POST'])
-# @func.require_login
-# def modify_avatar():
-#     uid = request.form.get('uid')
-#     avatar_data = base64.b64decode(request.form.get('avatar'))
-#     u = User.getUserByID(uid)
-#     if u.avatar == "static/user/avatar/default.png":
-#         u.avatar = "static/user/avatar/" + str(u.id) + ".png"
-#         u.add()
-#     with open(u.avatar, 'wb') as avatar:
-#         avatar.write(avatar_data)
-#     return func.reply_json(1)
