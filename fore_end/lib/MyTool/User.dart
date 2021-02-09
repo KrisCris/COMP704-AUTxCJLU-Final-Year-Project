@@ -34,6 +34,7 @@ class User {
   String _email;
   String _avatar;
   bool _needGuide;
+  bool _isOffline;
   int _theme;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
@@ -51,6 +52,7 @@ class User {
     int theme,
     Plan plan,
     bool needGuide,
+    bool offline,
     String avatar = User.defaultAvatar,
     String token,
     String email,
@@ -66,6 +68,7 @@ class User {
     this._age = age;
     this._needGuide = needGuide;
     this._theme = theme;
+    this._isOffline = offline;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -170,6 +173,10 @@ class User {
     return User._instance;
   }
 
+  bool get isOffline => _isOffline;
+  set isOffline(bool value) {
+    _isOffline = value;
+  }
   double get bodyWeight => _bodyWeight;
   int get themeCode => _theme;
   String get token => _token;
