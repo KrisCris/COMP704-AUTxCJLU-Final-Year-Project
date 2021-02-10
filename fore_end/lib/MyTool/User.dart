@@ -165,7 +165,7 @@ class User {
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
-          theme: 0,
+          theme: pre.getInt('theme') ?? 0,
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
           needGuide: pre.getBool("needSetPlan"));
