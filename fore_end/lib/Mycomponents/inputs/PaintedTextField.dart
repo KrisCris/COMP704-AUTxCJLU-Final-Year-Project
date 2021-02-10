@@ -42,7 +42,7 @@ class PaintedTextField extends StatelessWidget {
         icon: this.icon,
         iconSize: 18,
         buttonSize: 25,
-        backgroundOpacity: 0.1,
+        backgroundOpacity: 0,
       ));
     }
     content.addAll([

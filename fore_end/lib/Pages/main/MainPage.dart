@@ -62,7 +62,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       child: Container(
                         width: ScreenTool.partOfScreenWidth(1),
                         height: ScreenTool.partOfScreenHeight(1),
-                        color: Color(0xFF172632),
+                        color: MyTheme.convert(ThemeColorName.PageBackground),
                       ),
                     ),
                     TabBarView(
