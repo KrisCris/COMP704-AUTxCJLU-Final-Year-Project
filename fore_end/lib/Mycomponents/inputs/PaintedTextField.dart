@@ -6,8 +6,8 @@ import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 
 class PaintedTextField extends StatelessWidget {
-  final Color backgroundColor;
-  final Color textColor;
+  Color backgroundColor;
+  Color textColor;
   double width;
   final String hint;
   final double gap;
@@ -17,8 +17,8 @@ class PaintedTextField extends StatelessWidget {
   FocusNode node;
   final double borderRadius;
   PaintedTextField(
-      {this.backgroundColor = Colors.transparent,
-        this.textColor = Colors.white,
+      {Color backgroundColor,
+       Color textColor,
         this.paddingLeft = 5,
         this.contentPadding = 0,
       this.gap = 5,
@@ -30,6 +30,8 @@ class PaintedTextField extends StatelessWidget {
       : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.node = new FocusNode(debugLabel: "PaintedTextField");
+    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.TransparentShadow);
+    this.textColor = textColor ?? MyTheme.convert(ThemeColorName.NormalText);
   }
 
   @override
@@ -42,7 +44,7 @@ class PaintedTextField extends StatelessWidget {
         icon: this.icon,
         iconSize: 18,
         buttonSize: 25,
-        backgroundOpacity: 0.1,
+        backgroundOpacity: 0,
       ));
     }
     content.addAll([

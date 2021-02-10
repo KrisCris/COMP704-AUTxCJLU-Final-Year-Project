@@ -165,7 +165,7 @@ class User {
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
-          theme: 0,
+          theme: pre.getInt('theme') ?? 0,
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
           needGuide: pre.getBool("needSetPlan"));
@@ -244,6 +244,17 @@ class User {
     }
   }
 
+  bool changeTheme(int themeCode){
+    if(themeCode == this._theme)return false;
+    if(themeCode >= MyTheme.AVAILABLE_THEME.length)return false;
+
+    SharedPreferences pre = LocalDataManager.pre;
+    if(pre == null)return false;
+
+    this._theme = themeCode;
+    pre.setInt("theme",this._theme);
+    return true;
+  }
   void setPlan(res) {
     this._plan = new Plan(
         id: res.data['data']['pid'],
