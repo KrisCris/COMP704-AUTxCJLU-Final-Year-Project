@@ -69,7 +69,9 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
       }
       for (CardChooser cd in this.cards) {
         idx++;
-        res.add(cd);
+        res.add(Align(
+          alignment: Alignment.center,
+          child: cd));
         if (this.gap <= 0 || idx == this.cards.length - 1) continue;
         res.add(SizedBox(width: this.gap));
       }

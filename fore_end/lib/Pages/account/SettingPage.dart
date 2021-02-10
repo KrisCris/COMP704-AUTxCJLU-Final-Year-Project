@@ -21,11 +21,12 @@ class SettingPageState extends State<SettingPage> {
     CardChooserGroup group = CardChooserGroup(
       initVal: u.themeCode,
       listView: true,
+      gap: 10,
       direction: CardChooserGroupDirection.horizontal,
       cards: List.generate(MyTheme.AVAILABLE_THEME.length, (index){
         return CardChooser<int>(
           width: 0.25,
-          height: 60,
+          height: 100,
           isChosen: u.themeCode == index,
           textColor: MyTheme.AVAILABLE_THEME[index].normalTextColor,
           backgroundColor: MyTheme.AVAILABLE_THEME[index].componentBackgroundColor,
@@ -66,8 +67,10 @@ class SettingPageState extends State<SettingPage> {
                 SizedBox(height: 40),
                 TitleText(
                   text: "Theme",
+                  fontSize: 15,
                   underLineLength: 0,
                 ),
+                SizedBox(height: 5),
                 Container(
                   height: 100,
                   child: group,

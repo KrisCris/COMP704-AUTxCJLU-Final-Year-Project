@@ -6,7 +6,7 @@ import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 
-class DotPainter extends ContextPainter{
+class DotPainter extends ContextPainter {
   Paint pen;
   double k;
   double b;
@@ -14,13 +14,14 @@ class DotPainter extends ContextPainter{
   final TweenAnimation<double> moveAnimation;
 
   DotPainter(
-      {Color color=Colors.black12,
+      {Color color = Colors.black12,
       double k = 1,
       double b = 0,
       double dotSize = 8,
       double dotGap = 15,
-       BuildContext context,
-      this.moveAnimation}):super(repaint: moveAnimation) {
+      BuildContext context,
+      this.moveAnimation})
+      : super(repaint: moveAnimation) {
     this.dotGap = dotGap;
     this.k = k;
     this.b = b;
@@ -37,24 +38,21 @@ class DotPainter extends ContextPainter{
     Size configuredSize;
     double width = size.width;
     double height = size.height;
-    if(width == 0){
-      if(this.context != null){
-        width = context.size.width;
-      }else{
+    if (this.context != null) {
+      width = context.size.width;
+    } else {
+      if(width == 0)
         width = ScreenTool.partOfScreenWidth(1);
-      }
     }
-    if(height == 0){
-      if(this.context != null){
-        height = context.size.height;
-      }else{
+    if (this.context != null) {
+      height = context.size.height;
+    } else {
+      if(height == 0)
         height = width;
-      }
-
     }
-    configuredSize = new Size(width,height);
+    configuredSize = new Size(width, height);
     double moveVal = 0;
-    if(this.moveAnimation != null){
+    if (this.moveAnimation != null) {
       moveVal = moveAnimation.value;
     }
     double angle = math.atan(this.k);
@@ -74,7 +72,7 @@ class DotPainter extends ContextPainter{
 
   @override
   bool shouldRepaint(covariant DotPainter oldDelegate) {
-    if(oldDelegate.moveAnimation == null){
+    if (oldDelegate.moveAnimation == null) {
       return false;
     }
     return oldDelegate.moveAnimation.value != this.moveAnimation.value;
