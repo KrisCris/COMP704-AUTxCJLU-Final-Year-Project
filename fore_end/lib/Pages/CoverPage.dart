@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,6 +21,8 @@ class CoverPage extends StatefulWidget {
 
 class CoverState extends State<CoverPage> {
   User savedUser;
+  ValueNotifier<int> loginProcess = new ValueNotifier(-1);
+  String hintString="Checking login state...";
 
   Widget getPage(String text) {
     return Container(
@@ -57,44 +61,60 @@ class CoverState extends State<CoverPage> {
               ))),
     );
   }
-
+  @override
+  void initState(){
+    loginProcess.addListener(() {
+      if(loginProcess.value == 0){
+        hintString = "welcome to here!";
+        Future.delayed(Duration(milliseconds: 1500),(){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context){return new Welcome();}),
+                  (route){return route==null;}
+          );
+        });
+      }else if(loginProcess.value == 1){
+        hintString = "Auto login...";
+        Future.delayed(Duration(milliseconds: 1000),(){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context){
+                User u = User.getInstance();
+                u.isOffline = false;
+                if(u.needGuide){
+                  return GuidePage();
+                }else{
+                  return new MainPage(user: u);
+                }
+              }),
+                  (route){return route==null;}
+          );
+        });
+      }else if(loginProcess.value == 2){
+        hintString = "offline mode login...";
+        Future.delayed(Duration(milliseconds: 1000),(){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context){
+                User u = User.getInstance();
+                u.isOffline = true;
+                if(u.needGuide){
+                  return GuidePage();
+                }else{
+                  return new MainPage(user: u);
+                }
+              }),
+                  (route){return route==null;}
+          );
+        });
+      }else{
+        hintString = "Checking login state...";
+      }
+      setState(() {});
+    });
+    attemptLogin();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: this.attemptLogin(),
-        builder: (context, snapShot) {
-          if (snapShot.hasData) {
-            int resCode = snapShot.data;
-            if(resCode == 0){
-              Future.delayed(Duration(milliseconds: 1500),(){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){return new Welcome();}),
-                        (route){return route==null;}
-                );
-              });
-              return this.getPage("welcome to here!");
-            }else if(resCode == 1){
-              Future.delayed(Duration(milliseconds: 1000),(){
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context){
-                      User u = User.getInstance();
-                      if(u.needGuide){
-                        return GuidePage();
-                      }else{
-                        return new MainPage(user: u);
-                      }
-                    }),
-                    (route){return route==null;}
-                );
-              });
-              return this.getPage("Auto login...");
-            } else {
-              return this.getPage("Checking login state...");
-            }
-          } else {
-            return this.getPage("Checking login state...");
-          }
-        });
+    return this.getPage(this.hintString);
   }
 
   Future<int> attemptLogin() async {
@@ -106,7 +126,10 @@ class CoverState extends State<CoverPage> {
     if(u.token == null){
       return 0;
     }else{
-      return u.synchronize();
+      Future<int> userCode = u.synchronize();
+      userCode.then((value){
+        this.loginProcess.value = value;
+      });
     }
   }
 }
