@@ -18,6 +18,7 @@ enum ThemeColorName {
 }
 
 class MyTheme {
+  final String name;
 
   final Color warningColor;
   final Color successColor;
@@ -51,7 +52,8 @@ class MyTheme {
   final Color pickerToolTextColor;
 
   const MyTheme(
-      {this.warningColor,
+      {this.name,
+        this.warningColor,
       this.successColor,
       this.errorColor,
       this.pageBackgroundColor,
@@ -77,8 +79,9 @@ class MyTheme {
 
       });
 
-  static const AVAILABLE_THEME = [MyTheme.DARK_BLUE_THEME];
+  static const AVAILABLE_THEME = [MyTheme.DARK_BLUE_THEME,MyTheme.LIGHT_BLUE_THEME];
   static const DARK_BLUE_THEME = MyTheme(
+    name: "dark blue",
     ///Color 代替CalculatableColor就是可以直接的显示颜色
       errorColor: CalculatableColor(0xFFA30D0D),  ///红
       successColor: CalculatableColor(0xFF099926),  ///绿
@@ -99,12 +102,39 @@ class MyTheme {
       buttonColor: CalculatableColor(0xFF266EC0),  ///蓝
       buttonHighLightColor: CalculatableColor(0xFF4F8ED6),  ///浅蓝
       buttonDisabledColor: CalculatableColor(0xFF999999),  ///灰
-      transparentShadowColor: CalculatableColor(0x1AFFFFFF),  ///深灰
+      transparentShadowColor: CalculatableColor(0x1AFFFFFF),  ///纯白半透明
       pickerToolBackgroundColor: CalculatableColor(0xFF057d9f),  ///青蓝
       pickerToolTextColor:CalculatableColor(0xFF323232),  ///黑
       normalBackgroundColor:CalculatableColor(0xFFF1F1F1),  ///白
 
   );
+  static const LIGHT_BLUE_THEME = MyTheme(
+    name:"light blue",
+    errorColor: CalculatableColor(0xFFDF4444),  ///红
+    successColor: CalculatableColor(0xFF37C674),  ///绿
+    warningColor: CalculatableColor(0xFFDFD153),  ///黄
+    pageBackgroundColor: CalculatableColor(0xFFAAC8E1),  ///浅蓝
+    componentBackgroundColor: CalculatableColor(0xFF7FB1D8),  ///淡蓝
+    normalTextColor: CalculatableColor(0xFF000000),  ///黑
+    headerTextColor: CalculatableColor(0xFF000000),  ///黑
+    highLightTextColor: CalculatableColor(0xFFD96235),  ///橘色
+    disabledTextColor: CalculatableColor(0xFF606060),  ///灰色
+    textWithIconColor: CalculatableColor(0xFF000000),  ///黑
+    normalIconColor: CalculatableColor(0xFF000000),  ///黑色
+    darkIconColor: CalculatableColor(0xFFFD6D37),  ///橘色
+    highLightIconColor: CalculatableColor(0xFFFD6D37),  ///橘色
+    disabledIconColor: CalculatableColor(0xFF606060),  ///灰
+    textFieldColor: CalculatableColor(0xFF606060),  ///灰
+    highLightTextFieldColor: CalculatableColor(0xFFD96235),  ///橘色
+    buttonColor: CalculatableColor(0xFFFF7947),  ///蓝
+    buttonHighLightColor: CalculatableColor(0xFFFA916A),  ///浅蓝
+    buttonDisabledColor: CalculatableColor(0xFF999999),  ///灰
+    transparentShadowColor: CalculatableColor(0x1AFFFFFF),  ///白色透明
+    pickerToolBackgroundColor: CalculatableColor(0xFF057d9f),  ///青蓝
+    pickerToolTextColor:CalculatableColor(0xFF323232),  ///黑
+    normalBackgroundColor:CalculatableColor(0xFFF1F1F1),  ///白
+  );
+
   static MyTheme getTheme({int themeCode}) {
     //不提供主题编号，则从当前用户信息中获取编号
     if(themeCode == null){
@@ -124,6 +154,16 @@ class MyTheme {
       themeCode = 0;
     }
     return MyTheme.AVAILABLE_THEME[themeCode];
+  }
+  static int getThemeIndex(MyTheme theme){
+    int i=0;
+    for(MyTheme the in MyTheme.AVAILABLE_THEME){
+      if(the == theme){
+        return i;
+      }
+      i++;
+    }
+    return -1;
   }
   static Color convert(ThemeColorName name, {Color color}){
     //颜色已经给定，则直接返回

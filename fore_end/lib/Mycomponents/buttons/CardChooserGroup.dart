@@ -8,6 +8,7 @@ enum CardChooserGroupDirection { vertical, horizontal }
 class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetMixIn<T> {
   CardChooserGroupDirection direction;
   MainAxisAlignment mainAxisAlignment;
+  bool listView;
   double gap;
   double paddingLeft;
   double paddingRight;
@@ -16,6 +17,7 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
   CardChooserGroup(
       {@required T initVal,
       this.cards,
+        this.listView=false,
       this.direction = CardChooserGroupDirection.vertical,
       this.mainAxisAlignment = MainAxisAlignment.center,
         this.paddingLeft=0,
@@ -54,7 +56,13 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
         if (this.gap <= 0 || idx == this.cards.length - 1) continue;
         res.add(SizedBox(height: this.gap));
       }
-      return Column(mainAxisAlignment: this.mainAxisAlignment, children: res);
+      if(!this.listView){
+        return Column(mainAxisAlignment: this.mainAxisAlignment, children: res);
+      }
+      return ListView(
+        scrollDirection: Axis.vertical,
+        children: res,
+      );
     } else {
       if(this.paddingLeft !=0){
         res.add(SizedBox(width: this.paddingLeft));
@@ -68,7 +76,13 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
       if(this.paddingRight !=0){
         res.add(SizedBox(width: this.paddingRight));
       }
-      return Row(mainAxisAlignment: this.mainAxisAlignment, children: res);
+      if(!this.listView) {
+        return Row(mainAxisAlignment: this.mainAxisAlignment, children: res);
+      }
+      return ListView(
+        scrollDirection: Axis.horizontal,
+        children: res,
+      );
     }
   }
 }

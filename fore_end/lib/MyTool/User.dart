@@ -244,6 +244,17 @@ class User {
     }
   }
 
+  bool changeTheme(int themeCode){
+    if(themeCode == this._theme)return false;
+    if(themeCode >= MyTheme.AVAILABLE_THEME.length)return false;
+
+    SharedPreferences pre = LocalDataManager.pre;
+    if(pre == null)return false;
+
+    this._theme = themeCode;
+    pre.setInt("theme",this._theme);
+    return true;
+  }
   void setPlan(res) {
     this._plan = new Plan(
         id: res.data['data']['pid'],
