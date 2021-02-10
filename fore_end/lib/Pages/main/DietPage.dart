@@ -32,7 +32,6 @@ class DietPageState extends State<DietPage>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PaintedTextField(
-                backgroundColor: MyTheme.convert(ThemeColorName.TransparentShadow),
                 hint: "search foods",
                 icon: FontAwesomeIcons.search,
                 borderRadius: 5,

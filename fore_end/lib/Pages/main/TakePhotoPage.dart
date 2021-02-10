@@ -241,7 +241,7 @@ class TakePhotoState extends State<TakePhotoPage>
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
       height:ScreenTool.partOfScreenHeight(1),
-      color: Color(0xFF172632),
+      color: MyTheme.convert(ThemeColorName.PageBackground),
       child: Align(
         alignment: Alignment.center,
         child: Column(

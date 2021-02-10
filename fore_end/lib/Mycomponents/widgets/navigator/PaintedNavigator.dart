@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
@@ -26,13 +27,14 @@ class PaintedNavigator extends StatelessWidget {
       this.buttons,
       this.controller,
         this.borderRadius,
-      this.backgroundColor = Colors.white10}) {
+      this.backgroundColor,}) {
     this.changing = false;
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
     if(this.borderRadius ==null){
       this.borderRadius = this.height/2;
     }
+    this.backgroundColor = this.backgroundColor ?? MyTheme.convert(ThemeColorName.TransparentShadow);
     int idx=0;
     for (CustomIconButton bt in this.buttons) {
       bt.setParentNavigator(this);

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/BorderPainter.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
@@ -221,7 +222,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             position: widget.valuePosition,
             str: this.getDisplayValue(),
             fontColor: this.textColorAnimation.value,
-            color: Color(0x77AAAAAA)),
+            color: MyTheme.convert(ThemeColorName.TransparentShadow)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
             edgeEmptySize: widget.edgeEmpty,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
@@ -16,10 +17,12 @@ class GoalData extends StatelessWidget {
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white,
-      this.textColor = Colors.white}) {
+      Color backgroundColor,
+      Color textColor}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
+    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
+    this.textColor = textColor ?? MyTheme.convert(ThemeColorName.NormalText);
   }
   @override
   Widget build(BuildContext context) {

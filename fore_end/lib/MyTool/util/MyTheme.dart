@@ -117,19 +117,19 @@ class MyTheme {
     componentBackgroundColor: CalculatableColor(0xFF7FB1D8),  ///淡蓝
     normalTextColor: CalculatableColor(0xFF000000),  ///黑
     headerTextColor: CalculatableColor(0xFF000000),  ///黑
-    highLightTextColor: CalculatableColor(0xFFD96235),  ///橘色
+    highLightTextColor: CalculatableColor(0xFF266EC0),  ///蓝色
     disabledTextColor: CalculatableColor(0xFF606060),  ///灰色
     textWithIconColor: CalculatableColor(0xFF000000),  ///黑
     normalIconColor: CalculatableColor(0xFF000000),  ///黑色
-    darkIconColor: CalculatableColor(0xFFFD6D37),  ///橘色
-    highLightIconColor: CalculatableColor(0xFFFD6D37),  ///橘色
+    darkIconColor: CalculatableColor(0xFF266EC0),  ///蓝色
+    highLightIconColor: CalculatableColor(0xFF266EC0),  ///蓝色
     disabledIconColor: CalculatableColor(0xFF606060),  ///灰
     textFieldColor: CalculatableColor(0xFF606060),  ///灰
-    highLightTextFieldColor: CalculatableColor(0xFFD96235),  ///橘色
-    buttonColor: CalculatableColor(0xFFFF7947),  ///蓝
+    highLightTextFieldColor: CalculatableColor(0xFF266EC0),  ///蓝色
+    buttonColor: CalculatableColor(0xFF266EC0),  ///蓝
     buttonHighLightColor: CalculatableColor(0xFFFA916A),  ///浅蓝
     buttonDisabledColor: CalculatableColor(0xFF999999),  ///灰
-    transparentShadowColor: CalculatableColor(0x1AFFFFFF),  ///白色透明
+    transparentShadowColor: CalculatableColor(0x1A000000),  ///黑色透明
     pickerToolBackgroundColor: CalculatableColor(0xFF057d9f),  ///青蓝
     pickerToolTextColor:CalculatableColor(0xFF323232),  ///黑
     normalBackgroundColor:CalculatableColor(0xFFF1F1F1),  ///白

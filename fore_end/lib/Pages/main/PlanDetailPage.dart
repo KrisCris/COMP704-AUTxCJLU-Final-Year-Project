@@ -24,7 +24,6 @@ class PlanDetailPage extends StatelessWidget {
             width: 0.95,
             mainAxisAlignment: MainAxisAlignment.center,
             borderRadius: 6,
-            backgroundColor: Color(0xFF1F405A),
             children: [
               SizedBox(height: 12),
               Text(
@@ -32,7 +31,7 @@ class PlanDetailPage extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFD1D1D1),
+                    color: MyTheme.convert(ThemeColorName.NormalText),
                     fontFamily: "Futura"),
               ),
               SizedBox(height: 12),
@@ -46,7 +45,6 @@ class PlanDetailPage extends StatelessWidget {
               TitleText(
                 text: "Your Plan",
                 underLineLength: 0,
-                fontColor: Color(0xFFF1F1F1),
                 fontSize: 18,
                 maxWidth: 0.475,
                 maxHeight: 30,
@@ -71,8 +69,6 @@ class PlanDetailPage extends StatelessWidget {
           GoalData(
             width: 0.95,
             height: 100,
-            backgroundColor: Color(0xFF1F405A),
-            textColor: Color(0xFFD1D1D1),
           ),
           SizedBox(height: 5),
           Row(
@@ -82,7 +78,6 @@ class PlanDetailPage extends StatelessWidget {
               TitleText(
                 text: "Body Weight Info",
                 underLineLength: 0,
-                fontColor: Color(0xFFF1F1F1),
                 fontSize: 18,
                 maxWidth: 0.475,
                 maxHeight: 30,
