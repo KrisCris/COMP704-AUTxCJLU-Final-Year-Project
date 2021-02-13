@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/Pages/ComponentTestPage.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'MyTool/User.dart';
+import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'Mycomponents/widgets/food/CaloriesChart.dart';
 import 'Pages/account/AccountPage.dart';
 import 'Pages/GuidePage.dart';
@@ -23,10 +24,9 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       home: CoverPage(),
-      // home: BarChartSample1(),
-      //home: ComponentTestPage(),
-
+       // home: CoverPage(),
+      // home: ComponentTestPage(),
+      home: CustomFloatingSearchBar(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

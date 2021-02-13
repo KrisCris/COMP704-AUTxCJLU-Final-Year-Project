@@ -51,7 +51,7 @@ class CaloriesBarChart extends StatefulWidget {
   double thursdayValue=2000;
   double fridayValue=1800;
   double saturdayValue=1500;
-  double sundayValue=0;
+  double sundayValue=100;
 
 
   double planLimitedCalories=2500;
