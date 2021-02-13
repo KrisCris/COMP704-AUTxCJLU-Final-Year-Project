@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/Pages/ComponentTestPage.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'MyTool/User.dart';
-import 'Mycomponents/widgets/food/BarChartSample.dart';
+import 'Mycomponents/widgets/food/CaloriesChart.dart';
 import 'Pages/account/AccountPage.dart';
 import 'Pages/GuidePage.dart';
 import 'Pages/LoginPage.dart';
