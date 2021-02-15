@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/SoftwarePreference.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -136,13 +137,13 @@ class MyTheme {
   );
 
   static MyTheme getTheme({int themeCode}) {
-    //不提供主题编号，则从当前用户信息中获取编号
+    //不提供主题编号，则从当前软件偏好信息中获取编号
     if(themeCode == null){
-      if(User.isInit()){
-        themeCode = User.getInstance().themeCode;
+      if(SoftwarePreference.isInit()){
+        themeCode = SoftwarePreference.getInstance().theme;
       }
     }
-    //若用户未被初始化，则从本地文件中读取存储的编号
+    //若软件偏好未被初始化，则从本地文件中读取存储的编号
     if (themeCode == null) {
       if(LocalDataManager.isInit()){
         SharedPreferences pre = LocalDataManager.pre;

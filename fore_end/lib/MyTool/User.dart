@@ -35,7 +35,6 @@ class User {
   String _avatar;
   bool _needGuide;
   bool _isOffline;
-  int _theme;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
@@ -49,7 +48,6 @@ class User {
     int uid,
     double bodyWeight,
     double bodyHeight,
-    int theme,
     Plan plan,
     bool needGuide,
     bool offline,
@@ -67,7 +65,6 @@ class User {
     this._plan = plan;
     this._age = age;
     this._needGuide = needGuide;
-    this._theme = theme;
     this._isOffline = offline;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
@@ -127,9 +124,6 @@ class User {
   static bool isInit(){
     return User._instance != null;
   }
-  MyTheme getNowTheme(){
-    return MyTheme.getTheme(themeCode: this._theme);
-  }
 
   bool hasMealName(String s){
     for(Meal m in this.meals.value){
@@ -165,10 +159,10 @@ class User {
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
           age: pre.getInt('age'),
-          theme: pre.getInt('theme') ?? 0,
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
-          needGuide: pre.getBool("needSetPlan"));
+          needGuide: pre.getBool("needSetPlan"),
+      );
     }
     return User._instance;
   }
@@ -178,7 +172,6 @@ class User {
     _isOffline = value;
   }
   double get bodyWeight => _bodyWeight;
-  int get themeCode => _theme;
   String get token => _token;
   bool get needGuide => _needGuide;
   set token(String value) {
@@ -205,7 +198,7 @@ class User {
     Response res =
         await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
     if(res == null){
-      return 2;
+      return 5;
     }
 
     if (res.data['code'] == 1) {
@@ -238,23 +231,12 @@ class User {
                 NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
         this.save();
       }
-      return 1;
+      return 4;
     } else if (res.data['code'] == -1) {
-      return 0;
+      return 3;
     }
   }
 
-  bool changeTheme(int themeCode){
-    if(themeCode == this._theme)return false;
-    if(themeCode >= MyTheme.AVAILABLE_THEME.length)return false;
-
-    SharedPreferences pre = LocalDataManager.pre;
-    if(pre == null)return false;
-
-    this._theme = themeCode;
-    pre.setInt("theme",this._theme);
-    return true;
-  }
   void setPlan(res) {
     this._plan = new Plan(
         id: res.data['data']['pid'],
@@ -285,7 +267,7 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
-    pre.setInt("theme", this._theme);
+
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();

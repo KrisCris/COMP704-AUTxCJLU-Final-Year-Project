@@ -11,4 +11,5 @@ class LocalDataManager{
   static bool isInit(){
     return pre != null;
   }
+
 }

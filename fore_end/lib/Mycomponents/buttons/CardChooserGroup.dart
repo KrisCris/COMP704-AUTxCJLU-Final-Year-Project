@@ -60,6 +60,7 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
         return Column(mainAxisAlignment: this.mainAxisAlignment, children: res);
       }
       return ListView(
+        padding: EdgeInsets.only(top: 0),
         scrollDirection: Axis.vertical,
         children: res,
       );

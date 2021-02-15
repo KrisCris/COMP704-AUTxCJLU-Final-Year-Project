@@ -141,8 +141,17 @@ class CustomIconButtonState extends State<CustomIconButton>
   @override
   void didUpdateWidget(covariant CustomIconButton oldWidget) {
     // TODO: implement didUpdateWidget
-    widget.disabled = oldWidget.disabled;
-    widget.focus = oldWidget.focus;
+    widget.disabled.value = oldWidget.disabled.value;
+    widget.focus.value = oldWidget.focus.value;
+    //初始化disable监听器，实现在DisbaleStateMxiIn中
+    this.initDisableListener(this.widget.disabled);
+    widget.focus.addListener(() {
+      if(widget.focus.value){
+        this.setFocus();
+      }else{
+        this.setUnFocus();
+      }
+    });
     super.didUpdateWidget(oldWidget);
   }
   ///历史遗留问题, 不推荐在buiild函数中绑定state

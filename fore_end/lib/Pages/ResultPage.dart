@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/util/Picker_Tool.dart';
@@ -34,7 +35,7 @@ class ResultPage extends StatefulWidget {
 
 class ResultPageState extends State<ResultPage> {
   bool scrolling = false;
-  var mealsName = ['breakfast', 'lunch','dinner'];
+  List<String> mealsName;
 
   @override
   void initState() {
@@ -54,13 +55,20 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(mealsName == null){
+      mealsName = [
+        CustomLocalizations.of(context).breakfast,
+        CustomLocalizations.of(context).lunch,
+        CustomLocalizations.of(context).dinner
+      ];
+    }
 
     ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字 ====参考中间的提示文字
     Widget addMealTextButton =GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
-          "Add foods to Meal？",
+          CustomLocalizations.of(context).resultPageQuestion,
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'Futura',
@@ -83,15 +91,15 @@ class ResultPageState extends State<ResultPage> {
         String totalCalories=cal.toString();
 
         JhPickerTool.showStringPicker(context,
-            title: 'Total: '+totalCalories+ ' Kcal',
+            title: CustomLocalizations.of(context).total +totalCalories+ ' Kcal',
             normalIndex: 0,
             isChangeColor: true,
             data: this.mealsName, clickCallBack: (int index, var item) {
-              if(item=="breakfast"){
+              if(index == 0){
                 FoodRecognizer.addFoodToMealName("breakfast");
-              }else if(item=="lunch"){
-                FoodRecognizer.addFoodToMealName("lunch");   ///添加到午餐会报错
-              }else if(item=="dinner"){
+              }else if(index == 1){
+                FoodRecognizer.addFoodToMealName("lunch");
+              }else if(index == 2){
                 FoodRecognizer.addFoodToMealName("dinner");
               }
             });
@@ -104,7 +112,7 @@ class ResultPageState extends State<ResultPage> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: "Your Foods Here",
+          text: CustomLocalizations.of(context).resultPageTitle,
           fontSize: 18,
           fontColor: MyTheme.convert(ThemeColorName.NormalText),
           dividerColor: MyTheme.convert(ThemeColorName.NormalText),
@@ -164,7 +172,7 @@ class ResultPageState extends State<ResultPage> {
         Container(
           alignment: Alignment.center,
           child: Text(
-            "No Recognized Foods Here",
+            CustomLocalizations.of(context).resultPageEmpty,
             style: TextStyle(
                 fontSize: 16,
                 decoration: TextDecoration.none,
@@ -192,23 +200,14 @@ class ResultPageState extends State<ResultPage> {
     ///通知类型
     switch (notification.runtimeType) {
       case ScrollStartNotification:
-
-        ///在这里更新标识 刷新页面 不加载图片
-        print("开始滚动");
         this.setAllPicDefault();
         break;
       case ScrollUpdateNotification:
-
-        ///正在滚动
         break;
       case ScrollEndNotification:
-        print("停止滚动");
-
-        ///在这里更新标识 刷新页面 加载图片
         this.setAllPicEnable();
         break;
       case OverscrollNotification:
-        print("滚动到边界");
         break;
     }
     return true;

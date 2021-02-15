@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Plan.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -63,7 +64,7 @@ class PlanNotifier extends StatelessWidget {
                   offset: Offset(
                       0, -barThickness - ValueBar.backgroundExtraSpace * 2),
                   child: TitleText(
-                    text: "Today's Calories",
+                    text: CustomLocalizations.of(context).todayCal,
                     fontSize: 15,
                     underLineLength: 0,
                     maxHeight: 25,

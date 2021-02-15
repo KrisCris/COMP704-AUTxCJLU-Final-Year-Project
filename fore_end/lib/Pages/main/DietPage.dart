@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/food/BarChartSample.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
@@ -32,7 +31,7 @@ class DietPageState extends State<DietPage>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PaintedTextField(
-                hint: "search foods",
+                hint: CustomLocalizations.of(context).searchFood,
                 icon: FontAwesomeIcons.search,
                 borderRadius: 5,
                 paddingLeft: 10,
@@ -46,7 +45,7 @@ class DietPageState extends State<DietPage>{
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Plan Progress",
+                text: CustomLocalizations.of(context).planProcess,
                 underLineLength: 0,
                 fontSize: 18,
                 maxWidth: 0.95,
@@ -66,7 +65,7 @@ class DietPageState extends State<DietPage>{
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Today's Meal",
+                text: CustomLocalizations.of(context).todayMeal,
                 underLineLength: 0,
                 fontSize: 18,
                 maxWidth: 0.475,
@@ -74,7 +73,7 @@ class DietPageState extends State<DietPage>{
               ),
               Expanded(child: SizedBox()),
               CustomTextButton(
-                "detail",
+                CustomLocalizations.of(context).detail,
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
