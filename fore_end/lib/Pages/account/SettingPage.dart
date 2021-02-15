@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/SoftwarePreference.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
@@ -38,13 +40,40 @@ class SettingPageState extends State<SettingPage> {
         );
       }),
     );
+    List<Map<String,String>> languages = CustomLocalizations.getLanguages(context);
+    CardChooserGroup languageList = CardChooserGroup(
+      initVal: preference.theme,
+      listView: true,
+      gap: 10,
+      direction: CardChooserGroupDirection.vertical,
+      cards: List.generate(languages.length, (index){
+        String code = languages[index].values.first;
+        String displayName = languages[index].keys.first;
+        return CardChooser<String>(
+          width: 0.9,
+          height: 70,
+          isChosen: preference.languageCode == code,
+          textColor: MyTheme.convert(ThemeColorName.NormalText),
+          backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
+          text: displayName,
+          paddingLeft: 5,
+          paddingRight: 5,
+          value: code,
+        );
+      }),
+    );
     group.addValueChangeListener((){
       bool success = preference.changeTheme(group.widgetValue.value);
       if(success){
         setState(() {});
       }
     });
-
+    languageList.addValueChangeListener((){
+      bool success = preference.changeLauguage(languageList.widgetValue.value);
+      if(success){
+        setState(() {});
+      }
+    });
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
@@ -69,13 +98,26 @@ class SettingPageState extends State<SettingPage> {
                 TitleText(
                   text: "Theme",
                   fontSize: 15,
+                  maxHeight: 40,
                   underLineLength: 0,
                 ),
                 SizedBox(height: 5),
                 Container(
                   height: 100,
                   child: group,
-                )
+                ),
+                SizedBox(height: 40),
+                TitleText(
+                  text: "Language",
+                  fontSize: 15,
+                  maxHeight: 40,
+                  underLineLength: 0,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 250,
+                  child:languageList,
+                ),
               ],
             ),
           ),

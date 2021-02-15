@@ -65,8 +65,9 @@ class SoftwarePreference{
     SharedPreferences pre = LocalDataManager.pre;
     if(pre == null)return false;
 
-    pre.setString("languageCode", this._languageCode);
     this._languageCode=languageCode;
+    pre.setString("languageCode", this._languageCode);
+
 
     return true;
   }

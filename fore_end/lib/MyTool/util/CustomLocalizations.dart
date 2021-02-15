@@ -15,6 +15,14 @@ class CustomLocalizations {
   };
 
   static Map<String, Map<String, String>> _localizedValues = {
+    "default":{
+      "en":"default",
+      "zh":"默认"
+    },
+    "languageName":{
+      "en":"English",
+      "zh":"简体中文"
+    },
     "loginState":{
       "en":"checking login state...",
       "zh":"正在检测登录状态..."
@@ -43,6 +51,17 @@ class CustomLocalizations {
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
   }
+  static int getLanguageNum(){
+    return CustomLocalizations.supported.length;
+  }
+  static List<Map<String,String>> getLanguages(BuildContext context){
+    List<Map<String,String>> res = [{Localizations.of(context, CustomLocalizations).getContent("default"):"default"}];
+    for(MapEntry entry in _localizedValues["languageName"].entries){
+      Map<String,String> temp = {entry.value:entry.key};
+      res.add(temp);
+    }
+    return res;
+  }
   String _getLanguageCode(){
     String languageCode;
     if(SoftwarePreference.isInit()){
@@ -64,17 +83,11 @@ class CustomLocalizations {
     if(!_localizedValues[key].containsKey(languageCode)){
       return key + " has not supported in "+ languageCode;
     }
-    return _localizedValues[key][locale.languageCode];
+    return _localizedValues[key][languageCode];
   }
 
-  get loginState{
-    return getContent("loginState");
-  }
-  get welcome{
-    return getContent("welcome");
-  }
-  get autoLogin{
-    return getContent("autoLogin");
+  get languageName{
+    return getContent("languageName");
   }
 }
 

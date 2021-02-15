@@ -69,9 +69,9 @@ class CoverState extends State<CoverPage> {
       if(loginProcess.value == 0){
         hintString = "loginState";
       }else if(loginProcess.value == 1){
-        hintString = "foodRecognizer";
-      }else if(loginProcess.value == 2){
         hintString = "preference";
+      }else if(loginProcess.value == 2){
+        hintString = "foodRecognizer";
       }else if(loginProcess.value == 3){
         hintString = "welcome";
         Future.delayed(Duration(milliseconds: 1500),(){
@@ -128,14 +128,11 @@ class CoverState extends State<CoverPage> {
 
   Future<int> attemptLogin() async {
     await LocalDataManager.init();
-    this.loginProcess.value = 0;
-    await Future.delayed(Duration(milliseconds: 300),(){});
-    //init FoodRecognizer instance
-    FoodRecognizer fd = FoodRecognizer.instance;
+    SoftwarePreference preference = SoftwarePreference.getInstance();
     this.loginProcess.value = 1;
     await Future.delayed(Duration(milliseconds: 300),(){});
-    //init User instance
-    SoftwarePreference preference = SoftwarePreference.getInstance();
+
+    FoodRecognizer fd = FoodRecognizer.instance;
     this.loginProcess.value = 2;
     await Future.delayed(Duration(milliseconds: 300),(){});
 
