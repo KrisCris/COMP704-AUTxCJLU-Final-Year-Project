@@ -75,7 +75,10 @@ class CustomLocalizations {
       "en":"Dinner",
       "zh":"晚餐"
     },
-    ""
+    "total":{
+      "en":"Total",
+      "zh":"合计"
+    }
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -138,6 +141,9 @@ class CustomLocalizations {
   }
   get dinner{
     return getContent("dinner");
+  }
+  get total{
+    return getContent("total");
   }
 }
 
