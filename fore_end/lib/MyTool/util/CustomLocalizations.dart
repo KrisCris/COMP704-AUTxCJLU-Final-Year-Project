@@ -23,6 +23,10 @@ class CustomLocalizations {
       "en":"English",
       "zh":"简体中文"
     },
+    "slogan":{
+      "en":"Take a Picture of your food!",
+      "zh":"为你的食物拍张照吧!"
+    },
     "loginState":{
       "en":"checking login state...",
       "zh":"正在检测登录状态..."
@@ -46,7 +50,32 @@ class CustomLocalizations {
     "offlineLogin":{
       "en":"offline login...",
       "zh":"正在以离线模式登录..."
-    }
+    },
+    "resultPageTitle":{
+      "en":"Your Foods Here",
+      "zh":"您拍摄的食物"
+    },
+    "resultPageEmpty":{
+      "en":"No Recognized Food Here",
+      "zh":"暂未识别到任何食物"
+    },
+    "resultPageQuestion":{
+      "en":"Add Foods To Meals?",
+      "zh":"将食物添加到一日三餐"
+    },
+    "breakfast":{
+      "en":"Breakfast",
+      "zh":"早餐"
+    },
+    "lunch":{
+      "en":"Lunch",
+      "zh":"午餐"
+    },
+    "dinner":{
+      "en":"Dinner",
+      "zh":"晚餐"
+    },
+    ""
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -88,6 +117,27 @@ class CustomLocalizations {
 
   get languageName{
     return getContent("languageName");
+  }
+  get slogan{
+    return getContent("slogan");
+  }
+  get resultPageTitle{
+    return getContent("resultPageTitle");
+  }
+  get resultPageEmpty{
+    return getContent("resultPageEmpty");
+  }
+  get resultPageQuestion{
+    return getContent("resultPageQuestion");
+  }
+  get breakfast{
+    return getContent("breakfast");
+  }
+  get lunch{
+    return getContent("lunch");
+  }
+  get dinner{
+    return getContent("dinner");
   }
 }
 

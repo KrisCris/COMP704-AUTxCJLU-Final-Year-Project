@@ -40,7 +40,7 @@ class CoverState extends State<CoverPage> {
                 children: [
                   Icon(FontAwesomeIcons.lemon, color: Colors.black, size: 50),
                   SizedBox(height: 30),
-                  Text("Take a Picture of your food!",
+                  Text(CustomLocalizations.of(context).slogan,
                       textDirection: TextDirection.ltr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
