@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Meal.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -90,9 +91,8 @@ class MealViewState extends State<MealView>{
                     SizedBox(height: 10,),
 
                     Text(
-
                       ///标题
-                      widget.mealsListData.mealName,
+                      CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -114,7 +114,6 @@ class MealViewState extends State<MealView>{
                             Text(
                               widget.mealsListData.listFoodsName(),
                               overflow: TextOverflow.ellipsis,
-
                               ///设置文字溢出的处理方式，未验证有没有用
                               style: TextStyle(
                                 decoration: TextDecoration.none,

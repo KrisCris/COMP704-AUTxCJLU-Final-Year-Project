@@ -79,7 +79,6 @@ class CustomTextButtonState extends State<CustomTextButton>
   void didUpdateWidget(covariant CustomTextButton oldWidget) {
     // TODO: implement didUpdateWidget
     this.widget.disabled.value = oldWidget.disabled.value;
-    this.widget.widgetValue.value = oldWidget.widgetValue.value;
     //初始化value监听器，实现在ValueableStateMixIn中
     this.initValueListener(this.widget.widgetValue);
     //初始化disable监听器，实现在DisbaleStateMxiIn中

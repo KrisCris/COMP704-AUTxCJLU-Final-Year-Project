@@ -78,6 +78,26 @@ class CustomLocalizations {
     "total":{
       "en":"Total",
       "zh":"合计"
+    },
+    "detail":{
+      "en":"detail",
+      "zh":"详情"
+    },
+    "searchFood":{
+      "en":"Search foods",
+      "zh":"搜索食物"
+    },
+    "planProgress":{
+      "en":"Plan Progress",
+      "zh":"计划进度"
+    },
+    "todayCalories":{
+      "en":"Today's Calories",
+      "zh":"今日摄入卡路里"
+    },
+    "todayMeal":{
+      "en":"Today's Meal",
+      "zh":"今日三餐"
     }
   };
   static CustomLocalizations of(BuildContext context){
@@ -144,6 +164,21 @@ class CustomLocalizations {
   }
   get total{
     return getContent("total");
+  }
+  get detail{
+    return getContent("detail");
+  }
+  get todayCal{
+    return getContent("todayCalories");
+  }
+  get todayMeal{
+    return getContent("todayMeal");
+  }
+  get searchFood{
+    return getContent("searchFood");
+  }
+  get planProcess{
+    return getContent("planProgress");
   }
 }
 
