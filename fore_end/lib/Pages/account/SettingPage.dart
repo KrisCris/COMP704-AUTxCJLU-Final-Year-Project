@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fore_end/MyTool/SoftwarePreference.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -17,9 +18,9 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    User u = User.getInstance();
+    SoftwarePreference preference = SoftwarePreference.getInstance();
     CardChooserGroup group = CardChooserGroup(
-      initVal: u.themeCode,
+      initVal: preference.theme,
       listView: true,
       gap: 10,
       direction: CardChooserGroupDirection.horizontal,
@@ -27,7 +28,7 @@ class SettingPageState extends State<SettingPage> {
         return CardChooser<int>(
           width: 0.25,
           height: 100,
-          isChosen: u.themeCode == index,
+          isChosen: preference.theme == index,
           textColor: MyTheme.AVAILABLE_THEME[index].normalTextColor,
           backgroundColor: MyTheme.AVAILABLE_THEME[index].componentBackgroundColor,
           text: MyTheme.AVAILABLE_THEME[index].name,
@@ -38,7 +39,7 @@ class SettingPageState extends State<SettingPage> {
       }),
     );
     group.addValueChangeListener((){
-      bool success = u.changeTheme(group.widgetValue.value);
+      bool success = preference.changeTheme(group.widgetValue.value);
       if(success){
         setState(() {});
       }

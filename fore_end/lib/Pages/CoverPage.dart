@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
+import 'package:fore_end/MyTool/SoftwarePreference.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
@@ -22,7 +24,7 @@ class CoverPage extends StatefulWidget {
 class CoverState extends State<CoverPage> {
   User savedUser;
   ValueNotifier<int> loginProcess = new ValueNotifier(-1);
-  String hintString="Checking login state...";
+  String hintString="loginState";
 
   Widget getPage(String text) {
     return Container(
@@ -65,15 +67,21 @@ class CoverState extends State<CoverPage> {
   void initState(){
     loginProcess.addListener(() {
       if(loginProcess.value == 0){
-        hintString = "welcome to here!";
+        hintString = "loginState";
+      }else if(loginProcess.value == 1){
+        hintString = "foodRecognizer";
+      }else if(loginProcess.value == 2){
+        hintString = "preference";
+      }else if(loginProcess.value == 3){
+        hintString = "welcome";
         Future.delayed(Duration(milliseconds: 1500),(){
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){return new Welcome();}),
                   (route){return route==null;}
           );
         });
-      }else if(loginProcess.value == 1){
-        hintString = "Auto login...";
+      }else if(loginProcess.value == 4){
+        hintString = "AutoLogin";
         Future.delayed(Duration(milliseconds: 1000),(){
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){
@@ -88,8 +96,8 @@ class CoverState extends State<CoverPage> {
                   (route){return route==null;}
           );
         });
-      }else if(loginProcess.value == 2){
-        hintString = "offline mode login...";
+      }else if(loginProcess.value == 5){
+        hintString = "offlineLogin";
         Future.delayed(Duration(milliseconds: 1000),(){
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){
@@ -104,8 +112,6 @@ class CoverState extends State<CoverPage> {
                   (route){return route==null;}
           );
         });
-      }else{
-        hintString = "Checking login state...";
       }
       setState(() {});
     });
@@ -114,22 +120,31 @@ class CoverState extends State<CoverPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return this.getPage(this.hintString);
+    if(loginProcess.value == -1){
+      return Container(decoration: BoxDecoration(color: Colors.white));
+    }
+    return this.getPage(CustomLocalizations.of(context).getContent(this.hintString));
   }
 
   Future<int> attemptLogin() async {
     await LocalDataManager.init();
+    this.loginProcess.value = 0;
+    await Future.delayed(Duration(milliseconds: 300),(){});
     //init FoodRecognizer instance
     FoodRecognizer fd = FoodRecognizer.instance;
+    this.loginProcess.value = 1;
+    await Future.delayed(Duration(milliseconds: 300),(){});
     //init User instance
+    SoftwarePreference preference = SoftwarePreference.getInstance();
+    this.loginProcess.value = 2;
+    await Future.delayed(Duration(milliseconds: 300),(){});
+
     User u = User.getInstance();
     if(u.token == null){
-      return 0;
+      this.loginProcess.value = 3;
     }else{
-      Future<int> userCode = u.synchronize();
-      userCode.then((value){
-        this.loginProcess.value = value;
-      });
+      int userCode = await u.synchronize();
+      this.loginProcess.value = userCode;
     }
   }
 }
