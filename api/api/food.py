@@ -32,16 +32,7 @@ def detect():
         f = Food.searchByName(fr[5])
         f_db = {}
         if f:
-            f_db['id'] = f.id
-            f_db['name'] = f.name
-            f_db['category'] = f.category
-            f_db['img'] = f.image
-            f_db['calories'] = f.calories
-            f_db['fat'] = f.fat
-            f_db['carbohydrate'] = f.carbohydrate
-            f_db['protein'] = f.protein
-            f_db['cholesterol'] = f.cholesterol
-            f_db['cellulose'] = f.cellulose
+            f_db = f.toDict()
 
         # crop image based on results
         food_image = crop_image_by_coords_2(img, int(fr[0]), int(fr[1]), int(fr[2]), int(fr[3]))
@@ -63,6 +54,16 @@ def detect():
 @food.route('search', methods=['GET'])
 def search():
     pass
+
+
+@food.route('food_info', methods=['GET'])
+def getFoodInfo():
+    fid = request.values.get('fid')
+    f = Food.getById(fid)
+    if f:
+        return reply_json(1, data=f.toDict())
+    else:
+        return reply_json(-6)
 
 
 @food.route('consume_foods', methods=['POST'])
@@ -90,5 +91,7 @@ def consume_foods():
 @food.route('get_consume_history')
 @require_login
 def get_consume_history():
-    pass
-
+    begin = request.form.get('begin')
+    end = request.form.get('end')
+    uid = request.form.get('uid')
+    return reply_json(1, data=DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid))
