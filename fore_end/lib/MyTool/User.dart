@@ -27,6 +27,7 @@ class User {
   double _bodyHeight;
   int _uid;
   int _age;
+  int _registerDate;
   //male - 1, female - 2, other - 0
   Plan _plan;
   int _gender;
@@ -46,6 +47,7 @@ class User {
     int age,
     int gender,
     int uid,
+    int registerDate,
     double bodyWeight,
     double bodyHeight,
     Plan plan,
@@ -64,6 +66,7 @@ class User {
     this._gender = gender;
     this._plan = plan;
     this._age = age;
+    this._registerDate = registerDate;
     this._needGuide = needGuide;
     this._isOffline = offline;
     ///下面是Simon新加的mealData属性
@@ -158,6 +161,7 @@ class User {
           gender: pre.getInt('gender'),
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
+          registerDate: pre.getInt("registerDate"),
           age: pre.getInt('age'),
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
@@ -210,6 +214,7 @@ class User {
       this._bodyHeight = res.data['data']['height']/100;
       this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
+      this._registerDate =res.data['data']['register_date'];
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         //TODO:初始化用户，获取计划失败的情况
@@ -229,8 +234,8 @@ class User {
                 NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
             dailyProteinUpperLimit:
                 NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-        this.save();
       }
+      this.save();
       return 4;
     } else if (res.data['code'] == -1) {
       return 3;
@@ -267,7 +272,7 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
-
+    pre.setInt("registerDate", _registerDate);
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();

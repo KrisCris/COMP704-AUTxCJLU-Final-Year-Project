@@ -3,7 +3,6 @@ import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
 
 class DetailedMealList extends StatelessWidget{

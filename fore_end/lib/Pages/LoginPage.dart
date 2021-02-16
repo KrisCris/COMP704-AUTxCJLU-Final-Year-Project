@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -24,7 +25,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.backButton = CustomButton(
-      text: "Back",
+      text:  CustomLocalizations.of(context).back,
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
@@ -36,7 +37,7 @@ class Login extends StatelessWidget {
     );
 
     this.nextButton = CustomButton(
-      text: "Next",
+      text:  CustomLocalizations.of(context).next,
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
@@ -51,8 +52,8 @@ class Login extends StatelessWidget {
       },
     );
     this.emailField = CustomTextField(
-      placeholder: "Email address",
-      // keyboardAction: TextInputAction.next,
+      placeholder:  CustomLocalizations.of(context).email,
+      helpText:  CustomLocalizations.of(context).emailHint,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -65,7 +66,7 @@ class Login extends StatelessWidget {
       },
     );
     this.passwordField = CustomTextField(
-      placeholder: "Password",
+      placeholder:  CustomLocalizations.of(context).password,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -81,11 +82,11 @@ class Login extends StatelessWidget {
       resizeToAvoidBottomPadding: false,
       body: Container(
           color: MyTheme.convert(ThemeColorName.PageBackground),
-          child: this.LoginUI)
+          child: this.loginUI(context))
     );
   }
 
-  Widget get LoginUI {
+  Widget loginUI(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +94,7 @@ class Login extends StatelessWidget {
           SizedBox(height: ScreenTool.partOfScreenHeight(0.1)),
           Container(
             width: ScreenTool.partOfScreenWidth(0.7),
-            child: Text("Login your \naccount",
+            child: Text( CustomLocalizations.of(context).loginAccount,
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
                     decoration: TextDecoration.none,
@@ -142,7 +143,7 @@ class Login extends StatelessWidget {
         u.uid = res.data['data']['uid'];
         u.email = email;
         int code = await u.synchronize();
-        if(code == 1){
+        if(code == 4){
           EasyLoading.dismiss();
           if(u.needGuide){
             Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
@@ -153,8 +154,11 @@ class Login extends StatelessWidget {
               return new MainPage(user:u);
             }),(ct)=>false);
           }
-        }else{
+        }else if(code == 3){
           EasyLoading.showError("Login token invalid",
+              duration: Duration(milliseconds: 2000));
+        }else if(code == 5){
+          EasyLoading.showError("Please check network connection",
               duration: Duration(milliseconds: 2000));
         }
       }else if(res.data['code'] == -6){

@@ -124,10 +124,11 @@ class Requests {
   }
 
   static Future<Response> signUp(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/user/signup", data: dt);
-    return res;
+    return _postRequest("signUp", data, "/user/signup", "signup接口", null);
+    // Dio dio = Req.instance;
+    // FormData dt = FormData.fromMap(data);
+    // Response res = await dio.post("/user/signup", data: dt);
+    // return res;
   }
 
   static Future<Response> login(data) async {
