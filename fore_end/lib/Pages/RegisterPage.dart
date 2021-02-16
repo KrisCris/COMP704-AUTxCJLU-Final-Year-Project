@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -44,12 +45,12 @@ class Register extends StatelessWidget {
     this.scrollCtl = new ScrollController();
 
     this.emailTextField = CustomTextField(
-      placeholder: 'Email',
+      placeholder: CustomLocalizations.of(context).email,
       inputType: InputFieldType.email,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "Please input correct email!",
+      helpText:CustomLocalizations.of(context).emailHint,
       maxlength: 30,
       onCorrect: () async {
         // if (!this.counter.isStop()) return;
@@ -75,17 +76,20 @@ class Register extends StatelessWidget {
     );
 
     this.verifyTextField = VerifyCodeInputer(
+      firstShowText: CustomLocalizations.of(context).acquireVerify,
+      repeatShowText: CustomLocalizations.of(context).acquireAgain,
+      placeHolder: CustomLocalizations.of(context).verifyCode,
       onCheckSuccess: (){ this.nextButton.setDisabled(false);},
       onCheckFailed: (){this.nextButton.setDisabled(true);},
       emailField: this.emailTextField,
     );
 
     this.confirmPasswordTextField = CustomTextField(
-      placeholder: 'confirm password',
+      placeholder: CustomLocalizations.of(context).confirmPassword,
       inputType: InputFieldType.password,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "re-enter the password",
+      helpText: CustomLocalizations.of(context).confirmPasswordHint,
       maxlength: 30,
       onCorrect: () {
         if (this.confirmPasswordTextField.getValue() ==
@@ -112,11 +116,11 @@ class Register extends StatelessWidget {
     );
 
     this.passwordTextField = CustomTextField(
-      placeholder: 'password',
+      placeholder: CustomLocalizations.of(context).password,
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "At least 6 length, contain number \nand english characters",
+      helpText: CustomLocalizations.of(context).passwordHint,
       maxlength: 30,
       onCorrect: () {
         this.passwordDone = true;
@@ -138,11 +142,11 @@ class Register extends StatelessWidget {
     );
 
     this.nicknameTextField = CustomTextField(
-      placeholder: 'Nick name',
+      placeholder: CustomLocalizations.of(context).nickName,
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "please input your nick name",
+      helpText: CustomLocalizations.of(context).nickNameHint,
       maxlength: 30,
       onCorrect: () {
         this.nickNameDone = true;
@@ -175,7 +179,7 @@ class Register extends StatelessWidget {
       }
     });
     this.backButton = CustomButton(
-      text: "Back",
+      text: CustomLocalizations.of(context).back,
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
@@ -188,7 +192,7 @@ class Register extends StatelessWidget {
 
     this.nextButton = CustomButton(
       disabled: true,
-      text: "Next",
+      text: CustomLocalizations.of(context).next,
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
@@ -315,7 +319,7 @@ class Register extends StatelessWidget {
                 Container(
                   width: ScreenTool.partOfScreenWidth(0.7),
                   child: Text(
-                    "Create your\nAccount",
+                    CustomLocalizations.of(context).createAccount,
                     textDirection: TextDirection.ltr,
                     style: TextStyle(
                         fontSize: 50,

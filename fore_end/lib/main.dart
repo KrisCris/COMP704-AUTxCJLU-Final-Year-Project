@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'Pages/LoginPage.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         "register": (context) => Register(),
         "welcome": (context) => Welcome(),
       },
+        builder: EasyLoading.init(),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

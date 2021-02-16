@@ -91,6 +91,54 @@ class CustomLocalizations {
       "en":"Already Have Account?",
       "zh":"已有账户，点击登录"
     },
+    "createAccount":{
+      "en":"Create Your Account",
+      "zh":"创建您的账户"
+    },
+    "acquireVerify":{
+      "en":"Acquire Verify Code",
+      "zh":"获取验证码"
+    },
+    "acquireAgain":{
+      "en":"Acquire again",
+      "zh":"再次获取"
+    },
+    "verifyCode":{
+      "en":"input verify code",
+      "zh":"输入验证码"
+    },
+    "nickName":{
+      "en":"nick name",
+      "zh":"昵称"
+    },
+    "nickNameHint":{
+      "en":"Please input your nick name",
+      "zh":"请输入您的昵称"
+    },
+    "password":{
+      "en":"Password",
+      "zh":"密码"
+    },
+    "passwordHint":{
+      "en":"At lease 8 length, contain numbers and english characters",
+      "zh":"密码至少需要8位长度，并且包含数字和英文字母"
+    },
+    "confirmPassword":{
+      "en":"confirm password",
+      "zh":"确认密码"
+    },
+    "confirmPasswordHint":{
+      "en":"re-enter the password",
+      "zh":"再次输入密码"
+    },
+    "email":{
+      "en":"Email",
+      "zh":"电子邮箱"
+    },
+    "emailHint":{
+      "en":"Please input correct email",
+      "zh":"请输入正确的邮箱地址"
+    },
     "resultPageTitle":{
       "en":"Your Foods Here",
       "zh":"您拍摄的食物"
@@ -228,6 +276,7 @@ class CustomLocalizations {
       "zh":"语言"
     },
   };
+
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
   }
@@ -385,6 +434,43 @@ class CustomLocalizations {
   }
   get alreadyHave{
     return getContent("alreadyHave");
+  }
+  get createAccount{
+    return getContent("createAccount");
+  }
+  get email{
+    return getContent("email");
+  }
+  get emailHint{
+    return getContent("emailHint");
+  }
+  get password{
+    return getContent("password");
+  }
+  get passwordHint{
+    return getContent("passwordHint");
+  }
+  get confirmPassword{
+    return getContent("confirmPassword");
+  }
+  get confirmPasswordHint{
+    return getContent("confirmPasswordHint");
+  }
+  get nickName{
+    return getContent("nickName");
+  }
+  get nickNameHint{
+    return getContent("nickNameHint");
+  }
+
+  get acquireVerify{
+    return getContent("acquireVerify");
+  }
+  get acquireAgain {
+    return getContent("acquireAgain");
+  }
+  get verifyCode{
+    return getContent("verifyCode");
   }
 }
 
