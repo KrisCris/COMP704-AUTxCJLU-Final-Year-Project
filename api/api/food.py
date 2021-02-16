@@ -90,5 +90,7 @@ def consume_foods():
 @food.route('get_consume_history')
 @require_login
 def get_consume_history():
-    pass
-
+    begin = request.form.get('begin')
+    end = request.form.get('end')
+    uid = request.form.get('uid')
+    return reply_json(1, data=DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid))
