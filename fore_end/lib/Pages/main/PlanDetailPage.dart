@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -27,7 +28,8 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(height: 12),
               Text(
-                "Plan Type: " + User.getInstance().plan.getPlanType(),
+                CustomLocalizations.of(context).planType +" : "+
+                CustomLocalizations.of(context).getContent(User.getInstance().plan.getPlanType()),
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -43,7 +45,7 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Your Plan",
+                text: CustomLocalizations.of(context).yourPlan,
                 underLineLength: 0,
                 fontSize: 18,
                 maxWidth: 0.475,
@@ -51,7 +53,7 @@ class PlanDetailPage extends StatelessWidget {
               ),
               Expanded(child: SizedBox()),
               CustomTextButton(
-                "Change Plan",
+                CustomLocalizations.of(context).changePlan,
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
@@ -76,7 +78,7 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Body Weight Info",
+                text: CustomLocalizations.of(context).bodyWeightInfo,
                 underLineLength: 0,
                 fontSize: 18,
                 maxWidth: 0.475,
@@ -84,7 +86,7 @@ class PlanDetailPage extends StatelessWidget {
               ),
               Expanded(child: SizedBox()),
               CustomTextButton(
-                "Update weight",
+                CustomLocalizations.of(context).updateWeight,
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {

@@ -98,7 +98,60 @@ class CustomLocalizations {
     "todayMeal":{
       "en":"Today's Meal",
       "zh":"今日三餐"
-    }
+    },
+    "planType":{
+      "en":"Plan Type",
+      "zh":"计划类型"
+    },
+    "yourPlan":{
+      "en":"Your Plan",
+      "zh":"您的计划"
+    },
+    "changePlan":{
+      "en":"change Plan",
+      "zh":"更换计划"
+    },
+    "planKeep":{
+      "en":"Plan Continues For ",
+      "zh":"计划已经进行了 "
+    },
+    "days":{
+      "en":"days",
+      "zh":"天"
+    },
+    "currentWeight":{
+      "en":"Current Weight",
+      "zh":"当前体重"
+    },
+    "goalWeight":{
+      "en":"Goal Weight",
+      "zh":"目标体重"
+    },
+    "bodyWeightInfo":{
+      "en":"Body Weight Info",
+      "zh":"体重变化情况"
+    },
+    "updateWeight":{
+      "en":"Update Weight",
+      "zh":"更新体重"
+    },
+    "remainWeight":{
+      "en":"Remain Weight",
+      "zh":"剩余体重"
+    },
+    "shedWeight":{
+      "en":"Shed Weight",
+      "zh":"减肥"
+    },
+    "buildMuscle":{
+      "en":"Build Muscle",
+      "zh":"增肌"
+    },
+    "maintain":{
+      "en":"maintain",
+      "zh":"保持身材"
+    },
+
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -179,6 +232,36 @@ class CustomLocalizations {
   }
   get planProcess{
     return getContent("planProgress");
+  }
+  get planType{
+    return getContent("planType");
+  }
+  get yourPlan{
+    return getContent("yourPlan");
+  }
+  get changePlan{
+    return getContent("changePlan");
+  }
+  get planKeep{
+    return getContent("planKeep");
+  }
+  get days{
+    return getContent("days");
+  }
+  get currentWeight{
+    return getContent("currentWeight");
+  }
+  get goalWeight{
+    return getContent("goalWeight");
+  }
+  get remainWeight{
+    return getContent("remainWeight");
+  }
+  get bodyWeightInfo{
+    return getContent("bodyWeightInfo");
+  }
+  get updateWeight{
+    return getContent("updateWeight");
   }
 }
 

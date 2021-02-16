@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/SoftwarePreference.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -116,12 +115,13 @@ class SettingPageState extends State<SettingPage> {
                 SizedBox(height: 5),
                 Container(
                   height: 250,
+                  width: ScreenTool.partOfScreenWidth(0.9),
                   child:languageList,
                 ),
               ],
             ),
           ),
-          SizedBox(width: ScreenTool.partOfScreenWidth(0.1))
+          SizedBox(width: ScreenTool.partOfScreenWidth(0.05))
         ],
       ),
     );
