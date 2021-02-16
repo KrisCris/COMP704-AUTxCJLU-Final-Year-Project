@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -33,14 +34,14 @@ class BodyDataInputer extends StatelessWidget {
       fontsize: 15,
       width: 0.8,
       height: 50,
-      text: "Next Step",
+      text: CustomLocalizations.of(context).next,
       disabled: u.gender==null,
       tapFunc: this.nextDo,
     );
 
     CardChooser male = CardChooser<int>(
       value: 5,
-      text: "Male",
+      text: CustomLocalizations.of(context).male,
       isChosen: u.gender == null?false:u.gender == 1?true:false,
       textSize: 15,
       textColor: Colors.white,
@@ -51,7 +52,7 @@ class BodyDataInputer extends StatelessWidget {
     );
     CardChooser female = CardChooser<int>(
       value: -161,
-      text: "Female",
+      text: CustomLocalizations.of(context).female,
       textSize: 15,
       isChosen:  u.gender == null?false:u.gender == 2?true:false,
       textColor: Colors.white,
@@ -65,7 +66,7 @@ class BodyDataInputer extends StatelessWidget {
       roundNum: 2,
       adjustVal: 0.01,
       width: 0.8,
-      valueName: "Height",
+      valueName:CustomLocalizations.of(context).height,
       unit: "m",
       maxVal: 2.50,
       minVal: 1.00,
@@ -80,7 +81,7 @@ class BodyDataInputer extends StatelessWidget {
     ValueBar weight = ValueBar<int>(
       barThickness: 14,
       width: 0.8,
-      valueName: "Weight",
+      valueName: CustomLocalizations.of(context).weight,
       unit: "KG",
       maxVal: 150,
       minVal: 30,
@@ -143,7 +144,7 @@ class BodyDataInputer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                  Text("We Need Collect Some Data",
+                  Text(CustomLocalizations.of(context).collectBodyData,
                       style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -161,7 +162,7 @@ class BodyDataInputer extends StatelessWidget {
                     width: ScreenTool.partOfScreenWidth(0.8),
                     height: 50,
                     child: Text(
-                        "Please be relieved, these data will only be used as the figure support of daily energy intake.",
+                        CustomLocalizations.of(context).collectBodyDataInfo,
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -177,7 +178,7 @@ class BodyDataInputer extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                    text: "Are You Male or Female ?",
+                    text: CustomLocalizations.of(context).genderQuestion,
                     maxHeight: 30,
                     maxWidth: 300,
                     underLineLength: 0.795,
@@ -201,7 +202,7 @@ class BodyDataInputer extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                      text: "What Is Your Stature And Weight ?",
+                      text: CustomLocalizations.of(context).bodyDataQuestion,
                       maxWidth: 0.8,
                       maxHeight: 35,
                       fontSize: 18,
