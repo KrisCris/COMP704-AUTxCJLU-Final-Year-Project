@@ -15,6 +15,18 @@ class CustomLocalizations {
   };
 
   static Map<String, Map<String, String>> _localizedValues = {
+
+    //主题色的多语言翻译-------起始
+    "dark blue":{
+      "en":"dark blue",
+      "zh":"深蓝"
+    },
+    "light blue":{
+      "en":"light blue",
+      "zh":"浅蓝"
+    },
+    //主题色的多语言翻译-------结束
+
     "default":{
       "en":"default",
       "zh":"默认"
@@ -194,7 +206,15 @@ class CustomLocalizations {
     "drawerAbout":{
       "en":"ABOUT US",
       "zh":"关于我们"
-    }
+    },
+    "theme":{
+      "en":"Theme",
+      "zh":"主题色"
+    },
+    "language":{
+      "en":"Language",
+      "zh":"语言"
+    },
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -338,6 +358,12 @@ class CustomLocalizations {
   }
   get drawerAbout{
     return getContent("drawerAbout");
+  }
+  get theme{
+    return getContent("theme");
+  }
+  get language{
+    return getContent("language");
   }
 }
 

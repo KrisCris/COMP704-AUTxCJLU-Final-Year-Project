@@ -32,7 +32,7 @@ class SettingPageState extends State<SettingPage> {
           isChosen: preference.theme == index,
           textColor: MyTheme.AVAILABLE_THEME[index].normalTextColor,
           backgroundColor: MyTheme.AVAILABLE_THEME[index].componentBackgroundColor,
-          text: MyTheme.AVAILABLE_THEME[index].name,
+          text: CustomLocalizations.of(context).getContent(MyTheme.AVAILABLE_THEME[index].name),
           paddingLeft: 5,
           paddingRight: 5,
           value: index,
@@ -87,7 +87,7 @@ class SettingPageState extends State<SettingPage> {
               children: [
                 SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
                 TitleText(
-                  text: "SETTING",
+                  text:CustomLocalizations.of(context).drawerSetting,
                   underLineLength: 0.9,
                   underLineDistance: 1,
                   maxHeight: 35,
@@ -95,7 +95,7 @@ class SettingPageState extends State<SettingPage> {
                 ),
                 SizedBox(height: 40),
                 TitleText(
-                  text: "Theme",
+                  text: CustomLocalizations.of(context).theme,
                   fontSize: 15,
                   maxHeight: 40,
                   underLineLength: 0,
@@ -107,7 +107,7 @@ class SettingPageState extends State<SettingPage> {
                 ),
                 SizedBox(height: 40),
                 TitleText(
-                  text: "Language",
+                  text: CustomLocalizations.of(context).language,
                   fontSize: 15,
                   maxHeight: 40,
                   underLineLength: 0,
