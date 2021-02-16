@@ -23,6 +23,22 @@ class CustomLocalizations {
       "en":"English",
       "zh":"简体中文"
     },
+    "cancel":{
+      "en":"Cancel",
+      "zh":"取消",
+    },
+    "back":{
+      "en":"Back",
+      "zh":"返回"
+    },
+    "confirm":{
+      "en":"Confirm",
+      "zh":"确认"
+    },
+    "next":{
+      "en":"Next",
+      "zh":"下一步",
+    },
     "slogan":{
       "en":"Take a Picture of your food!",
       "zh":"为你的食物拍张照吧!"
@@ -119,6 +135,14 @@ class CustomLocalizations {
       "en":"days",
       "zh":"天"
     },
+    "weight":{
+      "en":"Weight",
+      "zh":"体重"
+    },
+    "height":{
+      "en":"Height",
+      "zh":"身高"
+    },
     "currentWeight":{
       "en":"Current Weight",
       "zh":"当前体重"
@@ -134,6 +158,10 @@ class CustomLocalizations {
     "updateWeight":{
       "en":"Update Weight",
       "zh":"更新体重"
+    },
+    "updateBodyTitle":{
+      "en":"Update Your Weight and Height",
+      "zh":"更新您的体重和身高"
     },
     "remainWeight":{
       "en":"Remain Weight",
@@ -262,6 +290,27 @@ class CustomLocalizations {
   }
   get updateWeight{
     return getContent("updateWeight");
+  }
+  get updateBodyTitle{
+    return getContent("updateBodyTitle");
+  }
+  get height{
+    return getContent("height");
+  }
+  get weight{
+    return getContent("weight");
+  }
+  get cancel{
+    return getContent("cancel");
+  }
+  get back{
+    return getContent("back");
+  }
+  get confirm{
+    return getContent("confirm");
+  }
+  get next{
+    return getContent("next");
   }
 }
 

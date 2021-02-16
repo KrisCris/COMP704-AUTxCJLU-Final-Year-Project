@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -16,7 +17,7 @@ class UpdateBody extends StatelessWidget {
       roundNum: 2,
       adjustVal: 0.01,
       width: 0.8,
-      valueName: "Height",
+      valueName: CustomLocalizations.of(context).height,
       unit: "m",
       maxVal: 2.50,
       minVal: 1.00,
@@ -31,7 +32,7 @@ class UpdateBody extends StatelessWidget {
     ValueBar weight = ValueBar<int>(
       barThickness: 14,
       width: 0.8,
-      valueName: "Weight",
+      valueName: CustomLocalizations.of(context).weight,
       unit: "KG",
       maxVal: 150,
       minVal: 30,
@@ -62,7 +63,7 @@ class UpdateBody extends StatelessWidget {
                 SizedBox(width: 10),
                 TitleText(
                   fontSize: 18,
-                  text: "Update Your Weight and Height",
+                  text: CustomLocalizations.of(context).updateBodyTitle,
                   underLineLength: 0,
                   maxWidth: 0.7,
                   maxHeight: 40,
@@ -79,7 +80,7 @@ class UpdateBody extends StatelessWidget {
               children: [
                 SizedBox(width: 20),
                 CustomButton(
-                  text: "Cancel",
+                  text: CustomLocalizations.of(context).cancel,
                   firstColorName: ThemeColorName.Error,
                   width: 80,
                   radius: 5,
@@ -89,7 +90,7 @@ class UpdateBody extends StatelessWidget {
                 ) ,
                 Expanded(child: SizedBox()),
                 CustomButton(
-                  text: "Confirm",
+                  text: CustomLocalizations.of(context).confirm,
                   width: 80,
                   radius: 5,
                 ),
