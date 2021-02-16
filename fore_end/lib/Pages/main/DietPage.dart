@@ -89,11 +89,7 @@ class DietPageState extends State<DietPage>{
           Container(
             width: ScreenTool.partOfScreenWidth(0.95),
             height: 220,
-            child: MealListUI(
-                backgroundColor:Color(0xFF1F405A),
-                textColor:Color(0xFFD1D1D1),
-                unitColor:Color(0xFFD1D1D1),
-                iconColor:Color(0xFFD1D1D1)),
+            child: MealListUI(),
           ),
           SizedBox(height: 20),
         ],
