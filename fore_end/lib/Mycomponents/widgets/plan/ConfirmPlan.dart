@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -30,11 +31,11 @@ class ConfirmPlan extends StatelessWidget {
   void setPlanType(int type){
     this.planTypeNum = type;
     if(type == 1){
-      this.planType = "shed Weight";
+      this.planType = "shedWeight";
     }else if(type == 2){
       this.planType = "maintain";
     }else if(type == 3){
-      this.planType = "build muscle";
+      this.planType = "buildMuscle";
     }else{
       this.planType = "none";
     }
@@ -54,7 +55,7 @@ class ConfirmPlan extends StatelessWidget {
       fontsize: 15,
       width: 0.35,
       height: 50,
-      text: "Create Plan",
+      text: CustomLocalizations.of(context).createPlan,
       disabled: false,
       tapFunc: this.nextDo,
     );
@@ -65,7 +66,7 @@ class ConfirmPlan extends StatelessWidget {
       fontsize: 15,
       width: 0.35,
       height: 50,
-      text: "Adjust Plan",
+      text: CustomLocalizations.of(context).changePlan,
       disabled: false,
       tapFunc: this.backDo,
     );
@@ -104,7 +105,7 @@ class ConfirmPlan extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                  Text("Here is Your Plan",
+                  Text(CustomLocalizations.of(context).hereYourPlan,
                       style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -119,7 +120,7 @@ class ConfirmPlan extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                    text: "Your Plan is " + this.planType,
+                    text: CustomLocalizations.of(context).yourPlan +" - "+ CustomLocalizations.of(context).getContent(this.planType),
                     maxHeight: 25,
                     maxWidth: 300,
                     underLineLength: 0.795,
@@ -131,7 +132,7 @@ class ConfirmPlan extends StatelessWidget {
               ),
               SizedBox(height: 30),
               this.isTooLow?isTooLow:SizedBox(height: 0),
-              this.getContent(),
+              this.getContent(context),
               Expanded(child: (SizedBox())),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -150,24 +151,24 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
   }
-  Widget getContent(){
+  Widget getContent(BuildContext context){
     if(this.planTypeNum == 1){
-      return this.getLoseWeight();
+      return this.getLoseWeight(context);
     }else if(this.planTypeNum == 2){
-      return this.getMaintain();
+      return this.getMaintain(context);
     }else if(this.planTypeNum == 3){
-      return this.getBuildMuscle();
+      return this.getBuildMuscle(context);
     }else{
 
     }
   }
-  Widget getMaintain(){
+  Widget getMaintain(BuildContext context){
     Widget dailyCal =Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "To maintain your body shape, the recommended daily calories  intake is",
+          text:CustomLocalizations.of(context).achieveMaintainInfo,
           maxHeight: 60,
           maxWidth: 300,
           underLineLength: 0,
@@ -206,13 +207,13 @@ class ConfirmPlan extends StatelessWidget {
         children: content
     );
   }
-  Widget getBuildMuscle(){
+  Widget getBuildMuscle(BuildContext context){
     Widget dailyCal =Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "To achieve the goal, the recommended daily calories  intake is around ",
+          text: CustomLocalizations.of(context).achieveCalInfo,
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -227,7 +228,7 @@ class ConfirmPlan extends StatelessWidget {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "To achieve the goal, the recommended daily protein intake is around ",
+          text:CustomLocalizations.of(context).activeProteinInfo,
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -286,13 +287,13 @@ class ConfirmPlan extends StatelessWidget {
         children: content
     );
   }
-  Widget getLoseWeight(){
+  Widget getLoseWeight(BuildContext context){
     Widget daily =Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "To achieve the goal, the recommended daily calories intake is around ",
+          text: CustomLocalizations.of(context).achieveCalInfo,
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -315,7 +316,8 @@ class ConfirmPlan extends StatelessWidget {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "After complete your goal, to maintian your weight, the recommended daily calories intake is around",
+          text: CustomLocalizations.of(context).maintainFigureInfo,
+          //"After complete your goal, to maintian your weight, the recommended daily calories intake is around",
           maxHeight: 80,
           maxWidth: 300,
           underLineLength: 0,

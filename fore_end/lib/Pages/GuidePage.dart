@@ -117,6 +117,7 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
           "duration": days,
           "goalWeight": goalWeight,
           "calories": (data["goalCal"] as int),
+          "pal":exerciseRatio,
           "maintCalories": (data["completedCal"] as int)
         });
         if(res.data['code'] == 1){

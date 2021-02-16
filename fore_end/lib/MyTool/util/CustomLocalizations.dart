@@ -51,6 +51,107 @@ class CustomLocalizations {
       "en":"Next",
       "zh":"下一步",
     },
+    "male":{
+      "en":"Male",
+      "zh":"男性"
+    },
+    "female":{
+      "en":"Female",
+      "zh":"女性"
+    },
+    "age":{
+      "en":"age",
+      "zh":"年龄"
+    },
+    "yearOld":{
+      "en":"years old",
+      "zh":"岁"
+    },
+    "veryLight":{
+      "en":"Very Light",
+      "zh":"非常少"
+    },
+    "veryLightInfo":{
+      "en":"Sitting at the computer most of the day, or sitting at a desk. Almost no activity at all.",
+      "zh":"一整天都坐在电脑或桌子前，几乎完全没有任何运动"
+    },
+    "light":{
+      "en":"Light",
+      "zh":"较少"
+    },
+    "lightInfo":{
+      "en":"Light industrial work, sales or office work that comprises light activities. Walking, non-strenuous cycling or gardening approximately once a week.",
+      "zh":"从事一些低运动量个人工作，例如销售或者办公室工作。每周可能会有一些例如散步，轻松骑行之类的轻量运动"
+    },
+    "moderate":{
+      "en":"Moderate",
+      "zh":"一般"
+    },
+    "moderateInfo":{
+      "en":"Regular activity at least once a week. Cleaning, kitchen staff, or delivering mail on foot or by bicycle.",
+      "zh":"每周都能保证有规律的运动。运动量相当于是做一次大扫除，徒步或骑行进行邮递工作"
+    },
+    "active":{
+      "en":"Active",
+      "zh":"较多"
+    },
+    "activeInfo":{
+      "en":"Regular activities more than once a week, e.g., intense walking, bicycling or sports.",
+      "zh":"能保证超过一周一次的规律性运动，运动量相当于是竞走，单车骑行或者其他运动量较大的运动"
+    },
+    "veryActive":{
+      "en":"Very Active",
+      "zh":"非常多"
+    },
+    "veryActiveInfo":{
+      "en":"Strenuous activities several times a week",
+      "zh":"每周都有多次运动量较大的活动"
+    },
+    "heavy":{
+      "en":"Heavy",
+      "zh":"难以复加"
+    },
+    "heavyInfo":{
+      "en":"Heavy industrial work, construction work or farming.",
+      "zh":"可能从事于繁重的体力工作，例如建筑行业或者农耕活动"
+    },
+    "setGoal":{
+      "en":"Set Your Goal",
+      "zh":"设置您的目标"
+    },
+
+    "littleMore":{
+      "en":"A little More",
+      "zh":"还剩一点了"
+    },
+    "genderQuestion":{
+      "en":"Are You Male or Female?",
+      "zh":"您的性别是?"
+    },
+    "bodyDataQuestion":{
+      "en":"What is Your Stature And Weight?",
+      "zh":"您的身高和体重数值是多少?"
+    },
+    "ageQuestion":{
+      "en":"What is Your Age?",
+      "zh":"您的年龄是?"
+    },
+    "exerciseQuestion":{
+      "en":"How do Your Exercise?",
+      "zh":"您的运动量如何?"
+    },
+    "planShedWeightDayQuestion":{
+      "en":"How Many Days Do You Want To Spend To Lose Your Weight?",
+      "zh":"您希望花费几天的时间来达到您减肥的目标?"
+    },
+    "planShedWeightQuestion":{
+      "en":"How Much Weight Do You Want To Lose (KG)?",
+      "zh":"您希望减轻多少体重 (KG)?"
+    },
+    "planBuildMuscleDayQuestion":{
+      "en":"How Many Days Do You Want To Spend To Build Your Muscle?",
+      "zh":"您希望花费几天时间来达到您增肌的目标?"
+    },
     "slogan":{
       "en":"Take a Picture of your food!",
       "zh":"为你的食物拍张照吧!"
@@ -199,9 +300,45 @@ class CustomLocalizations {
       "en":"Your Plan",
       "zh":"您的计划"
     },
+    "hereYourPlan":{
+      "en":"Here is Your Plan",
+      "zh":"以下是为您创建的计划"
+    },
+    "choosePlan":{
+      "en":"Choose Your Plan",
+      "zh":"选择您的计划"
+    },
+    "createPlan":{
+      "en":"Create Plan",
+      "zh":"创建计划"
+    },
     "changePlan":{
       "en":"change Plan",
-      "zh":"更换计划"
+      "zh":"修改计划"
+    },
+    "collectBodyData":{
+      "en":"We Need Collect Some Data",
+      "zh":"我们需要收集一些您的身体数据"
+    },
+    "collectBodyDataInfo":{
+      "en":"Please be relieved, these data will only be used as the figure calculation support of daily energy intake",
+      "zh":"请您放心，我们收集的数据将仅用于计算适合您的每日营养摄入量"
+    },
+    "maintainFigureInfo":{
+      "en":"After complete your goal, to maintian your weight, the recommended daily calories intake is around",
+      "zh":"完成计划后，我们推荐您每天摄入的卡路里量不超过以下数值来保持您的体型"
+    },
+    "achieveCalInfo":{
+      "en":"To achieve the goal, the recommended daily calories  intake is around",
+      "zh":"为了完成您的计划，我们推荐您每天摄入的卡路里量不超过以下数值"
+    },
+    "achieveProteinInfo":{
+      "en":"To achieve the goal, the recommended daily protein intake is around",
+      "zh":"为了完成您的计划，我们推荐您每天摄入的蛋白质量大约保持在以下数值"
+    },
+    "achieveMaintainInfo":{
+      "en":"To maintain your body shape, the recommended daily calories  intake is",
+      "zh":"为了保持您当前的体型，我们推荐您每天摄入的卡路里量不超过以下数值"
     },
     "planKeep":{
       "en":"Plan Continues For ",
@@ -247,13 +384,25 @@ class CustomLocalizations {
       "en":"Shed Weight",
       "zh":"减肥"
     },
+    "shedWeightInfo":{
+      "en":"Eating less food, reduce the amount of carbohydrate and fat in the food, keep exercises to burn the fat in the body",
+      "zh":"这项计划要求您摄入更少的碳水化合物以及脂肪，并且您也要保证一定的运动量来消耗体内的脂肪"
+    },
     "buildMuscle":{
       "en":"Build Muscle",
       "zh":"增肌"
     },
+    "buildMuscleInfo":{
+      "en":"Eating more food with more protein and less carbohydrate. Sufficient exercise is the guarantee of gaining muscle",
+      "zh":"这项计划要求您食用更多包含蛋白质的食物，摄入更少的碳水化合物。 充足的运动量也是保证增肌成功的关键因素",
+    },
     "maintain":{
       "en":"maintain",
       "zh":"保持身材"
+    },
+    "maintainInfo":{
+      "en":"Eating as what general people eat, not eat less deliberately or eat too much",
+      "zh":"和一般人一样正常进食，不刻意减少饭量，也不暴饮暴食"
     },
     "registerDuration":{
       "en":"Registered For ",
@@ -280,6 +429,8 @@ class CustomLocalizations {
       "zh":"语言"
     },
   };
+
+  get createPlan => getContent("createPlan");
 
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -479,6 +630,55 @@ class CustomLocalizations {
   get loginAccount{
     return getContent("loginAccount");
   }
+  get shedWeightInfo{
+    return getContent("shedWeightInfo");
+  }
+  get buildMuscleInfo{
+    return getContent("buildMuscleInfo");
+  }
+  get maintainInfo{
+    return getContent("maintainInfo");
+  }
+  get choosePlan{
+    return getContent("choosePlan");
+  }
+  get male => getContent("male");
+  get female => getContent("female");
+  get collectBodyData => getContent("collectBodyData");
+  get collectBodyDataInfo => getContent("collectBodyDataInfo");
+  get genderQuestion =>getContent("genderQuestion");
+  get bodyDataQuestion => getContent("bodyDataQuestion");
+
+  get ageQuestion => getContent("ageQuestion");
+  get exerciseQuestion => getContent("exerciseQuestion");
+  get age => getContent("age");
+  get yearOld => getContent("yearOld");
+  get littleMore => getContent("littleMore");
+
+  get veryLight => getContent("veryLight");
+  get light => getContent("light");
+  get moderate => getContent("moderate");
+  get active => getContent("active");
+  get veryActive =>getContent("veryActive");
+  get heavy => getContent("heavy");
+
+  get veryLightInfo => getContent("veryLightInfo");
+  get lightInfo => getContent("lightInfo");
+  get moderateInfo => getContent("moderateInfo");
+  get activeInfo => getContent("activeInfo");
+  get veryActiveInfo =>getContent("veryActiveInfo");
+  get heavyInfo => getContent("heavyInfo");
+
+  get setGoal => getContent("setGoal");
+  get planShedWeightDayQuestion => getContent("planShedWeightDayQuestion");
+  get planBuildMuscleDayQuestion => getContent("planBuildMuscleDayQuestion");
+  get planShedWeightQuestion => getContent("planShedWeightQuestion");
+
+  get maintainFigureInfo => getContent("maintainFigureInfo");
+  get achieveCalInfo => getContent("achieveCalInfo");
+  get activeProteinInfo => getContent("achieveProteinInfo");
+  get achieveMaintainInfo => getContent("achieveMaintainInfo");
+  get hereYourPlan => getContent("hereYourPlan");
 }
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<CustomLocalizations>{
