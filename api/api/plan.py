@@ -64,7 +64,7 @@ def set_plan():
     maintCalories = int(request.form.get('maintCalories'))
     plan_type = int(request.form.get('type'))
     duration = int(request.form.get('duration'))
-    pal = int(request.form.get('pal'))
+    pal = float(request.form.get('pal'))
 
 
     # db
