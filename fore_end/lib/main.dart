@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
+import 'MyTool/User.dart';
+import 'Mycomponents/widgets/food/BarChartSample.dart';
+import 'Pages/account/AccountPage.dart';
+import 'Pages/GuidePage.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
@@ -21,8 +25,6 @@ class MyApp extends StatelessWidget {
     this._preCacheAllImage();
     return MaterialApp(
        home: CoverPage(),
-      // home: BarChartSample1(),
-      //home: ComponentTestPage(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),
