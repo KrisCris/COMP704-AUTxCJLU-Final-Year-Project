@@ -17,7 +17,8 @@ class DailyConsumption(db.Model):
     protein = db.Column(db.FLOAT, comment='easier way to query protein')
     img = db.Column(db.Text(16777216))
 
-    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, time=get_current_time()):
+    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, time=get_current_time(),
+                 img=None):
         self.uid = uid
         self.pid = pid
         self.fid = fid
@@ -27,6 +28,7 @@ class DailyConsumption(db.Model):
         self.calories = calories
         self.protein = protein
         self.time = time
+        self.img = img
 
     def add(self):
         db.session.add(self)
@@ -35,3 +37,23 @@ class DailyConsumption(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def get_periodic_record(begin: int, end: int, uid: int):
+        records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
+            end >= DailyConsumption.time >= begin).order_by(DailyConsumption.time.asc())
+        arr = []
+        for record in records:
+            data = {
+                'id': record.id,
+                'pid': record.pid,
+                'fid': record.fid,
+                'time': record.time,
+                'type': record.type,
+                'calories': record.calories,
+                'protein': record.protein,
+                'name': record.name,
+                'img': record.img
+            }
+            arr.append(data)
+        return arr
