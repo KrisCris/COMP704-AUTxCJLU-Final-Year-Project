@@ -24,9 +24,9 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       // home: CoverPage(),
+       home: CoverPage(),
       // home: ComponentTestPage(),
-      home: CustomFloatingSearchBar(),
+      // home: CustomFloatingSearchBar(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),
