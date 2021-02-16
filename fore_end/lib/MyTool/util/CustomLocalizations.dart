@@ -179,7 +179,22 @@ class CustomLocalizations {
       "en":"maintain",
       "zh":"保持身材"
     },
-
+    "registerDuration":{
+      "en":"Registered For ",
+      "zh":"已经注册了 ",
+    },
+    "drawerAccount":{
+      "en":"ACCOUNT",
+      "zh":"账户设置"
+    },
+    "drawerSetting":{
+      "en":"SETTINGS",
+      "zh":"偏好设置"
+    },
+    "drawerAbout":{
+      "en":"ABOUT US",
+      "zh":"关于我们"
+    }
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -311,6 +326,18 @@ class CustomLocalizations {
   }
   get next{
     return getContent("next");
+  }
+  get registerDuration{
+    return getContent("registerDuration");
+  }
+  get drawerAccount{
+    return getContent("drawerAccount");
+  }
+  get drawerSetting{
+    return getContent("drawerSetting");
+  }
+  get drawerAbout{
+    return getContent("drawerAbout");
   }
 }
 

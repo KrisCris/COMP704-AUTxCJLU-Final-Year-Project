@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -90,9 +91,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   CustomDrawer getDrawer(BuildContext context) {
-    Widget account = this.getAccount();
-    Widget setting = this.getSetting();
-    Widget aboutUs = this.getAboutUs();
+    Widget account = this.getAccount(context);
+    Widget setting = this.getSetting(context);
+    Widget aboutUs = this.getAboutUs(context);
     Widget logOut = this.getLogOut();
 
     List<Widget> drawerItems = [
@@ -122,7 +123,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomDrawer(widthPercent: 1, children: drawerItems);
   }
 
-  Widget getAccount() {
+  Widget getAccount(BuildContext context) {
     return ListTile(
       onTap: () {
         //这里写setting pages的跳转
@@ -130,7 +131,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           return AccountPage();
         }));
       },
-      title: Text("ACCOUNTS",
+      title: Text(CustomLocalizations.of(context).drawerAccount,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
@@ -140,14 +141,14 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getSetting() {
+  Widget getSetting(BuildContext context) {
     return ListTile(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
         }));
       },
-      title: Text("SETTINGS",
+      title: Text(CustomLocalizations.of(context).drawerSetting,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
@@ -157,9 +158,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getAboutUs() {
+  Widget getAboutUs(BuildContext context) {
     return ListTile(
-      title: Text("ABOUT US",
+      title: Text(CustomLocalizations.of(context).drawerAbout,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
