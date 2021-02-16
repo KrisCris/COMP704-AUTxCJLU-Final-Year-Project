@@ -85,6 +85,7 @@ def set_plan():
         plan_type=plan_type,
         goal_weight=goal_weight
     )
+    newPlan.add()
     newPlanDetail = PlanDetail(
         pid=newPlan.id,
         uid=uid,
@@ -96,10 +97,7 @@ def set_plan():
         activeLevel=pal,
         ext=None
     )
-    from db.db import db
-    db.session.add(newPlan)
-    db.session.add(newPlanDetail)
-    db.session.commit()
+    newPlanDetail.add()
 
     # update user data
     user.age = age

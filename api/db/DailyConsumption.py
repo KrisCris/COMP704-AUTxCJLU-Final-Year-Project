@@ -57,3 +57,12 @@ class DailyConsumption(db.Model):
             }
             arr.append(data)
         return arr
+
+    @staticmethod
+    def getPeriodicCaloriesIntake(begin: int, end: int, uid: int):
+        records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
+            end >= DailyConsumption.time >= begin).order_by(DailyConsumption.time.asc())
+        cal = 0
+        for record in records:
+            cal += record.calories
+        return cal
