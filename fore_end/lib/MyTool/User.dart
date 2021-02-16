@@ -218,6 +218,7 @@ class User {
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         //TODO:初始化用户，获取计划失败的情况
+        this._needGuide = true;
         print(res.data);
       } else if (res.data['code'] == 1) {
         this._plan = new Plan(
