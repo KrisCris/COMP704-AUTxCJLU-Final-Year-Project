@@ -81,7 +81,7 @@ class CoverState extends State<CoverPage> {
           );
         });
       }else if(loginProcess.value == 4){
-        hintString = "AutoLogin";
+        hintString = "autoLogin";
         Future.delayed(Duration(milliseconds: 1000),(){
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context){

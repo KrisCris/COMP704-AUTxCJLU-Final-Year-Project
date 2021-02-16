@@ -234,8 +234,8 @@ class User {
                 NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
             dailyProteinUpperLimit:
                 NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-        this.save();
       }
+      this.save();
       return 4;
     } else if (res.data['code'] == -1) {
       return 3;

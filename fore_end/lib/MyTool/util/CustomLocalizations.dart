@@ -92,8 +92,8 @@ class CustomLocalizations {
       "zh":"已有账户，点击登录"
     },
     "createAccount":{
-      "en":"Create Your Account",
-      "zh":"创建您的账户"
+      "en":"Create Your\nAccount",
+      "zh":"创建您的\n账户"
     },
     "acquireVerify":{
       "en":"Acquire Verify Code",
@@ -138,6 +138,10 @@ class CustomLocalizations {
     "emailHint":{
       "en":"Please input correct email",
       "zh":"请输入正确的邮箱地址"
+    },
+    "loginAccount":{
+      "en":"Login Your\nAccount",
+      "zh":"登录您的\n账户"
     },
     "resultPageTitle":{
       "en":"Your Foods Here",
@@ -471,6 +475,9 @@ class CustomLocalizations {
   }
   get verifyCode{
     return getContent("verifyCode");
+  }
+  get loginAccount{
+    return getContent("loginAccount");
   }
 }
 
