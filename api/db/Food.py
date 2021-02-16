@@ -35,5 +35,25 @@ class Food(db.Model):
         db.session.commit()
 
     @staticmethod
-    def searchByName(exact_name):
+    def searchByName(exact_name) -> 'Food':
         return Food.query.filter(Food.name == exact_name).first()
+
+    @staticmethod
+    def getById(fid) -> 'Food':
+        return Food.query.filter(Food.id == fid).first()
+
+    def toDict(self):
+        f_db = {}
+
+        f_db['id'] = self.id
+        f_db['name'] = self.name
+        f_db['category'] = self.category
+        f_db['img'] = self.image
+        f_db['calories'] = self.calories
+        f_db['fat'] = self.fat
+        f_db['carbohydrate'] = self.carbohydrate
+        f_db['protein'] = self.protein
+        f_db['cholesterol'] = self.cholesterol
+        f_db['cellulose'] = self.cellulose
+
+        return f_db
