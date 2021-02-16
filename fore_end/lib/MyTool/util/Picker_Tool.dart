@@ -5,6 +5,8 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 
+import 'CustomLocalizations.dart';
+
 
 const double _kPickerHeight=216.0;
 const double _kItemHeigt=40.0;
@@ -98,8 +100,8 @@ class JhPickerTool{
         adapter: adapter,
         title: new Text(title??"Please Select",style: TextStyle(color: mealTheme?titleColor: _kTitleColor,fontSize: _kTextFontSize),),
         selecteds: selecteds,
-        cancelText: 'Cancel',
-        confirmText: "Confirm",
+        cancelText: CustomLocalizations.of(context).cancel,
+        confirmText: CustomLocalizations.of(context).confirm,
         cancelTextStyle: TextStyle(color: mealTheme ? cancelAndConfirmColor: _kBtnColor,fontSize: _kTextFontSize),
         confirmTextStyle: TextStyle(color: mealTheme ? cancelAndConfirmColor: _kBtnColor,fontSize: _kTextFontSize),
         textAlign: TextAlign.right,

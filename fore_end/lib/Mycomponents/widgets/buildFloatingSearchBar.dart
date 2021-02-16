@@ -5,12 +5,35 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+
+const searchList = [
+  'jiejie-大长腿',
+  'jiejie-水蛇腰',
+  'gege-帅气欧巴',
+  'gege-小鲜肉'
+];
+
+const recentSuggest = [
+  '推荐-1',
+  '推荐-2',
+];
+
+const suggestionsList= [
+  '1',
+  '2',
+];
+
+
 class CustomFloatingSearchBar extends StatefulWidget {
   @override
   _CustomFloatingSearchBarState createState() => _CustomFloatingSearchBarState();
 }
 
 class _CustomFloatingSearchBarState extends State<CustomFloatingSearchBar> {
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,48 +100,18 @@ class _CustomFloatingSearchBarState extends State<CustomFloatingSearchBar> {
           child: Material(
             color: Colors.white,
             elevation: 20.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Card(
-                  child: ListTile(
-                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
-                    title: Text('Hamburger'),
-                    subtitle: Text('Here is a second line'),
-                    trailing: Icon(Icons.more_vert),
+            child: ListView.builder(
+              itemCount: suggestionsList.length,
+              itemBuilder: (context,index) =>
+                  Card(
+                    child: ListTile(
+                      leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
+                      title: Text(suggestionsList[index]),
+                      subtitle: Text('Show data on the suggestion list'),
+                      trailing: Icon(Icons.more_vert),
+                    ),
                   ),
-                ),
-                // SizedBox(height: 20,),
-                Card(
-                  child: ListTile(
-                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
-                    title: Text('Hamburger'),
-                    subtitle: Text('Here is a second line'),
-                    trailing: Icon(Icons.more_vert),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    leading: Icon(FontAwesomeIcons.appleAlt,size: 56,color: Colors.blue,),
-                    title: Text('Apple'),
-                    subtitle: Text('Here is a second line'),
-                    trailing: Icon(Icons.more_vert),
-                  ),
-                ),
-
-                Card(
-                  child: ListTile(
-                    leading: FlutterLogo(size: 56.0),
-                    title: Text('Hamburger'),
-                    subtitle: Text('Here is a second line'),
-                    trailing: Icon(Icons.more_vert),
-                  ),
-                ),
-              ],
-              // children: Colors.accents.map((color) {
-              //   return Container(height: 50, color: color);
-              // }).toList(),
-            ),
+          ),
           ),
         );
       },
