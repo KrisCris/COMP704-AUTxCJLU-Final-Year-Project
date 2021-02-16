@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
@@ -14,7 +15,7 @@ class Welcome extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          "Welcome",
+          CustomLocalizations.of(context).welcomeTitle,
           textDirection: TextDirection.ltr,
           style: TextStyle(
               decoration: TextDecoration.none,
@@ -24,7 +25,7 @@ class Welcome extends StatelessWidget {
         ),
         SizedBox(height: 60.0),
         CustomButton(
-            text: "Sign up",
+            text: CustomLocalizations.of(context).signUp,
             fontsize: 18.0,
             width: 0.7,
             height: 55.0,
@@ -36,7 +37,7 @@ class Welcome extends StatelessWidget {
             }),
         SizedBox(height: 20),
         CustomTextButton(
-          "Already have account?",
+          CustomLocalizations.of(context).alreadyHave,
           fontsize: 16.0,
           tapUpFunc: () {
             Navigator.pushNamed(context, "login");
@@ -44,17 +45,6 @@ class Welcome extends StatelessWidget {
         ),
       ],
     );
-    CustomButton bt = CustomButton(
-        text: "Sign up",
-        fontsize: 18.0,
-        width: 0.7,
-        height: 55.0,
-        radius: 30.0,
-        sizeChangeMode: 2,
-        isBold: true,
-        tapFunc: () {
-          Navigator.pushNamed(context, "register");
-        });
     return  Container(
       color: MyTheme.convert(ThemeColorName.PageBackground),
       child: col,

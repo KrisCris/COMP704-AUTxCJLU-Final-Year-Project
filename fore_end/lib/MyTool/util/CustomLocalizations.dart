@@ -69,7 +69,7 @@ class CustomLocalizations {
     },
     "welcome":{
       "en":"welcome to here!",
-      "cn":"欢迎使用DietLens"
+      "zh":"欢迎使用DietLens"
     },
     "autoLogin":{
       "en":"auto login...",
@@ -78,6 +78,18 @@ class CustomLocalizations {
     "offlineLogin":{
       "en":"offline login...",
       "zh":"正在以离线模式登录..."
+    },
+    "welcomeTitle":{
+      "en":"Welcome",
+      "zh":"欢迎使用"
+    },
+    "signUp":{
+      "en":"Sign Up",
+      "zh":"注册新账户"
+    },
+    "alreadyHave":{
+      "en":"Already Have Account?",
+      "zh":"已有账户，点击登录"
     },
     "resultPageTitle":{
       "en":"Your Foods Here",
@@ -364,6 +376,15 @@ class CustomLocalizations {
   }
   get language{
     return getContent("language");
+  }
+  get welcomeTitle{
+    return getContent("welcomeTitle");
+  }
+  get signUp{
+    return getContent("signUp");
+  }
+  get alreadyHave{
+    return getContent("alreadyHave");
   }
 }
 
