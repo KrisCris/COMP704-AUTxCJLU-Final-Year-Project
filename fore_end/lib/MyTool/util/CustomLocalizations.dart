@@ -300,13 +300,21 @@ class CustomLocalizations {
       "en":"Your Plan",
       "zh":"您的计划"
     },
+    "hereYourPlan":{
+      "en":"Here is Your Plan",
+      "zh":"以下是为您创建的计划"
+    },
     "choosePlan":{
       "en":"Choose Your Plan",
       "zh":"选择您的计划"
     },
+    "createPlan":{
+      "en":"Create Plan",
+      "zh":"创建计划"
+    },
     "changePlan":{
       "en":"change Plan",
-      "zh":"更换计划"
+      "zh":"修改计划"
     },
     "collectBodyData":{
       "en":"We Need Collect Some Data",
@@ -315,6 +323,22 @@ class CustomLocalizations {
     "collectBodyDataInfo":{
       "en":"Please be relieved, these data will only be used as the figure calculation support of daily energy intake",
       "zh":"请您放心，我们收集的数据将仅用于计算适合您的每日营养摄入量"
+    },
+    "maintainFigureInfo":{
+      "en":"After complete your goal, to maintian your weight, the recommended daily calories intake is around",
+      "zh":"完成计划后，我们推荐您每天摄入的卡路里量不超过以下数值来保持您的体型"
+    },
+    "achieveCalInfo":{
+      "en":"To achieve the goal, the recommended daily calories  intake is around",
+      "zh":"为了完成您的计划，我们推荐您每天摄入的卡路里量不超过以下数值"
+    },
+    "achieveProteinInfo":{
+      "en":"To achieve the goal, the recommended daily protein intake is around",
+      "zh":"为了完成您的计划，我们推荐您每天摄入的蛋白质量大约保持在以下数值"
+    },
+    "achieveMaintainInfo":{
+      "en":"To maintain your body shape, the recommended daily calories  intake is",
+      "zh":"为了保持您当前的体型，我们推荐您每天摄入的卡路里量不超过以下数值"
     },
     "planKeep":{
       "en":"Plan Continues For ",
@@ -405,6 +429,8 @@ class CustomLocalizations {
       "zh":"语言"
     },
   };
+
+  get createPlan => getContent("createPlan");
 
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -647,6 +673,12 @@ class CustomLocalizations {
   get planShedWeightDayQuestion => getContent("planShedWeightDayQuestion");
   get planBuildMuscleDayQuestion => getContent("planBuildMuscleDayQuestion");
   get planShedWeightQuestion => getContent("planShedWeightQuestion");
+
+  get maintainFigureInfo => getContent("maintainFigureInfo");
+  get achieveCalInfo => getContent("achieveCalInfo");
+  get activeProteinInfo => getContent("achieveProteinInfo");
+  get achieveMaintainInfo => getContent("achieveMaintainInfo");
+  get hereYourPlan => getContent("hereYourPlan");
 }
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<CustomLocalizations>{
