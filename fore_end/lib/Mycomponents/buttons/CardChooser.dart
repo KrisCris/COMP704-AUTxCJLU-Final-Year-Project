@@ -238,6 +238,7 @@ class CardChooserState extends State<CardChooser>
                 CustomPaint(
                   foregroundPainter: DotPainter(
                       color: widget._paintColor,
+                      context: context,
                       dotGap: widget._dotGap,
                       moveAnimation: this.dotMoveAnimation),
                   child: Container(

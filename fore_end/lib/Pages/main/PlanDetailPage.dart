@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -24,15 +25,15 @@ class PlanDetailPage extends StatelessWidget {
             width: 0.95,
             mainAxisAlignment: MainAxisAlignment.center,
             borderRadius: 6,
-            backgroundColor: Color(0xFF1F405A),
             children: [
               SizedBox(height: 12),
               Text(
-                "Plan Type: " + User.getInstance().plan.getPlanType(),
+                CustomLocalizations.of(context).planType +" : "+
+                CustomLocalizations.of(context).getContent(User.getInstance().plan.getPlanType()),
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFD1D1D1),
+                    color: MyTheme.convert(ThemeColorName.NormalText),
                     fontFamily: "Futura"),
               ),
               SizedBox(height: 12),
@@ -44,16 +45,15 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Your Plan",
+                text: CustomLocalizations.of(context).yourPlan,
                 underLineLength: 0,
-                fontColor: Color(0xFFF1F1F1),
                 fontSize: 18,
                 maxWidth: 0.475,
                 maxHeight: 30,
               ),
               Expanded(child: SizedBox()),
               CustomTextButton(
-                "Change Plan",
+                CustomLocalizations.of(context).changePlan,
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
@@ -71,8 +71,6 @@ class PlanDetailPage extends StatelessWidget {
           GoalData(
             width: 0.95,
             height: 100,
-            backgroundColor: Color(0xFF1F405A),
-            textColor: Color(0xFFD1D1D1),
           ),
           SizedBox(height: 5),
           Row(
@@ -80,16 +78,15 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
               TitleText(
-                text: "Body Weight Info",
+                text: CustomLocalizations.of(context).bodyWeightInfo,
                 underLineLength: 0,
-                fontColor: Color(0xFFF1F1F1),
                 fontSize: 18,
                 maxWidth: 0.475,
                 maxHeight: 30,
               ),
               Expanded(child: SizedBox()),
               CustomTextButton(
-                "Update weight",
+                CustomLocalizations.of(context).updateWeight,
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {

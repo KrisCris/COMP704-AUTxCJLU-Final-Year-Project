@@ -27,6 +27,7 @@ class User {
   double _bodyHeight;
   int _uid;
   int _age;
+  int _registerDate;
   //male - 1, female - 2, other - 0
   Plan _plan;
   int _gender;
@@ -34,7 +35,7 @@ class User {
   String _email;
   String _avatar;
   bool _needGuide;
-  int _theme;
+  bool _isOffline;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
@@ -46,11 +47,12 @@ class User {
     int age,
     int gender,
     int uid,
+    int registerDate,
     double bodyWeight,
     double bodyHeight,
-    int theme,
     Plan plan,
     bool needGuide,
+    bool offline,
     String avatar = User.defaultAvatar,
     String token,
     String email,
@@ -64,8 +66,9 @@ class User {
     this._gender = gender;
     this._plan = plan;
     this._age = age;
+    this._registerDate = registerDate;
     this._needGuide = needGuide;
-    this._theme = theme;
+    this._isOffline = offline;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -124,9 +127,6 @@ class User {
   static bool isInit(){
     return User._instance != null;
   }
-  MyTheme getNowTheme(){
-    return MyTheme.getTheme(themeCode: this._theme);
-  }
 
   bool hasMealName(String s){
     for(Meal m in this.meals.value){
@@ -161,17 +161,21 @@ class User {
           gender: pre.getInt('gender'),
           bodyHeight: pre.getDouble("bodyHeight"),
           bodyWeight: pre.getDouble("bodyWeight"),
+          registerDate: pre.getInt("registerDate"),
           age: pre.getInt('age'),
-          theme: 0,
           plan: Plan.readLocal(),
           avatar: pre.getString("avatar"),
-          needGuide: pre.getBool("needSetPlan"));
+          needGuide: pre.getBool("needSetPlan"),
+      );
     }
     return User._instance;
   }
 
+  bool get isOffline => _isOffline;
+  set isOffline(bool value) {
+    _isOffline = value;
+  }
   double get bodyWeight => _bodyWeight;
-  int get themeCode => _theme;
   String get token => _token;
   bool get needGuide => _needGuide;
   set token(String value) {
@@ -197,6 +201,10 @@ class User {
   Future<int> synchronize() async {
     Response res =
         await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
+    if(res == null){
+      return 5;
+    }
+
     if (res.data['code'] == 1) {
       this._age = res.data['data']['age'];
       this._gender = res.data['data']['gender'];
@@ -206,6 +214,7 @@ class User {
       this._bodyHeight = res.data['data']['height']/100;
       this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
+      this._registerDate =res.data['data']['register_date'];
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         //TODO:初始化用户，获取计划失败的情况
@@ -225,11 +234,11 @@ class User {
                 NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
             dailyProteinUpperLimit:
                 NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-        this.save();
       }
-      return 1;
+      this.save();
+      return 4;
     } else if (res.data['code'] == -1) {
-      return 0;
+      return 3;
     }
   }
 
@@ -263,7 +272,7 @@ class User {
     pre.setString("userName", _userName);
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
-    pre.setInt("theme", this._theme);
+    pre.setInt("registerDate", _registerDate);
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();

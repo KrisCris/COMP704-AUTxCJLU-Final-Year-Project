@@ -7,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Plan {
   static const List<String> planTypes = [
     "None",
-    "Loose Weight",
-    "Maintain",
-    "Muscle Gain",
+    "shedWeight",
+    "maintain",
+    "buildMuscle",
   ];
   int id;
   int planType;

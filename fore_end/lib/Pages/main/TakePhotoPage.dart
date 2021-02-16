@@ -5,9 +5,11 @@ import 'package:camera/camera.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -239,7 +241,7 @@ class TakePhotoState extends State<TakePhotoPage>
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
       height:ScreenTool.partOfScreenHeight(1),
-      color: Color(0xFF172632),
+      color: MyTheme.convert(ThemeColorName.PageBackground),
       child: Align(
         alignment: Alignment.center,
         child: Column(
@@ -327,6 +329,17 @@ class TakePhotoState extends State<TakePhotoPage>
         )
       ],
       onClick: () async {
+        if(User.getInstance().isOffline){
+          Fluttertoast.showToast(
+            msg: "food detect requires online login",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Colors.black45,
+            fontSize: 13,
+          );
+          return;
+        }
         await _ctl.takePicture(this._path);
         this.startFlash();
         File pic = File(this._path);
@@ -355,6 +368,17 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
+        if(User.getInstance().isOffline){
+          Fluttertoast.showToast(
+            msg: "food detect requires online login",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Colors.black45,
+            fontSize: 13,
+          );
+          return;
+        }
         // Map<String, Uint8List> res = await this.pictureToBase64(image);
         ///这里改为了和拍照一样的Map
         Map<String, List<int>> res = await this.pictureToBase64(image);

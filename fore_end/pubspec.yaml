@@ -22,6 +22,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_localizations:
+    sdk: flutter
   material_floating_search_bar: ^0.2.6
   keyboard_avoider: ^0.1.2
   font_awesome_flutter: 8.10.0
