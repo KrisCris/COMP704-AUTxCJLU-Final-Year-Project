@@ -15,6 +15,18 @@ class CustomLocalizations {
   };
 
   static Map<String, Map<String, String>> _localizedValues = {
+
+    //主题色的多语言翻译-------起始
+    "dark blue":{
+      "en":"dark blue",
+      "zh":"深蓝"
+    },
+    "light blue":{
+      "en":"light blue",
+      "zh":"浅蓝"
+    },
+    //主题色的多语言翻译-------结束
+
     "default":{
       "en":"default",
       "zh":"默认"
@@ -22,6 +34,22 @@ class CustomLocalizations {
     "languageName":{
       "en":"English",
       "zh":"简体中文"
+    },
+    "cancel":{
+      "en":"Cancel",
+      "zh":"取消",
+    },
+    "back":{
+      "en":"Back",
+      "zh":"返回"
+    },
+    "confirm":{
+      "en":"Confirm",
+      "zh":"确认"
+    },
+    "next":{
+      "en":"Next",
+      "zh":"下一步",
     },
     "slogan":{
       "en":"Take a Picture of your food!",
@@ -98,7 +126,95 @@ class CustomLocalizations {
     "todayMeal":{
       "en":"Today's Meal",
       "zh":"今日三餐"
-    }
+    },
+    "planType":{
+      "en":"Plan Type",
+      "zh":"计划类型"
+    },
+    "yourPlan":{
+      "en":"Your Plan",
+      "zh":"您的计划"
+    },
+    "changePlan":{
+      "en":"change Plan",
+      "zh":"更换计划"
+    },
+    "planKeep":{
+      "en":"Plan Continues For ",
+      "zh":"计划已经进行了 "
+    },
+    "days":{
+      "en":"days",
+      "zh":"天"
+    },
+    "weight":{
+      "en":"Weight",
+      "zh":"体重"
+    },
+    "height":{
+      "en":"Height",
+      "zh":"身高"
+    },
+    "currentWeight":{
+      "en":"Current Weight",
+      "zh":"当前体重"
+    },
+    "goalWeight":{
+      "en":"Goal Weight",
+      "zh":"目标体重"
+    },
+    "bodyWeightInfo":{
+      "en":"Body Weight Info",
+      "zh":"体重变化情况"
+    },
+    "updateWeight":{
+      "en":"Update Weight",
+      "zh":"更新体重"
+    },
+    "updateBodyTitle":{
+      "en":"Update Your Weight and Height",
+      "zh":"更新您的体重和身高"
+    },
+    "remainWeight":{
+      "en":"Remain Weight",
+      "zh":"剩余体重"
+    },
+    "shedWeight":{
+      "en":"Shed Weight",
+      "zh":"减肥"
+    },
+    "buildMuscle":{
+      "en":"Build Muscle",
+      "zh":"增肌"
+    },
+    "maintain":{
+      "en":"maintain",
+      "zh":"保持身材"
+    },
+    "registerDuration":{
+      "en":"Registered For ",
+      "zh":"已经注册了 ",
+    },
+    "drawerAccount":{
+      "en":"ACCOUNT",
+      "zh":"账户设置"
+    },
+    "drawerSetting":{
+      "en":"SETTINGS",
+      "zh":"偏好设置"
+    },
+    "drawerAbout":{
+      "en":"ABOUT US",
+      "zh":"关于我们"
+    },
+    "theme":{
+      "en":"Theme",
+      "zh":"主题色"
+    },
+    "language":{
+      "en":"Language",
+      "zh":"语言"
+    },
   };
   static CustomLocalizations of(BuildContext context){
     return Localizations.of(context, CustomLocalizations);
@@ -179,6 +295,75 @@ class CustomLocalizations {
   }
   get planProcess{
     return getContent("planProgress");
+  }
+  get planType{
+    return getContent("planType");
+  }
+  get yourPlan{
+    return getContent("yourPlan");
+  }
+  get changePlan{
+    return getContent("changePlan");
+  }
+  get planKeep{
+    return getContent("planKeep");
+  }
+  get days{
+    return getContent("days");
+  }
+  get currentWeight{
+    return getContent("currentWeight");
+  }
+  get goalWeight{
+    return getContent("goalWeight");
+  }
+  get remainWeight{
+    return getContent("remainWeight");
+  }
+  get bodyWeightInfo{
+    return getContent("bodyWeightInfo");
+  }
+  get updateWeight{
+    return getContent("updateWeight");
+  }
+  get updateBodyTitle{
+    return getContent("updateBodyTitle");
+  }
+  get height{
+    return getContent("height");
+  }
+  get weight{
+    return getContent("weight");
+  }
+  get cancel{
+    return getContent("cancel");
+  }
+  get back{
+    return getContent("back");
+  }
+  get confirm{
+    return getContent("confirm");
+  }
+  get next{
+    return getContent("next");
+  }
+  get registerDuration{
+    return getContent("registerDuration");
+  }
+  get drawerAccount{
+    return getContent("drawerAccount");
+  }
+  get drawerSetting{
+    return getContent("drawerSetting");
+  }
+  get drawerAbout{
+    return getContent("drawerAbout");
+  }
+  get theme{
+    return getContent("theme");
+  }
+  get language{
+    return getContent("language");
   }
 }
 
