@@ -11,7 +11,7 @@ class Meal {
   static const Map<String, IconData> mealIcon = {
     "breakfast": FontAwesomeIcons.coffee,
     "lunch": FontAwesomeIcons.hamburger,
-    "dinner": FontAwesomeIcons.apple,
+    "dinner": FontAwesomeIcons.appleAlt,
   };
   String mealName;
   GlobalKey<MealViewState> key;

@@ -36,7 +36,7 @@ class PlanNotifier extends StatelessWidget {
     double barThickness = 15;
     ValueBar calories = ValueBar<int>(
       minVal: 0,
-      maxVal: p.dailyCaloriesUpperLimit.floor(),
+      maxVal: p.dailyCaloriesUpperLimit.floor(),  ///可以作为柱状图的上限
       adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,
@@ -44,7 +44,7 @@ class PlanNotifier extends StatelessWidget {
       valuePosition: ValuePosition.right,
       borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
       roundNum: 1,
-      initVal: u.getTodayCaloriesIntake(),
+      initVal: u.getTodayCaloriesIntake(),  ///获取今天的calories 目前是本地的，应该获取数据库里的
       showBorder: false,
       couldExpand: true,
       showAdjustButton: false,

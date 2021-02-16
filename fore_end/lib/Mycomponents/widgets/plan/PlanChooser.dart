@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
@@ -29,13 +30,13 @@ class PlanChooser extends StatelessWidget {
       fontsize: 15,
       width: 0.8,
       height: 50,
-      text: "Next Step",
+      text: CustomLocalizations.of(context).next,
       disabled: true,
       tapFunc: this.nextDo,
     );
     CardChooser addMuscle = CardChooser<int>(
       value: 3,
-      text: "Build Muscle",
+      text: CustomLocalizations.of(context).getContent("buildMuscle"),
       textColor: Colors.white,
       textSize: 15,
       backgroundColor: Color(0xFFF03838),
@@ -45,7 +46,7 @@ class PlanChooser extends StatelessWidget {
     );
     CardChooser loseWeight = CardChooser<int>(
       value: 1,
-      text: "Shed Weight",
+      text: CustomLocalizations.of(context).getContent("shedWeight"),
       textColor: Colors.white,
       textSize: 15,
       backgroundColor: Color(0xFF36BF88),
@@ -55,7 +56,7 @@ class PlanChooser extends StatelessWidget {
     );
     CardChooser keep = CardChooser<int>(
       value: 2,
-      text: "Maintain",
+      text: CustomLocalizations.of(context).getContent("maintain"),
       textColor: Colors.white,
       textSize: 15,
       backgroundColor: Color(0xFF3594DD),
@@ -65,15 +66,14 @@ class PlanChooser extends StatelessWidget {
     );
     addMuscle.setOnTap(() {
       info.changeTo(
-          "Eating more food with more protein and less carbohydrate. Sufficient exercise is the guarantee of gaining muscle");
+          CustomLocalizations.of(context).buildMuscleInfo);
     });
     loseWeight.setOnTap(() {
       info.changeTo(
-          "Eating less food, reduce the amount of carbohydrate and fat in the food, keep exercises to burn the fat in the body");
+          CustomLocalizations.of(context).shedWeightInfo);
     });
     keep.setOnTap(() {
-      info.changeTo(
-          "Eating as what general people eat, not eat less deliberately or eat too much");
+      info.changeTo(CustomLocalizations.of(context).maintainInfo);
     });
     CardChooserGroup<int> group = CardChooserGroup<int>(
       initVal: -1,
@@ -112,7 +112,7 @@ class PlanChooser extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                  Text("Choose Your Plan",
+                  Text(CustomLocalizations.of(context).choosePlan,
                       style: TextStyle(
                           fontSize: 28,
                           fontFamily: "Futura",
