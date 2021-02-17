@@ -50,12 +50,12 @@ class CaloriesBarChart extends StatefulWidget {
 
   ///保存每一天应该的卡路里值
   double mondayValue=1000; //测试
-  double tuesdayValue=790;
-  double wednesdayValue=900;
-  double thursdayValue=2000;
-  double fridayValue=1800;
-  double saturdayValue=1500;
-  double sundayValue=100;
+  double tuesdayValue=1000;
+  double wednesdayValue=1000;
+  double thursdayValue=1000;
+  double fridayValue=1000;
+  double saturdayValue=1000;
+  double sundayValue=1000;
 
 
   double planLimitedCalories=2500;
@@ -201,6 +201,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     ///有了星期几的具体日期就可以，传入数据库来获取这一天的卡路里了。所以都设置好了
     // widget.mondayValue=1000;
+    this.getHistoryCalories(widget.mondayDate,"sunday");
 
   }
 
@@ -258,14 +259,14 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
 
     ///有了星期几的具体日期就可以，传入数据库来获取这一天的卡路里了。所以都设置好了
-    this.getHistoryCalories(widget.sundayDate);
+
 
   }
 
-  Future getHistoryCalories(DateTime assignedDate) async{
+  Future getHistoryCalories(DateTime assignedDate, String weekdayOfDate) async{
     ///先用今天的日期来测试
-    int beginTime = (DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0).millisecondsSinceEpoch/1000).floor();
-    int endTime = (DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,23,59,59).millisecondsSinceEpoch/1000).floor();
+    int beginTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
+    int endTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
     int caloriesData=100;
     try{
       Response res = await Requests.getCaloriesIntake({
@@ -273,7 +274,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         "end": endTime,
         "uid": User.getInstance().uid,
       });
-      if (res.data['code'] == 1) {
+      if (res.data['code'] == -1) {
         print("getCaloriesIntake 获取成功！");
         caloriesData=res.data['data'];
       }
@@ -281,9 +282,10 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       print("getCaloriesIntake 获取失败！");
       print(e.toString());
     }
+    print("today is "+ weekdayOfDate);
 
     widget.sundayValue=caloriesData.toDouble();
-
+    return 100;
 
   }
 
