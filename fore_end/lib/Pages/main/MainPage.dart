@@ -49,6 +49,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    this.setNavigator();
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
@@ -74,16 +75,16 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                           new DietPage(),
                           new PlanDetailPage(),
                         ]),
-                    Column(
-                      children: [
-                        SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-                        SizedBox(height: 60),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [this.setNavigator()],
-                        ),
-                      ],
-                    )
+                    // Column(
+                    //   children: [
+                    //     SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+                    //     SizedBox(height: 60),
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [this.setNavigator()],
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 ));
           },

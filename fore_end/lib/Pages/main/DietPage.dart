@@ -21,7 +21,7 @@ class DietPage extends StatefulWidget{
   State<StatefulWidget> createState() {
       return new DietPageState();
   }
-  
+
 }
 
 class DietPageState extends State<DietPage>{
@@ -112,40 +112,11 @@ class DietPageState extends State<DietPage>{
         width: ScreenTool.partOfScreenWidth(1),
         child: Stack(
           children: [
-
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: ScreenTool.partOfScreenHeight(0.11)),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     PaintedTextField(
-                //       hint: CustomLocalizations.of(context).searchFood,
-                //       icon: FontAwesomeIcons.search,
-                //       borderRadius: 5,
-                //       paddingLeft: 10,
-                //       width: 0.95,
-                //     )
-                //   ],
-                // ),
-
-                // Container(
-                //   height: 90,
-                //   child: buildFloatingSearchBar(),
-                // ),
-                // CustomFloatingSearchBar(),
-                // Opacity(
-                //   opacity: 1,
-                //   child:
-                //   Container(
-                //     height: 400,
-                //
-                //     child: CustomFloatingSearchBar(),
-                //   ),
-                // ),
-
-                SizedBox(height: ScreenTool.partOfScreenHeight(50)),
+                SizedBox(height: ScreenTool.partOfScreenHeight(30)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -166,19 +137,6 @@ class DietPageState extends State<DietPage>{
                   effectColor: Colors.black12,
                 ),
                 // Expanded(child:SizedBox()),
-                SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TitleText(
-                      text: CustomLocalizations.of(context).planProcess,
-                      underLineLength: 0,
-                      fontSize: 18,
-                      maxWidth: 0.95,
-                      maxHeight: 30,
-                    ),
-                  ],
-                ),
                 SizedBox(height: 10),
                 Container(
                   child: CaloriesBarChart(
@@ -187,8 +145,6 @@ class DietPageState extends State<DietPage>{
 
                 ),
                 SizedBox(height: 10),
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -225,15 +181,23 @@ class DietPageState extends State<DietPage>{
                 SizedBox(height: 20),
               ],
             ),
-            Container(
-              height: ScreenTool.partOfScreenHeight(1),
-              color: Colors.transparent,
-              child: buildFloatingSearchBar(),
-            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //SizedBox(height: ScreenTool.partOfScreenWidth(0.06)),
+                Container(
+                  alignment: Alignment.topCenter,
+                  height: ScreenTool.partOfScreenHeight(1),
+                  color: Colors.transparent,
+                  child: buildFloatingSearchBar(),
+                ),
+              ],
+            )
+
           ],
         )
       ),
     );
   }
-  
+
 }

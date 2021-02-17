@@ -21,7 +21,7 @@ class PlanDetailPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          SizedBox(height: MediaQuery.of(context).viewPadding.top+6),
           DotColumn(
             width: 0.95,
             mainAxisAlignment: MainAxisAlignment.center,
