@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:date_format/date_format.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
@@ -255,7 +258,32 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
 
     ///有了星期几的具体日期就可以，传入数据库来获取这一天的卡路里了。所以都设置好了
-    // widget.mondayValue=1000;
+    this.getHistoryCalories(widget.sundayDate);
+
+  }
+
+  Future getHistoryCalories(DateTime assignedDate) async{
+    ///先用今天的日期来测试
+    int beginTime = (DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0).millisecondsSinceEpoch/1000).floor();
+    int endTime = (DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,23,59,59).millisecondsSinceEpoch/1000).floor();
+    int caloriesData=100;
+    try{
+      Response res = await Requests.getCaloriesIntake({
+        "begin": beginTime,
+        "end": endTime,
+        "uid": User.getInstance().uid,
+      });
+      if (res.data['code'] == 1) {
+        print("getCaloriesIntake 获取成功！");
+        caloriesData=res.data['data'];
+      }
+    }on DioError catch(e){
+      print("getCaloriesIntake 获取失败！");
+      print(e.toString());
+    }
+
+    widget.sundayValue=caloriesData.toDouble();
+
 
   }
 
