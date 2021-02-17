@@ -13,6 +13,7 @@ import 'package:fore_end/Pages/account/UpdateBody.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlanDetailPage extends StatelessWidget {
+  GlobalKey<GoalDataState> goalKey = new GlobalKey<GoalDataState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +21,7 @@ class PlanDetailPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          SizedBox(height: MediaQuery.of(context).viewPadding.top+6),
           DotColumn(
             width: 0.95,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -71,6 +72,7 @@ class PlanDetailPage extends StatelessWidget {
           GoalData(
             width: 0.95,
             height: 100,
+            k: this.goalKey,
           ),
           SizedBox(height: 5),
           Row(
@@ -90,14 +92,16 @@ class PlanDetailPage extends StatelessWidget {
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
-                  showDialog<Null>(
+                  showDialog<bool>(
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) {
                       return new UpdateBody();
                     },
                   ).then((val) {
-                    print(val);
+                    if(val == true){
+                      goalKey.currentState.setState(() {});
+                    }
                   });
                 },
               ),

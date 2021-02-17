@@ -138,7 +138,9 @@ class Requests {
   static Future<Response> getBasicInfo(data) async {
     return _postRequest("getBasicInfo", data, "/user/get_basic_info", "getBasicInfo接口", getBasicInfo);
   }
-
+  static Future<Response> updateBody(data) async {
+    return _postRequest("updateBody", data, "/plan/update_body_info", "updateBodyInfo接口", null);
+  }
   static Future<Response> previewPlan(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);

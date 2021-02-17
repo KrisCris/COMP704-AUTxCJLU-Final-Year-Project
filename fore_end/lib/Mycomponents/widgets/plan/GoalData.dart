@@ -7,7 +7,7 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 
-class GoalData extends StatelessWidget {
+class GoalData extends StatefulWidget {
   double width;
   double height;
   double margin;
@@ -19,37 +19,45 @@ class GoalData extends StatelessWidget {
       @required double height,
       this.margin = 20,
       Color backgroundColor,
-      Color textColor}) {
+      Color textColor,Key k}):super(key:k) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
     this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
     this.textColor = textColor ?? MyTheme.convert(ThemeColorName.NormalText);
   }
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return GoalDataState();
+  }
+}
+class GoalDataState extends State<GoalData>{
   @override
   Widget build(BuildContext context) {
     return DotColumn(
-        width: this.width,
-        height: this.height,
+        width: widget.width,
+        height: widget.height,
         borderRadius: 6,
         mainAxisAlignment: MainAxisAlignment.start,
-        backgroundColor: this.backgroundColor,
+        backgroundColor: widget.backgroundColor,
         children: getGoal(User.getInstance(),context));
   }
 
   List<Widget> getGoal(User u,BuildContext context) {
     List<Widget> goals = [
-      SizedBox(height: margin),
+      SizedBox(height: widget.margin),
       TitleText(
         text: CustomLocalizations.of(context).planKeep + u.plan.getKeepDays().toString() + CustomLocalizations.of(context).days,
-        maxWidth: this.width - 2 * margin,
+        maxWidth: widget.width - 2 * widget.margin,
         maxHeight: 30,
         underLineDistance: 1,
-        underLineLength: this.width * 2 / 3,
-        fontColor: this.textColor,
-        dividerColor: this.textColor,
+        underLineLength: widget.width * 2 / 3,
+        fontColor: widget.textColor,
+        dividerColor: widget.textColor,
         fontSize: 17,
       ),
-      SizedBox(height: margin),
+      SizedBox(height: widget.margin),
     ];
     List<Widget> weight = [SizedBox(height: 0)];
     if (u.plan.planType == 1) {
@@ -64,13 +72,13 @@ class GoalData extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: weight,
     ));
-    goals.add(SizedBox(height: margin));
+    goals.add(SizedBox(height: widget.margin));
     return goals;
   }
   List<Widget> getMaintain(User u, BuildContext context){
     List<Widget> weight = [];
     weight.add(Container(
-      width: this.width  - margin*2,
+      width: widget.width  - widget.margin*2,
       alignment: Alignment.center,
       child: Column(
         children: [
@@ -80,7 +88,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color:this.textColor,
+                color:widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -89,7 +97,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -100,7 +108,7 @@ class GoalData extends StatelessWidget {
   List<Widget> getLoseWeight(User u, BuildContext context){
     List<Widget> weight = [];
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width: widget.width / 3 - widget.margin*2/3,
       alignment: Alignment.centerLeft,
       child: Column(
         children: [
@@ -110,7 +118,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -119,14 +127,14 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
       ),
     ));
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width: widget.width / 3 - widget.margin*2/3,
       alignment:Alignment.center,
       child: Column(
         children: [
@@ -136,7 +144,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -145,14 +153,14 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
       ),
     ));
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width:widget.width / 3 - widget.margin*2/3,
       alignment:Alignment.centerRight,
       child: Column(
         children: [
@@ -162,7 +170,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -171,7 +179,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -179,4 +187,5 @@ class GoalData extends StatelessWidget {
     ));
     return weight;
   }
+
 }

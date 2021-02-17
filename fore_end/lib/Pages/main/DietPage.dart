@@ -13,31 +13,28 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-class DietPage extends StatefulWidget{
-
-  int listIndex=1;
+class DietPage extends StatefulWidget {
+  int listIndex = 1;
 
   @override
   State<StatefulWidget> createState() {
-      return new DietPageState();
+    return new DietPageState();
   }
-  
 }
 
-class DietPageState extends State<DietPage>{
-
-
+class DietPageState extends State<DietPage> {
   Widget buildFloatingSearchBar() {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
       iconColor: Colors.white,
-      queryStyle: TextStyle(color: Colors.white,fontSize: 15),
+      queryStyle: TextStyle(color: Colors.white, fontSize: 15),
       accentColor: Colors.white,
       border: BorderSide(color: Colors.white),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
       backgroundColor: Color(0xFF172632),
       hint: ' Search Foods...',
-      hintStyle: TextStyle(color: Colors.white,fontSize: 15),
+      hintStyle: TextStyle(color: Colors.white, fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),
       transitionCurve: Curves.easeInOut,
@@ -52,24 +49,23 @@ class DietPageState extends State<DietPage>{
       ///6.根据数据多少来改变展开后的页面大小
       onQueryChanged: (query) {
         print("onQueryChanged is clicked");
-        widget.listIndex=2;
-        setState(() {
-
-        });
+        widget.listIndex = 2;
+        setState(() {});
       },
-      onSubmitted: (query){
+      onSubmitted: (query) {
         print("onSubmitted is clicked");
-        widget.listIndex=3;
-        setState(() {
-
-        });
+        widget.listIndex = 3;
+        setState(() {});
       },
       transition: CircularFloatingSearchBarTransition(),
       actions: [
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.search,color: Colors.white,),
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
         ),
@@ -86,11 +82,15 @@ class DietPageState extends State<DietPage>{
             borderRadius: BorderRadius.circular(8),
           ),
           child: ListView.builder(
-            padding:EdgeInsets.only(top: 1) ,
+            padding: EdgeInsets.only(top: 1),
             itemBuilder: (BuildContext context, int index) {
               return Card(
                 child: ListTile(
-                  leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
+                  leading: Icon(
+                    FontAwesomeIcons.hamburger,
+                    size: 56,
+                    color: Colors.blue,
+                  ),
                   title: Text('Hamburger $index'),
                   subtitle: Text('378.00 Kcal'),
                   trailing: Icon(Icons.more_vert),
@@ -99,7 +99,6 @@ class DietPageState extends State<DietPage>{
             },
             itemCount: widget.listIndex,
           ),
-
         );
       },
     );
@@ -107,133 +106,83 @@ class DietPageState extends State<DietPage>{
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
+    return Container(
         width: ScreenTool.partOfScreenWidth(1),
         child: Stack(
           children: [
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: ScreenTool.partOfScreenHeight(0.11)),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     PaintedTextField(
-                //       hint: CustomLocalizations.of(context).searchFood,
-                //       icon: FontAwesomeIcons.search,
-                //       borderRadius: 5,
-                //       paddingLeft: 10,
-                //       width: 0.95,
-                //     )
-                //   ],
-                // ),
-
-                // Container(
-                //   height: 90,
-                //   child: buildFloatingSearchBar(),
-                // ),
-                // CustomFloatingSearchBar(),
-                // Opacity(
-                //   opacity: 1,
-                //   child:
-                //   Container(
-                //     height: 400,
-                //
-                //     child: CustomFloatingSearchBar(),
-                //   ),
-                // ),
-
-                SizedBox(height: ScreenTool.partOfScreenHeight(50)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
-                    TitleText(
-                      text: CustomLocalizations.of(context).planProcess,
-                      underLineLength: 0,
-                      fontSize: 18,
-                      maxWidth: 0.95,
-                      maxHeight: 30,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                PlanNotifier(
-                  width: 0.95,
-                  height: 100,
-                  effectColor: Colors.black12,
-                ),
-                // Expanded(child:SizedBox()),
-                SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TitleText(
-                      text: CustomLocalizations.of(context).planProcess,
-                      underLineLength: 0,
-                      fontSize: 18,
-                      maxWidth: 0.95,
-                      maxHeight: 30,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Container(
-                  child: CaloriesBarChart(
-                    width: 0.95,
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: ScreenTool.partOfScreenHeight(0.11)),
+                  SizedBox(height: ScreenTool.partOfScreenHeight(30)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
+                      TitleText(
+                        text: CustomLocalizations.of(context).planProcess,
+                        underLineLength: 0,
+                        fontSize: 18,
+                        maxWidth: 0.95,
+                        maxHeight: 30,
+                      ),
+                    ],
                   ),
-
-                ),
-                SizedBox(height: 10),
-
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
-                    TitleText(
-                      text: CustomLocalizations.of(context).todayMeal,
-                      underLineLength: 0,
-                      fontSize: 18,
-                      maxWidth: 0.475,
-                      maxHeight: 30,
+                  SizedBox(height: 5),
+                  PlanNotifier(
+                    width: 0.95,
+                    height: 100,
+                    effectColor: Colors.black12,
+                  ),
+                  // Expanded(child:SizedBox()),
+                  SizedBox(height: 10),
+                  Container(
+                    child: CaloriesBarChart(
+                      width: 0.95,
                     ),
-                    Expanded(child: SizedBox()),
-                    CustomTextButton(
-                      CustomLocalizations.of(context).detail,
-                      autoReturnColor: true,
-                      fontsize: 15,
-                      tapUpFunc: () {
-                        Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-                          return DetailMealPage(
-                            mealTime: DateTime.now(),
-                          );
-                        }));
-                      },
-                    ),
-                    SizedBox(width: ScreenTool.partOfScreenWidth(0.05))
-                  ],
-                ),
-                SizedBox(height: 5),
-                Container(
-                  width: ScreenTool.partOfScreenWidth(0.95),
-                  height: 220,
-                  child: MealListUI(),
-                ),
-                SizedBox(height: 20),
-              ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
+                      TitleText(
+                        text: CustomLocalizations.of(context).todayMeal,
+                        underLineLength: 0,
+                        fontSize: 18,
+                        maxWidth: 0.475,
+                        maxHeight: 30,
+                      ),
+                      Expanded(child: SizedBox()),
+                      CustomTextButton(
+                        CustomLocalizations.of(context).detail,
+                        autoReturnColor: true,
+                        fontsize: 15,
+                        tapUpFunc: () {
+                          Navigator.push(context,
+                              new MaterialPageRoute(builder: (ctx) {
+                            return DetailMealPage(
+                              mealTime: DateTime.now(),
+                            );
+                          }));
+                        },
+                      ),
+                      SizedBox(width: ScreenTool.partOfScreenWidth(0.05))
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    width: ScreenTool.partOfScreenWidth(0.95),
+                    height: 220,
+                    child: MealListUI(),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-            Container(
-              height: ScreenTool.partOfScreenHeight(1),
-              color: Colors.transparent,
-              child: buildFloatingSearchBar(),
-            ),
+            buildFloatingSearchBar(),
           ],
-        )
-      ),
-    );
+        ));
   }
-  
 }
