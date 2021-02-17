@@ -75,14 +75,23 @@ def consume_foods():
     type = request.form.get('type')
     # a list that contains all the food and its corresponding info including proteins, calories, names.
     foods_info = request.form.get('foods_info')
-    # TODO check the food_info's type
+    # TODO need check the food_info's type
     p = Plan.getPlanByID(pid)
+    if foods_info is None:
+        return reply_json(-2)
+    import json
+    foods_info = json.loads(foods_info)
 
     day = get_relative_days(p.begin, get_current_time()) + 1
     for food_info in foods_info:
         f = DailyConsumption(
-            uid=uid, pid=pid, type=type, fid=food_info[0], day=day,
-            name=food_info[1], calories=foods_info[2], protein=foods_info[3]
+            uid=uid, pid=pid, type=type, day=day,
+            name=food_info['name'],
+            img=food_info['picture'],
+            fid=food_info['id'],
+            calories=food_info['calories'],
+            protein=food_info['protein'],
+            weight=food_info['weight']
         )
         f.add()
     return reply_json(1)
@@ -90,11 +99,26 @@ def consume_foods():
 
 @food.route('get_consume_history', methods=['POST'])
 @require_login
-def get_consume_history():
+def getConsumeHistory():
     begin = request.form.get('begin')
     end = request.form.get('end')
     uid = request.form.get('uid')
-    return reply_json(1, data=DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid))
+    return reply_json(
+        code=1,
+        data=DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid)
+    )
+
+
+@food.route('get_daily_consumption', methods=['POST'])
+@require_login
+def getDailyConsumption():
+    begin = request.form.get('begin')
+    end = request.form.get('end')
+    uid = request.form.get('uid')
+    return reply_json(
+        code=1,
+        data=DailyConsumption.getConsumptionGroupByType(begin=begin, end=end, uid=uid)
+    )
 
 
 @food.route('calories_intake', methods=['POST'])
@@ -103,4 +127,7 @@ def getCaloriesIntake():
     begin = request.form.get('begin')
     end = request.form.get('end')
     uid = request.form.get('uid')
-    return reply_json(1, data=DailyConsumption.getPeriodicCaloriesIntake(begin=begin, end=end, uid=uid))
+    return reply_json(
+        code=1,
+        data=DailyConsumption.getPeriodicCaloriesIntake(begin=begin, end=end, uid=uid)
+    )

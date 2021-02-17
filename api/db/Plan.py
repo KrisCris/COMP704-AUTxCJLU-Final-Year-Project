@@ -43,3 +43,12 @@ class Plan(db.Model):
         self.achievedWeight = weight
         self.completed = True
         self.add()
+
+    def toDict(self):
+        return {
+            'pid': self.id, 'uid': self.uid,
+            'begin': self.begin, 'end': self.end,
+            'type': self.type, 'goalWeight': self.goalWeight,
+            'achievedWeight': self.achievedWeight, 'realEnd': self.realEnd,
+            'hasCompleted': self.completed
+        }

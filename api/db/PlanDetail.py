@@ -48,14 +48,24 @@ class PlanDetail(db.Model):
 
     @staticmethod
     def getWeightTrendInPeriod(uid, begin, end):
-        plans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(PlanDetail.time <= end).order_by(PlanDetail.time.asc())
+        plans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
+            PlanDetail.time <= end).order_by(PlanDetail.time.asc())
         weight_arr = []
         for p in plans:
             pType = Plan.getPlanByID(p.pid).type
-            data = {'time': p.time, 'weight': p.weight, 'type':pType}
+            data = {'time': p.time, 'weight': p.weight, 'type': pType}
             weight_arr.append(data)
         return weight_arr
 
     @staticmethod
     def getLatest(pid) -> 'PlanDetail':
         return PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc()).first()
+
+    def toDict(self):
+        return {
+            'pid': self.pid, 'uid': self.uid,
+            'time': self.time, 'weight': self.weight,
+            'cH': self.caloriesH, 'cL': self.caloriesL,
+            'pH': self.proteinH, 'pL': self.proteinL,
+            'pal': self.activityLevel, 'ext': self.ext
+        }
