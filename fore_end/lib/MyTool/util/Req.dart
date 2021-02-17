@@ -225,4 +225,12 @@ class Requests {
     });
     return urlPara;
   }
+
+  static Future<Response> getCaloriesIntake(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/food/calories_intake", data: dt);
+    return res;
+  }
+
 }

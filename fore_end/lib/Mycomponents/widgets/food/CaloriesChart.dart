@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:date_format/date_format.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
@@ -23,7 +26,7 @@ class CaloriesBarChart extends StatefulWidget {
 
   bool isChangeColor=false;
   bool isNeedInitial=true;
-  Plan p;
+  Plan p=User.getInstance().plan;
 
   ///下面的三种属性都要在calculateDate()方法里进行初始化
 
@@ -47,12 +50,12 @@ class CaloriesBarChart extends StatefulWidget {
 
   ///保存每一天应该的卡路里值
   double mondayValue=1000; //测试
-  double tuesdayValue=790;
-  double wednesdayValue=900;
-  double thursdayValue=2000;
-  double fridayValue=1800;
-  double saturdayValue=1500;
-  double sundayValue=100;
+  double tuesdayValue=1000;
+  double wednesdayValue=1000;
+  double thursdayValue=1000;
+  double fridayValue=1000;
+  double saturdayValue=1000;
+  double sundayValue=1000;
 
 
   double planLimitedCalories=2500;
@@ -102,7 +105,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     String weekDayOfSetting=DateFormat('EEEE').format(settingDay);
 
     ///这里还要与今天的日期进行比较，来决定是否修改颜色，因为setstate是重新build的，所以到了第一次初始化构建的时候回直接改变颜色，等重新选择日期后无法绕过初始化 所以还是会进行修改，因此要判断是否一样
-
+    User u=User.getInstance();
     int mondayIndex;
 
     switch(weekDayOfSetting){
@@ -197,18 +200,99 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
 
     ///有了星期几的具体日期就可以，传入数据库来获取这一天的卡路里了。所以都设置好了
-    // widget.mondayValue=1000;
+    switch(weekDayOfSetting){
+      case 'Monday':
+        widget.mondayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+        break;
+
+      case 'Tuesday':
+        widget.tuesdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Wednesday':
+        widget.wednesdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Thursday':
+        widget.thursdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Friday':
+        widget.fridayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Saturday':
+        widget.saturdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Sunday':
+        widget.sundayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+
+        break;
+
+      default:
+        print('初始化柱状图时 获取每一天卡路里数据失败');
+    }
 
   }
 
-
+  ///一开始初始化柱状图调用的函数 settingDay=today
   void initialDate(DateTime settingDay){
     String weekDayOfSetting=DateFormat('EEEE').format(settingDay);
     int mondayIndex;
+    User u=User.getInstance();
 
     switch(weekDayOfSetting){
       case 'Monday':
         widget.isMondayDate=true;
+        // widget.mondayValue=u.getTodayCaloriesIntake().toDouble();
         mondayIndex=1;
         break;
 
@@ -255,7 +339,148 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
 
     ///有了星期几的具体日期就可以，传入数据库来获取这一天的卡路里了。所以都设置好了
-    // widget.mondayValue=1000;
+    switch(weekDayOfSetting){
+      case 'Monday':
+        widget.mondayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+        break;
+
+      case 'Tuesday':
+        widget.tuesdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Wednesday':
+        widget.wednesdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Thursday':
+        widget.thursdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Friday':
+        widget.fridayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Saturday':
+        widget.saturdayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.sundayDate, "Sunday");
+
+        break;
+
+      case 'Sunday':
+        widget.sundayValue=u.getTodayCaloriesIntake().toDouble();
+        this.getHistoryCalories(widget.mondayDate, "Monday");
+        this.getHistoryCalories(widget.tuesdayDate, "Tuesday");
+        this.getHistoryCalories(widget.wednesdayDate, "Wednesday");
+        this.getHistoryCalories(widget.thursdayDate, "Thursday");
+        this.getHistoryCalories(widget.fridayDate, "Friday");
+        this.getHistoryCalories(widget.saturdayDate, "Saturday");
+
+        break;
+
+      default:
+        print('初始化柱状图时 获取每一天卡路里数据失败');
+    }
+
+  }
+
+  Future getHistoryCalories(DateTime assignedDate, String weekdayOfDate) async{
+    ///先用今天的日期来测试
+    int beginTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
+    int endTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
+    int caloriesData=100;
+    try{
+      Response res = await Requests.getCaloriesIntake({
+        "begin": beginTime,
+        "end": endTime,
+        "uid": User.getInstance().uid,
+        "token": User.getInstance().token,
+      });
+      if (res.data['code'] == 1) {
+        print("getCaloriesIntake 获取成功！");
+        caloriesData=res.data['data'];
+        print("caloriesData的值为:"+caloriesData.toString());
+      }else{
+        print("getCaloriesIntake 的接口有bug");
+      }
+    }on DioError catch(e){
+      print("getCaloriesIntake 获取失败！");
+      print(e.toString());
+    }
+    print("today is "+ weekdayOfDate);
+
+
+
+    switch(weekdayOfDate){
+      case 'Monday':
+        widget.mondayValue=caloriesData.toDouble();
+        break;
+
+      case 'Tuesday':
+        widget.thursdayValue=caloriesData.toDouble();
+        break;
+
+      case 'Wednesday':
+        widget.wednesdayValue=caloriesData.toDouble();
+        break;
+
+      case 'Thursday':
+        widget.thursdayValue=caloriesData.toDouble();
+        break;
+
+      case 'Friday':
+        widget.fridayValue=caloriesData.toDouble();
+        break;
+
+      case 'Saturday':
+        widget.saturdayValue=caloriesData.toDouble();
+        break;
+
+      case 'Sunday':
+        widget.sundayValue=caloriesData.toDouble();
+        break;
+
+      default:
+        print('getHistoryCalories 获取指定日期的卡路里后，赋值失败  none');
+    }
 
   }
 
