@@ -59,29 +59,18 @@ class FoodRecognizer{
     Meal m = u.getMealByName(mealName);
     int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
     if(m != null){
-      FoodRecognizer.addFoodToMeal(m);
       // List<List> totalFoodInfo=new List<List>();
-      List totalFoodInfo=[];
-      for(Food food in m.foods){
-        int foodId=food.id;
-        List singleFoodInfo=[];
-        //TODO:现在fid就是食物在数据库里的id，现在还没有这个数据，等数据库有了再写上去
-        singleFoodInfo.add(foodId);
-        singleFoodInfo.add(food.name);
-        singleFoodInfo.add(food.calorie);
-        singleFoodInfo.add(food.protein);
-        totalFoodInfo.add(singleFoodInfo);
-      }
       Response res = await Requests.consumeFoods({
         "uid": u.uid,
+        "token":u.token,
         "pid": u.plan.id,
         "type": mealsType.toString(),
-        "foods_info":totalFoodInfo,
+        "foods_info":jsonEncode(m.foods),
       });
 
       if (res.data["code"] == 1) {
-        print("保存成功");
-        print(res.data);
+        m.time = res.data['stmp']*1000;
+        FoodRecognizer.addFoodToMeal(m);
       }else {
         print("保存失败");
       }

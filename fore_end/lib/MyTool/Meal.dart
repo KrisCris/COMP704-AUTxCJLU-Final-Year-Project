@@ -14,6 +14,7 @@ class Meal {
     "dinner": FontAwesomeIcons.appleAlt,
   };
   String mealName;
+  int time;
   GlobalKey<MealViewState> key;
   List<Food> foods;
 
@@ -39,12 +40,14 @@ class Meal {
 
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
+    pre.setInt(this.mealName+"Time", this.time);
     pre.setString(this.mealName, this._encode());
   }
 
   void delete() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.remove(this.mealName);
+    pre.remove(this.mealName+"Time");
   }
 
   void read({SharedPreferences pre}) {
@@ -52,6 +55,7 @@ class Meal {
     if (preLocal == null) {
       preLocal = pre;
     }
+    this.time = preLocal.getInt(this.mealName+"Time");
     this.addFoodWithString(preLocal.getString(this.mealName));
   }
 
@@ -105,7 +109,7 @@ class Meal {
       res += fd.cholesterol.toString() + "-";
       res += fd.cellulose.toString() + "-";
       res += fd.carbohydrate.toString() + "-";
-      res += fd.cellulose.toString() + "-";
+      res += fd.cellulose.toString() + ",";
     }
   }
 

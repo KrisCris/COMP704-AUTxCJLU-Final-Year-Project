@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -76,8 +77,16 @@ class User {
       new Meal(mealName: "lunch"),
       new Meal(mealName: "dinner")
     ];
+    DateTime nowDay = DateTime.now();
+    nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
     for(Meal m in this.meals.value){
       m.read();
+      if(m.time == null)continue;
+
+      if(m.time < nowDay.millisecondsSinceEpoch ||
+        m.time >= nowDay.add(Duration(days: 1)).millisecondsSinceEpoch){
+        m.foods = [];
+      }
     }
     this.meals.addListener(() {
 
@@ -241,6 +250,49 @@ class User {
       this._bodyWeight = res.data['data']['weight'];
       this._needGuide = res.data['data']['needGuide'];
       this._registerDate =res.data['data']['register_date'];
+
+      DateTime nowDay = DateTime.now();
+      nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
+      res = await Requests.historyMeal({
+        "uid":this._uid,
+        "token":this._token,
+        "begin":nowDay.millisecondsSinceEpoch/1000,
+        "end":nowDay.add(Duration(days: 1)).millisecondsSinceEpoch/1000 - 1
+      });
+      if(res != null){
+        if(res.data['code'] == 1){
+          for(Map m in res.data['data']['b']){
+            this.meals.value[0].addFood(new Food(
+              name: m['name'],
+              id: m['fid'],
+              calorie: m['calories'],
+              picture: m['img'],
+              protein: m['protein'],
+              weight: (m['weight'] as double).floor()
+            ));
+          }
+          for(Map m in res.data['data']['l']){
+            this.meals.value[1].addFood(new Food(
+                name: m['name'],
+                id: m['fid'],
+                calorie: m['calories'],
+                picture: m['img'],
+                protein: m['protein'],
+                weight: (m['weight'] as double).floor()
+            ));
+          }
+          for(Map m in res.data['data']['d']){
+            this.meals.value[2].addFood(new Food(
+                name: m['name'],
+                id: m['fid'],
+                calorie: m['calories'],
+                picture: m['img'],
+                protein: m['protein'],
+                weight: (m['weight'] as double).floor()
+            ));
+          }
+        }
+      }
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         //TODO:初始化用户，获取计划失败的情况

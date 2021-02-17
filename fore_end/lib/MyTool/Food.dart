@@ -83,5 +83,14 @@ class Food {
     this.weight=newWeight;
   }
 
-
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['id'] = this.id;
+    data['calories'] = this.calorie;
+    data['picture'] = this.picture;
+    data['protein'] = this.protein;
+    data['weight'] = this.weight;
+    return data;
+  }
 }
