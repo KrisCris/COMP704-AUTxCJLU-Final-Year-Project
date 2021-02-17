@@ -69,7 +69,7 @@ class FoodRecognizer{
       });
 
       if (res.data["code"] == 1) {
-        m.time = res.data['stmp']*1000;
+        m.time = res.data['data']['stmp']*1000;
         FoodRecognizer.addFoodToMeal(m);
       }else {
         print("保存失败");

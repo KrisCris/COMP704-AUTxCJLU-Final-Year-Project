@@ -39,7 +39,29 @@ class Food {
     ///weight只是为了计算营养价值和显示使用 用户可以增加
     this.weight=1,
   });
+  Food.fromJson(Map<String,dynamic> json){
+    this.id = json['id'];
+    this.name = json['name'];
+    this.picture = json['picture'];
+    this.weight = json['weight'];
+    this.calorie =json['calories'];
+    this.protein = json['protein'];
+    this.fat = 0;
+    this.cholesterol = 0;
+    this.cellulose = 0;
+    this.category = 0;
+  }
 
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['id'] = this.id;
+    data['calories'] = this.calorie;
+    data['picture'] = this.picture;
+    data['protein'] = this.protein;
+    data['weight'] = this.weight;
+    return data;
+  }
   String getCaloriePerUnit(){
     return calorie.toString() + "Kcal/100g";
   }
@@ -81,16 +103,5 @@ class Food {
   }
   void setWeight(int newWeight){
     this.weight=newWeight;
-  }
-
-  Map<String, dynamic> toJson(){
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['id'] = this.id;
-    data['calories'] = this.calorie;
-    data['picture'] = this.picture;
-    data['protein'] = this.protein;
-    data['weight'] = this.weight;
-    return data;
   }
 }

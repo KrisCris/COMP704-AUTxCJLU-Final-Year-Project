@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
@@ -98,39 +100,16 @@ class Meal {
 
   ///food类又增加了许多其他的东西，不知道现在匹配方法够不够
   String _encode() {
-    String res = "";
-    for (Food fd in foods) {
-      res += fd.name + "-";
-      res += fd.id.toString() + "-";
-      res += fd.weight.toString()+"-";
-      res += fd.calorie.toString() + "-";
-      res += fd.protein.toString() + "-";
-      res += fd.fat.toString() + "-";
-      res += fd.cholesterol.toString() + "-";
-      res += fd.cellulose.toString() + "-";
-      res += fd.carbohydrate.toString() + "-";
-      res += fd.cellulose.toString() + ",";
-    }
+    String res = jsonEncode(foods);
+    return res;
   }
 
   static List<Food> decode(String str) {
-    if (str == null) return [];
-    List<Food> result = [];
-    List<String> foodInfo = str.split(',');
-    for (String fi in foodInfo) {
-      List<String> food = fi.split('-');
-      result.add(Food(
-        name: food[0],
-        id: int.parse(food[1]),
-        weight: int.parse(food[2]),
-        calorie: double.parse(food[3]),
-        protein: double.parse(food[4]),
-        fat: double.parse(food[5]),
-        cholesterol: double.parse(food[6]),
-        carbohydrate: double.parse(food[7]),
-        cellulose: double.parse(food[8]),
-      ));
+    var data = jsonDecode(str);
+    List<Food> res = [];
+    for(Map m in data){
+      res.add(Food.fromJson(m));
     }
-    return result;
+    return res;
   }
 }

@@ -77,20 +77,7 @@ class User {
       new Meal(mealName: "lunch"),
       new Meal(mealName: "dinner")
     ];
-    DateTime nowDay = DateTime.now();
-    nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
-    for(Meal m in this.meals.value){
-      m.read();
-      if(m.time == null)continue;
-
-      if(m.time < nowDay.millisecondsSinceEpoch ||
-        m.time >= nowDay.add(Duration(days: 1)).millisecondsSinceEpoch){
-        m.foods = [];
-      }
-    }
-    this.meals.addListener(() {
-
-    });
+    this.readLocalMeal();
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
@@ -104,6 +91,10 @@ class User {
       }
     }
   }
+  static bool isInit(){
+    return User._instance != null;
+  }
+
   int getTodayCaloriesIntake(){
     int cal = 0;
     for(Meal m in meals.value){
@@ -150,35 +141,7 @@ class User {
       return false;
     }
   }
-  void refreshMeal(){
-    for(Meal m in meals.value){
-      State st = m.key.currentState;
-      if(st != null && st.mounted){
-        st.setState(() {
-        });
-      }
-    }
-  }
-  static bool isInit(){
-    return User._instance != null;
-  }
 
-  bool hasMealName(String s){
-    for(Meal m in this.meals.value){
-      if(s == m.mealName){
-        return true;
-      }
-    }
-    return false;
-  }
-  Meal getMealByName(String s){
-    for(Meal m in this.meals.value){
-      if(s == m.mealName){
-        return m;
-      }
-    }
-    return null;
-  }
 
   ///从本地文件读取用户信息
   static User getInstance() {
@@ -206,19 +169,6 @@ class User {
     return User._instance;
   }
 
-  bool get isOffline => _isOffline;
-  set isOffline(bool value) {
-    _isOffline = value;
-  }
-  double get bodyWeight => _bodyWeight;
-  String get token => _token;
-  bool get needGuide => _needGuide;
-  set token(String value) {
-    _token = value;
-  }
-
-  Plan get plan => _plan;
-
   Image getAvatar(double width, double height) {
     return Image.memory(
       base64Decode(this._avatar),
@@ -231,7 +181,50 @@ class User {
   Uint8List getAvatarBin() {
     return base64Decode(this._avatar);
   }
+  void refreshMeal(){
+    for(Meal m in meals.value){
+      State st = m.key.currentState;
+      if(st != null && st.mounted){
+        st.setState(() {
+        });
+      }
+    }
+  }
+  bool hasMealName(String s){
+    for(Meal m in this.meals.value){
+      if(s == m.mealName){
+        return true;
+      }
+    }
+    return false;
+  }
+  Meal getMealByName(String s){
+    for(Meal m in this.meals.value){
+      if(s == m.mealName){
+        return m;
+      }
+    }
+    return null;
+  }
+  void saveMeal(){
+    this.meals.value.forEach((element) {
+      element.save();
+    });
+  }
+  void readLocalMeal(){
+    DateTime nowDay = DateTime.now();
+    nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
+    for(Meal m in this.meals.value){
+      m.read();
+      //m.delete();
+      if(m.time == null)continue;
 
+      if(m.time < nowDay.millisecondsSinceEpoch ||
+          m.time >= nowDay.add(Duration(days: 1)).millisecondsSinceEpoch){
+        m.foods = [];
+      }
+    }
+  }
   ///与服务器上的用户数据同步
   Future<int> synchronize() async {
     Response res =
@@ -295,7 +288,6 @@ class User {
       }
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
-        //TODO:初始化用户，获取计划失败的情况
         this._needGuide = true;
         print(res.data);
       } else if (res.data['code'] == 1) {
@@ -333,11 +325,6 @@ class User {
         dailyProteinLowerLimit: res.data['data']['pl'],
         dailyProteinUpperLimit: res.data['data']['ph']);
     this._plan.save();
-  }
-  void saveMeal(){
-    this.meals.value.forEach((element) {
-      element.save();
-    });
   }
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
@@ -379,7 +366,18 @@ class User {
   Icon genderIcon() {
     return User.genderIcons[this._gender];
   }
+  bool get isOffline => _isOffline;
+  set isOffline(bool value) {
+    _isOffline = value;
+  }
+  double get bodyWeight => _bodyWeight;
+  String get token => _token;
+  bool get needGuide => _needGuide;
+  set token(String value) {
+    _token = value;
+  }
 
+  Plan get plan => _plan;
   int get uid => _uid;
 
   set uid(int value) {
