@@ -22,7 +22,8 @@ class User(db.Model):
     guide = db.Column(db.BOOLEAN)
     register_date = db.Column(db.INTEGER)
 
-    def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(), nickname='', password='',
+    def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(),
+                 nickname='', password='',
                  group=0, token='', code_check=0, guide=1, register_date=get_current_time()):
         self.email = email
         self.nickname = nickname
@@ -54,3 +55,8 @@ class User(db.Model):
     @staticmethod
     def getUserByEmail(email) -> 'User':
         return User.query.filter(User.email == email).first()
+
+    def toDict(self):
+        return {'id': self.id, 'email': self.email, 'nickname': self.nickname, 'token': self.token,
+                'avatar': self.avatar, 'gender': self.gender, 'age': self.age, 'weight': self.weight,
+                'height': self.height, 'regDate': self.register_date, 'needGuide': self.guide}

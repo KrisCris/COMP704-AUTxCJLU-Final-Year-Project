@@ -15,10 +15,11 @@ class DailyConsumption(db.Model):
     name = db.Column(db.VARCHAR(256), comment='easier way to query food name...')
     calories = db.Column(db.FLOAT, comment='easier way to query calories')
     protein = db.Column(db.FLOAT, comment='easier way to query protein')
+    weight = db.Column(db.FLOAT, comment='100g per')
     img = db.Column(db.Text(16777216))
 
-    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, time=get_current_time(),
-                 img=None):
+    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, weight=None,
+                 time=get_current_time(), img=None):
         self.uid = uid
         self.pid = pid
         self.fid = fid
@@ -28,6 +29,7 @@ class DailyConsumption(db.Model):
         self.calories = calories
         self.protein = protein
         self.time = time
+        self.weight = weight
         self.img = img
 
     def add(self):
@@ -41,28 +43,57 @@ class DailyConsumption(db.Model):
     @staticmethod
     def get_periodic_record(begin: int, end: int, uid: int):
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
-            end >= DailyConsumption.time >= begin).order_by(DailyConsumption.time.asc())
+            DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         arr = []
         for record in records:
-            data = {
-                'id': record.id,
-                'pid': record.pid,
-                'fid': record.fid,
-                'time': record.time,
-                'type': record.type,
-                'calories': record.calories,
-                'protein': record.protein,
-                'name': record.name,
-                'img': record.img
-            }
+            data = record.toDict()
             arr.append(data)
         return arr
 
     @staticmethod
+    def getConsumptionGroupByType(begin: int, end: int, uid: int):
+        records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
+            DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
+        dic = {
+            'b': [],
+            'l': [],
+            'd': [],
+            'e': []
+        }
+        for record in records:
+            def getArr(t: int):
+                m = {
+                    1: dic['b'],
+                    2: dic['l'],
+                    3: dic['d'],
+                    0: dic['e']
+                }
+                return m.get(t)
+
+            data = record.toDict()
+            getArr(record.type).append(data)
+        return dic
+
+    @staticmethod
     def getPeriodicCaloriesIntake(begin: int, end: int, uid: int):
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
-            end >= DailyConsumption.time >= begin).order_by(DailyConsumption.time.asc())
+            DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         cal = 0
         for record in records:
             cal += record.calories
         return cal
+
+    def toDict(self):
+        {
+            'cid': self.id,
+            'uid': self.uid,
+            'pid': self.pid,
+            'fid': self.fid,
+            'time': self.time,
+            'type': self.type,
+            'calories': self.calories,
+            'protein': self.protein,
+            'name': self.name,
+            'img': self.img,
+            'weight': self.weight,
+        }
