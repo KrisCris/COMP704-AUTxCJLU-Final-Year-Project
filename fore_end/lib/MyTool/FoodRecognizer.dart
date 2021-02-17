@@ -47,8 +47,6 @@ class FoodRecognizer{
     for(FoodBox fb in l){
       m.addFood(fb.food);
     }
-    u.refreshMeal();
-    l.clear();
     FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
   }
 
@@ -67,10 +65,11 @@ class FoodRecognizer{
         "type": mealsType.toString(),
         "foods_info":jsonEncode(m.foods),
       });
-
       if (res.data["code"] == 1) {
         m.time = res.data['data']['stmp']*1000;
         m.save();
+        FoodRecognizer.instance.foods.clear();
+        u.refreshMeal();
       }else {
         print("保存失败");
       }
