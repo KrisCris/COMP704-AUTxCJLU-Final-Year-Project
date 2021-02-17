@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
@@ -85,7 +88,7 @@ class UpdateBody extends StatelessWidget {
                   width: 80,
                   radius: 5,
                   tapFunc: (){
-                    Navigator.pop(context);
+                    Navigator.pop(context,false);
                   },
                 ) ,
                 Expanded(child: SizedBox()),
@@ -93,6 +96,18 @@ class UpdateBody extends StatelessWidget {
                   text: CustomLocalizations.of(context).confirm,
                   width: 80,
                   radius: 5,
+                  tapFunc: () async{
+                    User u = User.getInstance();
+                    bool success = await u.updateBodyData(
+                        weight: weight.widgetValue.value.floorToDouble(),
+                        height: height.widgetValue.value*100
+                    );
+                    if(success){
+                      Navigator.pop(context,true);
+                    }else{
+                      Fluttertoast.showToast(msg: "update failed");
+                    }
+                  },
                 ),
                 SizedBox(width: 20),
               ],
