@@ -85,9 +85,12 @@ def consume_foods():
     day = get_relative_days(p.begin, get_current_time()) + 1
     for food_info in foods_info:
         f = DailyConsumption(
-            uid=uid, pid=pid, type=type, fid=food_info['id'], day=day,
-            name=food_info['name'], img=foods_info['picture'],
-            calories=foods_info['calories'], protein=foods_info['protein'],
+            uid=uid, pid=pid, type=type, day=day,
+            name=food_info['name'],
+            img=food_info['picture'],
+            fid=food_info['id'],
+            calories=food_info['calories'],
+            protein=food_info['protein'],
             weight=food_info['weight']
         )
         f.add()

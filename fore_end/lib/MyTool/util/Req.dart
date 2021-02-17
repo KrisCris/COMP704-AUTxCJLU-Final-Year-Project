@@ -141,6 +141,9 @@ class Requests {
   static Future<Response> updateBody(data) async {
     return _postRequest("updateBody", data, "/plan/update_body_info", "updateBodyInfo接口", null);
   }
+  static Future<Response> historyMeal(data) async {
+    return _postRequest("historyMeal", data, "/food/get_daily_consumption", "historyMeal接口", null);
+  }
   static Future<Response> previewPlan(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
@@ -172,14 +175,7 @@ class Requests {
   static Future<Response> consumeFoods(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/consume_foods", data: dt);
-    return res;
-  }
-
-  static Future<Response> addMealFoods(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/consume_foods", data: dt);
+    Response res = await dio.post("/food/consume_foods", data: dt);
     return res;
   }
 
