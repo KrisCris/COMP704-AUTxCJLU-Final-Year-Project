@@ -109,11 +109,37 @@ class User {
     }
     return pro;
   }
-  bool updateBodyData({double weight, double height}){
-    if(weight != null)this._bodyWeight = weight;
-    if(height != null)this._bodyHeight = height;
-    //TODO:后端接口更新身体数据
-
+  Future<bool> updateBodyData({double weight, double height}) async {
+    Response res = await Requests.updateBody({
+      "uid":_uid,
+      "token":_token,
+      "height":height,
+      "weight":weight,
+    });
+    if(res == null){
+      return false;
+    }
+    if(res.data['code'] == 1){
+      if(weight != null)this._bodyWeight = weight;
+      if(height != null)this._bodyHeight = height/100;
+      this._plan = new Plan(
+          id: res.data['data']['pid'],
+          startTime: res.data['data']['begin'],
+          endTime: res.data['data']['end'],
+          planType: res.data['data']['type'],
+          goalWeight: res.data['data']['goal'],
+          dailyCaloriesLowerLimit:
+          NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
+          dailyCaloriesUpperLimit:
+          NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
+          dailyProteinLowerLimit:
+          NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
+          dailyProteinUpperLimit:
+          NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
+      return true;
+    }else{
+      return false;
+    }
   }
   void refreshMeal(){
     for(Meal m in meals.value){
@@ -218,6 +244,7 @@ class User {
       res = await Requests.getPlan({"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         //TODO:初始化用户，获取计划失败的情况
+        this._needGuide = true;
         print(res.data);
       } else if (res.data['code'] == 1) {
         this._plan = new Plan(

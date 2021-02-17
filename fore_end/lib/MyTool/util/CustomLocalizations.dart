@@ -232,6 +232,11 @@ class CustomLocalizations {
       "en":"re-enter the password",
       "zh":"再次输入密码"
     },
+    "differentPasswordHint":{
+      "en":"Two passwords are different!",
+      "zh":"两次密码不一致！"
+    },
+
     "email":{
       "en":"Email",
       "zh":"电子邮箱"
@@ -239,6 +244,10 @@ class CustomLocalizations {
     "emailHint":{
       "en":"Please input correct email",
       "zh":"请输入正确的邮箱地址"
+    },
+    "wrongEmail":{
+      "en":"Wrong email address!",
+      "zh":"错误的的邮箱地址"
     },
     "loginAccount":{
       "en":"Login Your\nAccount",
@@ -428,6 +437,62 @@ class CustomLocalizations {
       "en":"Language",
       "zh":"语言"
     },
+    // "":{
+    //   "en":"",
+    //   "zh":""
+    // },
+    "accountPageTitle":{
+      "en":"ACCOUNT INFO",
+      "zh":"账户信息页"
+    },
+    "basicInformation":{
+      "en":"Basic information",
+      "zh":"基本信息"
+    },
+    "changeSuccess":{
+      "en":"Change success!",
+      "zh":"修改成功！"
+    },
+    "accountInformation":{
+      "en":"Account Information",
+      "zh":"账号信息"
+    },
+    "profilePhoto":{
+      "en":"Profile Photo",
+      "zh":"头像"
+    },
+    "username":{
+      "en":"Username",
+      "zh":"用户名"
+    },
+    "gender":{
+      "en":"Gender",
+      "zh":"性别"
+    },
+    "save":{
+      "en":"Save",
+      "zh":"保存"
+    },
+    "changePasswordPageTitle":{
+      "en":"Change Login PASSWORD",
+      "zh":"修改登录密码页"
+    },
+    "newPassword":{
+      "en":"New password",
+      "zh":"新的密码"
+    },
+    "oldPassword":{
+      "en":"old password",
+      "zh":"旧的密码"
+    },
+
+    "caloriesChartTitle":{
+      "en":"History Daily Calories",
+      "zh":"历史卡路里"
+    },
+
+
+
   };
 
   get createPlan => getContent("createPlan");
@@ -642,6 +707,51 @@ class CustomLocalizations {
   get choosePlan{
     return getContent("choosePlan");
   }
+  get accountPageTitle{
+    return getContent("accountPageTitle");
+  }
+  get basicInformation{
+    return getContent("basicInformation");
+  }
+  get changeSuccess{
+    return getContent("changeSuccess");
+  }
+  get accountInformation{
+    return getContent("accountInformation");
+  }
+  get profilePhoto{
+    return getContent("profilePhoto");
+  }
+  get username{
+    return getContent("username");
+  }
+  get gender{
+    return getContent("gender");
+  }
+  get save{
+    return getContent("save");
+  }
+  get changePasswordPageTitle{
+    return getContent("changePasswordPageTitle");
+  }
+  get differentPasswordHint{
+    return getContent("differentPasswordHint");
+  }
+  get wrongEmail{
+    return getContent("wrongEmail");
+  }
+  get newPassword{
+    return getContent("newPassword");
+  }
+  get oldPassword{
+    return getContent("oldPassword");
+  }
+
+  get caloriesChartTitle{
+    return getContent("caloriesChartTitle");
+  }
+
+
   get male => getContent("male");
   get female => getContent("female");
   get collectBodyData => getContent("collectBodyData");
