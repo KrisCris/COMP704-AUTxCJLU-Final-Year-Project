@@ -173,6 +173,7 @@ class Requests {
   }
 
   static Future<Response> consumeFoods(data) async {
+    return _postRequest("consumeFoods", data, "/food/consume_foods", "consume_foods接口", null);
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/food/consume_foods", data: dt);
