@@ -180,11 +180,14 @@ def get_plan():
 @require_login
 def update_body_info():
     uid = request.form.get('uid')
-    height = None if 'height' in request.form.keys() else request.form.get('height')
-    weight = None if 'weight' in request.form.keys() else request.form.get('weight')
-    pal = None if 'pal' in request.form.keys() else request.form.get('pal')  # physical activity level
+    height = float(request.values.get('height'))
+    weight = float(request.values.get('weight'))
+    pal = None if 'pal' not in request.form.keys() else request.form.get('pal')  # physical activity level
 
     u = User.getUserByID(uid)
+    if u is None:
+        return reply_json(-2)
+
     u.height = height if height else u.height
     u.weight = weight if weight else u.weight
 
@@ -193,6 +196,8 @@ def update_body_info():
     if p:
         remain = get_relative_days(get_current_time(), p.end)
         planDetail = PlanDetail.getLatest(p.id)
+        if pal is None:
+            pal = planDetail.activityLevel
 
         # last extension record
         ext = planDetail.ext
@@ -226,6 +231,7 @@ def update_body_info():
             maintCalories = result.get('maintainCal')
 
             newPlanDetail = PlanDetail(
+                uid=uid,
                 pid=p.id,
                 weight=weight,
                 caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,

@@ -43,17 +43,6 @@ class Food(db.Model):
         return Food.query.filter(Food.id == fid).first()
 
     def toDict(self):
-        f_db = {}
-
-        f_db['id'] = self.id
-        f_db['name'] = self.name
-        f_db['category'] = self.category
-        f_db['img'] = self.image
-        f_db['calories'] = self.calories
-        f_db['fat'] = self.fat
-        f_db['carbohydrate'] = self.carbohydrate
-        f_db['protein'] = self.protein
-        f_db['cholesterol'] = self.cholesterol
-        f_db['cellulose'] = self.cellulose
-
-        return f_db
+        return {'id': self.id, 'name': self.name, 'category': self.category, 'img': self.image,
+                'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate, 'protein': self.protein,
+                'cholesterol': self.cholesterol, 'cellulose': self.cellulose}
