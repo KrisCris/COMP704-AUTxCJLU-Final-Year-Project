@@ -15,6 +15,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlanDetailPage extends StatelessWidget {
   GlobalKey<GoalDataState> goalKey = new GlobalKey<GoalDataState>();
+  GlobalKey<BodyWeightChartState> chartKey = new GlobalKey<BodyWeightChartState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,6 +103,7 @@ class PlanDetailPage extends StatelessWidget {
                   ).then((val) {
                     if(val == true){
                       goalKey.currentState.setState(() {});
+                      chartKey.currentState.repaintData();
                     }
                   });
                 },
@@ -117,7 +119,7 @@ class PlanDetailPage extends StatelessWidget {
               color: MyTheme. convert(ThemeColorName.ComponentBackground),
               borderRadius: BorderRadius.circular(6)
             ),
-            child: BodyWeightChart()
+            child: BodyWeightChart(key:chartKey)
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BodyWeightChart extends StatefulWidget{
+  BodyWeightChart({Key key}):super(key:key);
   @override
   State<StatefulWidget> createState() {
     return BodyWeightChartState();
@@ -17,26 +18,7 @@ class BodyWeightChartState extends State<BodyWeightChart>{
   List<BodyChangeLog> bodyChanges;
   @override
   void initState() {
-    User u = User.getInstance();
-    DateTime now = DateTime.now();
-    bodyChanges = [];
-    Requests.getWeightTrend({
-      "uid":u.uid,
-      "token":u.token,
-      "begin": (now.add(Duration(days: -60)).millisecondsSinceEpoch/1000).floor(),
-      "end":(now.millisecondsSinceEpoch/1000).floor(),
-    }).then((value){
-      if(value == null)return;
-      if(value.data['code'] != 1)return;
-      for(Map m in value.data['data']['trend']){
-        bodyChanges.insert(0, BodyChangeLog(
-          time: m['time']*1000,
-          weight: (m['weight'] as double).floor(),
-          height: 0
-        ));
-      }
-      setState(() {});
-    });
+   this.repaintData();
     super.initState();
   }
   @override
@@ -68,12 +50,7 @@ class BodyWeightChartState extends State<BodyWeightChart>{
             xAxisName: "Time",
             yAxisName: "Weight(KG)",
             name: "Body Weight",
-            dataSource: <BodyChangeLog>[
-              // BodyChangeLog(time:1611874156990,weight:68,height: 174),
-              // BodyChangeLog(time:1611974156990,weight:70,height: 174),
-              // BodyChangeLog(time:1612074156990,weight:69,height: 174),
-              // BodyChangeLog(time:1612174156990,weight:71,height: 174),
-            ],
+            dataSource: bodyChanges,
             xValueMapper: (BodyChangeLog log, _)=> log.getTime(),
             yValueMapper: (BodyChangeLog log, _)=> log.weight,
             dataLabelSettings: DataLabelSettings(
@@ -88,5 +65,26 @@ class BodyWeightChartState extends State<BodyWeightChart>{
     );
     return chart;
   }
-
+  void repaintData(){
+    User u = User.getInstance();
+    DateTime now = DateTime.now();
+    bodyChanges = [];
+    Requests.getWeightTrend({
+      "uid":u.uid,
+      "token":u.token,
+      "begin": (now.add(Duration(days: -60)).millisecondsSinceEpoch/1000).floor(),
+      "end":(now.millisecondsSinceEpoch/1000).floor(),
+    }).then((value){
+      if(value == null)return;
+      if(value.data['code'] != 1)return;
+      for(Map m in value.data['data']['trend']){
+        bodyChanges.add(BodyChangeLog(
+            time: m['time']*1000,
+            weight: (m['weight'] as double).floor(),
+            height: 0
+        ));
+      }
+      setState(() {});
+    });
+  }
 }
