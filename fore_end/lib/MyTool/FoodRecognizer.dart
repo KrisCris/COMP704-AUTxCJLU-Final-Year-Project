@@ -47,9 +47,6 @@ class FoodRecognizer{
     for(FoodBox fb in l){
       m.addFood(fb.food);
     }
-    u.refreshMeal();
-    u.saveMeal();
-    l.clear();
     FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
   }
 
@@ -59,6 +56,7 @@ class FoodRecognizer{
     Meal m = u.getMealByName(mealName);
     int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
     if(m != null){
+      FoodRecognizer.addFoodToMeal(m);
       // List<List> totalFoodInfo=new List<List>();
       Response res = await Requests.consumeFoods({
         "uid": u.uid,
@@ -67,10 +65,11 @@ class FoodRecognizer{
         "type": mealsType.toString(),
         "foods_info":jsonEncode(m.foods),
       });
-
       if (res.data["code"] == 1) {
         m.time = res.data['data']['stmp']*1000;
-        FoodRecognizer.addFoodToMeal(m);
+        m.save();
+        FoodRecognizer.instance.foods.clear();
+        u.refreshMeal();
       }else {
         print("保存失败");
       }
