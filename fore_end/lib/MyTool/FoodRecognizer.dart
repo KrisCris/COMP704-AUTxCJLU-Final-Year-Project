@@ -70,6 +70,7 @@ class FoodRecognizer{
         m.save();
         FoodRecognizer.instance.foods.clear();
         u.refreshMeal();
+        FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
       }else {
         print("保存失败");
       }
