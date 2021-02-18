@@ -122,9 +122,9 @@ def getDailyConsumption():
     )
 
 
-@food.route('calories_intake', methods=['POST'])
+@food.route('accumulated_calories_intake', methods=['POST'])
 @require_login
-def getCaloriesIntake():
+def getAccumulatedCaloriesIntake():
     begin = request.form.get('begin')
     end = request.form.get('end')
     uid = request.form.get('uid')
@@ -132,3 +132,5 @@ def getCaloriesIntake():
         code=1,
         data=DailyConsumption.getPeriodicCaloriesIntake(begin=begin, end=end, uid=uid)
     )
+
+@food.route('')
