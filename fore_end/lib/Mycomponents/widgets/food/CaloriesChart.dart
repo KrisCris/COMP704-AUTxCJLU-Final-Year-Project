@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -199,11 +198,14 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     DateTime today = DateTime(nowCurrent.year,nowCurrent.month,nowCurrent.day);
     DateTime settingDay = DateTime(time.year,time.month,time.day);
     if(settingDay.compareTo(today) == 0){
-      this.calculateDate(today);
+      // this.calculateDate(today);
+      ///如果是选择了今天 那么什么也不用做
     }else{
       ///不一样再去修改
       this.calculateDate(settingDay);
     }
+
+    ///执行完calculateDate  再刷新界面
     setState(() {
 
     });
@@ -214,6 +216,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     User u=User.getInstance();
     int mondayIndex;
 
+    ///第一个switch 用来突出显示今天的柱状图 变红
     switch(weekDayOfSetting){
       case 'Monday':
         widget.isMondayDate=true;
@@ -304,154 +307,140 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.saturdayDate=settingDay.add(Duration(days: mondayIndex+5));
     widget.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
 
-    ///TODO:要么就判断一下 今天的日期 是否等于 mondaDate-- sundayDate 里面其中一个，如果是的话就改一下
-    ///目前这样也是可以的   然后 要把获取其他天的接口给写上
-    ///
-    switch(weekDayOfSetting){
-      case 'Monday':
-        if(widget.mondayDate.compareTo(widget.today)==0){
-          widget.mondayValue=u.getTodayCaloriesIntake();
-        }
-        break;
 
-      case 'Tuesday':
-        if(widget.tuesdayDate.compareTo(widget.today)==0){
-          widget.tuesdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
 
-      case 'Wednesday':
-        if(widget.wednesdayDate.compareTo(widget.today)==0){
-          widget.wednesdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Thursday':
-        if(widget.thursdayDate.compareTo(widget.today)==0){
-          widget.thursdayValue=u.getTodayCaloriesIntake();
-        }else{
-          widget.thursdayValue=0;  //这里正确的应该是 等于数据库的数据
-          this.getHistoryCalories(settingDay, "Thursday");
-        }
-        break;
-
-      case 'Friday':
-        if(widget.fridayDate.compareTo(widget.today)==0){
-          widget.fridayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Saturday':
-        if(widget.saturdayDate.compareTo(widget.today)==0){
-          widget.saturdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Sunday':
-        if(widget.sundayDate.compareTo(widget.today)==0){
-          widget.sundayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      default:
-        print('初始化柱状图时 获取每一天卡路里数据失败');
-    }
+    ///先从接口获取每一天的数据
+    this.getHistoryCalories();
+    ///这个switch是用来获取今天的数据，因为yyz说今天最好是本地的数值，其实也不是一定要)
+    // switch(weekDayOfSetting){
+    //   case 'Monday':
+    //     ///首先判断设定的日期的这一天是不是就是今天，如果是就拿本地的数据(其实也不是一定要)，然后如果不是就去数据库里获取数据然后初始化，赋值应该在if上面
+    //     this.getHistoryCalories(settingDay, "Monday");
+    //     if(widget.mondayDate.compareTo(widget.today)==0){
+    //       widget.mondayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Tuesday':
+    //     this.getHistoryCalories(settingDay, "Tuesday");
+    //     if(widget.tuesdayDate.compareTo(widget.today)==0){
+    //       widget.tuesdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Wednesday':
+    //     this.getHistoryCalories(settingDay, "Wednesday");
+    //     if(widget.wednesdayDate.compareTo(widget.today)==0){
+    //       widget.wednesdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Thursday':
+    //     this.getHistoryCalories(settingDay, "Thursday");
+    //     if(widget.thursdayDate.compareTo(widget.today)==0){
+    //       widget.thursdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Friday':
+    //
+    //     if(widget.fridayDate.compareTo(widget.today)==0){
+    //       widget.fridayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Saturday':
+    //     this.getHistoryCalories();
+    //     if(widget.saturdayDate.compareTo(widget.today)==0){
+    //       widget.saturdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Sunday':
+    //     this.getHistoryCalories();
+    //     if(widget.sundayDate.compareTo(widget.today)==0){
+    //       widget.sundayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   default:
+    //     print('初始化柱状图时 获取每一天卡路里数据失败');
+    // }
 
   }
 
-  Future getHistoryCalories(DateTime assignedDate, String weekdayOfDate) async{
-
-    DateTime beginDate;
-    DateTime endDate;
+  ///根据指定的一天来获取一周卡路里的方法
+  ///DateTime assignedDate, String weekdayOfDate
+  Future getHistoryCalories() async{
+    DateTime beginDate=widget.mondayDate;
+    DateTime endDate=widget.sundayDate;
     int beginTime;
     int endTime;
-    // DateTime transferedDate=DateTime.fromMillisecondsSinceEpoch(beginTime);//将拿到的时间戳转化为日期
-    print("getHistoryCalories接口的today is "+ weekdayOfDate+",日期为："+assignedDate.toString());
+    List oneWeekCaloriesList=new List();
 
-    switch(weekdayOfDate){
-      case 'Monday':
-        ///每次从begin：周一，end:周日。然后获取一周的结果再去分割，所以先要把这个间隔算出来
+    beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
+    endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
 
-        beginDate=assignedDate.add(Duration(days: 0));
-        endDate=assignedDate.add(Duration(days: 6));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-
-        break;
-
-      case 'Tuesday':
-        beginDate=assignedDate.add(Duration(days: -1));
-        endDate=assignedDate.add(Duration(days: 5));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      case 'Wednesday':
-        beginDate=assignedDate.add(Duration(days: -2));
-        endDate=assignedDate.add(Duration(days: 4));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      case 'Thursday':
-        beginDate=assignedDate.add(Duration(days: -3));
-        endDate=assignedDate.add(Duration(days: 3));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      case 'Friday':
-        beginDate=assignedDate.add(Duration(days: -4));
-        endDate=assignedDate.add(Duration(days: 2));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      case 'Saturday':
-        beginDate=assignedDate.add(Duration(days: -5));
-        endDate=assignedDate.add(Duration(days: 1));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      case 'Sunday':
-        beginDate=assignedDate.add(Duration(days: -6));
-        endDate=assignedDate.add(Duration(days: 0));
-        beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-        endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-        break;
-
-      default:
-        print('getHistoryCalories 获取指定日期的卡路里后，赋值失败  none');
-    }
-
-    print("getHistoryCalories接口的beginDate is "+beginDate.toString());
-    print("getHistoryCalories接口的endDate is "+endDate.toString());
-
-    ///先用今天的日期来测试
-    // int beginTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-    // int endTime = (DateTime(assignedDate.year,assignedDate.month,assignedDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-    int todayBeginTime = (DateTime(widget.today.year,widget.today.month,widget.today.day,0,0,0).millisecondsSinceEpoch/1000).floor();
-    int todayEndTime = (DateTime(widget.today.year,widget.today.month,widget.today.day,23,59,59).millisecondsSinceEpoch/1000).floor();
-
-
-    int caloriesData=100;
     Response res = await Requests.getCaloriesIntake({
-        "begin": todayBeginTime,
-        "end": todayEndTime,
+        "begin": beginTime,
+        "end": endTime,
         "uid": User.getInstance().uid,
         "token": User.getInstance().token,
       });
       if (res.data['code'] == 1) {
-        print("getCaloriesIntake 获取成功！");
-        // caloriesData=res.data['data'];
-        // print("caloriesData的值为:"+caloriesData.toString());
+        print("getCaloriesIntake 接口数据获取成功！----------");
+        oneWeekCaloriesList=res.data['data'];
+        this.assignValueBasedOnList(oneWeekCaloriesList);
+        print("assignValueBasedOnList 执行完成--------");
       }else{
         print("getCaloriesIntake 的接口有bug");
       }
 
 
   }
+
+  ///处理接口返回的卡路里list
+  void assignValueBasedOnList(List caloriesList ){
+
+    // Map map=Map<String,int>();
+    //每一个List里面的element都是一个map
+    // Map map={"calories":68.12,"id":3,"time":1613637513};
+    // Map map2={"calories":357.31,"id":4,"time":1613637516};
+    // caloriesList=[map, map2];
+    caloriesList.forEach((element) {
+      DateTime dateOfElement=DateTime.fromMillisecondsSinceEpoch(element["time"]*1000);
+      DateTime formatedDate=DateTime.parse(formatDate(dateOfElement, [yyyy, '-', mm, '-', dd]));
+      int isEqual=formatedDate.compareTo(widget.thursdayDate);
+      double caloriesOfElement=element["calories"];
+      if(formatedDate.compareTo(widget.mondayDate)==0){
+        widget.mondayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.tuesdayDate)==0){
+        widget.tuesdayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.wednesdayDate)==0){
+        widget.wednesdayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.thursdayDate)==0){
+        widget.thursdayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.fridayDate)==0){
+        widget.fridayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.saturdayDate)==0){
+        widget.saturdayValue+=caloriesOfElement.toInt();
+
+      }else if(formatedDate.compareTo(widget.sundayDate)==0){
+        widget.sundayValue+=caloriesOfElement.toInt();
+
+      }
+
+    });
+
+    print("caloriesList 遍历完成--------");
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -224,7 +224,7 @@ class Requests {
   }
 
   static Future<Response> getCaloriesIntake(data) async {
-    return _postRequest("getCaloriesIntake", data, "/food/calories_intake", "getCaloriesIntake接口", null);
+    return _postRequest("getCaloriesIntake", data, "/food/listed_calories_intake", "getCaloriesIntake接口", null);
   }
 
 }
