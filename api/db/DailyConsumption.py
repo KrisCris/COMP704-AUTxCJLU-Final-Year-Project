@@ -80,12 +80,12 @@ class DailyConsumption(db.Model):
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         cal = 0
         for record in records:
-            cal += record.calories
+            cal += record.calories * record.weight
         return cal
 
     def toDict(self):
-        {
-            'cid': self.id,
+        return {
+            'id': self.id,
             'uid': self.uid,
             'pid': self.pid,
             'fid': self.fid,

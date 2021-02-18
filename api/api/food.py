@@ -81,7 +81,7 @@ def consume_foods():
         return reply_json(-2)
     import json
     foods_info = json.loads(foods_info)
-
+    time = get_current_time()
     day = get_relative_days(p.begin, get_current_time()) + 1
     for food_info in foods_info:
         f = DailyConsumption(
@@ -91,10 +91,11 @@ def consume_foods():
             fid=food_info['id'],
             calories=food_info['calories'],
             protein=food_info['protein'],
-            weight=food_info['weight']
+            weight=food_info['weight'],
+            time=time
         )
         f.add()
-    return reply_json(1)
+    return reply_json(1, data={'stmp': time})
 
 
 @food.route('get_consume_history', methods=['POST'])
