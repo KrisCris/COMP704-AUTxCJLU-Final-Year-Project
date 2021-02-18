@@ -93,15 +93,17 @@ class Requests {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res;
-
+    print(info+"is posting...");
     try{
       res = await dio.post(url, data: dt);
       Req.resetRepeat(interfaceKey);
+      print(info+" done");
       return res;
     }on DioError catch(e){
+      print(info+"solving error...");
       res =  await _errorSolve(e,interfaceKey,info: info,data:data,f:f);
-      if(res != null)
-        return res;
+      print(info+"error done");
+      return res;
     }
   }
   ///POST
@@ -141,6 +143,9 @@ class Requests {
   static Future<Response> updateBody(data) async {
     return _postRequest("updateBody", data, "/plan/update_body_info", "updateBodyInfo接口", null);
   }
+  static Future<Response> historyMeal(data) async {
+    return _postRequest("historyMeal", data, "/food/get_daily_consumption", "historyMeal接口", null);
+  }
   static Future<Response> previewPlan(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
@@ -170,17 +175,7 @@ class Requests {
   }
 
   static Future<Response> consumeFoods(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/consume_foods", data: dt);
-    return res;
-  }
-
-  static Future<Response> addMealFoods(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/consume_foods", data: dt);
-    return res;
+    return _postRequest("consumeFoods", data, "/food/consume_foods", "consume_foods接口", null);
   }
 
   static Future<Response> modifyBasicInfo(data) async {
@@ -189,7 +184,9 @@ class Requests {
     Response res = await dio.post("/user/modify_basic_info", data: dt);
     return res;
   }
-
+  static Future<Response> getWeightTrend(data) async {
+    return _postRequest("get_weight_trend", data, "/plan/get_weight_trend", "get_weight_trend接口", null);
+  }
   static Future<Response> modifyPassword(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
@@ -225,4 +222,12 @@ class Requests {
     });
     return urlPara;
   }
+
+  static Future<Response> getCaloriesIntake(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/food/calories_intake", data: dt);
+    return res;
+  }
+
 }

@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
@@ -40,12 +43,70 @@ class DetailMealPageState extends State<DetailMealPage> {
         setState(() {});
       }
     }else{
-      getHistoryMeal(widget.mealTime);
+      getHistoryMeal(time);
     }
   }
   void getHistoryMeal(DateTime time) async {
     //TODO:后端接口获取历史三餐
+    User u = User.getInstance();
     this.meal = null;
+    setState(() {});
+    Response res = await Requests.historyMeal({
+      "uid":u.uid,
+      "token":u.token,
+      "begin":time.millisecondsSinceEpoch/1000,
+      "end":time.millisecondsSinceEpoch/1000+ 3600*24 - 1
+    });
+    if(res == null){
+      this.meal = null;
+    }else{
+      if(res.data['code'] == 1){
+        //TODO: 这里有问题，记得修改
+        this.meal = [
+          Meal(mealName: "breakfast"),
+          Meal(mealName: "lunch"),
+          Meal(mealName: "dinner")
+        ];
+        for(Map m in res.data['data']['b']){
+          this.meal[0].foods = [];
+          this.meal[0].time = m['time']*1000;
+          this.meal[0].addFood(new Food(
+              name: m['name'],
+              id: m['fid'],
+              calorie: m['calories'],
+              picture: m['img'],
+              protein: m['protein'],
+              weight: (m['weight'] as double).floor()
+          ));
+        }
+        for(Map m in res.data['data']['l']){
+          this.meal[1].foods = [];
+          this.meal[1].time = m['time']*1000;
+          this.meal[1].addFood(new Food(
+              name: m['name'],
+              id: m['fid'],
+              calorie: m['calories'],
+              picture: m['img'],
+              protein: m['protein'],
+              weight: (m['weight'] as double).floor()
+          ));
+        }
+        for(Map m in res.data['data']['d']){
+          this.meal[2].foods = [];
+          this.meal[2].time = m['time']*1000;
+          this.meal[2].addFood(new Food(
+              name: m['name'],
+              id: m['fid'],
+              calorie: m['calories'],
+              picture: m['img'],
+              protein: m['protein'],
+              weight: (m['weight'] as double).floor()
+          ));
+        }
+      }else{
+        this.meal = [];
+      }
+    }
     setState(() {
     });
   }
@@ -88,7 +149,7 @@ class DetailMealPageState extends State<DetailMealPage> {
       ),
       SizedBox(height:20)
     ];
-    if(this.meal == null || this.meal.length == 0){
+    if(this.meal == null){
       col.add(
         Expanded(
             child: Center(

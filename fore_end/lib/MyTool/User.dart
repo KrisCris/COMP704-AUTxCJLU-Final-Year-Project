@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -76,12 +77,7 @@ class User {
       new Meal(mealName: "lunch"),
       new Meal(mealName: "dinner")
     ];
-    for(Meal m in this.meals.value){
-      m.read();
-    }
-    this.meals.addListener(() {
-
-    });
+    this.readLocalMeal();
     if (avatar == null) {
       this._avatar = User.defaultAvatar;
     } else {
@@ -94,6 +90,187 @@ class User {
         this._avatar = "";
       }
     }
+  }
+  ///从本地文件读取用户信息
+  static User getInstance() {
+    if (User._instance == null) {
+      SharedPreferences pre = LocalDataManager.pre;
+      if(pre == null){
+        print("Local Data Manager has not been initialized yet! User info getting failed!");
+        return null;
+      }
+      User._instance = User._internal(
+        token: pre.getString('token'),
+        uid: pre.getInt('uid'),
+        username: pre.getString("userName"),
+        email: pre.getString('email'),
+        gender: pre.getInt('gender'),
+        bodyHeight: pre.getDouble("bodyHeight"),
+        bodyWeight: pre.getDouble("bodyWeight"),
+        registerDate: pre.getInt("registerDate"),
+        age: pre.getInt('age'),
+        plan: Plan.readLocal(),
+        avatar: pre.getString("avatar"),
+        needGuide: pre.getBool("needSetPlan"),
+      );
+    }
+    return User._instance;
+  }
+  
+  static bool isInit(){
+    return User._instance != null;
+  }
+  ///与服务器上的用户数据同步
+  Future<int> synchronize() async {
+    Response res =
+    await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
+    if(res == null){
+      return 5;
+    }
+
+    if (res.data['code'] == 1) {
+      this._age = res.data['data']['age'];
+      this._gender = res.data['data']['gender'];
+      this._userName = res.data['data']['nickname'];
+      this._avatar = res.data['data']['avatar'];
+      this._email = res.data['data']['email'];
+      this._bodyHeight = res.data['data']['height']/100;
+      this._bodyWeight = res.data['data']['weight'];
+      this._needGuide = res.data['data']['needGuide'];
+      this._registerDate =res.data['data']['register_date'];
+
+      DateTime nowDay = DateTime.now();
+      nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
+      res = await Requests.historyMeal({
+        "uid":this._uid,
+        "token":this._token,
+        "begin":nowDay.millisecondsSinceEpoch/1000,
+        "end":nowDay.add(Duration(days: 1)).millisecondsSinceEpoch/1000 - 1
+      });
+      if(res != null){
+        if(res.data['code'] == 1){
+          for(Map m in res.data['data']['b']){
+            this.meals.value[0].foods = [];
+            this.meals.value[0].time = m['time']*1000;
+            this.meals.value[0].addFood(new Food(
+                name: m['name'],
+                id: m['fid'],
+                calorie: m['calories'],
+                picture: m['img'],
+                protein: m['protein'],
+                weight: (m['weight'] as double).floor()
+            ));
+          }
+          for(Map m in res.data['data']['l']){
+            this.meals.value[1].foods = [];
+            this.meals.value[1].time = m['time']*1000;
+            this.meals.value[1].addFood(new Food(
+                name: m['name'],
+                id: m['fid'],
+                calorie: m['calories'],
+                picture: m['img'],
+                protein: m['protein'],
+                weight: (m['weight'] as double).floor()
+            ));
+          }
+          for(Map m in res.data['data']['d']){
+            this.meals.value[2].foods = [];
+            this.meals.value[2].time = m['time']*1000;
+            this.meals.value[2].addFood(new Food(
+                name: m['name'],
+                id: m['fid'],
+                calorie: m['calories'],
+                picture: m['img'],
+                protein: m['protein'],
+                weight: (m['weight'] as double).floor()
+            ));
+          }
+        }
+      }
+      res = await Requests.getPlan({"uid": this._uid, "token": this._token});
+      if (res.data["code"] == -6) {
+        this._needGuide = true;
+        print(res.data);
+      } else if (res.data['code'] == 1) {
+        this._plan = new Plan(
+            id: res.data['data']['pid'],
+            startTime: res.data['data']['begin'],
+            endTime: res.data['data']['end'],
+            planType: res.data['data']['type'],
+            goalWeight: res.data['data']['goal'],
+            dailyCaloriesLowerLimit:
+            NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
+            dailyCaloriesUpperLimit:
+            NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
+            dailyProteinLowerLimit:
+            NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
+            dailyProteinUpperLimit:
+            NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
+      }
+      this.save();
+      return 4;
+    } else if (res.data['code'] == -1) {
+      return 3;
+    }
+  }
+  //meal相关
+  bool hasMealName(String s){
+    for(Meal m in this.meals.value){
+      if(s == m.mealName){
+        return true;
+      }
+    }
+    return false;
+  }
+  Meal getMealByName(String s){
+    for(Meal m in this.meals.value){
+      if(s == m.mealName){
+        return m;
+      }
+    }
+    return null;
+  }
+  void saveMeal(){
+    this.meals.value.forEach((element) {
+      element.save();
+    });
+  }
+  void readLocalMeal(){
+    DateTime nowDay = DateTime.now();
+    nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
+    for(Meal m in this.meals.value){
+      m.read();
+      //m.delete();
+      if(m.time == null)continue;
+
+      if(m.time < nowDay.millisecondsSinceEpoch ||
+          m.time >= nowDay.add(Duration(days: 1)).millisecondsSinceEpoch){
+        m.foods = [];
+      }
+    }
+  }
+  void refreshMeal(){
+    for(Meal m in meals.value){
+      State st = m.key.currentState;
+      if(st != null && st.mounted){
+        st.setState(() {
+        });
+      }
+    }
+  }
+  //plan相关
+  void setPlan(res) {
+    this._plan = new Plan(
+        id: res.data['data']['pid'],
+        startTime: res.data['data']['begin'],
+        endTime: res.data['data']['end'],
+        planType: res.data['data']['type'],
+        goalWeight: res.data['data']['goal'],
+        dailyCaloriesLowerLimit: res.data['data']['cl'],
+        dailyCaloriesUpperLimit: res.data['data']['ch'],
+        dailyProteinLowerLimit: res.data['data']['pl'],
+        dailyProteinUpperLimit: res.data['data']['ph']);
+    this._plan.save();
   }
   int getTodayCaloriesIntake(){
     int cal = 0;
@@ -141,152 +318,12 @@ class User {
       return false;
     }
   }
-  void refreshMeal(){
-    for(Meal m in meals.value){
-      State st = m.key.currentState;
-      if(st != null && st.mounted){
-        st.setState(() {
-        });
-      }
-    }
+  double getRemainWeight(){
+    double result = this._bodyWeight - this._plan.goalWeight;
+    if(result < 0)result = 0;
+    return result;
   }
-  static bool isInit(){
-    return User._instance != null;
-  }
-
-  bool hasMealName(String s){
-    for(Meal m in this.meals.value){
-      if(s == m.mealName){
-        return true;
-      }
-    }
-    return false;
-  }
-  Meal getMealByName(String s){
-    for(Meal m in this.meals.value){
-      if(s == m.mealName){
-        return m;
-      }
-    }
-    return null;
-  }
-
-  ///从本地文件读取用户信息
-  static User getInstance() {
-    if (User._instance == null) {
-      SharedPreferences pre = LocalDataManager.pre;
-      if(pre == null){
-        print("Local Data Manager has not been initialized yet! User info getting failed!");
-        return null;
-      }
-      User._instance = User._internal(
-          token: pre.getString('token'),
-          uid: pre.getInt('uid'),
-          username: pre.getString("userName"),
-          email: pre.getString('email'),
-          gender: pre.getInt('gender'),
-          bodyHeight: pre.getDouble("bodyHeight"),
-          bodyWeight: pre.getDouble("bodyWeight"),
-          registerDate: pre.getInt("registerDate"),
-          age: pre.getInt('age'),
-          plan: Plan.readLocal(),
-          avatar: pre.getString("avatar"),
-          needGuide: pre.getBool("needSetPlan"),
-      );
-    }
-    return User._instance;
-  }
-
-  bool get isOffline => _isOffline;
-  set isOffline(bool value) {
-    _isOffline = value;
-  }
-  double get bodyWeight => _bodyWeight;
-  String get token => _token;
-  bool get needGuide => _needGuide;
-  set token(String value) {
-    _token = value;
-  }
-
-  Plan get plan => _plan;
-
-  Image getAvatar(double width, double height) {
-    return Image.memory(
-      base64Decode(this._avatar),
-      width: width,
-      height: height,
-      fit: BoxFit.cover,
-    );
-  }
-
-  Uint8List getAvatarBin() {
-    return base64Decode(this._avatar);
-  }
-
-  ///与服务器上的用户数据同步
-  Future<int> synchronize() async {
-    Response res =
-        await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
-    if(res == null){
-      return 5;
-    }
-
-    if (res.data['code'] == 1) {
-      this._age = res.data['data']['age'];
-      this._gender = res.data['data']['gender'];
-      this._userName = res.data['data']['nickname'];
-      this._avatar = res.data['data']['avatar'];
-      this._email = res.data['data']['email'];
-      this._bodyHeight = res.data['data']['height']/100;
-      this._bodyWeight = res.data['data']['weight'];
-      this._needGuide = res.data['data']['needGuide'];
-      this._registerDate =res.data['data']['register_date'];
-      res = await Requests.getPlan({"uid": this._uid, "token": this._token});
-      if (res.data["code"] == -6) {
-        //TODO:初始化用户，获取计划失败的情况
-        this._needGuide = true;
-        print(res.data);
-      } else if (res.data['code'] == 1) {
-        this._plan = new Plan(
-            id: res.data['data']['pid'],
-            startTime: res.data['data']['begin'],
-            endTime: res.data['data']['end'],
-            planType: res.data['data']['type'],
-            goalWeight: res.data['data']['goal'],
-            dailyCaloriesLowerLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
-            dailyCaloriesUpperLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
-            dailyProteinLowerLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
-            dailyProteinUpperLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-      }
-      this.save();
-      return 4;
-    } else if (res.data['code'] == -1) {
-      return 3;
-    }
-  }
-
-  void setPlan(res) {
-    this._plan = new Plan(
-        id: res.data['data']['pid'],
-        startTime: res.data['data']['begin'],
-        endTime: res.data['data']['end'],
-        planType: res.data['data']['type'],
-        goalWeight: res.data['data']['goal'],
-        dailyCaloriesLowerLimit: res.data['data']['cl'],
-        dailyCaloriesUpperLimit: res.data['data']['ch'],
-        dailyProteinLowerLimit: res.data['data']['pl'],
-        dailyProteinUpperLimit: res.data['data']['ph']);
-    this._plan.save();
-  }
-  void saveMeal(){
-    this.meals.value.forEach((element) {
-      element.save();
-    });
-  }
+  
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.setString("token", _token);
@@ -323,48 +360,58 @@ class User {
     });
     Plan.removeLocal();
   }
-
-  Icon genderIcon() {
-    return User.genderIcons[this._gender];
-  }
-
+  
+  bool get isOffline => _isOffline;
+  double get bodyWeight => _bodyWeight;
+  String get token => _token;
+  bool get needGuide => _needGuide;
+  Plan get plan => _plan;
   int get uid => _uid;
-
+  int get age => _age;
+  int get gender => _gender;
+  String get userName => _userName;
+  String get email => _email;
+  String get avatar => _avatar;
+  double get bodyHeight => _bodyHeight;
+  
+  set isOffline(bool value) {
+    _isOffline = value;
+  }
+  set token(String value) {
+    _token = value;
+  }
   set uid(int value) {
     _uid = value;
   }
-
-  int get age => _age;
-
   set age(int value) {
     _age = value;
   }
-
-  int get gender => _gender;
-
   set gender(int value) {
     _gender = value;
   }
-
-  String get userName => _userName;
-
   set userName(String value) {
     _userName = value;
   }
-
-  String get email => _email;
-
   set email(String value) {
     _email = value;
   }
-
-  String get avatar => _avatar;
-
   set avatar(String value) {
     _avatar = value;
   }
-
-  double get bodyHeight => _bodyHeight;
+  Image getAvatar(double width, double height) {
+    return Image.memory(
+      base64Decode(this._avatar),
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+    );
+  }
+  Uint8List getAvatarBin() {
+    return base64Decode(this._avatar);
+  }
+  Icon genderIcon() {
+    return User.genderIcons[this._gender];
+  }
 }
 
 class BodyChangeLog{
