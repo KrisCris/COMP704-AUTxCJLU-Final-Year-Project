@@ -216,7 +216,7 @@ class User {
     nowDay = DateTime(nowDay.year,nowDay.month,nowDay.day);
     for(Meal m in this.meals.value){
       m.read();
-      //m.delete();
+      // m.delete();
       if(m.time == null)continue;
 
       if(m.time < nowDay.millisecondsSinceEpoch ||
