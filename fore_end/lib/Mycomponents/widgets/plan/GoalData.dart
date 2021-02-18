@@ -159,6 +159,7 @@ class GoalDataState extends State<GoalData>{
         ],
       ),
     ));
+    double remainWeight = u.getRemainWeight();
     weight.add(Container(
       width:widget.width / 3 - widget.margin*2/3,
       alignment:Alignment.centerRight,
@@ -174,7 +175,7 @@ class GoalDataState extends State<GoalData>{
                 decoration: TextDecoration.none),
           ),
           Text(
-            (u.bodyWeight - u.plan.goalWeight).toString() + "   KG",
+            remainWeight.toString() + "   KG",
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
