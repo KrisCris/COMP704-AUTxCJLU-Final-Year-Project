@@ -75,17 +75,30 @@ class DailyConsumption(db.Model):
         return dic
 
     @staticmethod
-    def getPeriodicCaloriesIntake(begin: int, end: int, uid: int):
+    def getAccumulatedCaloriesIntake(begin: int, end: int, uid: int):
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         cal = 0
         for record in records:
-            cal += record.calories
+            cal += record.calories * record.weight
         return cal
 
+    @staticmethod
+    def getListedCaloriesIntake(begin: int, end: int, uid: int):
+        records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
+            DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
+        arr = []
+        for record in records:
+            arr.append({
+                'id': record.id,
+                'time': record.time,
+                'calories': record.calories * record.weight
+            })
+        return arr
+
     def toDict(self):
-        {
-            'cid': self.id,
+        return {
+            'id': self.id,
             'uid': self.uid,
             'pid': self.pid,
             'fid': self.fid,
