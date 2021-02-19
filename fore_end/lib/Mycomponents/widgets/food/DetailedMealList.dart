@@ -63,10 +63,10 @@ class DetailedMealList extends StatelessWidget{
                   ),
                   SizedBox(height: 10),
                   Container(
-                    width: this.width-2*this.paddingHorizontal,
+                    width: this.width,
                     height: this.dragAreaHeight,
                     decoration: BoxDecoration(
-                      color: MyTheme.convert(ThemeColorName.PageBackground),
+                      color: MyTheme.convert(ThemeColorName.ComponentBackground),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: ListView.builder(
