@@ -23,7 +23,6 @@ class CaloriesBarChart extends StatefulWidget {
   String weekDayOfToday=DateFormat('EEEE').format(DateTime.now());
 
   bool isChangeColor=false;
-  bool isNeedInitial=true;
   Plan p=User.getInstance().plan;
 
   ///下面的三种属性都要在calculateDate()方法里进行初始化
@@ -55,8 +54,8 @@ class CaloriesBarChart extends StatefulWidget {
   int saturdayValue=0;
   int sundayValue=0;
 
-
-  int planLimitedCalories=3000;
+  ///每条柱状图的上限，超出也会显示
+  int planLimitedCalories=2000;
 
   ///组件的宽高
   double width=ScreenTool.partOfScreenWidth(0.95);
@@ -82,12 +81,10 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex;
 
-  ///先初始化数据,默认就是以今天作为初始化
   @override
-  // ignore: must_call_super
   @mustCallSuper
   void initState() {
-    print("initState 方法被调用了！");
+    print("initState 初始化数据方法被调用了！-------------");
     int mondayIndex;
     User u=User.getInstance();
     switch(widget.weekDayOfToday){
@@ -138,56 +135,60 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     widget.saturdayDate=widget.today.add(Duration(days: mondayIndex+5));
     widget.sundayDate=widget.today.add(Duration(days: mondayIndex+6));
 
+
+    ///获取接口的数据 初始化
+    this.getHistoryCalories();
+
     ///这里是初始化，weekDayOfToday的数据，如果今天是周四 那么周四这一天的数据应该是本地的 同时也要判断 thursdayDate 是否= today 日期要要一样才可以
     ///TODO:获取一周数据 然后给这些天去赋值，再判断是不是今天的数据 再判断一下今天的日期在不在这一周里面 如果在就修改为今天的数据
-    switch(widget.weekDayOfToday){
-      case 'Monday':
-        ///这里就获取一周数据 然后给这些天去赋值  。再判断是不是今天的数据
-
-        if(widget.mondayDate.compareTo(widget.today)==0){
-          widget.mondayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Tuesday':
-        if(widget.tuesdayDate.compareTo(widget.today)==0){
-          widget.tuesdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Wednesday':
-        if(widget.wednesdayDate.compareTo(widget.today)==0){
-          widget.wednesdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Thursday':
-        if(widget.thursdayDate.compareTo(widget.today)==0){
-          widget.thursdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Friday':
-        if(widget.fridayDate.compareTo(widget.today)==0){
-          widget.fridayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Saturday':
-        if(widget.saturdayDate.compareTo(widget.today)==0){
-          widget.saturdayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Sunday':
-        if(widget.sundayDate.compareTo(widget.today)==0){
-          widget.sundayValue=u.getTodayCaloriesIntake();
-        }
-        break;
-
-      default:
-        print('初始化柱状图时 获取每一天卡路里数据失败');
-    }
+    // switch(widget.weekDayOfToday){
+    //   case 'Monday':
+    //     ///这里就获取一周数据 然后给这些天去赋值  。再判断是不是今天的数据
+    //
+    //     if(widget.mondayDate.compareTo(widget.today)==0){
+    //       widget.mondayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Tuesday':
+    //     if(widget.tuesdayDate.compareTo(widget.today)==0){
+    //       widget.tuesdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Wednesday':
+    //     if(widget.wednesdayDate.compareTo(widget.today)==0){
+    //       widget.wednesdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Thursday':
+    //     if(widget.thursdayDate.compareTo(widget.today)==0){
+    //       widget.thursdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Friday':
+    //     if(widget.fridayDate.compareTo(widget.today)==0){
+    //       widget.fridayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Saturday':
+    //     if(widget.saturdayDate.compareTo(widget.today)==0){
+    //       widget.saturdayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   case 'Sunday':
+    //     if(widget.sundayDate.compareTo(widget.today)==0){
+    //       widget.sundayValue=u.getTodayCaloriesIntake();
+    //     }
+    //     break;
+    //
+    //   default:
+    //     print('初始化柱状图时 获取每一天卡路里数据失败');
+    // }
 
   }
 
@@ -198,18 +199,107 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     DateTime today = DateTime(nowCurrent.year,nowCurrent.month,nowCurrent.day);
     DateTime settingDay = DateTime(time.year,time.month,time.day);
     if(settingDay.compareTo(today) == 0){
-      // this.calculateDate(today);
-      ///如果是选择了今天 那么什么也不用做
+      ///如果是选择了今天 那么什么也不用做  但是要刷新今天的数据颜色
+      this.judgeWeekDay(widget.weekDayOfToday);
+      setState(() {
+
+      });
     }else{
       ///不一样再去修改
       this.calculateDate(settingDay);
     }
 
-    ///执行完calculateDate  再刷新界面
-    setState(() {
 
-    });
   }
+  ///TODO:有一个bug 就是日期的刷新，点击18再转到19  19不会变红，应该在judge那里刷新一下
+  ///TODO: Bug：刷新，有时候因为切换日期太快，导致柱状图数据还没有刷新 但是日期选择器的日期变了。
+  ///这个问题应该在judge之后进行一次刷新  这些代码复用都要再精简 拿出去
+  void judgeWeekDay(String weekDayOfSetting){
+    switch(weekDayOfSetting){
+      case 'Monday':
+        widget.isMondayDate=true;
+        widget.isTuesdayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSaturdayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=1;
+        break;
+
+      case 'Tuesday':
+        widget.isTuesdayDate=true;
+        widget.isMondayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSaturdayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=-1;
+        break;
+
+      case 'Wednesday':
+        widget.isWednesdayDate=true;
+        widget.isMondayDate=false;
+        widget.isTuesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSaturdayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=-2;
+        break;
+
+      case 'Thursday':
+        widget.isThursdayDate=true;
+        widget.isMondayDate=false;
+        widget.isTuesdayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSaturdayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=-3;
+        break;
+
+      case 'Friday':
+        widget.isFridayDate=true;
+        widget.isMondayDate=false;
+        widget.isTuesdayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isSaturdayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=-4;
+        break;
+
+      case 'Saturday':
+        widget.isSaturdayDate=true;
+        widget.isMondayDate=false;
+        widget.isTuesdayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSundayDate=false;
+        // mondayIndex=-5;
+        break;
+
+      case 'Sunday':
+        widget.isSundayDate=true;
+        widget.isMondayDate=false;
+        widget.isTuesdayDate=false;
+        widget.isWednesdayDate=false;
+        widget.isThursdayDate=false;
+        widget.isFridayDate=false;
+        widget.isSaturdayDate=false;
+        // mondayIndex=-6;
+        break;
+
+      default:
+        print('calculateDate  none');
+    }
+
+  }
+
+
   ///从服务器获取一周的卡路里记录，然后保存给widget的变量里
   void calculateDate(DateTime settingDay){
     String weekDayOfSetting=DateFormat('EEEE').format(settingDay);
@@ -311,7 +401,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     ///先从接口获取每一天的数据
     this.getHistoryCalories();
-    ///这个switch是用来获取今天的数据，因为yyz说今天最好是本地的数值，其实也不是一定要)
+    ///这个switch是用来获取今天的数据，今天最好是本地的数值，其实也不是一定要,到时候和
     // switch(weekDayOfSetting){
     //   case 'Monday':
     //     ///首先判断设定的日期的这一天是不是就是今天，如果是就拿本地的数据(其实也不是一定要)，然后如果不是就去数据库里获取数据然后初始化，赋值应该在if上面
@@ -370,8 +460,9 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   }
 
   ///根据指定的一天来获取一周卡路里的方法
-  ///DateTime assignedDate, String weekdayOfDate
   Future getHistoryCalories() async{
+
+    print("调用了一次查询卡路里接口！---------------");
     DateTime beginDate=widget.mondayDate;
     DateTime endDate=widget.sundayDate;
     int beginTime;
@@ -388,6 +479,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         "token": User.getInstance().token,
       });
       if (res.data['code'] == 1) {
+        this.clearValue();
         print("getCaloriesIntake 接口数据获取成功！----------");
         oneWeekCaloriesList=res.data['data'];
         this.assignValueBasedOnList(oneWeekCaloriesList);
@@ -396,17 +488,17 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         print("getCaloriesIntake 的接口有bug");
       }
 
+    ///执行完calculateDate  再刷新界面，处理完数据就可以刷新了。
+    setState(() {
+
+    });
+
 
   }
 
   ///处理接口返回的卡路里list
   void assignValueBasedOnList(List caloriesList ){
 
-    // Map map=Map<String,int>();
-    //每一个List里面的element都是一个map
-    // Map map={"calories":68.12,"id":3,"time":1613637513};
-    // Map map2={"calories":357.31,"id":4,"time":1613637516};
-    // caloriesList=[map, map2];
     caloriesList.forEach((element) {
       DateTime dateOfElement=DateTime.fromMillisecondsSinceEpoch(element["time"]*1000);
       DateTime formatedDate=DateTime.parse(formatDate(dateOfElement, [yyyy, '-', mm, '-', dd]));
@@ -439,6 +531,17 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     print("caloriesList 遍历完成--------");
 
+  }
+
+  ///每次获取数据之前都清空之前的数据
+  void clearValue(){
+    widget.mondayValue=0;
+    widget.tuesdayValue=0;
+    widget.wednesdayValue=0;
+    widget.thursdayValue=0;
+    widget.fridayValue=0;
+    widget.saturdayValue=0;
+    widget.sundayValue=0;
   }
 
 
@@ -485,7 +588,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
                       beginTime: DateTime(2021,1,1),
                       lastTime: DateTime.now(),
                       onChangeDate: (int newDate){
-                        widget.isNeedInitial=false;
                         this.judgeDate(time:DateTime.fromMillisecondsSinceEpoch(newDate));
                         ///这里选择好新的日期后 设置今天的日期为新的日期
                       },
