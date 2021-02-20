@@ -48,7 +48,10 @@ def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
 
 
 if __name__ == '__main__':
-    result = calc_calories(age=22, height=170, weight=70, pal=1.4, time=30, goalWeight=65, gender=True, type=1)
+    import time
+    print(time.time())
+    result = calc_calories(age=22, height=175, weight=100, pal=1.6, time=168, goalWeight=70, gender=True, type=1)
+    print(time.time())
     print(result)
     # baseline = Baseline(male, age, height, weight, physicalActivityLevel, True, False)
     # goalIntervention = Intervention()

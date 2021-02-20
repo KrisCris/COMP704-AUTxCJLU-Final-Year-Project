@@ -17,10 +17,10 @@ class PlanDetail(db.Model):
     activityLevel = db.Column(db.FLOAT, nullable=False)
     ext = db.Column(db.INTEGER, comment='extension')
 
-    def __init__(self, pid, uid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext):
+    def __init__(self, pid, uid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext=None, time=get_current_time()):
         self.pid = pid
         self.uid = uid
-        self.time = get_current_time()
+        self.time = time
         self.weight = weight
         self.caloriesL = caloriesL
         self.caloriesH = caloriesH
@@ -36,6 +36,20 @@ class PlanDetail(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def toDict(self):
+        return {
+            'pid': self.pid, 'uid': self.uid,
+            'time': self.time, 'weight': self.weight,
+            'cH': self.caloriesH, 'cL': self.caloriesL,
+            'pH': self.proteinH, 'pL': self.proteinL,
+            'pal': self.activityLevel, 'ext': self.ext
+        }
+
+    def extend(self, ext) -> 'PlanDetail':
+        self.ext = ext if self.ext is None else self.ext + ext
+        self.add()
+        return self
 
     @staticmethod
     def getWeightTrendInPlan(pid):
@@ -61,11 +75,6 @@ class PlanDetail(db.Model):
     def getLatest(pid) -> 'PlanDetail':
         return PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc()).first()
 
-    def toDict(self):
-        return {
-            'pid': self.pid, 'uid': self.uid,
-            'time': self.time, 'weight': self.weight,
-            'cH': self.caloriesH, 'cL': self.caloriesL,
-            'pH': self.proteinH, 'pL': self.proteinL,
-            'pal': self.activityLevel, 'ext': self.ext
-        }
+    @staticmethod
+    def getPastRecords(begin, end, ):
+        pass

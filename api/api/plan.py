@@ -3,7 +3,7 @@ from flasgger import swag_from
 
 from db import User, Plan, DailyConsumption, PlanDetail
 from util.user import require_login
-from util.func import reply_json, get_current_time, get_future_time, get_relative_days
+from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap
 from util.Planer.CalsPlaner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
@@ -66,7 +66,6 @@ def set_plan():
     duration = int(request.form.get('duration'))
     pal = float(request.form.get('pal'))
 
-
     # db
     user = User.getUserByID(uid)
 
@@ -79,9 +78,10 @@ def set_plan():
             return reply_json(-3)
 
     # new plan
+    time = get_current_time()
     newPlan = Plan(
         uid=uid,
-        begin=get_current_time(), end=get_future_time(duration),
+        begin=time, end=get_future_time(now=time, days=duration),
         plan_type=plan_type,
         goal_weight=goal_weight
     )
@@ -95,7 +95,8 @@ def set_plan():
         proteinL=maintCalories / 7.7 * 0.22,
         proteinH=maintCalories / 7.7 * 0.32,
         activeLevel=pal,
-        ext=None
+        ext=None,
+        time=time
     )
     newPlanDetail.add()
 
@@ -179,6 +180,8 @@ def get_plan():
 @plan.route('update_body_info', methods=['POST'])
 @require_login
 def update_body_info():
+    FLAG = False
+    FLAG_EXT = 0
     uid = request.form.get('uid')
     height = float(request.values.get('height'))
     weight = float(request.values.get('weight'))
@@ -206,51 +209,69 @@ def update_body_info():
 
         if p.type == 1:
             # 10 attempts to find a realizable diet plan, or plan would be failed.
-            failed = True
-            for i in range(11):
-                day = 7 * i
-                result = calc_calories(
-                    age=u.age,
-                    height=u.height,
-                    weight=u.weight,
-                    pal=pal,
-                    time=remain + day,
-                    goalWeight=p.goalWeight,
-                    gender=True if u.gender == 1 else False,
-                    type=p.type
-                )
-                # find the shortest ext
-                if not (result == 'unachievable' or result.get('low')):
-                    failed = False
-                    ext = day if not ext else ext + day
-                    break
-            if failed:
-                return reply_json(-2)
 
-            calories = result.get('goalCal')
-            maintCalories = result.get('maintainCal')
-
-            newPlanDetail = PlanDetail(
-                uid=uid,
-                pid=p.id,
-                weight=weight,
-                caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
-                caloriesH=round(calories * 1.05),
-                proteinL=maintCalories / 7.7 * 0.22,
-                proteinH=maintCalories / 7.7 * 0.32,
-                activeLevel=pal,
-                ext=None if not ext else ext
+            result = calc_calories(
+                age=u.age,
+                height=u.height,
+                weight=u.weight,
+                pal=pal,
+                time=remain,
+                goalWeight=p.goalWeight,
+                gender=True if u.gender == 1 else False,
+                type=p.type
             )
-            newPlanDetail.add()
+            if result == 'unachievable' or result.get('low'):
+                FLAG = True
+                day = 7
+                accumDay = 7
+                lastAvaDay = -1
+                for i in range(0, 24):
+                    result = calc_calories(
+                        age=u.age,
+                        height=u.height,
+                        weight=u.weight,
+                        pal=pal,
+                        time=remain + accumDay,
+                        goalWeight=p.goalWeight,
+                        gender=True if u.gender == 1 else False,
+                        type=p.type
+                    )
+                    # find the shortest ext
+                    if result == 'unachievable' or result.get('low'):
+                        if lastAvaDay > 0:
+                            FLAG_EXT = lastAvaDay
+                            break
+                        day *= 2
+                        accumDay += day
+                    else:
+                        lastAvaDay = accumDay
+                        accumDay = accumDay - (day / 2 if day >= 14 else day)
 
-            planData = {
-                'pid': p.id,
-                'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
-                'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
-                'begin': p.begin, 'end': p.end,
-                'ext': 0 if not newPlanDetail.ext else ext,
-                'type': p.type, 'goal': p.goalWeight,
-            }
+            if not FLAG:
+                calories = result.get('goalCal')
+                maintCalories = result.get('maintainCal')
+
+                newPlanDetail = PlanDetail(
+                    uid=uid,
+                    pid=p.id,
+                    weight=weight,
+                    caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
+                    caloriesH=round(calories * 1.05),
+                    proteinL=maintCalories / 7.7 * 0.22,
+                    proteinH=maintCalories / 7.7 * 0.32,
+                    activeLevel=pal,
+                    ext=None if not ext else ext
+                )
+                newPlanDetail.add()
+
+                planData = {
+                    'pid': p.id,
+                    'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+                    'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+                    'begin': p.begin, 'end': p.end,
+                    'ext': 0 if not newPlanDetail.ext else ext,
+                    'type': p.type, 'goal': p.goalWeight,
+                }
 
         elif p.type == 2:
             # calibrate weight using type.1, 14 days to lose weight.
@@ -326,7 +347,10 @@ def update_body_info():
             }
 
         u.add()
-        return reply_json(1, data=planData)
+        if not FLAG:
+            return reply_json(1, data=planData)
+        else:
+            return reply_json(-2, data={'hasRecommendation': True if FLAG_EXT else False, 'recommend_ext': FLAG_EXT})
     else:
         return reply_json(-6)
 
@@ -348,3 +372,52 @@ def get_plan_weight_trend():
     pid = request.form.get('pid')
     trend = PlanDetail.getWeightTrendInPlan(pid)
     return reply_json(1, data={'trend': trend})
+
+
+@plan.route('extend_update_plan', methods=['POST'])
+@require_login
+def extendAndUpdatePlan():
+    # only called by type 1 for fixing the end date
+    uid = request.form.get('uid')
+    pid = request.form.get('pid')
+    days = request.form.get('days')
+    user = User.getUserByID(uid)
+    subPlan = PlanDetail.getLatest(pid)
+    newSubPlan = PlanDetail(
+        pid=pid,
+        uid=subPlan.uid,
+        weight=user.weight,
+        caloriesL=subPlan.caloriesL,
+        caloriesH=subPlan.caloriesH,
+        proteinL=subPlan.proteinL,
+        proteinH=subPlan.proteinH,
+        activeLevel=subPlan.activityLevel,
+    )
+    newSubPlan.add()
+    return reply_json(1, data={'ext': newSubPlan.extend(ext=days).ext})
+
+
+@plan.route('extend_plan', methods=['POST'])
+@require_login
+def extendPlan():
+    pid = request.form.get('pid')
+    days = request.form.get('days')
+    return reply_json(1, data={'ext': PlanDetail.getLatest(pid).extend(ext=days).ext})
+
+
+@plan.route('should_update_weight', methods=['POST'])
+@require_login
+def shouldUpdateWeight():
+    pid = request.form.get('pid')
+    subPlan = PlanDetail.getLatest(pid)
+    if get_time_gap(subPlan.time) > 3600 * 24 * 7:
+        return reply_json(1, data={'shouldUpdate': True})
+    else:
+        return reply_json(1, data={'shouldUpdate': False})
+
+
+@plan.route('get_past_plans', methods=['POST'])
+@require_login
+def getPastDetails():
+    # too many bullshit to figure out.
+    pass
