@@ -29,7 +29,7 @@ def detect():
     res_dict = []
     for fr in res:
         #  search in db
-        f = Food.searchByName(fr[5])
+        f = Food.getByExactName(fr[5])
         f_db = {}
         if f:
             f_db = f.toDict()
@@ -53,7 +53,21 @@ def detect():
 
 @food.route('search', methods=['GET'])
 def search():
-    pass
+    name: str = request.values.get('name').strip()
+    nameArr = name.split(' ')
+    nameArr.insert(0, name)
+    resMap = {}
+    for n in nameArr:
+        if n == '':
+            continue
+        else:
+            res = Food.search(n)
+            for r in res:
+                resMap[r.name] = r.toDict()
+    return reply_json(1, data=resMap)
+
+
+
 
 
 @food.route('food_info', methods=['GET'])

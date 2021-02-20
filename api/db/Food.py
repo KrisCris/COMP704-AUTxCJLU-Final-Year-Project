@@ -35,12 +35,16 @@ class Food(db.Model):
         db.session.commit()
 
     @staticmethod
-    def searchByName(exact_name) -> 'Food':
+    def getByExactName(exact_name) -> 'Food':
         return Food.query.filter(Food.name == exact_name).first()
 
     @staticmethod
     def getById(fid) -> 'Food':
         return Food.query.filter(Food.id == fid).first()
+
+    @staticmethod
+    def search(name: str):
+        return Food.query.filter(Food.name.like('%' + name + '%')).all()
 
     def toDict(self):
         return {'id': self.id, 'name': self.name, 'category': self.category, 'img': self.image,
