@@ -61,7 +61,7 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
         children: [
           SizedBox(width: 5),
           ClipRRect(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(widget.pictureSize),
             child: img
           ),
           SizedBox(width: 5),

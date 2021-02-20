@@ -174,7 +174,7 @@ class DetailMealPageState extends State<DetailMealPage> {
         Expanded(child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List<Widget>.generate(this.meal.length, (index){
-            return DetailedMealList(meal: this.meal[index],width: 0.9,height: 140,dragAreaHeight: 80,);
+            return DetailedMealList(meal: this.meal[index],width: 0.95,height: 120,dragAreaHeight: 60,);
           }),
         ))
       );
