@@ -17,7 +17,8 @@ class PlanDetail(db.Model):
     activityLevel = db.Column(db.FLOAT, nullable=False)
     ext = db.Column(db.INTEGER, comment='extension')
 
-    def __init__(self, pid, uid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext=None, time=get_current_time()):
+    def __init__(self, pid, uid, weight, caloriesL, caloriesH, proteinL, proteinH, activeLevel, ext=None,
+                 time=get_current_time()):
         self.pid = pid
         self.uid = uid
         self.time = time
@@ -76,5 +77,7 @@ class PlanDetail(db.Model):
         return PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.desc()).first()
 
     @staticmethod
-    def getPastRecords(begin, end, ):
-        pass
+    def getPastRecords(begin, end, uid):
+        res = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
+            PlanDetail.time <= end).order_by(PlanDetail.id.asc()).all()
+        return res

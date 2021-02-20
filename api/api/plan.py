@@ -419,5 +419,63 @@ def shouldUpdateWeight():
 @plan.route('get_past_plans', methods=['POST'])
 @require_login
 def getPastDetails():
-    # too many bullshit to figure out.
-    pass
+    uid = request.form.get('uid')
+    begin = request.form.get('begin')
+    end = request.form.get('end')
+    dataMap = {}
+    for result in PlanDetail.getPastRecords(begin=begin, end=end, uid=uid):
+        if result.pid not in dataMap.keys():
+            # from db
+            p = Plan.getPlanByID(result.pid)
+            dcs = DailyConsumption.getRecordsByPID(result.pid)
+
+            # processing data
+            consumptionRecords = {
+                'accumCalories': 0,
+                'accumProtein': 0,
+                'avgCalories': 0,
+                'avgProtein': 0,
+                'calsHigh': {
+                    'days': 0,
+                    'details': [],
+                },
+                'calsLow': {
+                    'days': 0,
+                    'details': [],
+                },
+                'proteinHigh': {
+                    'days': 0,
+                    'details': [],
+                },
+                'proteinLow': {
+                    'days': 0,
+                    'details': [],
+                },
+                'detailedRecords': []
+            }
+            counter = 0
+            for dc in dcs:
+                # for avg
+                counter += 1
+                # accumulated
+                consumptionRecords['accumCalories'] += dc.calories * dc.weight if dc.calories is not None else 0
+                consumptionRecords['accumProtein'] += dc.protein * dc.weight if dc.protein is not None else 0
+                # calculate low and high
+
+                # detailed
+                detail = dc.toDict()
+                detail.pop('img')
+                consumptionRecords['detailedRecords'].append(detail)
+
+            consumptionRecords['avgCalories'] = consumptionRecords['accumCalories'] / counter
+            consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / counter
+
+            dataMap[result.pid] = {
+                'planBrief': Plan.toDict(),
+                'weeklyDetails': [],
+                'consumption': consumptionRecords
+            }
+
+        dataMap[result.pid]['weeklyDetails'].append(PlanDetail)
+
+        return reply_json(1, data=dataMap)
