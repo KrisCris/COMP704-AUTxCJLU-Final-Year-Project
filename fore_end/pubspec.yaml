@@ -22,6 +22,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_swiper : ^1.1.6
+  flutter_neumorphic: ^3.0.4+1
+  flutter_page_indicator:
+
   flutter_localizations:
     sdk: flutter
   material_floating_search_bar: ^0.2.6
