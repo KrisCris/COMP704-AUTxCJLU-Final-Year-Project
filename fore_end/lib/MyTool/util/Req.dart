@@ -230,4 +230,11 @@ class Requests {
     return _postRequest("getCaloriesIntake", data, "/food/listed_calories_intake", "getCaloriesIntake接口", null);
   }
 
+  static Future<Response> searchFood(Map data) async {
+    Dio dio = Req.instance;
+    String name = data['name'];
+    Response res = await dio.get("/food/search" + name);
+    return res;
+  }
+
 }
