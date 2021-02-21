@@ -12,6 +12,7 @@ import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PaintedColumn.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/SettingPage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
@@ -47,39 +48,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       new GlobalKey<CustomIconButtonState>()
     ];
     this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
-    if(widget.user.shouldUpdateWeight){
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        widget.user.shouldUpdateWeight = false;
-        showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              height: ScreenTool.partOfScreenHeight(1),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  DotColumn(
-                      borderRadius: 5,
-                      children: [
-                        SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                        Container(
-                          child: Text(
-                            "1 week had passed since your last body weight updating. It's time to update!",style: TextStyle(
-                              fontFamily: "Futura",
-                              fontSize: 15,
-                              color: MyTheme.convert(ThemeColorName.NormalText)
-                          ),),
-                          width: ScreenTool.partOfScreenWidth(0.6),
-                        ),
-                        SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                      ])
-                ],
-              ),
-            );
-          },
-        );
-      });
-    }
+    widget.user.solvePastDeadline(context);
+    widget.user.solveUpdateWeight(context);
     super.initState();
   }
 
