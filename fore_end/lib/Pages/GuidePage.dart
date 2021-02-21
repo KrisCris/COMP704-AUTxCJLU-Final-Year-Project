@@ -155,6 +155,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
     Response res = await Requests.finishPlan({
       "uid":u.uid,
       "token":u.token,
+      "pid":u.plan?.id ?? -1,
+      "weight":u.bodyWeight.floor()
     });
     return res;
   }
