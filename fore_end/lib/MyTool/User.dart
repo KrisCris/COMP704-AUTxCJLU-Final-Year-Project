@@ -36,6 +36,7 @@ class User {
   String _email;
   String _avatar;
   bool _needGuide;
+  bool _shouldUpdateWeight;
   bool _isOffline;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
@@ -198,6 +199,7 @@ class User {
             endTime: res.data['data']['end'],
             planType: res.data['data']['type'],
             goalWeight: res.data['data']['goal'],
+            extendDays: res.data['data']['ext'] ?? 0,
             dailyCaloriesLowerLimit:
             NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
             dailyCaloriesUpperLimit:
@@ -208,6 +210,14 @@ class User {
             NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
       }
       this.save();
+      res = await Requests.shouldUpdateWeight({
+        "uid":this._uid,
+        "token":this._token,
+        "pid":this._plan.id
+      });
+      if(res != null && res.data['code'] == 1){
+        this._shouldUpdateWeight = res.data['data']['shouldUpdateWeight'];
+      }
       return 4;
     } else if (res.data['code'] == -1) {
       return 3;
@@ -373,7 +383,12 @@ class User {
   String get email => _email;
   String get avatar => _avatar;
   double get bodyHeight => _bodyHeight;
-  
+  bool get shouldUpdateWeight{
+    return this._shouldUpdateWeight;
+  }
+  set shouldUpdateWeight(bool value){
+    this._shouldUpdateWeight = value;
+  }
   set isOffline(bool value) {
     _isOffline = value;
   }
