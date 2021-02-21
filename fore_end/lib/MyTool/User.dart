@@ -9,6 +9,9 @@ import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Meal.dart';
 import 'Plan.dart';
@@ -37,6 +40,7 @@ class User {
   String _avatar;
   bool _needGuide;
   bool _shouldUpdateWeight;
+  bool _pastDeadline;
   bool _isOffline;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
@@ -209,6 +213,7 @@ class User {
             dailyProteinUpperLimit:
             NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
       }
+      this._pastDeadline = DateTime.now().millisecondsSinceEpoch > (this._plan.endTime*1000 + 3600*24* this._plan.extendDays*1000);
       this.save();
       res = await Requests.shouldUpdateWeight({
         "uid":this._uid,
@@ -216,7 +221,7 @@ class User {
         "pid":this._plan.id
       });
       if(res != null && res.data['code'] == 1){
-        this._shouldUpdateWeight = res.data['data']['shouldUpdateWeight'];
+        this._shouldUpdateWeight = res.data['data']['shouldUpdate'];
       }
       return 4;
     } else if (res.data['code'] == -1) {
@@ -282,6 +287,57 @@ class User {
         dailyProteinUpperLimit: res.data['data']['ph']);
     this._plan.save();
   }
+  void solvePastDeadline(BuildContext context){
+    //TODO: 获取后端计算出来的时间
+    if(this._pastDeadline){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return ExtendTimeHint(extendDays: 14);
+          },
+        ).then((value){
+
+        });
+      });
+    }
+  }
+  void solveUpdateWeight(BuildContext context){
+    if(this._shouldUpdateWeight){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        this._shouldUpdateWeight = false;
+        showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: ScreenTool.partOfScreenHeight(1),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DotColumn(
+                      borderRadius: 5,
+                      children: [
+                        SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                        Container(
+                          child: Text(
+                            "1 week had passed since your last body weight updating. It's time to update!",style: TextStyle(
+                              fontFamily: "Futura",
+                              fontSize: 15,
+                              color: MyTheme.convert(ThemeColorName.NormalText)
+                          ),),
+                          width: ScreenTool.partOfScreenWidth(0.6),
+                        ),
+                        SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                      ])
+                ],
+              ),
+            );
+          },
+        );
+      });
+    }
+  }
+
   int getTodayCaloriesIntake(){
     int cal = 0;
     for(Meal m in meals.value){
@@ -383,6 +439,11 @@ class User {
   String get email => _email;
   String get avatar => _avatar;
   double get bodyHeight => _bodyHeight;
+  bool get pastDeadline => _pastDeadline;
+
+  set pastDeadline(bool value) {
+    _pastDeadline = value;
+  }
   bool get shouldUpdateWeight{
     return this._shouldUpdateWeight;
   }
