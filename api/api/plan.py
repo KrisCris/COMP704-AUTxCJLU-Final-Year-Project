@@ -126,16 +126,18 @@ def set_plan():
 def finish_plan():
     weight = request.form.get('weight')
     pid = request.form.get('pid')
-
+    uid = request.form.get('uid')
+    u = User.getUserByID(uid)
     # no more search by uid. completely eliminate unfinished plan.
     p = Plan.getPlanByID(pid)
     if p:
         if not p.completed:
             p.finish(weight=weight)
-
+            u.weight = weight
+            u.add()
             return reply_json(1)
         else:
-            return reply_json(-3, msg='Already finished')
+            return reply_json(-2, msg='Already finished')
     else:
         return reply_json(-6)
 
