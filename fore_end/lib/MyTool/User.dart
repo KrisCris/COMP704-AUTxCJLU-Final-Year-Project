@@ -299,7 +299,7 @@ class User {
             },);
           },
         ).then((value){
-
+          this.solveUpdateWeight(context);
         });
       });
     }
@@ -367,6 +367,9 @@ class User {
     if(res.data['code'] == 1){
       if(weight != null)this._bodyWeight = weight;
       if(height != null)this._bodyHeight = height/100;
+      if(res.data['data'] == null){
+
+      }
       this._plan = new Plan(
           id: res.data['data']['pid'],
           startTime: res.data['data']['begin'],
