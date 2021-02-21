@@ -3,6 +3,7 @@ from flasgger import swag_from
 
 from db import User, Plan, DailyConsumption, PlanDetail
 from util.user import require_login
+from util.plan import estimateExt
 from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap
 from util.Planer.CalsPlaner import calc_calories
 
@@ -81,7 +82,7 @@ def set_plan():
     time = get_current_time()
     newPlan = Plan(
         uid=uid,
-        begin=time, end=get_future_time(now=time, days=duration),
+        begin=time, end=get_future_time(now=time, days=duration) if duration != 0 else -1,
         plan_type=plan_type,
         goal_weight=goal_weight
     )
@@ -131,6 +132,7 @@ def finish_plan():
     if p:
         if not p.completed:
             p.finish(weight=weight)
+
             return reply_json(1)
         else:
             return reply_json(-3, msg='Already finished')
@@ -193,7 +195,7 @@ def update_body_info():
 
     u.height = height if height else u.height
     u.weight = weight if weight else u.weight
-
+    u.add()
     # update plan and return the future calories and protein intake
     p: Plan = Plan.getUnfinishedPlanByUID(uid).first()
     if p:
@@ -208,8 +210,12 @@ def update_body_info():
             remain = remain + ext
 
         if p.type == 1:
-            # 10 attempts to find a realizable diet plan, or plan would be failed.
+            # check if already reached the target weight
+            if weight <= p.goalWeight:
+                p.finish(weight=weight)
+                return reply_json(1)
 
+            # 24 attempts to find a realizable diet plan, or plan would be failed.
             result = calc_calories(
                 age=u.age,
                 height=u.height,
@@ -222,30 +228,7 @@ def update_body_info():
             )
             if result == 'unachievable' or result.get('low'):
                 FLAG = True
-                day = 7
-                accumDay = 7
-                lastAvaDay = -1
-                for i in range(0, 24):
-                    result = calc_calories(
-                        age=u.age,
-                        height=u.height,
-                        weight=u.weight,
-                        pal=pal,
-                        time=remain + accumDay,
-                        goalWeight=p.goalWeight,
-                        gender=True if u.gender == 1 else False,
-                        type=p.type
-                    )
-                    # find the shortest ext
-                    if result == 'unachievable' or result.get('low'):
-                        if lastAvaDay > 0:
-                            FLAG_EXT = lastAvaDay
-                            break
-                        day *= 2
-                        accumDay += day
-                    else:
-                        lastAvaDay = accumDay
-                        accumDay = accumDay - (day / 2 if day >= 14 else day)
+                FLAG_EXT = estimateExt(u=u, goalWeight=p.goalWeight, pal=pal, remain=remain)
 
             if not FLAG:
                 calories = result.get('goalCal')
@@ -346,7 +329,6 @@ def update_body_info():
                 'type': p.type, 'goal': p.goalWeight,
             }
 
-        u.add()
         if not FLAG:
             return reply_json(1, data=planData)
         else:
@@ -479,3 +461,19 @@ def getPastDetails():
         dataMap[result.pid]['weeklyDetails'].append(PlanDetail)
 
         return reply_json(1, data=dataMap)
+
+
+@plan.record('estimate_extension', methods=['POST'])
+@require_login
+def estimateExtension():
+    uid = request.form.get('uid')
+    pid = request.form.get('pid')
+
+    u = User.getUserByID(uid)
+    p = Plan.getPlanByID(pid)
+    sp = PlanDetail.getLatest(p.id)
+    res = estimateExt(u=u, pal=sp.activityLevel, remain=0, goalWeight=p.goalWeight)
+    if res:
+        return reply_json(1, data={'ext': res})
+    else:
+        return reply_json(-2)
