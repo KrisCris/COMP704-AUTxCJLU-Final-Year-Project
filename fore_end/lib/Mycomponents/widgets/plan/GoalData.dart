@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
+import 'package:fore_end/Pages/main/PlanDetailPage.dart';
 
 class GoalData extends StatefulWidget {
   double width;
@@ -35,27 +38,40 @@ class GoalData extends StatefulWidget {
 class GoalDataState extends State<GoalData>{
   @override
   Widget build(BuildContext context) {
-    return DotColumn(
-        width: widget.width,
-        height: widget.height,
-        borderRadius: 6,
-        mainAxisAlignment: MainAxisAlignment.start,
-        backgroundColor: widget.backgroundColor,
-        children: getGoal(User.getInstance(),context));
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HistoryPlanPage();
+        }));
+      },
+      child: DotColumn(
+          width: widget.width,
+          height: widget.height,
+          borderRadius: 6,
+          mainAxisAlignment: MainAxisAlignment.start,
+          backgroundColor: widget.backgroundColor,
+          children: getGoal(User.getInstance(),context)),
+    );
   }
 
   List<Widget> getGoal(User u,BuildContext context) {
     List<Widget> goals = [
       SizedBox(height: widget.margin),
-      TitleText(
-        text: CustomLocalizations.of(context).planKeep + u.plan.getKeepDays().toString() + CustomLocalizations.of(context).days,
-        maxWidth: widget.width - 2 * widget.margin,
-        maxHeight: 30,
-        underLineDistance: 1,
-        underLineLength: widget.width * 2 / 3,
-        fontColor: widget.textColor,
-        dividerColor: widget.textColor,
-        fontSize: 17,
+      Row(
+        children: [
+          TitleText(
+            text: CustomLocalizations.of(context).planKeep + u.plan.getKeepDays().toString() + CustomLocalizations.of(context).days,
+            maxWidth: widget.width - 2 * widget.margin,
+            maxHeight: 30,
+            underLineDistance: 1,
+            underLineLength: widget.width * 2 / 3,
+            fontColor: widget.textColor,
+            dividerColor: widget.textColor,
+            fontSize: 17,
+          ),
+          Icon(FontAwesomeIcons.calendar,size: 25,color: Colors.white,),
+
+        ],
       ),
       SizedBox(height: widget.margin),
     ];
