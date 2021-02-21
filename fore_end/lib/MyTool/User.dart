@@ -36,6 +36,7 @@ class User {
   String _email;
   String _avatar;
   bool _needGuide;
+  bool _shouldUpdateWeight;
   bool _isOffline;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
@@ -209,6 +210,14 @@ class User {
             NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
       }
       this.save();
+      res = await Requests.shouldUpdateWeight({
+        "uid":this._uid,
+        "token":this._token,
+        "pid":this._plan.id
+      });
+      if(res != null && res.data['code'] == 1){
+        this._shouldUpdateWeight = res.data['data']['shouldUpdateWeight'];
+      }
       return 4;
     } else if (res.data['code'] == -1) {
       return 3;
