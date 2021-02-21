@@ -1,4 +1,3 @@
-from db import Plan
 from db.db import db
 from util.func import get_current_time
 
@@ -63,12 +62,13 @@ class PlanDetail(db.Model):
 
     @staticmethod
     def getWeightTrendInPeriod(uid, begin, end):
-        plans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
+        subPlans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
             PlanDetail.time <= end).order_by(PlanDetail.time.asc())
         weight_arr = []
-        for p in plans:
-            pType = Plan.getPlanByID(p.pid).type
-            data = {'time': p.time, 'weight': p.weight, 'type': pType}
+        from db.Plan import Plan
+        for subPlan in subPlans:
+            pType = Plan.getPlanByID(subPlan.pid).type
+            data = {'time': subPlan.time, 'weight': subPlan.weight, 'type': pType}
             weight_arr.append(data)
         return weight_arr
 
