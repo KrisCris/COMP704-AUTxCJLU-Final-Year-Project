@@ -9,9 +9,11 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtendTimeHint extends StatelessWidget {
   int extendDays;
+  int finishPlanWeight;
   Function onAcceptDelay;
-  Function onFinishPlan;
-  ExtendTimeHint({Key key, this.extendDays,this.onAcceptDelay,this.onFinishPlan}) : super(key: key);
+  Function beforeFinishPlan;
+  Function afterFinishPlan;
+  ExtendTimeHint({Key key, this.extendDays,this.onAcceptDelay,this.beforeFinishPlan,this.afterFinishPlan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +78,22 @@ class ExtendTimeHint extends StatelessWidget {
   }
   //TODO:结束计划的接口
   void finishPlan() async {
-    print("unimplemented yet");
-    if(onFinishPlan != null){
-      onFinishPlan();
+    User u = User.getInstance();
+    if(beforeFinishPlan != null){
+      this.finishPlanWeight = await beforeFinishPlan();
+    }else{
+      this.finishPlanWeight = u.bodyWeight.floor();
+    }
+    Response res = await Requests.finishPlan({
+      "uid": u.uid,
+      "token": u.token,
+      "pid": u.plan?.id ?? -1,
+      "weight": this.finishPlanWeight
+    });
+    if(res != null && res.data['code'] == 1){
+      if(this.afterFinishPlan != null){
+        this.afterFinishPlan();
+      }
     }
   }
 }
