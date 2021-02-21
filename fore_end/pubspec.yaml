@@ -23,9 +23,8 @@ environment:
 
 dependencies:
   flutter_swiper : ^1.1.6
-  flutter_neumorphic: ^3.0.4+1
   flutter_page_indicator:
-
+#  getwidget: ^1.2.4
   flutter_localizations:
     sdk: flutter
   material_floating_search_bar: ^0.2.6
