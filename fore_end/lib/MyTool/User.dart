@@ -287,14 +287,16 @@ class User {
         dailyProteinUpperLimit: res.data['data']['ph']);
     this._plan.save();
   }
-  void solvePastDeadline(BuildContext context){
+  void solvePastDeadline(BuildContext context, int days){
     //TODO: 获取后端计算出来的时间
     if(this._pastDeadline){
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return ExtendTimeHint(extendDays: 14);
+            return ExtendTimeHint(extendDays: days,onAcceptDelay: (){
+              Navigator.of(context).pop();
+            },);
           },
         ).then((value){
 
@@ -352,7 +354,7 @@ class User {
     }
     return pro;
   }
-  Future<bool> updateBodyData({double weight, double height}) async {
+  Future<int> updateBodyData({double weight, double height,BuildContext context}) async {
     Response res = await Requests.updateBody({
       "uid":_uid,
       "token":_token,
@@ -360,7 +362,7 @@ class User {
       "weight":weight,
     });
     if(res == null){
-      return false;
+      return -1;
     }
     if(res.data['code'] == 1){
       if(weight != null)this._bodyWeight = weight;
@@ -379,9 +381,10 @@ class User {
           NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
           dailyProteinUpperLimit:
           NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-      return true;
-    }else{
-      return false;
+      return 1;
+    }else if(res.data['code'] == -2){
+      this.solvePastDeadline(context,res.data['data']['recommend_ext']);
+      return -2;
     }
   }
   double getRemainWeight(){
