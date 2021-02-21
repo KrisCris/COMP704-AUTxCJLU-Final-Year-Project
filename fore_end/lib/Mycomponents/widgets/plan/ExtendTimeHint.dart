@@ -76,7 +76,6 @@ class ExtendTimeHint extends StatelessWidget {
   }
   //TODO:结束计划的接口
   void finishPlan() async {
-    print("unimplemented yet");
     if(onFinishPlan != null){
       onFinishPlan();
     }

@@ -12,6 +12,8 @@ import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
+import 'package:fore_end/Pages/GuidePage.dart';
+import 'package:fore_end/Pages/account/UpdateBody.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Meal.dart';
 import 'Plan.dart';
@@ -311,17 +313,49 @@ class User {
             return ExtendTimeHint(
               extendDays: this._calculatedDelayTime,
               onAcceptDelay: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               },
               onFinishPlan: (){
-                Requests.finishPlan({
-
-                });
+                Navigator.of(context).pop(false);
               },
             );
           },
         ).then((value) {
-          this.solveUpdateWeight(context);
+          if(value == false){
+            showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                UpdateBody updateBody = new UpdateBody(
+                    text: "Before change your plan, please record your current weight",
+                    needHeight: false);
+                updateBody.onUpdate = () async{
+                  User u = User.getInstance();
+                  Response res = await Requests.finishPlan({
+                    "uid": u.uid,
+                    "token":u.token,
+                    "pid":u._plan?.id ?? -1,
+                    "weight": updateBody.weight.widgetValue.value.floor()
+                  });
+                  if(res != null && res.data['code'] == 1){
+                    Navigator.pop(context,true);
+                  }else{
+
+                  }
+                };
+                return updateBody;
+              },
+            ).then((val) {
+              if(val == true){
+                Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                  return GuidePage(
+                    firstTime: false,
+                  );
+                }));
+              }
+            });
+          }else{
+            this.solveUpdateWeight(context);
+          }
         });
       });
     }
