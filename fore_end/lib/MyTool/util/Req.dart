@@ -184,6 +184,12 @@ class Requests {
     Response res = await dio.post("/user/modify_basic_info", data: dt);
     return res;
   }
+  static Future<Response> shouldUpdateWeight(data) async {
+    return _postRequest("shouldUpdateWeight", data, "/plan/should_update_weight", "should_update_weight接口", null);
+  }
+  static Future<Response> delayPlan(data) async {
+    return _postRequest("delayPlan", data, "/plan/extend_plan", "extend_plan接口", null);
+  }
   static Future<Response> getWeightTrend(data) async {
     return _postRequest("get_weight_trend", data, "/plan/get_weight_trend", "get_weight_trend接口", null);
   }

@@ -6,9 +6,13 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/PaintedColumn.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/SettingPage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
@@ -43,7 +47,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>()
     ];
-    this.ctl = TabController(length: 3, vsync: this,initialIndex: 1);
+    this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
+    widget.user.solvePastDeadline(context,14);
+    widget.user.solveUpdateWeight(context);
     super.initState();
   }
 
@@ -68,23 +74,13 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       ),
                     ),
                     TabBarView(
-                      //physics: new NeverScrollableScrollPhysics(),
+                        //physics: new NeverScrollableScrollPhysics(),
                         controller: ctl,
                         children: [
                           new TakePhotoPage(key: this.photoKey),
                           new DietPage(),
                           new PlanDetailPage(),
                         ]),
-                    // Column(
-                    //   children: [
-                    //     SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-                    //     SizedBox(height: 60),
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [this.setNavigator()],
-                    //     ),
-                    //   ],
-                    // )
                   ],
                 ));
           },
@@ -206,8 +202,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       buttonSize: 30,
       iconSize: 10,
       borderRadius: 10,
-      onClick: () {
-      },
+      onClick: () {},
       navigatorCallback: () {
         User.getInstance().refreshMeal();
       },
@@ -221,8 +216,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       borderRadius: 10,
       iconSize: 15,
       fontSize: 12,
-      onClick: () {
-      },
+      onClick: () {},
       navigatorCallback: () {
         this.photoKey.currentState.getCamera();
         // this.takePhotoPart.getCamera();
@@ -237,8 +231,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         buttonSize: 30,
         iconSize: 10,
         fontSize: 12,
-        onClick: () {
-        });
-    return [takePhotoButton, myDietButton,addPlanButton];
+        onClick: () {});
+    return [takePhotoButton, myDietButton, addPlanButton];
   }
 }

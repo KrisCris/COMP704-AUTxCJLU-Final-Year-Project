@@ -98,11 +98,12 @@ class UpdateBody extends StatelessWidget {
                   radius: 5,
                   tapFunc: () async{
                     User u = User.getInstance();
-                    bool success = await u.updateBodyData(
+                    int success = await u.updateBodyData(
                         weight: weight.widgetValue.value.floorToDouble(),
-                        height: height.widgetValue.value*100
+                        height: height.widgetValue.value*100,
+                      context: context
                     );
-                    if(success){
+                    if(success == 1){
                       Navigator.pop(context,true);
                     }else{
                       Fluttertoast.showToast(msg: "update failed");
