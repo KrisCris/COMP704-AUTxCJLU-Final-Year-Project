@@ -568,7 +568,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     this.sundayValue=0;
   }
 
-
   @override
   Widget build(BuildContext context) {
       return  Container(

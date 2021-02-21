@@ -96,6 +96,11 @@ class DailyConsumption(db.Model):
             })
         return arr
 
+    @staticmethod
+    def getRecordsByPID(pid: int):
+        records = DailyConsumption.query.filter(DailyConsumption.pid == pid).all()
+        return records
+
     def toDict(self):
         return {
             'id': self.id,
