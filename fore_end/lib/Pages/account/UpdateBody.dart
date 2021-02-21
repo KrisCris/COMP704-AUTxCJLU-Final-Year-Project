@@ -18,8 +18,9 @@ class UpdateBody extends StatelessWidget {
   ValueBar weight;
   bool needHeight;
   bool needWeight;
+  bool needCancel;
 
-  UpdateBody({this.onUpdate,this.text,this.needHeight = true,this.needWeight = true});
+  UpdateBody({this.onUpdate,this.text,this.needHeight = true,this.needWeight = true,this.needCancel = true});
 
   @override
   Widget build(BuildContext context) {
@@ -94,15 +95,16 @@ class UpdateBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(width: 20),
+                this.needCancel == true ?
                 CustomButton(
                   text: CustomLocalizations.of(context).cancel,
                   firstColorName: ThemeColorName.Error,
                   width: 80,
                   radius: 5,
                   tapFunc: (){
-                    Navigator.pop(context,false);
+                    Navigator.pop(context);
                   },
-                ) ,
+                ) : SizedBox(width: 0),
                 Expanded(child: SizedBox()),
                 CustomButton(
                   text: CustomLocalizations.of(context).confirm,

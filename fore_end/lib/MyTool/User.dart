@@ -342,6 +342,7 @@ class User {
             beforeFinishPlan: ()async{
               int currentWeight = await showDialog<int>(
                 context: context,
+                barrierDismissible: false,
                 builder: (BuildContext context) {
                   UpdateBody updateBody = new UpdateBody(
                       text:
