@@ -14,6 +14,7 @@ class Plan {
   int id;
   int planType;
   int startTime;
+  int extendDays;
   int endTime;
   int goalWeight;
   double dailyCaloriesLowerLimit;
@@ -27,6 +28,7 @@ class Plan {
       @required this.startTime,
       @required this.endTime,
         @required double goalWeight,
+        @required this.extendDays,
       @required this.dailyCaloriesUpperLimit,
       @required this.dailyProteinUpperLimit,
       @required this.dailyProteinLowerLimit,
@@ -56,6 +58,7 @@ class Plan {
     pre.setInt("planId", id);
     pre.setInt("startTime", startTime);
     pre.setInt("endTime", endTime);
+    pre.setInt("extendDays",extendDays);
     pre.setDouble("goalWeight", goalWeight.floorToDouble());
     pre.setDouble("dailyCaloriesLowerLimit", dailyCaloriesLowerLimit);
     pre.setDouble("dailyCaloriesUpperLimit", dailyCaloriesUpperLimit);
@@ -70,6 +73,7 @@ class Plan {
     pre.remove("startTime");
     pre.remove("endTime");
     pre.remove("goalWeight");
+    pre.remove("extendDays");
     pre.remove("dailyCaloriesLowerLimit");
     pre.remove("dailyCaloriesUpperLimit");
     pre.remove("dailyProteinLowerLimit");
@@ -87,6 +91,7 @@ class Plan {
         startTime: pre.getInt("startTime"),
         endTime: pre.getInt("endTime"),
         goalWeight: pre.getDouble("goalWeight"),
+        extendDays: pre.getInt("extendDays"),
         dailyCaloriesUpperLimit: pre.getDouble("dailyCaloriesLowerLimit"),
         dailyProteinUpperLimit: pre.getDouble("dailyCaloriesUpperLimit"),
         dailyProteinLowerLimit: pre.getDouble("dailyProteinLowerLimit"),
