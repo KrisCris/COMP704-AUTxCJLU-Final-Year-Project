@@ -1,4 +1,3 @@
-from db import PlanDetail
 from db.db import db
 from util.func import get_current_time
 
@@ -24,6 +23,24 @@ class Plan(db.Model):
         self.type = plan_type
         self.goalWeight = goal_weight
 
+    @staticmethod
+    def getUnfinishedPlanByUID(uid):
+        return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True).order_by(Plan.id.desc())
+
+    @staticmethod
+    def getPlanByID(pid) -> 'Plan':
+        return Plan.query.filter(Plan.id == pid).first()
+
+    # @staticmethod
+    # def getMaintainPlan(uid, age, height, weight, pal, gender):
+    #     plan = Plan(
+    #         uid=uid,
+    #         begin=get_current_time(), end=-1,
+    #         plan_type=2,
+    #         goal_weight=weight
+    #     )
+    #     return plan
+
     def add(self):
         db.session.add(self)
         db.session.commit()
@@ -38,23 +55,6 @@ class Plan(db.Model):
         self.completed = True
         self.add()
 
-    def tryComplete(self, weight, time=get_current_time()):
-        result = {'result': False, 'expired': False}
-        # shed weight
-        if self.type == 1:
-            subPlan = PlanDetail.getLatest(self.id)
-            end = self.end if subPlan.ext is None else subPlan.ext * 3600 * 24 + self.end
-            if weight <= self.goalWeight:
-                result['result'] = True
-                self.finish(weight)
-            elif end <= time:
-                result['expired'] = True
-        # build muscle
-        elif self.type == 2:
-            if self.end <= time:
-                result['expired'] = True
-        return result
-
     def toDict(self):
         return {
             'pid': self.id, 'uid': self.uid,
@@ -63,23 +63,4 @@ class Plan(db.Model):
             'achievedWeight': self.achievedWeight, 'realEnd': self.realEnd,
             'hasCompleted': self.completed
         }
-
-    @staticmethod
-    def getUnfinishedPlanByUID(uid):
-        return Plan.query.filter(Plan.uid == uid).filter(Plan.completed != True).order_by(Plan.id.desc())
-
-    @staticmethod
-    def getPlanByID(pid) -> 'Plan':
-        return Plan.query.filter(Plan.id == pid).first()
-
-    @staticmethod
-    def getPlanByPeriod(begin: int, end: int, uid: int):
-        if begin and end:
-            res = Plan.query.filter(Plan.uid == uid).filter(Plan.begin >= begin)
-        elif begin:
-            pass
-        elif end:
-            pass
-        else:
-            pass
 
