@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
@@ -87,13 +88,20 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               children: [
                 Container(
                   height:ScreenTool.partOfScreenHeight(0.08),
-                  margin: EdgeInsets.only(left: 25,right: 15,),
+                  margin: EdgeInsets.only(left: 10,right: 10,),
                   padding:EdgeInsets.only(top: 5,bottom: 5,),
                   // decoration: BoxDecoration(
                   //   border: Border.all(color: Colors.white),
                   // ),
                   child: Row(
                     children: [
+                      GestureDetector(
+                        child: Icon(FontAwesomeIcons.arrowLeft,size: 25,color: MyTheme.convert(ThemeColorName.NormalIcon),),
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                      SizedBox(width: 10,),
                       Text("From",style: TextStyle(fontSize: 20,color: Colors.white),),
                       DateSelect(
                         width: 0.3,
@@ -126,7 +134,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
 
                       ),
                     ],
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
 
                   ),
                 ),
