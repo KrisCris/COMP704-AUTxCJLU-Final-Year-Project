@@ -190,6 +190,9 @@ class Requests {
   static Future<Response> delayPlan(data) async {
     return _postRequest("delayPlan", data, "/plan/extend_plan", "extend_plan接口", null);
   }
+  static Future<Response> calculateDelayTime(data) async {
+    return _postRequest("calculateDelayTime", data, "/plan/estimate_extension", "estimate_extension接口", null);
+  }
   static Future<Response> getWeightTrend(data) async {
     return _postRequest("get_weight_trend", data, "/plan/get_weight_trend", "get_weight_trend接口", null);
   }
