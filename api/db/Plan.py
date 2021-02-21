@@ -31,6 +31,10 @@ class Plan(db.Model):
     def getPlanByID(pid) -> 'Plan':
         return Plan.query.filter(Plan.id == pid).first()
 
+    @staticmethod
+    def getLatest(uid) -> 'Plan':
+        return Plan.query.filter(Plan.uid == uid).order_by(Plan.id.desc()).first()
+
     # @staticmethod
     # def getMaintainPlan(uid, age, height, weight, pal, gender):
     #     plan = Plan(
