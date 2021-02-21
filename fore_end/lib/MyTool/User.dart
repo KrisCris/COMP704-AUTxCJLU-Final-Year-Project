@@ -217,9 +217,11 @@ class User {
             dailyProteinUpperLimit:
                 NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
       }
+      //计算是否延期
       this._pastDeadline = DateTime.now().millisecondsSinceEpoch >
           (this._plan.endTime * 1000 +
               3600 * 24 * this._plan.extendDays * 1000);
+      //计算可能延期多久
       if (this.pastDeadline) {
         res = await Requests.calculateDelayTime(
             {"uid": this._uid, "token": this._token, "pid": this._plan.id});
@@ -303,62 +305,90 @@ class User {
     this._plan.save();
   }
 
+  void _askExtendTime(
+      {BuildContext context,
+      Function onAcceptDelayClose,
+        Function beforeFinishPlan,
+      Function onFinishPlanClose}) {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return ExtendTimeHint(
+          extendDays: this._calculatedDelayTime,
+          onAcceptDelay: () {
+            Navigator.of(context).pop(true);
+          },
+          beforeFinishPlan: beforeFinishPlan,
+          afterFinishPlan: (){
+            Navigator.of(context).pop(false);
+          },
+        );
+      },
+    ).then((value) {
+      if (value == true) {
+        onAcceptDelayClose();
+      } else {
+        onFinishPlanClose();
+      }
+    });
+  }
+
   void solvePastDeadline(BuildContext context) {
-    //TODO: 获取后端计算出来的时间
     if (this._pastDeadline) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return ExtendTimeHint(
-              extendDays: this._calculatedDelayTime,
-              onAcceptDelay: () {
-                Navigator.of(context).pop(true);
-              },
-              onFinishPlan: (){
-                Navigator.of(context).pop(false);
-              },
-            );
-          },
-        ).then((value) {
-          if(value == false){
-            showDialog<bool>(
-              context: context,
-              builder: (BuildContext context) {
-                UpdateBody updateBody = new UpdateBody(
-                    text: "Before change your plan, please record your current weight",
-                    needHeight: false);
-                updateBody.onUpdate = () async{
-                  User u = User.getInstance();
-                  Response res = await Requests.finishPlan({
-                    "uid": u.uid,
-                    "token":u.token,
-                    "pid":u._plan?.id ?? -1,
-                    "weight": updateBody.weight.widgetValue.value.floor()
-                  });
-                  if(res != null && res.data['code'] == 1){
-                    Navigator.pop(context,true);
-                  }else{
-
-                  }
-                };
-                return updateBody;
-              },
-            ).then((val) {
-              if(val == true){
-                Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-                  return GuidePage(
-                    firstTime: false,
-                  );
-                }));
-              }
+        this._askExtendTime(
+            context: context,
+            //超时延期，选择finishPlan之前，要先更新体重
+            beforeFinishPlan: ()async{
+              int currentWeight = await showDialog<int>(
+                context: context,
+                builder: (BuildContext context) {
+                  UpdateBody updateBody = new UpdateBody(
+                      text:
+                      "Before change your plan, please record your current weight",
+                      needHeight: false);
+                  updateBody.onUpdate = (){
+                    //更新完成，将新的体重返回
+                    Navigator.of(context).pop(updateBody.weight.widgetValue.value);
+                  };
+                  return updateBody;
+                },
+              );
+              //将体重告诉ExtendTimeHint
+              return currentWeight;
+            },
+            onAcceptDelayClose: () {
+              this._pastDeadline = false;
+              this.solveUpdateWeight(context);
+            },
+            onFinishPlanClose: () {
+              this._pastDeadline = false;
+              Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                return GuidePage(
+                  firstTime: false,
+                );
+              }));
             });
-          }else{
-            this.solveUpdateWeight(context);
-          }
-        });
       });
     }
+  }
+
+  void solveNeedExtendByBodyData(BuildContext context) {
+    this._askExtendTime(
+      context: context,
+      //由于是更新体重导致的延期，不需要再结束计划前告知体重了
+      beforeFinishPlan: null,
+      onAcceptDelayClose: (){
+        Navigator.of(context).pop();
+      },
+      onFinishPlanClose: (){
+        Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+          return GuidePage(
+            firstTime: false,
+          );
+        }));
+      }
+    );
   }
 
   void solveUpdateWeight(BuildContext context) {
@@ -444,7 +474,6 @@ class User {
       return 1;
     } else if (res.data['code'] == -2) {
       this._calculatedDelayTime = res.data['data']['recommend_ext'];
-      this.solvePastDeadline(context);
       return -2;
     }
   }
