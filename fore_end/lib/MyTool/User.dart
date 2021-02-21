@@ -198,6 +198,7 @@ class User {
             endTime: res.data['data']['end'],
             planType: res.data['data']['type'],
             goalWeight: res.data['data']['goal'],
+            extendDays: res.data['data']['ext'] ?? 0,
             dailyCaloriesLowerLimit:
             NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
             dailyCaloriesUpperLimit:
