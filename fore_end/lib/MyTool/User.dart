@@ -383,7 +383,12 @@ class User {
   String get email => _email;
   String get avatar => _avatar;
   double get bodyHeight => _bodyHeight;
-  
+  bool get shouldUpdateWeight{
+    return this._shouldUpdateWeight;
+  }
+  set shouldUpdateWeight(bool value){
+    this._shouldUpdateWeight = value;
+  }
   set isOffline(bool value) {
     _isOffline = value;
   }
