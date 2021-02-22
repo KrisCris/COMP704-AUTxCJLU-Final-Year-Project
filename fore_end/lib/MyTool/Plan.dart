@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -288,7 +289,7 @@ class ShedWeightPlan extends Plan {
       context: context,
       builder: (BuildContext context) {
         UpdateBody updt = UpdateBody(
-          text: "Before change your plan, please record your current weight",
+          text: CustomLocalizations.of(context).updateBodyTitle,
           needHeight: false,
           needCancel: true,
         );
