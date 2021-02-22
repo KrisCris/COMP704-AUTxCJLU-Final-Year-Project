@@ -10,7 +10,9 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtendTimeHint extends StatelessWidget {
   int extendDays;
-  ExtendTimeHint({Key key, this.extendDays}) : super(key: key);
+  Function onClickAccept;
+  Function onClickFinish;
+  ExtendTimeHint({Key key, this.extendDays,this.onClickAccept,this.onClickFinish}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,12 @@ class ExtendTimeHint extends StatelessWidget {
                 text: "Accept Delay",
                 width: 0.6,
                 radius: 5,
-                tapFunc: (){Navigator.of(context).pop(true);},
+                tapFunc: () async {
+                  if(this.onClickAccept != null){
+                    await this.onClickAccept();
+                  }
+                  Navigator.of(context).pop(true);
+                  },
               ),
               SizedBox(height: 5),
               CustomButton(
@@ -49,7 +56,12 @@ class ExtendTimeHint extends StatelessWidget {
                 width: 0.6,
                 radius: 5,
                 firstColorName: ThemeColorName.Error,
-                tapFunc: (){Navigator.of(context).pop(false);}
+                tapFunc: ()async{
+                  if(this.onClickFinish != null){
+                    await this.onClickFinish();
+                  }
+                  Navigator.of(context).pop(false);
+                }
               ),
               SizedBox(height: 10),
               SizedBox(height: 10),

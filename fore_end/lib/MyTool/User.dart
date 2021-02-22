@@ -367,39 +367,6 @@ class User {
     return pro;
   }
 
-  Future<int> updateBodyData(
-      {double weight, double height, BuildContext context}) async {
-    Response res = await Requests.updateBody({
-      "uid": _uid,
-      "token": _token,
-      "height": height,
-      "weight": weight,
-    });
-    if (res == null) {
-      return -1;
-    }
-    if (res.data['code'] == 1) {
-      if (weight != null) this._bodyWeight = weight;
-      if (height != null) this._bodyHeight = height / 100;
-      if (res.data['data'] == null) {}
-      this._plan = Plan.generatePlan(
-        res.data['data']['type'],
-        res.data['data']['pid'],
-        res.data['data']['begin'],
-        res.data['data']['end'],
-        res.data['data']['goal'],
-        res.data['data']['ext'] ?? 0,
-        NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
-        NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
-        NumUtil.getNumByValueDouble(res.data['data']['ph'], 1),
-        NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),);
-      return 1;
-    } else if (res.data['code'] == -2) {
-      this._calculatedDelayTime = res.data['data']['recommend_ext'];
-      return -2;
-    }
-  }
-
   double getRemainWeight() {
     double result = this._bodyWeight - this._plan.goalWeight;
     if (result < 0) result = 0;
@@ -455,11 +422,6 @@ class User {
   String get email => _email;
   String get avatar => _avatar;
   double get bodyHeight => _bodyHeight;
-  bool get pastDeadline => _pastDeadline;
-
-  set pastDeadline(bool value) {
-    _pastDeadline = value;
-  }
 
   bool get shouldUpdateWeight {
     return this._shouldUpdateWeight;
@@ -468,7 +430,9 @@ class User {
   set shouldUpdateWeight(bool value) {
     this._shouldUpdateWeight = value;
   }
-
+  set bodyWeight(double weight){
+    this.bodyWeight = weight;
+  }
   set isOffline(bool value) {
     _isOffline = value;
   }

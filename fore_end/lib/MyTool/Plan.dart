@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
@@ -30,7 +34,7 @@ abstract class Plan {
   double dailyProteinLowerLimit;
   double dailyProteinUpperLimit;
   bool pastDeadline;
-  int delayDays;
+  int calculatedDelayDays;
 
   Plan._internal(
     int planType,
@@ -160,7 +164,7 @@ abstract class Plan {
   static Plan readLocal() {
     SharedPreferences pre = LocalDataManager.pre;
     String json = pre.getString("plan");
-    return Plan.fromJson(jsonDecode(json));
+    return json == null ? null : Plan.fromJson(jsonDecode(json));
   }
 }
 
@@ -209,8 +213,8 @@ class ShedWeightPlan extends Plan {
     Response res = await Requests.calculateDelayTime(
         {"uid": u.uid, "token": u.token, "pid": this.id});
     if (res != null && res.data['code'] == 1) {
-      this.delayDays = res.data['data']['ext'];
-      return this.delayDays;
+      this.calculatedDelayDays = res.data['data']['ext'];
+      return this.calculatedDelayDays;
     } else {
       return null;
     }
@@ -223,18 +227,21 @@ class ShedWeightPlan extends Plan {
       context: context,
       builder: (BuildContext context) {
         return ExtendTimeHint(
-          extendDays: this.delayDays,
+          extendDays: this.calculatedDelayDays,
+          onClickAccept: ()async{
+            Response res = await Requests.delayPlan(
+                {"uid": u.uid, "token": u.token, "pid": this.id});
+            if (res != null && res.data['code'] == 1) {
+              this.extendDays = res.data['data']['ext'];
+              this.save();
+            }
+          },
         );
       },
     ).then((value) async {
       //accept delay
       if (value == true) {
-        Response res = await Requests.delayPlan(
-            {"uid": u.uid, "token": u.token, "pid": this.id});
-        if (res != null && res.data['code'] == 1) {
-          this.extendDays = res.data['data']['ext'];
-          this.save();
-        }
+
       }
       //finish plan
       else {
@@ -242,22 +249,25 @@ class ShedWeightPlan extends Plan {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return UpdateBody(
+            UpdateBody updt = UpdateBody(
               text:
                   "Before change your plan, please record your current weight",
               needHeight: false,
               needCancel: false,
-              onUpdate: () async {
-                Response res = await Requests.finishPlan({
-                  "uid": u.uid,
-                  "token": u.token,
-                  "pid": this.id,
-                });
-                if (res != null && res.data['code'] == 1) {
-                  Navigator.of(context).pop(true);
-                }
-              },
             );
+            updt.onUpdate = () async {
+              Response res = await Requests.finishPlan({
+                "uid": u.uid,
+                "token": u.token,
+                "pid": this.id,
+                "weight":updt.weight.widgetValue.value
+              });
+              if (res != null && res.data['code'] == 1) {
+                u.bodyWeight = updt.weight.widgetValue.value;
+                Navigator.of(context).pop(true);
+              }
+            };
+            return updt;
           },
         );
         //create new plan after finish plan
@@ -272,9 +282,143 @@ class ShedWeightPlan extends Plan {
       }
     });
   }
+
   @override
   void solveUpdateWeight(BuildContext context) {
-    
+    User u = User.getInstance();
+    showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        UpdateBody updt = UpdateBody(
+          text: "Before change your plan, please record your current weight",
+          needHeight: false,
+          needCancel: true,
+        );
+        updt.onUpdate = () async {
+          Response res = await Requests.updateBody({
+            "uid": u.uid,
+            "token": u.token,
+            "weight": updt.weight.widgetValue.value,
+          });
+          if (res == null) return;
+
+          if (res.data['code'] == 1) {
+            u.bodyWeight = updt.weight.widgetValue.value;
+            //计划完成
+            if (res.data['data'] == null) {
+              Navigator.of(context).pop(-1);
+            }
+            //正常更新体重
+            else {
+              this.dailyCaloriesUpperLimit =
+                  NumUtil.getNumByValueDouble(res.data['data']['ch'], 1);
+              this.dailyCaloriesLowerLimit =
+                  NumUtil.getNumByValueDouble(res.data['data']['cl'], 1);
+              this.dailyProteinUpperLimit =
+                  NumUtil.getNumByValueDouble(res.data['data']['ph'], 1);
+              this.dailyProteinLowerLimit =
+                  NumUtil.getNumByValueDouble(res.data['data']['pl'], 1);
+              this.save();
+              Navigator.of(context).pop(0);
+            }
+          }
+          //可能延期
+          else if (res.data['code'] == -2) {
+            u.bodyWeight = updt.weight.widgetValue.value;
+            this.calculatedDelayDays = res.data['data']['recommend_ext'];
+            Navigator.of(context).pop(-2);
+          }
+        };
+        return updt;
+      },
+    ).then((value) async {
+      //计划完成
+      if (value == -1) {
+        showDialog<int>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+          return Container(
+            height: ScreenTool.partOfScreenHeight(1),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DotColumn(borderRadius: 5, children: [
+                  SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                  Container(
+                    child: Text(
+                      "Congratulations! Your Plan was completed!Create new plan in few seconds...",
+                      style: TextStyle(
+                          fontFamily: "Futura",
+                          fontSize: 15,
+                          color: MyTheme.convert(ThemeColorName.NormalText)),
+                    ),
+                    width: ScreenTool.partOfScreenWidth(0.6),
+                  ),
+                  SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                ])
+              ],
+            ),
+          );
+        }).then((value){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) {
+                return GuidePage(firstTime: false);
+              }), (route) {
+            return route == null;
+          });
+        });
+        await Future.delayed(Duration(seconds: 3));
+        Navigator.of(context).pop();
+      }
+      //正常更新体重
+      else if(value == 0){
+
+      }
+      //计划延期
+      else if(value == -2){
+        showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return ExtendTimeHint(
+              extendDays: this.calculatedDelayDays,
+              onClickAccept: ()async{
+                Response res = await Requests.delayPlan(
+                    {"uid": u.uid, "token": u.token, "pid": this.id});
+                if (res != null && res.data['code'] == 1) {
+                  this.extendDays = res.data['data']['ext'];
+                  this.save();
+                }
+                Navigator.of(context).pop(true);
+              },
+              onClickFinish: ()async{
+                Response res = await Requests.finishPlan({
+                  "uid": u.uid,
+                  "token": u.token,
+                  "pid": this.id,
+                  "weight":u.bodyWeight,
+                });
+                Navigator.of(context).pop(false);
+              },
+            );
+          },
+        ).then((value) async{
+          //accept delay
+          if(value == true){
+
+          }
+          //finish plan
+          else{
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) {
+                  return GuidePage(firstTime: false);
+                }), (route) {
+              return route == null;
+            });
+          }
+        });
+      }
+    });
   }
 }
 
