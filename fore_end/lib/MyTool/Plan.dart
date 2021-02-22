@@ -478,26 +478,26 @@ class BuildMusclePlan extends Plan {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return ExtendTimeHint(
-          title: "Congratulations! Your plan has completed! You can choose one of the following choise.",
+          title:
+              "Congratulations! Your plan has completed! You can choose one of the following choise.",
           delayText: "Continue Plan",
           finishText: "Change Plan",
         );
       },
     );
     //continue plan
-    if(b == true){
+    if (b == true) {
       int day = await showDialog<int>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context){
-          return ChooseExtendTime();
-        }
-      );
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return ChooseExtendTime();
+          });
       this.extendDays = day;
       this.save();
     }
     //finish plan
-    else{
+    else {
       bool success = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
@@ -526,8 +526,8 @@ class BuildMusclePlan extends Plan {
       if (success) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-              return GuidePage(firstTime: false);
-            }), (route) {
+          return GuidePage(firstTime: false);
+        }), (route) {
           return route == null;
         });
       }
@@ -536,7 +536,31 @@ class BuildMusclePlan extends Plan {
 
   @override
   void solveUpdateWeight(BuildContext context) {
-    
+    User u = User.getInstance();
+    showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          UpdateBody updt = UpdateBody(
+            text: CustomLocalizations.of(context).updateBodyTitle,
+            needHeight: false,
+            needCancel: true,
+          );
+          updt.onUpdate = () async {
+            Response res = await Requests.updateBody({
+              "uid": u.uid,
+              "token": u.token,
+              "weight": updt.weight.widgetValue.value,
+            });
+            if(res == null)return;
+            //正常更新体重
+            if(res.data['code'] == 1){
+              Navigator.of(context).pop(1);
+            }else if(res.data['code'] == -2){
+              //TODO:处理失衡的问题
+            }
+          };
+          return updt;
+        });
   }
 }
 
