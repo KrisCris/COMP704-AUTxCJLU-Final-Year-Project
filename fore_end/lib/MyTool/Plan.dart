@@ -284,7 +284,6 @@ class ShedWeightPlan extends Plan {
   @override
   void solveUpdateWeight(BuildContext context) {
     User u = User.getInstance();
-    if (!u.shouldUpdateWeight) return;
     showDialog<int>(
       context: context,
       builder: (BuildContext context) {
