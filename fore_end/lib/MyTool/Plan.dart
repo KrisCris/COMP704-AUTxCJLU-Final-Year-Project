@@ -221,14 +221,15 @@ class ShedWeightPlan extends Plan {
   }
 
   @override
-  void solvePastDeadLine(BuildContext context) {
+  void solvePastDeadLine(BuildContext context) async {
+    if (!this.pastDeadline) return;
     User u = User.getInstance();
-    showDialog<bool>(
+    bool b = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return ExtendTimeHint(
           extendDays: this.calculatedDelayDays,
-          onClickAccept: ()async{
+          onClickAccept: () async {
             Response res = await Requests.delayPlan(
                 {"uid": u.uid, "token": u.token, "pid": this.id});
             if (res != null && res.data['code'] == 1) {
@@ -238,54 +239,52 @@ class ShedWeightPlan extends Plan {
           },
         );
       },
-    ).then((value) async {
-      //accept delay
-      if (value == true) {
-
+    );
+    //accept delay
+    if (b == true) {
+    }
+    //finish plan
+    else {
+      bool success = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          UpdateBody updt = UpdateBody(
+            text: "Before change your plan, please record your current weight",
+            needHeight: false,
+            needCancel: false,
+          );
+          updt.onUpdate = () async {
+            Response res = await Requests.finishPlan({
+              "uid": u.uid,
+              "token": u.token,
+              "pid": this.id,
+              "weight": updt.weight.widgetValue.value
+            });
+            if (res != null && res.data['code'] == 1) {
+              u.bodyWeight = updt.weight.widgetValue.value;
+              Navigator.of(context).pop(true);
+            }
+          };
+          return updt;
+        },
+      );
+      //create new plan after finish plan
+      if (success) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return GuidePage(firstTime: false);
+        }), (route) {
+          return route == null;
+        });
       }
-      //finish plan
-      else {
-        bool success = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            UpdateBody updt = UpdateBody(
-              text:
-                  "Before change your plan, please record your current weight",
-              needHeight: false,
-              needCancel: false,
-            );
-            updt.onUpdate = () async {
-              Response res = await Requests.finishPlan({
-                "uid": u.uid,
-                "token": u.token,
-                "pid": this.id,
-                "weight":updt.weight.widgetValue.value
-              });
-              if (res != null && res.data['code'] == 1) {
-                u.bodyWeight = updt.weight.widgetValue.value;
-                Navigator.of(context).pop(true);
-              }
-            };
-            return updt;
-          },
-        );
-        //create new plan after finish plan
-        if (success) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-            return GuidePage(firstTime: false);
-          }), (route) {
-            return route == null;
-          });
-        }
-      }
-    });
+    }
   }
 
   @override
   void solveUpdateWeight(BuildContext context) {
     User u = User.getInstance();
+    if (!u.shouldUpdateWeight) return;
     showDialog<int>(
       context: context,
       builder: (BuildContext context) {
@@ -338,33 +337,34 @@ class ShedWeightPlan extends Plan {
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
-          return Container(
-            height: ScreenTool.partOfScreenHeight(1),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DotColumn(borderRadius: 5, children: [
-                  SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                  Container(
-                    child: Text(
-                      "Congratulations! Your Plan was completed!Create new plan in few seconds...",
-                      style: TextStyle(
-                          fontFamily: "Futura",
-                          fontSize: 15,
-                          color: MyTheme.convert(ThemeColorName.NormalText)),
-                    ),
-                    width: ScreenTool.partOfScreenWidth(0.6),
-                  ),
-                  SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                ])
-              ],
-            ),
-          );
-        }).then((value){
+              return Container(
+                height: ScreenTool.partOfScreenHeight(1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DotColumn(borderRadius: 5, children: [
+                      SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                      Container(
+                        child: Text(
+                          "Congratulations! Your Plan was completed!Create new plan in few seconds...",
+                          style: TextStyle(
+                              fontFamily: "Futura",
+                              fontSize: 15,
+                              color:
+                                  MyTheme.convert(ThemeColorName.NormalText)),
+                        ),
+                        width: ScreenTool.partOfScreenWidth(0.6),
+                      ),
+                      SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                    ])
+                  ],
+                ),
+              );
+            }).then((value) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) {
-                return GuidePage(firstTime: false);
-              }), (route) {
+            return GuidePage(firstTime: false);
+          }), (route) {
             return route == null;
           });
         });
@@ -372,17 +372,16 @@ class ShedWeightPlan extends Plan {
         Navigator.of(context).pop();
       }
       //正常更新体重
-      else if(value == 0){
-
+      else if (value == 0) {
       }
       //计划延期
-      else if(value == -2){
+      else if (value == -2) {
         showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
             return ExtendTimeHint(
               extendDays: this.calculatedDelayDays,
-              onClickAccept: ()async{
+              onClickAccept: () async {
                 Response res = await Requests.delayPlan(
                     {"uid": u.uid, "token": u.token, "pid": this.id});
                 if (res != null && res.data['code'] == 1) {
@@ -391,28 +390,27 @@ class ShedWeightPlan extends Plan {
                 }
                 Navigator.of(context).pop(true);
               },
-              onClickFinish: ()async{
+              onClickFinish: () async {
                 Response res = await Requests.finishPlan({
                   "uid": u.uid,
                   "token": u.token,
                   "pid": this.id,
-                  "weight":u.bodyWeight,
+                  "weight": u.bodyWeight,
                 });
                 Navigator.of(context).pop(false);
               },
             );
           },
-        ).then((value) async{
+        ).then((value) async {
           //accept delay
-          if(value == true){
-
+          if (value == true) {
           }
           //finish plan
-          else{
+          else {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) {
-                  return GuidePage(firstTime: false);
-                }), (route) {
+              return GuidePage(firstTime: false);
+            }), (route) {
               return route == null;
             });
           }

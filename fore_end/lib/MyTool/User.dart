@@ -43,6 +43,7 @@ class User {
   bool _needGuide;
   bool _shouldUpdateWeight;
   bool _isOffline;
+  bool stillHaveDialog;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
@@ -76,7 +77,7 @@ class User {
     this._registerDate = registerDate;
     this._needGuide = needGuide;
     this._isOffline = offline;
-
+    this.stillHaveDialog = false;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -204,7 +205,7 @@ class User {
           res.data['data']['pid'],
           res.data['data']['begin'],
           res.data['data']['end'],
-          res.data['data']['goal'],
+          (res.data['data']['goal'] as double).floor(),
           res.data['data']['ext'] ?? 0,
           NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
           NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
@@ -284,7 +285,7 @@ class User {
       res.data['data']['pid'],
       res.data['data']['begin'],
       res.data['data']['end'],
-      res.data['data']['goal'],
+      (res.data['data']['goal'] as double).floor(),
       res.data['data']['ext'] ?? 0,
       NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
       NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
@@ -294,26 +295,12 @@ class User {
     this._plan.save();
   }
 
-  void solvePastDeadline(BuildContext context) {
-    this._plan.solvePastDeadLine(context);
+  void solvePastDeadline(BuildContext context) async {
+    await this._plan.solvePastDeadLine(context);
   }
 
   void solveUpdateWeight(BuildContext context) {
     this._plan.solveUpdateWeight(context);
-    // this._askExtendTime(
-    //     context: context,
-    //     //由于是更新体重导致的延期，不需要再结束计划前告知体重了
-    //     beforeFinishPlan: null,
-    //     onAcceptDelayClose: () {
-    //       Navigator.of(context).pop();
-    //     },
-    //     onFinishPlanClose: () {
-    //       Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-    //         return GuidePage(
-    //           firstTime: false,
-    //         );
-    //       }));
-    //     });
   }
 
   void remindUpdateWeight(BuildContext context) {
