@@ -49,7 +49,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     ];
     this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
     widget.user.solvePastDeadline(context);
-    widget.user.solveUpdateWeight(context);
+    widget.user.remindUpdateWeight(context);
     super.initState();
   }
 

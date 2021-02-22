@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -9,11 +10,7 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtendTimeHint extends StatelessWidget {
   int extendDays;
-  int finishPlanWeight;
-  Function onAcceptDelay;
-  Function beforeFinishPlan;
-  Function afterFinishPlan;
-  ExtendTimeHint({Key key, this.extendDays,this.onAcceptDelay,this.beforeFinishPlan,this.afterFinishPlan}) : super(key: key);
+  ExtendTimeHint({Key key, this.extendDays}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +41,7 @@ class ExtendTimeHint extends StatelessWidget {
                 text: "Accept Delay",
                 width: 0.6,
                 radius: 5,
-                tapFunc: this.acceptDelay,
+                tapFunc: (){Navigator.of(context).pop(true);},
               ),
               SizedBox(height: 5),
               CustomButton(
@@ -52,7 +49,7 @@ class ExtendTimeHint extends StatelessWidget {
                 width: 0.6,
                 radius: 5,
                 firstColorName: ThemeColorName.Error,
-                tapFunc: this.finishPlan,
+                tapFunc: (){Navigator.of(context).pop(false);}
               ),
               SizedBox(height: 10),
               SizedBox(height: 10),
@@ -61,39 +58,5 @@ class ExtendTimeHint extends StatelessWidget {
         ),
       ),
     );
-  }
-  void acceptDelay() async {
-    User u = User.getInstance();
-    Response res =await Requests.delayPlan({
-      "uid":u.uid,
-      "token":u.token,
-      "pid":u.plan.id
-    });
-    if(res != null && res.data['code'] == 1){
-      u.plan.extendDays = res.data['data']['ext'];
-    }
-    if(onAcceptDelay!= null){
-      onAcceptDelay();
-    }
-  }
-  //TODO:结束计划的接口
-  void finishPlan() async {
-    User u = User.getInstance();
-    if(beforeFinishPlan != null){
-      this.finishPlanWeight = await beforeFinishPlan();
-    }else{
-      this.finishPlanWeight = u.bodyWeight.floor();
-    }
-    Response res = await Requests.finishPlan({
-      "uid": u.uid,
-      "token": u.token,
-      "pid": u.plan?.id ?? -1,
-      "weight": this.finishPlanWeight
-    });
-    if(res != null && res.data['code'] == 1){
-      if(this.afterFinishPlan != null){
-        this.afterFinishPlan();
-      }
-    }
   }
 }

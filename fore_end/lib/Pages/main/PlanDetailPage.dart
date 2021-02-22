@@ -148,7 +148,7 @@ class PlanDetailPage extends StatelessWidget {
                     },
                   ).then((val) {
                     if(val == false){
-                      u.solveNeedExtendByBodyData(context);
+                      u.solveUpdateWeight(context);
                     }
                     goalKey.currentState.setState(() {});
                     chartKey.currentState.repaintData();
