@@ -1,27 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
-class ExtendTimeHint extends StatelessWidget {
-  Function onClickAccept;
-  Function onClickFinish;
-  String title;
-  String delayText;
-  String finishText;
-  ExtendTimeHint({Key key,this.onClickAccept,this.onClickFinish,String title,String delayText,String finishText}) : super(key: key){
-   this.title = title;
-   this.delayText = delayText ?? "Accept Delay";
-   this.finishText = finishText ?? "Finish Plan";
-  }
-
+class ChooseExtendTime extends StatelessWidget{
+  GlobalKey<ValueBarState> barKey = GlobalKey<ValueBarState>();
   @override
   Widget build(BuildContext context) {
+    ValueBar bar = ValueBar<int>(
+      key: barKey,
+        adjustVal: 1,
+        minVal: 7,
+        maxVal: 365,
+        initVal: 7,
+        unit: CustomLocalizations.of(context).days,
+        valuePosition: ValuePosition.center,
+    );
     return Container(
       height: ScreenTool.partOfScreenHeight(1),
       child: Align(
@@ -37,37 +37,31 @@ class ExtendTimeHint extends StatelessWidget {
             children: [
               SizedBox(height: 10),
               TitleText(
-                text: this.title,
+                text: "How many days do you want to do?",
                 maxHeight: 55,
                 maxWidth: 0.6,
                 underLineLength: 0.6,
               ),
               SizedBox(height: 20),
+              bar,
               CustomButton(
-                text: this.delayText,
+                text: "Confirm",
                 width: 0.6,
                 radius: 5,
                 tapFunc: () async {
-                  if(this.onClickAccept != null){
-                    await this.onClickAccept();
+                  User u = User.getInstance();
+                  int days = (barKey.currentWidget as ValueBar).widgetValue.value;
+                  Response res = await Requests.delayPlan({
+                    "uid":u.uid,
+                    "token":u.token,
+                    "pid":u.plan.id,
+                    "days":days
+                  });
+                  if(res != null && res.data['code'] == 1){
+                    Navigator.of(context).pop(days);
                   }
-                  Navigator.of(context).pop(true);
-                  },
+                },
               ),
-              SizedBox(height: 5),
-              CustomButton(
-                text: this.finishText,
-                width: 0.6,
-                radius: 5,
-                firstColorName: ThemeColorName.Error,
-                tapFunc: ()async{
-                  if(this.onClickFinish != null){
-                    await this.onClickFinish();
-                  }
-                  Navigator.of(context).pop(false);
-                }
-              ),
-              SizedBox(height: 10),
               SizedBox(height: 10),
             ],
           ),
@@ -75,4 +69,5 @@ class ExtendTimeHint extends StatelessWidget {
       ),
     );
   }
+
 }

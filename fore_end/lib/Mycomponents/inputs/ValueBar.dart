@@ -48,6 +48,7 @@ class ValueBar<T extends num> extends StatefulWidget
 
   ValueBar(
       {double width = 100,
+        Key key,
       this.barThickness = 10,
       this.borderThickness = 2,
       this.onChange,
@@ -79,7 +80,7 @@ class ValueBar<T extends num> extends StatefulWidget
       : assert(initVal != null),
         assert(minVal != null),
         assert(maxVal != null),
-        assert(adjustVal != null) {
+        assert(adjustVal != null),super(key:key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.widgetValue = ValueNotifier(initVal);
     this.minVal = ValueNotifier(minVal);
