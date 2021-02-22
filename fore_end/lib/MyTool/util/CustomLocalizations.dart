@@ -382,8 +382,8 @@ class CustomLocalizations {
       "zh":"更新体重"
     },
     "updateBodyTitle":{
-      "en":"Update Your Weight and Height",
-      "zh":"更新您的体重和身高"
+      "en":"Update Your Weight",
+      "zh":"更新您的体重"
     },
     "remainWeight":{
       "en":"Remain Weight",
@@ -437,10 +437,6 @@ class CustomLocalizations {
       "en":"Language",
       "zh":"语言"
     },
-    // "":{
-    //   "en":"",
-    //   "zh":""
-    // },
     "accountPageTitle":{
       "en":"ACCOUNT INFO",
       "zh":"账户信息页"
