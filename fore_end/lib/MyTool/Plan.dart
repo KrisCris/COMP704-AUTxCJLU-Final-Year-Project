@@ -382,7 +382,7 @@ class ShedWeightPlan extends Plan {
             return ExtendTimeHint(
               extendDays: this.calculatedDelayDays,
               onClickAccept: () async {
-                Response res = await Requests.delayPlan(
+                Response res = await Requests.delayAndUpdatePlan(
                     {"uid": u.uid, "token": u.token, "pid": this.id});
                 if (res != null && res.data['code'] == 1) {
                   this.extendDays = res.data['data']['ext'];
