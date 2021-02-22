@@ -57,9 +57,7 @@ class GoalDataState extends State<GoalData>{
   List<Widget> getGoal(User u,BuildContext context) {
     List<Widget> goals = [
       SizedBox(height: widget.margin),
-      Row(
-        children: [
-          TitleText(
+      TitleText(
             text: CustomLocalizations.of(context).planKeep + u.plan.getKeepDays().toString() + CustomLocalizations.of(context).days,
             maxWidth: widget.width - 2 * widget.margin,
             maxHeight: 30,
@@ -68,10 +66,6 @@ class GoalDataState extends State<GoalData>{
             fontColor: widget.textColor,
             dividerColor: widget.textColor,
             fontSize: 17,
-          ),
-          Icon(FontAwesomeIcons.calendar,size: 25,color: Colors.white,),
-
-        ],
       ),
       SizedBox(height: widget.margin),
     ];
