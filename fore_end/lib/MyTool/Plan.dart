@@ -12,6 +12,7 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ChooseExtendTime.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
@@ -229,7 +230,9 @@ class ShedWeightPlan extends Plan {
       context: context,
       builder: (BuildContext context) {
         return ExtendTimeHint(
-          extendDays: this.calculatedDelayDays,
+          title: "Your Plan will be delayed for " +
+              this.calculatedDelayDays.toString() +
+              " days, do you accept it or finish the plan?",
           onClickAccept: () async {
             Response res = await Requests.delayPlan(
                 {"uid": u.uid, "token": u.token, "pid": this.id});
@@ -380,7 +383,9 @@ class ShedWeightPlan extends Plan {
           context: context,
           builder: (BuildContext context) {
             return ExtendTimeHint(
-              extendDays: this.calculatedDelayDays,
+              title: "Your Plan will be delayed for " +
+                  this.calculatedDelayDays.toString() +
+                  " days, do you accept it or finish the plan?",
               onClickAccept: () async {
                 Response res = await Requests.delayAndUpdatePlan(
                     {"uid": u.uid, "token": u.token, "pid": this.id});
@@ -461,18 +466,77 @@ class BuildMusclePlan extends Plan {
 
   @override
   Future<int> calculateDelayDays() {
-    // TODO: implement calculateDelayDays
-    throw UnimplementedError();
+    return Future.value(-1);
   }
 
   @override
-  void solvePastDeadLine(BuildContext context) {
-    // TODO: implement solvePastDeadLine
+  void solvePastDeadLine(BuildContext context) async {
+    if (!this.pastDeadline) return;
+    User u = User.getInstance();
+    bool b = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ExtendTimeHint(
+          title: "Congratulations! Your plan has completed! You can choose one of the following choise.",
+          delayText: "Continue Plan",
+          finishText: "Change Plan",
+        );
+      },
+    );
+    //continue plan
+    if(b == true){
+      int day = await showDialog<int>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return ChooseExtendTime();
+        }
+      );
+      this.extendDays = day;
+      this.save();
+    }
+    //finish plan
+    else{
+      bool success = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          UpdateBody updt = UpdateBody(
+            text: "Before change your plan, please record your current weight",
+            needHeight: false,
+            needCancel: false,
+          );
+          updt.onUpdate = () async {
+            Response res = await Requests.finishPlan({
+              "uid": u.uid,
+              "token": u.token,
+              "pid": this.id,
+              "weight": updt.weight.widgetValue.value
+            });
+            if (res != null && res.data['code'] == 1) {
+              u.bodyWeight = updt.weight.widgetValue.value;
+              Navigator.of(context).pop(true);
+            }
+          };
+          return updt;
+        },
+      );
+      //create new plan after finish plan
+      if (success) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+              return GuidePage(firstTime: false);
+            }), (route) {
+          return route == null;
+        });
+      }
+    }
   }
 
   @override
   void solveUpdateWeight(BuildContext context) {
-    // TODO: implement solveUpdateWeight
+    
   }
 }
 
