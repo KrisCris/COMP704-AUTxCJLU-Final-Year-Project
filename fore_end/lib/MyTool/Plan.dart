@@ -601,17 +601,40 @@ class MaintainPlan extends Plan {
 
   @override
   Future<int> calculateDelayDays() {
-    // TODO: implement calculateDelayDays
-    throw UnimplementedError();
+    return Future.value(-1);
   }
 
   @override
-  void solvePastDeadLine(BuildContext context) {
-    // TODO: implement solvePastDeadLine
+  void solvePastDeadLine(BuildContext context) async {
+    return;
   }
 
   @override
   void solveUpdateWeight(BuildContext context) {
-    // TODO: implement solveUpdateWeight
+    User u = User.getInstance();
+    showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          UpdateBody updt = UpdateBody(
+            text: CustomLocalizations.of(context).updateBodyTitle,
+            needHeight: false,
+            needCancel: true,
+          );
+          updt.onUpdate = () async {
+            Response res = await Requests.updateBody({
+              "uid": u.uid,
+              "token": u.token,
+              "weight": updt.weight.widgetValue.value,
+            });
+            if(res == null)return;
+            //正常更新体重
+            if(res.data['code'] == 1){
+              Navigator.of(context).pop(1);
+            }else if(res.data['code'] == -2){
+              //TODO:处理失衡的问题
+            }
+          };
+          return updt;
+        });
   }
 }
