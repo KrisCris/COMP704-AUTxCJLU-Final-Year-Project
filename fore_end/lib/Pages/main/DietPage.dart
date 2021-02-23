@@ -15,6 +15,8 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+import '../FoodDetailsPage.dart';
+
 class DietPage extends StatefulWidget {
 
 
@@ -28,6 +30,9 @@ class DietPage extends StatefulWidget {
 class DietPageState extends State<DietPage> {
   int listIndex=0; //默认没有数据
   Map resultList=new Map();  //搜索返回的结果List，里面的每一个都是一个食物
+
+  List<Map> foodDetailInfoList=new List<Map>();
+
 
   List<String> foodNameList=new List<String>();  //
   List<int> foodCaloriesList=new List<int>();  //
@@ -52,10 +57,12 @@ class DietPageState extends State<DietPage> {
     resultList.forEach((key, value) {
       foodNames=key;
       Map info=value;
+
       foodCalorie=info["calories"];
       print("返回结果赋值成功！");
       foodNameList.add(foodNames);
       foodCaloriesList.add(foodCalorie.toInt());
+      foodDetailInfoList.add({key:value});
 
     });
 
@@ -150,13 +157,22 @@ class DietPageState extends State<DietPage> {
                 cal=foodCaloriesList[index];
               }
 
-              return Card(
-                child: ListTile(
-                  leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
-                  title: Text(name),
-                  subtitle: Text(cal.toString()+'  Kcal'),
-                  trailing: Icon(Icons.more_vert),
+              return GestureDetector(
+                child: Card(
+                  child: ListTile(
+                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
+                    title: Text(name),
+                    subtitle: Text(cal.toString()+'  Kcal'),
+                    trailing: Icon(Icons.more_vert),
+                  ),
                 ),
+                onTap: ( ){
+                  print("click card!");
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
+
+
+                },
               );
             },
             itemCount: foodNameList.length,
