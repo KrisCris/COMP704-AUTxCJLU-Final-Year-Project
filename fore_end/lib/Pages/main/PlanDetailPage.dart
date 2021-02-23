@@ -125,34 +125,7 @@ class PlanDetailPage extends StatelessWidget {
                 fontsize: 15,
                 tapUpFunc: () {
                   User u = User.getInstance();
-                  showDialog<bool>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      UpdateBody updateBody = new UpdateBody();
-                      updateBody.onUpdate = () async{
-                        int success = await u.updateBodyData(
-                            weight: updateBody.weight.widgetValue.value.floorToDouble(),
-                            height: updateBody.height.widgetValue.value*100,
-                            context: context
-                        );
-                        if(success == 1){
-                          Navigator.pop(context,true);
-                        }else if (success == -2){
-                          Navigator.pop(context,false);
-                        }else{
-                          Fluttertoast.showToast(msg: "update failed");
-                        }
-                      };
-                      return updateBody;
-                    },
-                  ).then((val) {
-                    if(val == false){
-                      u.solveNeedExtendByBodyData(context);
-                    }
-                    goalKey.currentState.setState(() {});
-                    chartKey.currentState.repaintData();
-                  });
+                  u.plan.solveUpdateWeight(context);
                 },
               ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
