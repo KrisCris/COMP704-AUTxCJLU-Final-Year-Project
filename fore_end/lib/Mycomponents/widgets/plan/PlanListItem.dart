@@ -10,6 +10,7 @@ class PlanTextItem extends StatefulWidget {
   int rightValue; //右侧显示数值
   double textSize;
   bool isShowRightValue;
+  bool isShowRightText;
 
 
   PlanTextItem({
@@ -19,6 +20,7 @@ class PlanTextItem extends StatefulWidget {
     this.rightValue,
     this.textSize=15,
     this.isShowRightValue=true,
+    this.isShowRightText=true,
   }): super(key: key);
 
   @override
@@ -55,7 +57,7 @@ class _PlanTextItemState extends State<PlanTextItem> {
           Container(
             child: Text(
               " "+widget.leftText,
-              style: TextStyle(fontSize: widget.textSize,color: Colors.white ),  //color: MyTheme.convert(ThemeColorName.NormalText)
+              style: TextStyle(fontSize: widget.textSize,color: Colors.white,fontFamily: 'Futura' ),  //color: MyTheme.convert(ThemeColorName.NormalText)
             ),
           ),
           Expanded(child: SizedBox()),
@@ -63,7 +65,7 @@ class _PlanTextItemState extends State<PlanTextItem> {
           Container(
             child: Text(
               widget.isShowRightValue?this.toThousands(widget.rightValue)+" "+widget.rightText: widget.rightText,
-              style: TextStyle(fontSize: widget.textSize, color: Colors.white),
+              style: TextStyle(fontSize: widget.textSize, color: Colors.white,fontFamily: 'Futura'),
             ),
           ),
         ],

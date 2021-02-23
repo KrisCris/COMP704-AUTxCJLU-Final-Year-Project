@@ -88,7 +88,7 @@ class _FoodDetailsState extends State<FoodDetails> {
         children: [
           Container(
             height: ScreenTool.partOfScreenHeight(0.1),
-            child: Text("Food's Detail Page",style: TextStyle(color: Colors.white,fontSize: 30),),
+            child: Text(CustomLocalizations.of(context).foodDetailPageTitle,style: TextStyle(color: Colors.white,fontSize: 30,fontFamily: 'Futura'),),
 
           ),
           Container(
@@ -115,12 +115,12 @@ class _FoodDetailsState extends State<FoodDetails> {
                     maxHeight: 30,
                   ),
                   SizedBox(height: 5,),
-                  PlanTextItem(leftText: "卡路里", rightText: "千卡", rightValue: widget.calories.toInt(),),
-                  PlanTextItem(leftText: "蛋白质", rightText: "克", rightValue: widget.protein.toInt(),),
-                  PlanTextItem(leftText: "脂肪", rightText: "克", rightValue: widget.fat.toInt(),),
-                  PlanTextItem(leftText: "纤维素", rightText: "克", rightValue: widget.cellulose.toInt(),),
-                  PlanTextItem(leftText: "碳水化合物", rightText: "克", rightValue: widget.carbohydrate.toInt(),),
-                  PlanTextItem(leftText: "胆固醇", rightText: "克", rightValue: widget.cholesterol.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).calories, rightText: "Kcal/100g", rightValue: widget.calories.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).protein, rightText: "g/100g", rightValue: widget.protein.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).fat, rightText: "g/100g", rightValue: widget.fat.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).cellulose, rightText: "g/100g", rightValue: widget.cellulose.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).carbohydrate, rightText: "g/100g", rightValue: widget.carbohydrate.toInt(),),
+                  PlanTextItem(leftText: CustomLocalizations.of(context).cholesterol, rightText: "g/100g", rightValue: widget.cholesterol.toInt(),),
                   SizedBox(height: 25,),
                   CustomButton(
                     disabled: false,

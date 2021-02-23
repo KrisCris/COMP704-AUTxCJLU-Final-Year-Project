@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
@@ -80,7 +81,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                   },
                 ),
                 SizedBox(width: 10,),
-                Text("From",style: TextStyle(fontSize: 20,color: Colors.white),),
+                Text(CustomLocalizations.of(context).from,style: TextStyle(fontSize: 20,color: Colors.white,fontFamily: 'Futura'),),
                 DateSelect(
                   width: 0.3,
                   height: 40,
@@ -95,7 +96,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                     });
                   },
                 ),
-                Text("To",style: TextStyle(fontSize: 20,color: Colors.white),),
+                Text(CustomLocalizations.of(context).to,style: TextStyle(fontSize: 20,color: Colors.white,fontFamily: 'Futura')),
                 DateSelect(
                   width: 0.3,
                   height: 40,
@@ -148,7 +149,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                     Divider(color: Colors.white,thickness: 2,),
                     Container(
                         margin: EdgeInsets.only(left: 15,right: 15,bottom: 5,top: 6),
-                        padding: EdgeInsets.only(left: 15,right: 15,),
+                        padding: EdgeInsets.only(left: 15,right: 15,top: 15),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white),
                         ),
@@ -157,50 +158,50 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                         child: Column(
                           children: [
                             TitleText(
-                              text: "减肥",
+                              text: CustomLocalizations.of(context).shedWeight,
                               underLineLength: 0.5,
                               fontSize: 25,
                               maxWidth: 0.8,
                               maxHeight: 40,
                             ),
                             SizedBox(height: 5,),
-                            PlanTextItem(leftText: "计划开始", rightText: "2020年06月20日", rightValue: 0, isShowRightValue: false,),
-                            PlanTextItem(leftText: "计划完成", rightText: "2020年10月10日", rightValue: 0, isShowRightValue: false,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).startPlan, rightText: "2020年06月20日", rightValue: 0, isShowRightValue: false,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).finishPlan, rightText: "2020年10月10日", rightValue: 0, isShowRightValue: false,),
 
                             SizedBox(height: 15,),
                             TitleText(
-                              text: "营养统计",
+                              text: CustomLocalizations.of(context).totalNutrition,
                               underLineLength: 0.5,
                               fontSize: 18,
                               maxWidth: 0.8,
                               maxHeight: 30,
                             ),
                             SizedBox(height: 5,),
-                            PlanTextItem(leftText: "卡路里总摄入", rightText: "千卡", rightValue: 215130,),
-                            PlanTextItem(leftText: "卡路里总摄入", rightText: "千卡", rightValue: 1955,),
-                            PlanTextItem(leftText: "蛋白质总摄入", rightText: "克", rightValue: 6820,),
-                            PlanTextItem(leftText: "蛋白质总摄入", rightText: "克", rightValue: 62,),
-                            PlanTextItem(leftText: "初始体重", rightText: "公斤", rightValue: 71,),
-                            PlanTextItem(leftText: "完成体重", rightText: "公斤", rightValue: 65,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).caloriesTotal, rightText: "Kcal", rightValue: 215130,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).caloriesDaily, rightText: "Kcal", rightValue: 1955,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).proteinTotal, rightText: "g", rightValue: 6820,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).proteinDaily, rightText: "g", rightValue: 62,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).weightStart, rightText: "Kg", rightValue: 71,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).weightFinish, rightText: "Kg", rightValue: 65,),
 
                             SizedBox(height: 15,),
                             TitleText(
-                              text: "计划执行情况",
+                              text: CustomLocalizations.of(context).planExecution,
                               underLineLength: 0.5,
                               fontSize: 18,
                               maxWidth: 0.8,
                               maxHeight: 30,
                             ),
                             SizedBox(height: 5,),
-                            PlanTextItem(leftText: "卡路里标准天数", rightText: "天", rightValue: 97,),
-                            PlanTextItem(leftText: "卡路里过量天数", rightText: "天", rightValue: 10,),
-                            PlanTextItem(leftText: "卡路里不足天数", rightText: "天", rightValue: 3,),
-                            PlanTextItem(leftText: "延期次数", rightText: "次", rightValue: 0,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).caloriesStandard, rightText: " ", rightValue: 97,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).caloriesOver, rightText: " ", rightValue: 10,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).caloriesInsufficient, rightText: " ", rightValue: 3,),
+                            PlanTextItem(leftText: CustomLocalizations.of(context).planDelayTimes, rightText: " ", rightValue: 0,),
 
 
                             SizedBox(height: 15,),
                             TitleText(
-                              text: "评价",
+                              text: CustomLocalizations.of(context).comment,
                               underLineLength: 0.5,
                               fontSize: 18,
                               maxWidth: 0.8,
@@ -208,11 +209,13 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                             ),
                             SizedBox(height: 5,),
                             Text(
-                              this.commentOfPlan,
-                              style: TextStyle(fontSize: 15,color: Colors.white ), //color: MyTheme.convert(ThemeColorName.NormalText)
+                              CustomLocalizations.of(context).commentFirst,
+                              style: TextStyle(fontSize: 15,color: Colors.white,fontFamily: 'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
                               softWrap: true,//自动换行
+                              // textAlign: TextAlign.start,
                               // overflow: TextOverflow.visible,
                             ),
+
                           ],
                         )
                     ),

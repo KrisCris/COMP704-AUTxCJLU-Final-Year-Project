@@ -490,10 +490,110 @@ class CustomLocalizations {
       "en":"History Daily Calories",
       "zh":"历史卡路里"
     },
+    "From":{
+      "en":"From",
+      "zh":"从"
+    },
+    "To":{
+      "en":"To",
+      "zh":"到"
+    },
+    "startPlan":{
+      "en":"Plan Started",
+      "zh":"计划开始"
+    },
+    "finishPlan":{
+      "en":"Plan Finished",
+      "zh":"计划完成"
+    },
+    "totalNutrition":{
+      "en":"Nutrition Statistic ",
+      "zh":"营养统计"
+    },
+    "caloriesTotal":{
+      "en":"Total Calories",
+      "zh":"卡路里总摄入"
+    },
+    "caloriesDaily":{
+      "en":"Daily Calories",
+      "zh":"卡路里日摄入"
+    },
+    "proteinTotal":{
+      "en":"Total Protein",
+      "zh":"蛋白质总摄入"
+    },
+    "proteinDaily":{
+      "en":"Daily Protein",
+      "zh":"蛋白质日摄入"
+    },
+    "weightStart":{
+      "en":"Weight Started",
+      "zh":"初始体重入"
+    },
+    "weightFinish":{
+      "en":"Weight Finished",
+      "zh":"完成体重"
+    },
+    "planExecution":{
+      "en":"Plan Execution",
+      "zh":"计划执行情况"
+    },
+    "caloriesStandard":{
+      "en":"Standard Days",
+      "zh":"卡路里标准天数"
+    },
+    "caloriesOver":{
+      "en":"Overload Days",
+      "zh":"卡路里过量天数"
+    },
+    "caloriesInsufficient":{
+      "en":"Insufficient Days",
+      "zh":"卡路里不足天数"
+    },
+    "planDelayTimes":{
+      "en":"Plan Delay Times",
+      "zh":"计划延期次数"
+    },
+    "comment":{
+      "en":"Plan Comment",
+      "zh":"评价"
+    },
+    "commentFirst":{
+      "en":"Plan worked well,no postponement record!",
+      "zh":"减肥计划还不错，完成情况良好，未有延期记录!"
+    },
+    "foodDetailPageTitle":{
+      "en":"Food's Detail Page",
+      "zh":"食物营养信息页"
+    },
+    "calories":{
+      "en":"Calories",
+      "zh":"卡路里"
+    },
+    "carbohydrate":{
+      "en":"Carbohydrate",
+      "zh":"碳水化合物"
+    },
+    "cellulose":{
+      "en":"Cellulose",
+      "zh":"纤维素"
+    },
+    "cholesterol":{
+      "en":"Cholesterol",
+      "zh":"胆固醇"
+    },
+    "fat":{
+      "en":"Fat",
+      "zh":"脂肪"
+    },
+    "protein":{
+      "en":"Protein",
+      "zh":"蛋白质"
+    },
 
 
 
-  };
+};
 
   get createPlan => getContent("createPlan");
 
@@ -535,6 +635,9 @@ class CustomLocalizations {
     return _localizedValues[key][languageCode];
   }
 
+  get shedWeight{
+    return getContent("shedWeight");
+  }
   get languageName{
     return getContent("languageName");
   }
@@ -789,6 +892,34 @@ class CustomLocalizations {
   get activeProteinInfo => getContent("achieveProteinInfo");
   get achieveMaintainInfo => getContent("achieveMaintainInfo");
   get hereYourPlan => getContent("hereYourPlan");
+  get from => getContent("From");
+  get  to => getContent("To");
+  get  startPlan=> getContent("startPlan");
+  get  finishPlan=> getContent("finishPlan");
+  get  totalNutrition=> getContent("totalNutrition");
+  get  caloriesTotal=> getContent("caloriesTotal");
+  get caloriesDaily => getContent("caloriesDaily");
+  get  proteinTotal=> getContent("proteinTotal");
+  get  proteinDaily=> getContent("proteinDaily");
+  get  weightStart=> getContent("weightStart");
+  get  weightFinish=> getContent("weightFinish");
+  get  planExecution=> getContent("planExecution");
+  get  caloriesStandard=> getContent("caloriesStandard");
+  get  caloriesOver=> getContent("caloriesOver");
+  get  caloriesInsufficient=> getContent("caloriesInsufficient");
+  get  planDelayTimes=> getContent("planDelayTimes");
+  get  comment=> getContent("comment");
+  get  commentFirst=> getContent("commentFirst");
+  get  foodDetailPageTitle=> getContent("foodDetailPageTitle");
+  get  calories=> getContent("calories");
+  get  carbohydrate=> getContent("carbohydrate");
+  get  cellulose=> getContent("cellulose");
+  get  cholesterol=> getContent("cholesterol");
+  get  fat=> getContent("fat");
+  get  protein=> getContent("protein");
+
+
+
 }
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<CustomLocalizations>{
