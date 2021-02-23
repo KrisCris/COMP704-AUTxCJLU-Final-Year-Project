@@ -238,7 +238,7 @@ class Requests {
 
   static Future<Response> searchFood(Map data) async {
     Dio dio = Req.instance;
-    String name = data['name'];
+    String name =  _readUrlPara(data);
     Response res = await dio.get("/food/search" + name);
     return res;
   }
