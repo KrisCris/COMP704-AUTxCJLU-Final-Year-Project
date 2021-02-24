@@ -455,7 +455,7 @@ def getPastDetails():
             consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / counter
 
             dataMap[result.pid] = {
-                'planBrief': Plan.toDict(),
+                'planBrief': p.toDict(),
                 'weeklyDetails': [],
                 'consumption': consumptionRecords
             }
@@ -465,7 +465,7 @@ def getPastDetails():
         return reply_json(1, data=dataMap)
 
 
-@plan.record('estimate_extension', methods=['POST'])
+@plan.route('estimate_extension', methods=['POST'])
 @require_login
 def estimateExtension():
     uid = request.form.get('uid')
