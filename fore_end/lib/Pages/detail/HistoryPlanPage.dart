@@ -69,6 +69,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       height: 40,
       buttonMargin: 18,
       beginTime: this.startedPlanTime,
+      initTime: this.nowTimeWhenInit,
       lastTime: this.nowTimeWhenInit,
       isShowTwoButton: false,
       onChangeDate: (int newDate) {
@@ -83,6 +84,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       height: 40,
       buttonMargin: 18,
       beginTime: this.registerTime,
+      initTime: this.registerTime,
       lastTime: this.finishedPlanTime,
       isShowTwoButton: false,
       onChangeDate: (int newDate) {
