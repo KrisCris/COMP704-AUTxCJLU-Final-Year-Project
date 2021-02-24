@@ -147,46 +147,48 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               // borderRadius: BorderRadius.circular(5),
               color: MyTheme.convert(ThemeColorName.ComponentBackground),
             ),
-            child: this.searching
-                ? Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Searching...",
-                      style: TextStyle(
-                          color: MyTheme.convert(ThemeColorName.NormalText),
-                          fontFamily: "Futura",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12),
-                    ))
-                : this.pagesData.length <= 0
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "No Plan was found",
-                          style: TextStyle(
-                              color: MyTheme.convert(ThemeColorName.NormalText),
-                              fontFamily: "Futura",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12),
-                        ))
-                    : this.getSwiper()),
+            child:
+            // this.searching
+            //     ? Align(
+            //         alignment: Alignment.center,
+            //         child: Text(
+            //           "Searching...",
+            //           style: TextStyle(
+            //               color: MyTheme.convert(ThemeColorName.NormalText),
+            //               fontFamily: "Futura",
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 12),
+            //         ))
+            //     : this.pagesData.length <= 0
+            //         ? Align(
+            //             alignment: Alignment.center,
+            //             child: Text(
+            //               "No Plan was found",
+            //               style: TextStyle(
+            //                   color: MyTheme.convert(ThemeColorName.NormalText),
+            //                   fontFamily: "Futura",
+            //                   fontWeight: FontWeight.bold,
+            //                   fontSize: 12),
+            //             ))
+            //         :
+            this.getSwiper()),
       ],
     ));
   }
 
   @override
   void initState() {
-    User u = User.getInstance();
-    DateTime now = DateTime.now();
-    this.searching = true;
-    this.nowTimeWhenInit = now;
-    this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
-    this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
-    this.finishedPlanTime = now;
-    //第一次页面渲染完毕再执行接口查询
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      this.searchData();
-    });
+    // User u = User.getInstance();
+    // DateTime now = DateTime.now();
+    // this.searching = true;
+    // this.nowTimeWhenInit = now;
+    // this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
+    // this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
+    // this.finishedPlanTime = now;
+    // //第一次页面渲染完毕再执行接口查询
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   this.searchData();
+    // });
   }
 
   void clearData() {
@@ -225,12 +227,12 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               thickness: 2,
             ),
             Container(
-                margin: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 6),
-                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+                padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                 decoration: BoxDecoration(
                   border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.83),
+                height: ScreenTool.partOfScreenHeight(0.82),
                 child: Column(
                   children: [
                     TitleText(
