@@ -148,29 +148,29 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               color: MyTheme.convert(ThemeColorName.ComponentBackground),
             ),
             child:
-            // this.searching
-            //     ? Align(
-            //         alignment: Alignment.center,
-            //         child: Text(
-            //           "Searching...",
-            //           style: TextStyle(
-            //               color: MyTheme.convert(ThemeColorName.NormalText),
-            //               fontFamily: "Futura",
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 12),
-            //         ))
-            //     : this.pagesData.length <= 0
-            //         ? Align(
-            //             alignment: Alignment.center,
-            //             child: Text(
-            //               "No Plan was found",
-            //               style: TextStyle(
-            //                   color: MyTheme.convert(ThemeColorName.NormalText),
-            //                   fontFamily: "Futura",
-            //                   fontWeight: FontWeight.bold,
-            //                   fontSize: 12),
-            //             ))
-            //         :
+            this.searching
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Searching...",
+                      style: TextStyle(
+                          color: MyTheme.convert(ThemeColorName.NormalText),
+                          fontFamily: "Futura",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
+                    ))
+                : this.pagesData.length <= 0
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "No Plan was found",
+                          style: TextStyle(
+                              color: MyTheme.convert(ThemeColorName.NormalText),
+                              fontFamily: "Futura",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12),
+                        ))
+                    :
             this.getSwiper()),
       ],
     ));
@@ -178,17 +178,17 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
 
   @override
   void initState() {
-    // User u = User.getInstance();
-    // DateTime now = DateTime.now();
-    // this.searching = true;
-    // this.nowTimeWhenInit = now;
-    // this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
-    // this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
-    // this.finishedPlanTime = now;
-    // //第一次页面渲染完毕再执行接口查询
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   this.searchData();
-    // });
+    User u = User.getInstance();
+    DateTime now = DateTime.now();
+    this.searching = true;
+    this.nowTimeWhenInit = now;
+    this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
+    this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
+    this.finishedPlanTime = now;
+    //第一次页面渲染完毕再执行接口查询
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      this.searchData();
+    });
   }
 
   void clearData() {
