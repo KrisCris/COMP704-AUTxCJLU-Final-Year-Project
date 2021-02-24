@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -16,8 +17,8 @@ class ExtendTimeHint extends StatelessWidget {
   String finishText;
   ExtendTimeHint({Key key,this.onClickAccept,this.onClickFinish,String title,String delayText,String finishText}) : super(key: key){
    this.title = title;
-   this.delayText = delayText ?? "Accept Delay";
-   this.finishText = finishText ?? "Finish Plan";
+   this.delayText = delayText;
+   this.finishText = finishText;
   }
 
   @override
@@ -44,7 +45,7 @@ class ExtendTimeHint extends StatelessWidget {
               ),
               SizedBox(height: 20),
               CustomButton(
-                text: this.delayText,
+                text: this.delayText ?? CustomLocalizations.of(context).acceptDelayButton,
                 width: 0.6,
                 radius: 5,
                 tapFunc: () async {
@@ -56,7 +57,7 @@ class ExtendTimeHint extends StatelessWidget {
               ),
               SizedBox(height: 5),
               CustomButton(
-                text: this.finishText,
+                text: this.finishText ?? CustomLocalizations.of(context).finishPlanButton,
                 width: 0.6,
                 radius: 5,
                 firstColorName: ThemeColorName.Error,

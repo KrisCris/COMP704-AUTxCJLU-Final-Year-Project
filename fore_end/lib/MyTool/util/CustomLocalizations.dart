@@ -140,18 +140,6 @@ class CustomLocalizations {
       "en":"How do Your Exercise?",
       "zh":"您的运动量如何?"
     },
-    "planShedWeightDayQuestion":{
-      "en":"How Many Days Do You Want To Spend To Lose Your Weight?",
-      "zh":"您希望花费几天的时间来达到您减肥的目标?"
-    },
-    "planShedWeightQuestion":{
-      "en":"How Much Weight Do You Want To Lose (KG)?",
-      "zh":"您希望减轻多少体重 (KG)?"
-    },
-    "planBuildMuscleDayQuestion":{
-      "en":"How Many Days Do You Want To Spend To Build Your Muscle?",
-      "zh":"您希望花费几天时间来达到您增肌的目标?"
-    },
     "slogan":{
       "en":"Take a Picture of your food!",
       "zh":"为你的食物拍张照吧!"
@@ -289,10 +277,6 @@ class CustomLocalizations {
       "en":"Search foods",
       "zh":"搜索食物"
     },
-    "planProgress":{
-      "en":"Plan Progress",
-      "zh":"计划进度"
-    },
     "todayCalories":{
       "en":"Today's Calories",
       "zh":"今日摄入卡路里"
@@ -300,6 +284,38 @@ class CustomLocalizations {
     "todayMeal":{
       "en":"Today's Meal",
       "zh":"今日三餐"
+    },
+    "planShedWeightDayQuestion":{
+      "en":"How Many Days Do You Want To Spend To Lose Your Weight?",
+      "zh":"您希望花费几天的时间来达到您减肥的目标?"
+    },
+    "planShedWeightQuestion":{
+      "en":"How Much Weight Do You Want To Lose (KG)?",
+      "zh":"您希望减轻多少体重 (KG)?"
+    },
+    "planBuildMuscleDayQuestion":{
+      "en":"How Many Days Do You Want To Spend To Build Your Muscle?",
+      "zh":"您希望花费几天时间来达到您增肌的目标?"
+    },
+    "planDelayFor":{
+      "en":"Your Plan will be delayed for ",
+      "zh":"您的计划可能会延期"
+    },
+    "planDelayChoose":{
+      "en":"do you accept it or finish the plan?",
+      "zh":"您选择接受延期或是终止计划?"
+    },
+    "planSuccessCreateNew":{
+      "en":"Congratulations! Your Plan was completed!Create new plan in few seconds...",
+      "zh":"恭喜您完成计划!将在数秒种之后创建新的计划..."
+    },
+    "planSuccessTwoChoise":{
+      "en":"Congratulations! Your plan has completed! You can choose one of the following choise.",
+      "zh":"恭喜您完成计划!您可以选择以下的其中一个选项来继续."
+    },
+    "planProgress":{
+      "en":"Plan Progress",
+      "zh":"计划进度"
     },
     "planType":{
       "en":"Plan Type",
@@ -325,6 +341,50 @@ class CustomLocalizations {
       "en":"change Plan",
       "zh":"修改计划"
     },
+    "planKeep":{
+      "en":"Plan Continues For ",
+      "zh":"计划已经进行了 "
+    },
+    "beforeChangePlan":{
+      "en":"Before change your plan, please record your current weight",
+      "zh":"在更改您的计划之前，请先记录您当前的体重"
+    },
+    "startPlan":{
+      "en":"Plan Started",
+      "zh":"计划开始"
+    },
+    "finishPlan":{
+      "en":"Plan Finished",
+      "zh":"计划完成"
+    },
+    "planDelayTimes":{
+      "en":"Plan Delay Times",
+      "zh":"计划延期次数"
+    },
+    "planExecution":{
+      "en":"Plan Execution",
+      "zh":"计划执行情况"
+    },
+    "continuePlanButton":{
+      "en":"Continue Plan",
+      "zh":"继续计划"
+    },
+    "finishPlanButton":{
+      "en":"Finish Plan",
+      "zh":"终止计划"
+    },
+    "changePlanButton":{
+      "en":"Change Plan",
+      "zh":"更改计划"
+    },
+    "acceptDelayButton":{
+      "en":"Accept Delay",
+      "zh":"延期计划"
+    },
+    "planDelayQuestion":{
+      "en":"How many days do you want to do?",
+      "zh":"您想要执行多久 (天)"
+    },
     "collectBodyData":{
       "en":"We Need Collect Some Data",
       "zh":"我们需要收集一些您的身体数据"
@@ -348,10 +408,6 @@ class CustomLocalizations {
     "achieveMaintainInfo":{
       "en":"To maintain your body shape, the recommended daily calories  intake is",
       "zh":"为了保持您当前的体型，我们推荐您每天摄入的卡路里量不超过以下数值"
-    },
-    "planKeep":{
-      "en":"Plan Continues For ",
-      "zh":"计划已经进行了 "
     },
     "days":{
       "en":"days",
@@ -494,14 +550,6 @@ class CustomLocalizations {
       "en":"To",
       "zh":"到"
     },
-    "startPlan":{
-      "en":"Plan Started",
-      "zh":"计划开始"
-    },
-    "finishPlan":{
-      "en":"Plan Finished",
-      "zh":"计划完成"
-    },
     "totalNutrition":{
       "en":"Nutrition Statistic ",
       "zh":"营养统计"
@@ -530,10 +578,6 @@ class CustomLocalizations {
       "en":"Weight Finished",
       "zh":"完成体重"
     },
-    "planExecution":{
-      "en":"Plan Execution",
-      "zh":"计划执行情况"
-    },
     "caloriesStandard":{
       "en":"Standard Days",
       "zh":"卡路里标准天数"
@@ -545,10 +589,6 @@ class CustomLocalizations {
     "caloriesInsufficient":{
       "en":"Insufficient Days",
       "zh":"卡路里不足天数"
-    },
-    "planDelayTimes":{
-      "en":"Plan Delay Times",
-      "zh":"计划延期次数"
     },
     "comment":{
       "en":"Plan Comment",
@@ -882,16 +922,29 @@ class CustomLocalizations {
   get planShedWeightDayQuestion => getContent("planShedWeightDayQuestion");
   get planBuildMuscleDayQuestion => getContent("planBuildMuscleDayQuestion");
   get planShedWeightQuestion => getContent("planShedWeightQuestion");
+  get hereYourPlan => getContent("hereYourPlan");
+  get  startPlan=> getContent("startPlan");
+  get  finishPlan=> getContent("finishPlan");
+  get  planExecution=> getContent("planExecution");
+  get  planDelayTimes=> getContent("planDelayTimes");
+  get planDelayFor => getContent("planDelayFor");
+  get planDelayChoose => getContent("planDelayChoose");
+  get planDelayQuestion => getContent("planDelayQuestion");
+  get planSuccessCreateNew => getContent("planSuccessCreateNew");
+  get planSuccessTwoChoise => getContent("planSuccessTwoChoise");
+  get beforeChangePlan => getContent("beforeChangePlan");
+  get continuePlanButton => getContent("continuePlan");
+  get finishPlanButton => getContent("finishPlanButton");
+  get changePlanButton => getContent("changePlanButton");
+  get acceptDelayButton => getContent("acceptDelayButton");
 
   get maintainFigureInfo => getContent("maintainFigureInfo");
   get achieveCalInfo => getContent("achieveCalInfo");
   get activeProteinInfo => getContent("achieveProteinInfo");
   get achieveMaintainInfo => getContent("achieveMaintainInfo");
-  get hereYourPlan => getContent("hereYourPlan");
+
   get from => getContent("From");
   get  to => getContent("To");
-  get  startPlan=> getContent("startPlan");
-  get  finishPlan=> getContent("finishPlan");
   get  totalNutrition=> getContent("totalNutrition");
   get  caloriesTotal=> getContent("caloriesTotal");
   get caloriesDaily => getContent("caloriesDaily");
@@ -899,11 +952,9 @@ class CustomLocalizations {
   get  proteinDaily=> getContent("proteinDaily");
   get  weightStart=> getContent("weightStart");
   get  weightFinish=> getContent("weightFinish");
-  get  planExecution=> getContent("planExecution");
   get  caloriesStandard=> getContent("caloriesStandard");
   get  caloriesOver=> getContent("caloriesOver");
   get  caloriesInsufficient=> getContent("caloriesInsufficient");
-  get  planDelayTimes=> getContent("planDelayTimes");
   get  comment=> getContent("comment");
   get  commentFirst=> getContent("commentFirst");
   get  foodDetailPageTitle=> getContent("foodDetailPageTitle");
@@ -913,8 +964,6 @@ class CustomLocalizations {
   get  cholesterol=> getContent("cholesterol");
   get  fat=> getContent("fat");
   get  protein=> getContent("protein");
-
-
 
 }
 
