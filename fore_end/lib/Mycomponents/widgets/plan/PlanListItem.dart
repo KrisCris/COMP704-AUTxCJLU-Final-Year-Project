@@ -57,7 +57,7 @@ class _PlanTextItemState extends State<PlanTextItem> {
           Container(
             child: Text(
               " "+widget.leftText,
-              style: TextStyle(fontSize: widget.textSize,color: Colors.white,fontFamily: 'Futura' ),  //color: MyTheme.convert(ThemeColorName.NormalText)
+              style: TextStyle(fontSize: widget.textSize,color: MyTheme.convert(ThemeColorName.NormalText),fontFamily: 'Futura' ),  //color: MyTheme.convert(ThemeColorName.NormalText)
             ),
           ),
           Expanded(child: SizedBox()),
@@ -65,7 +65,7 @@ class _PlanTextItemState extends State<PlanTextItem> {
           Container(
             child: Text(
               widget.isShowRightValue?this.toThousands(widget.rightValue)+" "+widget.rightText: widget.rightText,
-              style: TextStyle(fontSize: widget.textSize, color: Colors.white,fontFamily: 'Futura'),
+              style: TextStyle(fontSize: widget.textSize, color: MyTheme.convert(ThemeColorName.NormalText),fontFamily: 'Futura'),
             ),
           ),
         ],
