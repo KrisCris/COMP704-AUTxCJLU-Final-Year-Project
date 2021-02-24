@@ -42,9 +42,8 @@ class User {
   String _avatar;
   bool _needGuide;
   bool _shouldUpdateWeight;
-  bool _pastDeadline;
   bool _isOffline;
-  int _calculatedDelayTime;
+  bool stillHaveDialog;
 
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
@@ -78,7 +77,7 @@ class User {
     this._registerDate = registerDate;
     this._needGuide = needGuide;
     this._isOffline = offline;
-
+    this.stillHaveDialog = false;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -201,33 +200,22 @@ class User {
         this._needGuide = true;
         print(res.data);
       } else if (res.data['code'] == 1) {
-        this._plan = new Plan(
-            id: res.data['data']['pid'],
-            startTime: res.data['data']['begin'],
-            endTime: res.data['data']['end'],
-            planType: res.data['data']['type'],
-            goalWeight: res.data['data']['goal'],
-            extendDays: res.data['data']['ext'] ?? 0,
-            dailyCaloriesLowerLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
-            dailyCaloriesUpperLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
-            dailyProteinLowerLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
-            dailyProteinUpperLimit:
-                NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
+        this._plan = Plan.generatePlan(
+          res.data['data']['type'],
+          res.data['data']['pid'],
+          res.data['data']['begin'],
+          res.data['data']['end'],
+          (res.data['data']['goal'] as double).floor(),
+          res.data['data']['ext'] ?? 0,
+          NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
+          NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
+          NumUtil.getNumByValueDouble(res.data['data']['ph'], 1),
+          NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
+        );
       }
-      //计算是否延期
-      this._pastDeadline = DateTime.now().millisecondsSinceEpoch >
-          (this._plan.endTime * 1000 +
-              3600 * 24 * this._plan.extendDays * 1000);
       //计算可能延期多久
-      if (this.pastDeadline) {
-        res = await Requests.calculateDelayTime(
-            {"uid": this._uid, "token": this._token, "pid": this._plan.id});
-        if (res != null && res.data['code'] == 1) {
-          this._calculatedDelayTime = res.data['data']['ext'];
-        }
+      if (this._plan.pastDeadline) {
+        await this._plan.calculateDelayDays();
       }
       this.save();
       res = await Requests.shouldUpdateWeight(
@@ -292,107 +280,30 @@ class User {
 
   //plan相关
   void setPlan(res) {
-    this._plan = new Plan(
-        id: res.data['data']['pid'],
-        startTime: res.data['data']['begin'],
-        endTime: res.data['data']['end'],
-        planType: res.data['data']['type'],
-        goalWeight: res.data['data']['goal'],
-        dailyCaloriesLowerLimit: res.data['data']['cl'],
-        dailyCaloriesUpperLimit: res.data['data']['ch'],
-        dailyProteinLowerLimit: res.data['data']['pl'],
-        dailyProteinUpperLimit: res.data['data']['ph']);
+    this._plan = Plan.generatePlan(
+      res.data['data']['type'],
+      res.data['data']['pid'],
+      res.data['data']['begin'],
+      res.data['data']['end'],
+      (res.data['data']['goal'] as double).floor(),
+      res.data['data']['ext'] ?? 0,
+      NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
+      NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
+      NumUtil.getNumByValueDouble(res.data['data']['ph'], 1),
+      NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
+    );
     this._plan.save();
   }
 
-  void _askExtendTime(
-      {BuildContext context,
-      Function onAcceptDelayClose,
-        Function beforeFinishPlan,
-      Function onFinishPlanClose}) {
-    showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return ExtendTimeHint(
-          extendDays: this._calculatedDelayTime,
-          onAcceptDelay: () {
-            Navigator.of(context).pop(true);
-          },
-          beforeFinishPlan: beforeFinishPlan,
-          afterFinishPlan: (){
-            Navigator.of(context).pop(false);
-          },
-        );
-      },
-    ).then((value) {
-      if (value == true) {
-        onAcceptDelayClose();
-      } else {
-        onFinishPlanClose();
-      }
-    });
-  }
-
-  void solvePastDeadline(BuildContext context) {
-    if (this._pastDeadline) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        this._askExtendTime(
-            context: context,
-            //超时延期，选择finishPlan之前，要先更新体重
-            beforeFinishPlan: ()async{
-              int currentWeight = await showDialog<int>(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  UpdateBody updateBody = new UpdateBody(
-                      text:
-                      "Before change your plan, please record your current weight",
-                      needHeight: false);
-                  updateBody.onUpdate = (){
-                    //更新完成，将新的体重返回
-                    Navigator.of(context).pop(updateBody.weight.widgetValue.value);
-                  };
-                  return updateBody;
-                },
-              );
-              //将体重告诉ExtendTimeHint
-              return currentWeight;
-            },
-            onAcceptDelayClose: () {
-              this._pastDeadline = false;
-              this.solveUpdateWeight(context);
-            },
-            onFinishPlanClose: () {
-              this._pastDeadline = false;
-              Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-                return GuidePage(
-                  firstTime: false,
-                );
-              }));
-            });
-      });
-    }
-  }
-
-  void solveNeedExtendByBodyData(BuildContext context) {
-    this._askExtendTime(
-      context: context,
-      //由于是更新体重导致的延期，不需要再结束计划前告知体重了
-      beforeFinishPlan: null,
-      onAcceptDelayClose: (){
-        Navigator.of(context).pop();
-      },
-      onFinishPlanClose: (){
-        Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-          return GuidePage(
-            firstTime: false,
-          );
-        }));
-      }
-    );
+  void solvePastDeadline(BuildContext context) async {
+    await this._plan.solvePastDeadLine(context);
   }
 
   void solveUpdateWeight(BuildContext context) {
+    this._plan.solveUpdateWeight(context);
+  }
+
+  void remindUpdateWeight(BuildContext context) {
     if (this._shouldUpdateWeight) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         this._shouldUpdateWeight = false;
@@ -441,42 +352,6 @@ class User {
       pro += m.calculateTotalCalories();
     }
     return pro;
-  }
-
-  Future<int> updateBodyData(
-      {double weight, double height, BuildContext context}) async {
-    Response res = await Requests.updateBody({
-      "uid": _uid,
-      "token": _token,
-      "height": height,
-      "weight": weight,
-    });
-    if (res == null) {
-      return -1;
-    }
-    if (res.data['code'] == 1) {
-      if (weight != null) this._bodyWeight = weight;
-      if (height != null) this._bodyHeight = height / 100;
-      if (res.data['data'] == null) {}
-      this._plan = new Plan(
-          id: res.data['data']['pid'],
-          startTime: res.data['data']['begin'],
-          endTime: res.data['data']['end'],
-          planType: res.data['data']['type'],
-          goalWeight: res.data['data']['goal'],
-          dailyCaloriesLowerLimit:
-              NumUtil.getNumByValueDouble(res.data['data']['cl'], 1),
-          dailyCaloriesUpperLimit:
-              NumUtil.getNumByValueDouble(res.data['data']['ch'], 1),
-          dailyProteinLowerLimit:
-              NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
-          dailyProteinUpperLimit:
-              NumUtil.getNumByValueDouble(res.data['data']['ph'], 1));
-      return 1;
-    } else if (res.data['code'] == -2) {
-      this._calculatedDelayTime = res.data['data']['recommend_ext'];
-      return -2;
-    }
   }
 
   double getRemainWeight() {
@@ -534,11 +409,6 @@ class User {
   String get email => _email;
   String get avatar => _avatar;
   double get bodyHeight => _bodyHeight;
-  bool get pastDeadline => _pastDeadline;
-
-  set pastDeadline(bool value) {
-    _pastDeadline = value;
-  }
 
   bool get shouldUpdateWeight {
     return this._shouldUpdateWeight;
@@ -547,7 +417,9 @@ class User {
   set shouldUpdateWeight(bool value) {
     this._shouldUpdateWeight = value;
   }
-
+  set bodyWeight(double weight){
+    this.bodyWeight = weight;
+  }
   set isOffline(bool value) {
     _isOffline = value;
   }
@@ -595,6 +467,12 @@ class User {
 
   Icon genderIcon() {
     return User.genderIcons[this._gender];
+  }
+  int registerTime(){
+    DateTime registerDay = DateTime.fromMillisecondsSinceEpoch(this._registerDate*1000);
+    DateTime nowDay = DateTime.now();
+    Duration duration = nowDay.difference(registerDay);
+    return duration.inDays;
   }
 }
 
