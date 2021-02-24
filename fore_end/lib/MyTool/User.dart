@@ -468,6 +468,12 @@ class User {
   Icon genderIcon() {
     return User.genderIcons[this._gender];
   }
+  int registerTime(){
+    DateTime registerDay = DateTime.fromMillisecondsSinceEpoch(this._registerDate*1000);
+    DateTime nowDay = DateTime.now();
+    Duration duration = nowDay.difference(registerDay);
+    return duration.inDays;
+  }
 }
 
 class BodyChangeLog {
