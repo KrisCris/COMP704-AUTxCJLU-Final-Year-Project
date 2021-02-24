@@ -80,7 +80,7 @@ class _FoodDetailsState extends State<FoodDetails> {
       width: ScreenTool.partOfScreenWidth(1),
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(5),
-        color: MyTheme.convert(ThemeColorName.ComponentBackground),
+        color: MyTheme.convert(ThemeColorName.PageBackground),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -88,14 +88,14 @@ class _FoodDetailsState extends State<FoodDetails> {
         children: [
           Container(
             height: ScreenTool.partOfScreenHeight(0.1),
-            child: Text(CustomLocalizations.of(context).foodDetailPageTitle,style: TextStyle(color: Colors.white,fontSize: 30,fontFamily: 'Futura'),),
+            child: Text(CustomLocalizations.of(context).foodDetailPageTitle,style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 30,fontFamily: 'Futura'),),
 
           ),
           Container(
               margin: EdgeInsets.only(left: 10,right: 10,),
               padding: EdgeInsets.only(left: 20,right: 20,),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
+                border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
               ),
               height: ScreenTool.partOfScreenHeight(0.7),
 
@@ -104,7 +104,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                 children: [
                   Card(
                     color: MyTheme.convert(ThemeColorName.ComponentBackground),
-                    child: Icon(FontAwesomeIcons.hamburger,size: 80,color: Colors.blue,),
+                    child: Icon(FontAwesomeIcons.hamburger,size: 80,color: MyTheme.convert(ThemeColorName.NormalIcon),),
                   ),
                   SizedBox(height: 40,),
                   TitleText(

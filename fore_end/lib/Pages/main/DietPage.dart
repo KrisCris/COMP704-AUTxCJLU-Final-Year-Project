@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
@@ -77,14 +78,14 @@ class DietPageState extends State<DietPage> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
-      iconColor: Colors.white,
-      queryStyle: TextStyle(color: Colors.white, fontSize: 15),
-      accentColor: Colors.white,
-      border: BorderSide(color: Colors.white),
+      iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
+      queryStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
+      accentColor: MyTheme.convert(ThemeColorName.NormalText),
+      border: BorderSide(color: MyTheme.convert(ThemeColorName.NormalText)),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
-      backgroundColor: Color(0xFF172632),
+      backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
       hint: ' Search Foods...',
-      hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+      hintStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),
       transitionCurve: Curves.easeInOut,
@@ -126,16 +127,16 @@ class DietPageState extends State<DietPage> {
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.search,
-              color: Colors.white,
+              color: MyTheme.convert(ThemeColorName.NormalIcon),
             ),
             onPressed: () {},
           ),
         ),
         FloatingSearchBarAction.searchToClear(
           showIfClosed: false,
-          color: Colors.white,
+          color: MyTheme.convert(ThemeColorName.NormalIcon),
         ),
       ],
       builder: (context, transition) {
@@ -159,19 +160,17 @@ class DietPageState extends State<DietPage> {
 
               return GestureDetector(
                 child: Card(
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
                   child: ListTile(
-                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
-                    title: Text(name),
-                    subtitle: Text(cal.toString()+'  Kcal'),
-                    trailing: Icon(Icons.more_vert),
+                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
+                    title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+                    subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+                    trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
                 ),
                 onTap: ( ){
-                  print("click card!");
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
-
-
                 },
               );
             },

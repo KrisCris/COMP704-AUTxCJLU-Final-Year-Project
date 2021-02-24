@@ -128,12 +128,12 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               Text(
                 CustomLocalizations.of(context).from,
                 style: TextStyle(
-                    fontSize: 20, color: Colors.white, fontFamily: 'Futura'),
+                    fontSize: 20, color: MyTheme.convert(ThemeColorName.NormalText), fontFamily: 'Futura'),
               ),
               from,
               Text(CustomLocalizations.of(context).to,
                   style: TextStyle(
-                      fontSize: 20, color: Colors.white, fontFamily: 'Futura')),
+                      fontSize: 20, color: MyTheme.convert(ThemeColorName.NormalText), fontFamily: 'Futura')),
               to
             ],
             mainAxisAlignment: MainAxisAlignment.center,
@@ -221,14 +221,14 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         return new Column(
           children: [
             Divider(
-              color: Colors.white,
+              color: MyTheme.convert(ThemeColorName.NormalText),
               thickness: 2,
             ),
             Container(
                 margin: EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 6),
                 padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
                 height: ScreenTool.partOfScreenHeight(0.83),
                 child: Column(
@@ -350,7 +350,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                       CustomLocalizations.of(context).commentFirst,
                       style: TextStyle(
                           fontSize: 15,
-                          color: Colors.white,
+                          color: MyTheme.convert(ThemeColorName.NormalText),
                           fontFamily:
                               'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
                       softWrap: true, //自动换行

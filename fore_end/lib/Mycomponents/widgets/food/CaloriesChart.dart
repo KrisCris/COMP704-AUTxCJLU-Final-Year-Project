@@ -588,7 +588,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
                   Text(
                     CustomLocalizations.of(context).caloriesChartTitle,
                     style: TextStyle(
-                        color: const Color(0xff379982), fontSize: 18, fontFamily: 'Futura',fontWeight: FontWeight.bold,decoration: TextDecoration.none),
+                        color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 18, fontFamily: 'Futura',fontWeight: FontWeight.bold,decoration: TextDecoration.none),
                   ),
                   SizedBox(height: 10,),
                   Expanded(
