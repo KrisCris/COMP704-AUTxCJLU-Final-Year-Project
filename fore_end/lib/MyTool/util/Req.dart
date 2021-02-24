@@ -199,6 +199,9 @@ class Requests {
   static Future<Response> getWeightTrend(data) async {
     return _postRequest("get_weight_trend", data, "/plan/get_weight_trend", "get_weight_trend接口", null);
   }
+  static Future<Response>getHistoryPlan(data) async {
+    return _postRequest("getHistoryPlan", data, "/plan/get_past_plans","get_past_plans接口", null);
+  }
   static Future<Response> modifyPassword(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
