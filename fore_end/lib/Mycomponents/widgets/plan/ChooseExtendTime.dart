@@ -37,7 +37,7 @@ class ChooseExtendTime extends StatelessWidget{
             children: [
               SizedBox(height: 10),
               TitleText(
-                text: "How many days do you want to do?",
+                text: CustomLocalizations.of(context).planDelayQuestion,
                 maxHeight: 55,
                 maxWidth: 0.6,
                 underLineLength: 0.6,
@@ -45,7 +45,7 @@ class ChooseExtendTime extends StatelessWidget{
               SizedBox(height: 20),
               bar,
               CustomButton(
-                text: "Confirm",
+                text: CustomLocalizations.of(context).confirm,
                 width: 0.6,
                 radius: 5,
                 tapFunc: () async {

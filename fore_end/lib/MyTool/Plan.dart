@@ -230,9 +230,9 @@ class ShedWeightPlan extends Plan {
       context: context,
       builder: (BuildContext context) {
         return ExtendTimeHint(
-          title: "Your Plan will be delayed for " +
-              this.calculatedDelayDays.toString() +
-              " days, do you accept it or finish the plan?",
+          title: CustomLocalizations.of(context).planDelayFor +
+              this.calculatedDelayDays.toString() + CustomLocalizations.of(context).days+
+              ","+CustomLocalizations.of(context).planDelayChoose,
           onClickAccept: () async {
             Response res = await Requests.delayPlan(
                 {"uid": u.uid, "token": u.token, "pid": this.id});
@@ -254,7 +254,7 @@ class ShedWeightPlan extends Plan {
         barrierDismissible: false,
         builder: (BuildContext context) {
           UpdateBody updt = UpdateBody(
-            text: "Before change your plan, please record your current weight",
+            text: CustomLocalizations.of(context).beforeChangePlan,
             needHeight: false,
             needCancel: false,
           );
@@ -349,7 +349,7 @@ class ShedWeightPlan extends Plan {
                       SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
                       Container(
                         child: Text(
-                          "Congratulations! Your Plan was completed!Create new plan in few seconds...",
+                          CustomLocalizations.of(context).planSuccessCreateNew,
                           style: TextStyle(
                               fontFamily: "Futura",
                               fontSize: 15,
@@ -383,9 +383,9 @@ class ShedWeightPlan extends Plan {
           context: context,
           builder: (BuildContext context) {
             return ExtendTimeHint(
-              title: "Your Plan will be delayed for " +
-                  this.calculatedDelayDays.toString() +
-                  " days, do you accept it or finish the plan?",
+              title:CustomLocalizations.of(context).planDelayFor +
+                  this.calculatedDelayDays.toString() + CustomLocalizations.of(context).days+
+                  ","+CustomLocalizations.of(context).planDelayChoose,
               onClickAccept: () async {
                 Response res = await Requests.delayAndUpdatePlan(
                     {"uid": u.uid, "token": u.token, "pid": this.id});
@@ -479,9 +479,9 @@ class BuildMusclePlan extends Plan {
       builder: (BuildContext context) {
         return ExtendTimeHint(
           title:
-              "Congratulations! Your plan has completed! You can choose one of the following choise.",
-          delayText: "Continue Plan",
-          finishText: "Change Plan",
+              CustomLocalizations.of(context).planSuccessTwoChoise,
+          delayText: CustomLocalizations.of(context).continuePlanButton,
+          finishText: CustomLocalizations.of(context).changePlanButton,
         );
       },
     );
@@ -503,7 +503,7 @@ class BuildMusclePlan extends Plan {
         barrierDismissible: false,
         builder: (BuildContext context) {
           UpdateBody updt = UpdateBody(
-            text: "Before change your plan, please record your current weight",
+            text: CustomLocalizations.of(context).beforeChangePlan,
             needHeight: false,
             needCancel: false,
           );

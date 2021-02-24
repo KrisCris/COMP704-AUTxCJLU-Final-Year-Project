@@ -77,10 +77,39 @@ class BodyWeightChartState extends State<BodyWeightChart>{
     }).then((value){
       if(value == null)return;
       if(value.data['code'] != 1)return;
+      DateTime oneDay;
+      int oneWeight;
       for(Map m in value.data['data']['trend']){
+        DateTime tm = DateTime.fromMillisecondsSinceEpoch(m['time']*1000);
+        //保存某一天的数据
+        if(oneDay == null){
+          oneDay = tm;
+          oneWeight = (m['weight'] as double).floor();
+        }else{
+          //如果这次获取到的时间和上次保存的是同一天
+          if(oneDay.year == tm.year && oneDay.month == tm.month && oneDay.day == tm.day){
+            //取同一天里靠后的那次数据
+            if(tm.compareTo(oneDay) >= 0){
+              oneDay = tm;
+              oneWeight = (m['weight'] as double).floor();
+            }
+          }else{
+            //如果不是同一天，将之前保存的那天的数据录入，然后更新保存的时间
+            bodyChanges.add(BodyChangeLog(
+                time: oneDay.millisecondsSinceEpoch,
+                weight: oneWeight,
+                height: 0
+            ));
+            oneDay = tm;
+            oneWeight = (m['weight'] as double).floor();
+          }
+        }
+      }
+      //将最后保存的那天的数据录入
+      if(oneDay != null && oneWeight != null){
         bodyChanges.add(BodyChangeLog(
-            time: m['time']*1000,
-            weight: (m['weight'] as double).floor(),
+            time: oneDay.millisecondsSinceEpoch,
+            weight: oneWeight,
             height: 0
         ));
       }
