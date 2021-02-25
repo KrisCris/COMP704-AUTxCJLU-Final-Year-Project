@@ -187,8 +187,8 @@ def update_body_info():
     FLAG = False
     FLAG_EXT = 0
     uid = request.form.get('uid')
-    height = float(request.values.get('height'))
-    weight = float(request.values.get('weight'))
+    height = float(request.values.get('height')) if request.values.get('height') is not None else None
+    weight = float(request.values.get('weight')) if request.values.get('weight') is not None else None
     pal = None if 'pal' not in request.form.keys() else request.form.get('pal')  # physical activity level
 
     u = User.getUserByID(uid)
@@ -214,7 +214,7 @@ def update_body_info():
         if p.type == 1:
             # check if already reached the target weight
             if weight <= p.goalWeight:
-                p.finish(weight=weight)
+                p.finish(weight=u.weight)
                 return reply_json(1)
 
             # 24 attempts to find a realizable diet plan, or plan would be failed.
@@ -239,7 +239,7 @@ def update_body_info():
                 newPlanDetail = PlanDetail(
                     uid=uid,
                     pid=p.id,
-                    weight=weight,
+                    weight=u.weight,
                     caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
                     caloriesH=round(calories * 1.05),
                     proteinL=maintCalories / 7.7 * 0.22,
@@ -273,7 +273,7 @@ def update_body_info():
             calories = result.get('goalCal')
             newPlanDetail = PlanDetail(
                 pid=p.id,
-                weight=weight,
+                weight=u.weight,
                 caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
                 caloriesH=round(calories * 1.05),
                 proteinL=calories / 7.7 * 0.22,
@@ -313,7 +313,7 @@ def update_body_info():
 
             newPlanDetail = PlanDetail(
                 pid=p.id,
-                weight=weight,
+                weight=u.weight,
                 caloriesL=round(maintCals * 0.95) if round(maintCals * 0.95) >= 1000 else 1000,
                 caloriesH=round(maintCals * 1.05),
                 proteinL=maintCals / 7.7 * 0.22,
@@ -402,7 +402,7 @@ def shouldUpdateWeight():
 
 @plan.route('get_past_plans', methods=['POST'])
 @require_login
-def getPastDetails():
+def getPastPlans():
     uid = request.form.get('uid')
     begin = request.form.get('begin')
     end = request.form.get('end')
@@ -460,7 +460,7 @@ def getPastDetails():
                 'consumption': consumptionRecords
             }
 
-        dataMap[result.pid]['weeklyDetails'].append(PlanDetail)
+        dataMap[result.pid]['weeklyDetails'].append(result.toDict())
 
         return reply_json(1, data=dataMap)
 
