@@ -113,7 +113,9 @@ class BodyWeightChartState extends State<BodyWeightChart>{
             height: 0
         ));
       }
-      setState(() {});
+      if(mounted){
+        setState(() {});
+      }
     });
   }
 }
