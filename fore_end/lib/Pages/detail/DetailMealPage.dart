@@ -47,7 +47,6 @@ class DetailMealPageState extends State<DetailMealPage> {
     }
   }
   void getHistoryMeal(DateTime time) async {
-    //TODO:后端接口获取历史三餐
     User u = User.getInstance();
     this.meal = null;
     setState(() {});
@@ -61,7 +60,6 @@ class DetailMealPageState extends State<DetailMealPage> {
       this.meal = null;
     }else{
       if(res.data['code'] == 1){
-        //TODO: 这里有问题，记得修改
         this.meal = [
           Meal(mealName: "breakfast"),
           Meal(mealName: "lunch"),

@@ -205,9 +205,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       "end": (this.finishedPlanTime.millisecondsSinceEpoch / 1000).floor()
     });
     if (res == null) return;
-    if (res.data['code'] != 1) return;
     for (Map m in res.data['data']) {
-      //TODO:将获取到的数据填充到 [pagesData]
+
     }
     this.searching = false;
     setState(() {});
