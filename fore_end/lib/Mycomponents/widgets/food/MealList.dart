@@ -50,7 +50,6 @@ class MealView extends StatefulWidget {
 class MealViewState extends State<MealView>{
   @override
   void didUpdateWidget(covariant MealView oldWidget) {
-    // TODO: implement didUpdateWidget
     ///一般不需要重写  默认是直接废弃oldWidget
     /// 如果你本来的widget有一些内容是需要用到的，要在这个函数里面把旧的widget里的东西拿到新的widget里面来
     super.didUpdateWidget(oldWidget);
