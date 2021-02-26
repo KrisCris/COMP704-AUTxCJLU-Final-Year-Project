@@ -143,8 +143,11 @@ class Requests {
   static Future<Response> updateBody(data) async {
     return _postRequest("updateBody", data, "/plan/update_body_info", "updateBodyInfo接口", null);
   }
+  static Future<Response> dailyMeal(data) async {
+    return _postRequest("dailyMeal", data, "/food/get_daily_consumption", "get_daily_consumption接口", null);
+  }
   static Future<Response> historyMeal(data) async {
-    return _postRequest("historyMeal", data, "/food/get_daily_consumption", "historyMeal接口", null);
+    return _postRequest("historyMeal", data, "/food/get_consume_history", "get_consume_history接口", null);
   }
   static Future<Response> previewPlan(Map data) async {
     Dio dio = Req.instance;
