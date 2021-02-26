@@ -29,6 +29,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
 
   String planType; //减肥 增肌  维持
 
+  String planStart;
+  String planFinish;
+
   DateTime startedPlanTime;
   DateTime finishedPlanTime;
   DateTime nowTimeWhenInit;
@@ -46,6 +49,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   int standardCaloriesDays;
   int overCaloriesDays;
   int lessCaloriesDays;
+  int overProteinDays;
+  int lessProteinDays;
   int delayDays;
 
   String commentOfPlan = "减肥卓有成效，完成情况良好，未有延期记录";
@@ -59,6 +64,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   // void didUpdateWidget(T oldWidget) {
   //
   // }
+
+
+  ///TODO:现在这个页面还差 1.评价的判断和赋值  2.计划延迟的次数  3.计划的初始体重  
 
   @override
   Widget build(BuildContext context) {
@@ -210,10 +218,64 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     if (res.data['code'] != 1) return;
     for (Map m in res.data['data']) {
       //TODO:将获取到的数据填充到 [pagesData]
+      this.pagesData.add(m);
     }
+    setValue();
     this.searching = false;
+
+  }
+
+  void setValue(){
+    String foodNames;
+    double foodCalorie;
+    this.index=pagesData.length;
+    this.pagesData.forEach((element) {
+      element.forEach((key, value) { 
+        if(key=="consumption"){
+          Map info=value;
+          this.caloriesTotalInput=info["accumCalories"].toInt();
+          this.caloriesDailyInput=info["avgCalories"].toInt();
+          this.proteinTotalInput=info["accumProtein"].toInt();
+          this.proteinDailyInput=info["avgProtein"].toInt();
+          Map calsHigh=info["calsHigh"];
+          this.overCaloriesDays=calsHigh["days"];
+          Map calsLow=info["calsLow"];
+          this.lessCaloriesDays=calsLow["days"];
+
+          Map proteinHigh=info["proteinHigh"];
+          this.overProteinDays=proteinHigh["days"];
+          Map proteinLow=info["proteinLow"];
+          this.lessProteinDays=proteinLow["days"];
+
+        }
+        if(key=="planBrief"){
+
+          ///计算时间用 begin和finish 的时间应该也可以?
+          // this.standardCaloriesDays=this.startedPlanTime.difference(this.finishedPlanTime).inDays - (this.overCaloriesDays+this.lessCaloriesDays);
+          Map info=value;
+          this.finishedWeight=info["achievedWeight"].toInt();
+          DateTime begin=DateTime.fromMillisecondsSinceEpoch(info["begin"]*1000);
+          DateTime end=DateTime.fromMillisecondsSinceEpoch(info["realEnd"]*1000);
+          this.standardCaloriesDays=end.difference(begin).inDays-this.overCaloriesDays-this.lessCaloriesDays;
+          this.startedPlanTime=begin;
+          this.finishedPlanTime=end;
+
+          DateTime formatedBeginDate=DateTime.parse(formatDate(begin, [yyyy, '-', mm, '-', dd]));
+          DateTime formatedEndDate=DateTime.parse(formatDate(end, [yyyy, '-', mm, '-', dd]));
+          this.planStart=formatedBeginDate.year.toString()+"-"+formatedBeginDate.month.toString()+"-"+formatedBeginDate.day.toString();
+          this.planFinish=formatedEndDate.year.toString()+"-"+formatedEndDate.month.toString()+"-"+formatedEndDate.day.toString();
+        }
+        if(key=="weeklyDetails"){
+        }
+        
+      });
+
+    });
+
+    print("返回结果赋值成功！");
     setState(() {});
   }
+
 
   Swiper getSwiper() {
     return Swiper(
@@ -247,13 +309,13 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                     ),
                     PlanTextItem(
                       leftText: CustomLocalizations.of(context).startPlan,
-                      rightText: "2020年06月20日",
+                      rightText: this.planStart,
                       rightValue: 0,
                       isShowRightValue: false,
                     ),
                     PlanTextItem(
                       leftText: CustomLocalizations.of(context).finishPlan,
-                      rightText: "2020年10月10日",
+                      rightText: this.planFinish,
                       rightValue: 0,
                       isShowRightValue: false,
                     ),
@@ -316,23 +378,23 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                     PlanTextItem(
                       leftText:
                           CustomLocalizations.of(context).caloriesStandard,
-                      rightText: " ",
-                      rightValue: 97,
+                      rightText: " Days",
+                      rightValue: this.standardCaloriesDays,
                     ),
                     PlanTextItem(
                       leftText: CustomLocalizations.of(context).caloriesOver,
-                      rightText: " ",
-                      rightValue: 10,
+                      rightText: " Days",
+                      rightValue: this.overCaloriesDays,
                     ),
                     PlanTextItem(
                       leftText:
                           CustomLocalizations.of(context).caloriesInsufficient,
-                      rightText: " ",
-                      rightValue: 3,
+                      rightText: " Days",
+                      rightValue: this.lessCaloriesDays,
                     ),
                     PlanTextItem(
                       leftText: CustomLocalizations.of(context).planDelayTimes,
-                      rightText: " ",
+                      rightText: " Times",
                       rightValue: 0,
                     ),
                     SizedBox(
@@ -381,7 +443,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       controller: this.swiperController,
 
       indicatorLayout: PageIndicatorLayout.COLOR, //分页指示器滑动方式
-      itemCount: 5, //页数，这个应该由plan个数决定
+      itemCount: this.index, //页数，这个应该由plan个数决定
       scrollDirection: Axis.horizontal, //滚动方向，现在是水平滚动，设置为Axis.vertical为垂直滚动
       loop: false, //无限轮播模式开关
       index: 0, //初始的时候下标位置
@@ -389,7 +451,6 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       // itemWidth: ,
       // itemHeight: ,
       onTap: (int index) {
-        print("123123123");
       }, //当用户手动拖拽或者自动播放引起下标改变的时候调用
       duration: 300, //动画时间，单位是毫秒
 
