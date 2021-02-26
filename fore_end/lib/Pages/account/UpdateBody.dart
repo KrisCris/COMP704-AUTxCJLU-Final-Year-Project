@@ -21,7 +21,12 @@ class UpdateBody extends StatelessWidget {
   bool needCancel;
 
   UpdateBody({this.onUpdate,this.text,this.needHeight = true,this.needWeight = true,this.needCancel = true});
-
+  double getHeight(){
+    return this.height!=null ? this.height.widgetValue.value : User.getInstance().bodyHeight;
+  }
+  int getWeight(){
+    return this.weight!=null ? this.weight.widgetValue.value : User.getInstance().bodyWeight;
+  }
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();

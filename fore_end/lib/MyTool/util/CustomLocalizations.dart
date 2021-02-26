@@ -156,6 +156,10 @@ class CustomLocalizations {
       "en":"init preferences...",
       "zh":"正在初始化偏好设置...",
     },
+    "syncLocalData":{
+      "en":"sync local data...",
+      "zh":"正在更新本地数据..."
+    },
     "welcome":{
       "en":"welcome to here!",
       "zh":"欢迎使用DietLens"
