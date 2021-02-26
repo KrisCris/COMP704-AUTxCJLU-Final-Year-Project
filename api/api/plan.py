@@ -457,12 +457,14 @@ def getPastPlans():
             dataMap[result.pid] = {
                 'planBrief': p.toDict(),
                 'weeklyDetails': [],
+                'exts': 0,
                 'consumption': consumptionRecords
             }
-
+        if result.ext != dataMap[result.pid]['weeklyDetails'][-1].ext:
+            dataMap[result.pid]['exts'] += 1
         dataMap[result.pid]['weeklyDetails'].append(result.toDict())
 
-        return reply_json(1, data=dataMap)
+    return reply_json(1, data=list(dataMap.values()))
 
 
 @plan.route('estimate_extension', methods=['POST'])
