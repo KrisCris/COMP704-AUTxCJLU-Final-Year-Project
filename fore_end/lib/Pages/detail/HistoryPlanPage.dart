@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -13,6 +16,7 @@ import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 import 'package:date_format/date_format.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPlanPage extends StatefulWidget {
   ///不会变的全局数据
@@ -25,6 +29,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   ///数据放到State
   ///pagesData 用来存放所有不同页面的数据   然后在build 里面获取这些数据
   List<Map> pagesData = new List<Map>(); //里面放Map
+  List localPagesData = new List();  //里面放离线数据 Map
+
   bool searching;
 
   String planType; //减肥 增肌  维持
@@ -56,6 +62,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   String commentOfPlan = "减肥卓有成效，完成情况良好，未有延期记录";
 
   int index = 0;
+
 
   ///默认的初始页号
   SwiperController swiperController = new SwiperController();
@@ -167,7 +174,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12),
                     ))
-                : this.pagesData.length <= 0
+                : this.pagesData.length <= 0  && this.localPagesData.length <=0
                     ? Align(
                         alignment: Alignment.center,
                         child: Text(
@@ -188,15 +195,44 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void initState() {
     User u = User.getInstance();
     DateTime now = DateTime.now();
-    this.searching = true;
+
     this.nowTimeWhenInit = now;
     this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
     this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
     this.finishedPlanTime = now;
-    //第一次页面渲染完毕再执行接口查询
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    if(u.isOffline){
+      this.searching = false;
+      print("历史计划界面离线成功--------1");
+      SharedPreferences pre = LocalDataManager.pre;
+      int bg = pre.getInt("localBeginTime");
+      int ed = pre.getInt("localEndTime");
+      String json = pre.getString("localHistoryPlan");
+      this.localPagesData = jsonDecode(json);
+      this.setValue(this.localPagesData);
+      if(bg != null){
+        this.startedPlanTime = DateTime.fromMillisecondsSinceEpoch(bg);
+      }
+      if(ed != null){
+        this.finishedPlanTime = DateTime.fromMillisecondsSinceEpoch(ed);
+      }
+      print("历史计划里界面离线成功--------1");
+
+    }else{
+      this.searching = true;
       this.searchData();
+    }
+
+
+    setState(() {
+
     });
+    // //第一次页面渲染完毕再执行接口查询
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //
+    //
+    //
+    // });
   }
 
   void clearData() {
@@ -219,16 +255,16 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       //TODO:将获取到的数据填充到 [pagesData]
       this.pagesData.add(m);
     }
-    setValue();
+    setValue(this.pagesData);
     this.searching = false;
 
   }
 
-  void setValue(){
+  void setValue(List pagesData){
     String foodNames;
     double foodCalorie;
     this.index=pagesData.length;
-    this.pagesData.forEach((element) {
+    pagesData.forEach((element) {
       element.forEach((key, value) { 
         if(key=="consumption"){
           Map info=value;
