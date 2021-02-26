@@ -158,8 +158,8 @@ class CoverState extends State<CoverPage> {
     DateTime begin = end.add(Duration(days: -30));
     int endTime = (end.millisecondsSinceEpoch/1000).floor();
     int beginTime = (begin.millisecondsSinceEpoch/1000).floor();
-    pre.setInt("localBeginTime", beginTime);
-    pre.setInt("localEndTime", endTime);
+    pre.setInt("localBeginTime", beginTime*1000);
+    pre.setInt("localEndTime", endTime*1000);
     Response res = await Requests.getCaloriesIntake({
       "begin": beginTime,
       "end": endTime,
