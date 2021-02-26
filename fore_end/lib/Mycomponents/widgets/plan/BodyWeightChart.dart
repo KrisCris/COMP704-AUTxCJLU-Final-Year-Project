@@ -78,7 +78,7 @@ class BodyWeightChartState extends State<BodyWeightChart>{
       List<dynamic> obj = jsonDecode(json);
       for(Map m in obj){
         bodyChanges.add(BodyChangeLog(
-          time: m['time'];/,
+          time: m['time'];,
           weight: m['weight'],
           height: m['height']
         ));
