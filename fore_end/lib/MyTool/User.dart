@@ -152,7 +152,7 @@ class User {
 
       DateTime nowDay = DateTime.now();
       nowDay = DateTime(nowDay.year, nowDay.month, nowDay.day);
-      res = await Requests.historyMeal({
+      res = await Requests.dailyMeal({
         "uid": this._uid,
         "token": this._token,
         "begin": nowDay.millisecondsSinceEpoch / 1000,
@@ -483,8 +483,16 @@ class BodyChangeLog {
 
   BodyChangeLog({this.time, this.weight, this.height});
 
+  Map<String, dynamic> toJson(){
+    Map<String,dynamic> res = {};
+    res['time'] = this.time;
+    res['weight'] = this.weight;
+    res['height'] = this.height;
+    return res;
+  }
   String getTime() {
     return DateUtil.formatDate(DateTime.fromMillisecondsSinceEpoch(this.time),
         format: "MM-dd");
   }
+
 }
