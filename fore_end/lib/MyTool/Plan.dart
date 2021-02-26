@@ -263,7 +263,7 @@ class ShedWeightPlan extends Plan {
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
-              "weight": updt.weight.widgetValue.value
+              "weight": updt.getWeight()
             });
             if (res != null && res.data['code'] == 1) {
               u.bodyWeight = updt.weight.widgetValue.value;
@@ -300,7 +300,8 @@ class ShedWeightPlan extends Plan {
           Response res = await Requests.updateBody({
             "uid": u.uid,
             "token": u.token,
-            "weight": updt.weight.widgetValue.value,
+            "weight": updt.getWeight(),
+            "height": updt.getHeight(),
           });
           if (res == null) return;
 
@@ -512,7 +513,7 @@ class BuildMusclePlan extends Plan {
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
-              "weight": updt.weight.widgetValue.value
+              "weight": updt.getWeight(),
             });
             if (res != null && res.data['code'] == 1) {
               u.bodyWeight = updt.weight.widgetValue.value;
@@ -549,7 +550,8 @@ class BuildMusclePlan extends Plan {
             Response res = await Requests.updateBody({
               "uid": u.uid,
               "token": u.token,
-              "weight": updt.weight.widgetValue.value,
+              "weight": updt.getWeight(),
+              "height": updt.getHeight(),
             });
             if(res == null)return;
             //正常更新体重
@@ -624,7 +626,7 @@ class MaintainPlan extends Plan {
             Response res = await Requests.updateBody({
               "uid": u.uid,
               "token": u.token,
-              "weight": updt.weight.widgetValue.value,
+              "weight":updt.getWeight(),
             });
             if(res == null)return;
             //正常更新体重

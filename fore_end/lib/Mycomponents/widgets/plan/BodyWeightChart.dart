@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BodyWeightChart extends StatefulWidget{
@@ -67,8 +71,24 @@ class BodyWeightChartState extends State<BodyWeightChart>{
   }
   void repaintData(){
     User u = User.getInstance();
-    DateTime now = DateTime.now();
     bodyChanges = [];
+    if(u.isOffline){
+      SharedPreferences pre = LocalDataManager.pre;
+      String json = pre.getString("localBodyChanges");
+      List<dynamic> obj = jsonDecode(json);
+      for(Map m in obj){
+        bodyChanges.add(BodyChangeLog(
+          time: m['time'],
+          weight: m['weight'],
+          height: m['height']
+        ));
+      }
+      if(mounted){
+        setState(() {});
+      }
+      return;
+    }
+    DateTime now = DateTime.now();
     Requests.getWeightTrend({
       "uid":u.uid,
       "token":u.token,
@@ -113,7 +133,9 @@ class BodyWeightChartState extends State<BodyWeightChart>{
             height: 0
         ));
       }
-      setState(() {});
+      if(mounted){
+        setState(() {});
+      }
     });
   }
 }

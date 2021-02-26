@@ -132,7 +132,6 @@ class PlanDetailPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-          //TODO: 体重折线图
           Container(
             width: ScreenTool.partOfScreenWidth(0.95),
             decoration: BoxDecoration(
