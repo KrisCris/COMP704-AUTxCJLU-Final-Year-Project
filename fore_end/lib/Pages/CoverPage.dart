@@ -238,6 +238,16 @@ class CoverState extends State<CoverPage> {
       String json = jsonEncode(bodyChanges);
       pre.setString("localBodyChanges", json);
     }
+    res = await Requests.getHistoryPlan({
+      "uid": u.uid,
+      "token": u.token,
+      "begin": beginTime,
+      "end": endTime
+    });
+    if(res != null && res.data['code'] == 1){
+      String json = jsonEncode(res.data['data']);
+      pre.setString("localHistoryPlan", json);
+    }
     loginProcess.value = 6;
   }
 
