@@ -50,7 +50,7 @@ class DetailMealPageState extends State<DetailMealPage> {
     User u = User.getInstance();
     this.meal = null;
     setState(() {});
-    Response res = await Requests.historyMeal({
+    Response res = await Requests.dailyMeal({
       "uid":u.uid,
       "token":u.token,
       "begin":time.millisecondsSinceEpoch/1000,
