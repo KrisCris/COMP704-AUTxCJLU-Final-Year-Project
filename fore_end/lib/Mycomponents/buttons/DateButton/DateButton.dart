@@ -29,6 +29,10 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
   ///当日期变化时触发的回调函数
   Function(int newDate) onChangeDate;
 
+  ///是否显示两侧按钮
+  bool isShowTwoButton;
+
+
   DateSelect(
       {double width,
       double height,
@@ -38,6 +42,8 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
       TextStyle style,
       BoxDecoration decoration,
       DateTime lastTime, DateTime beginTime,DateTime initTime,
+
+        this.isShowTwoButton=true,
         Key key
       }):super(key:key) {
     this.width = ScreenTool.partOfScreenWidth(width);
@@ -97,14 +103,14 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomIconButton(
+          widget.isShowTwoButton?CustomIconButton(
             icon: FontAwesomeIcons.chevronLeft,
             buttonSize: widget.buttonMargin,
             backgroundOpacity: 0,
             onClick: (){
               this.minusDay();
             },
-          ),
+          ):Container(),
           GestureDetector(
               onTap: () async {
                 final DateTime date = await showDatePicker(
@@ -124,14 +130,14 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
                 alignment: Alignment.center,
                 child: Text(this.convertToStr(), style: widget.style),
               )),
-          CustomIconButton(
+          widget.isShowTwoButton?CustomIconButton(
             icon: FontAwesomeIcons.chevronRight,
             buttonSize: widget.buttonMargin,
             backgroundOpacity: 0,
             onClick: (){
               this.addDay();
-            },
-          ),
+            }
+          ):Container(),
         ],
       ),
     );

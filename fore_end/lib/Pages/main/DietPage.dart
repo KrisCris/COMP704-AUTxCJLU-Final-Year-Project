@@ -1,7 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/PaintedTextField.dart';
@@ -13,8 +16,11 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+import '../FoodDetailsPage.dart';
+
 class DietPage extends StatefulWidget {
-  int listIndex = 1;
+
+
 
   @override
   State<StatefulWidget> createState() {
@@ -23,18 +29,63 @@ class DietPage extends StatefulWidget {
 }
 
 class DietPageState extends State<DietPage> {
+  int listIndex=0; //默认没有数据
+  Map resultList=new Map();  //搜索返回的结果List，里面的每一个都是一个食物
+
+  List<Map> foodDetailInfoList=new List<Map>();
+
+
+  List<String> foodNameList=new List<String>();  //
+  List<int> foodCaloriesList=new List<int>();  //
+
+
+  void queryFoods(String foodName) async {
+    Response res = await Requests.searchFood({
+      "name":foodName,
+    });
+    if(res.data['code'] == 1){
+      print("搜索食物成功！");
+      resultList=res.data['data'];
+      this.setValue();
+    }else{
+      print("搜索食物失败！");
+    }
+  }
+  void setValue(){
+    String foodNames;
+    double foodCalorie;
+    // listIndex=resultList.length;
+    resultList.forEach((key, value) {
+      foodNames=key;
+      Map info=value;
+
+      foodCalorie=info["calories"];
+      print("返回结果赋值成功！");
+      foodNameList.add(foodNames);
+      foodCaloriesList.add(foodCalorie.toInt());
+      foodDetailInfoList.add({key:value});
+
+    });
+
+
+    print("返回结果赋值成功！");
+    setState(() {});
+  }
+
+
+
   Widget buildFloatingSearchBar() {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
-      iconColor: Colors.white,
-      queryStyle: TextStyle(color: Colors.white, fontSize: 15),
-      accentColor: Colors.white,
-      border: BorderSide(color: Colors.white),
+      iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
+      queryStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
+      accentColor: MyTheme.convert(ThemeColorName.NormalText),
+      border: BorderSide(color: MyTheme.convert(ThemeColorName.NormalText)),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
-      backgroundColor: Color(0xFF172632),
+      backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
       hint: ' Search Foods...',
-      hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+      hintStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),
       transitionCurve: Curves.easeInOut,
@@ -42,36 +93,50 @@ class DietPageState extends State<DietPage> {
       axisAlignment: isPortrait ? 0.0 : -1.0,
       openAxisAlignment: 0.0,
       maxWidth: isPortrait ? 600 : 500,
-      debounceDelay: const Duration(milliseconds: 700),
-
-      ///目前可以通过这两个方法去改变要显示的内容，通过改变外部的list和数量
-      ///现在差：1.服务器获取的接口   2.查询时的加载动画   3.放到主界面  4.每个item应该展示什么信息和设计  5.点击每个item进入的详细信息页的设计  。。。  6.检查当输入框为空的时候展示历史搜索，或者推荐列表
-      ///6.根据数据多少来改变展开后的页面大小
+      debounceDelay: const Duration(milliseconds: 1000),
+      clearQueryOnClose: true,
       onQueryChanged: (query) {
         print("onQueryChanged is clicked");
-        widget.listIndex = 2;
-        setState(() {});
+        ///因为用户比如搜索了一次ham  然后又打了bur变成hambur 这样原本上一次的结果未被清空
+        this.foodNameList.clear();
+        this.foodCaloriesList.clear();
+        this.queryFoods(query);
+        query="";
+        ///TODO:可以展示一些历史记录
       },
       onSubmitted: (query) {
+        this.foodNameList.clear();
+        this.foodCaloriesList.clear();
         print("onSubmitted is clicked");
-        widget.listIndex = 3;
-        setState(() {});
+        this.queryFoods(query);
+
       },
+      onFocusChanged: (bool isOpen){
+        if(isOpen){
+          //print("打开搜索框");
+        }else {
+          this.foodNameList.clear();
+          this.foodCaloriesList.clear();
+          setState(() {
+          });
+        }
+      },
+
       transition: CircularFloatingSearchBarTransition(),
       actions: [
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.search,
-              color: Colors.white,
+              color: MyTheme.convert(ThemeColorName.NormalIcon),
             ),
             onPressed: () {},
           ),
         ),
         FloatingSearchBarAction.searchToClear(
           showIfClosed: false,
-          color: Colors.white,
+          color: MyTheme.convert(ThemeColorName.NormalIcon),
         ),
       ],
       builder: (context, transition) {
@@ -82,22 +147,34 @@ class DietPageState extends State<DietPage> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: ListView.builder(
-            padding: EdgeInsets.only(top: 1),
+            padding:EdgeInsets.only(top: 1) ,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                child: ListTile(
-                  leading: Icon(
-                    FontAwesomeIcons.hamburger,
-                    size: 56,
-                    color: Colors.blue,
+              String name="defaultName";
+              int cal=666;
+              if(foodNameList.isNotEmpty){
+                name=foodNameList[index];
+              }
+              if(foodCaloriesList.isNotEmpty){
+                cal=foodCaloriesList[index];
+              }
+
+              return GestureDetector(
+                child: Card(
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
+                  child: ListTile(
+                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
+                    title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+                    subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+                    trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  title: Text('Hamburger $index'),
-                  subtitle: Text('378.00 Kcal'),
-                  trailing: Icon(Icons.more_vert),
                 ),
+                onTap: ( ){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
+                },
               );
             },
-            itemCount: widget.listIndex,
+            itemCount: foodNameList.length,
           ),
         );
       },

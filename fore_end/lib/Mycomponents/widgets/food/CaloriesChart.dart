@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
@@ -8,12 +9,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CaloriesBarChart extends StatefulWidget {
   DateTime mealTime;
@@ -54,7 +57,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   int touchedIndex;
 
   Map<DateTime,double> localDateValueMap = new Map<DateTime,double>();
-
+  // Map<DateTime,double> offlineLocalDateValueMap = new Map<DateTime,double>();
 
   ///下面的三种会变化的属性都要放到State里面
   ///保存周几对应的现实日期，根据今天的时间来计算
@@ -142,8 +145,21 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     this.sundayDate=widget.today.add(Duration(days: mondayIndex+6));
 
 
-    ///获取接口的数据 初始化
-    this.getHistoryCalories();
+    ///获取接口的数据 增加离线初始化  初始化
+
+   if(u.isOffline){
+     print("卡路里柱状图离线成功--------1");
+      SharedPreferences pre = LocalDataManager.pre;
+      String json = pre.getString("localCalories");
+      List LocalOneWeekCaloriesList=new List();
+      LocalOneWeekCaloriesList = jsonDecode(json);
+      this.assignValueBasedOnList(LocalOneWeekCaloriesList);
+      setState(() {
+      });
+     print("卡路里柱状图离线成功--------2");
+    }else{
+      this.getHistoryCalories();
+    }
 
 
   }
@@ -458,14 +474,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
 
     ///从接口获取每一天的数据,只有本地没有时 最后才去获取
-
-    if(this.localDateValueMap.containsKey(settingDay)){
-      this.readLocalValue();
-
-
-    }else{
       this.getHistoryCalories();
-    }
 
   }
 
@@ -490,10 +499,8 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       });
       if (res.data['code'] == 1) {
         this.clearValue();
-        print("getCaloriesIntake 接口数据获取成功！----------");
         oneWeekCaloriesList=res.data['data'];
         this.assignValueBasedOnList(oneWeekCaloriesList);
-        print("assignValueBasedOnList 执行完成--------");
       }else{
         print("getCaloriesIntake 的接口有bug");
       }
@@ -588,7 +595,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
                   Text(
                     CustomLocalizations.of(context).caloriesChartTitle,
                     style: TextStyle(
-                        color: const Color(0xff379982), fontSize: 18, fontFamily: 'Futura',fontWeight: FontWeight.bold,decoration: TextDecoration.none),
+                        color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 18, fontFamily: 'Futura',fontWeight: FontWeight.bold,decoration: TextDecoration.none),
                   ),
                   SizedBox(height: 10,),
                   Expanded(

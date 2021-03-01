@@ -1,7 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
@@ -60,11 +63,38 @@ class PlanDetailPage extends StatelessWidget {
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
-                  Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-                    return GuidePage(
-                      firstTime: false,
-                    );
-                  }));
+                  showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      UpdateBody updateBody = new UpdateBody(
+                        text: "Before change your plan, please record your current weight",
+                          needHeight: false)
+                      ;
+                      updateBody.onUpdate = () async{
+                        User u = User.getInstance();
+                        Response res = await Requests.finishPlan({
+                          "uid": u.uid,
+                          "token":u.token,
+                          "pid":u.plan?.id ?? -1,
+                          "weight": updateBody.weight.widgetValue.value.floor()
+                        });
+                        if(res != null && res.data['code'] == 1){
+                          Navigator.pop(context,true);
+                        }else{
+                          Fluttertoast.showToast(msg: "update failed");
+                        }
+                      };
+                      return updateBody;
+                    },
+                  ).then((val) {
+                    if(val == true){
+                      Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                        return GuidePage(
+                          firstTime: false,
+                        );
+                      }));
+                    }
+                  });
                 },
               ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
@@ -94,25 +124,14 @@ class PlanDetailPage extends StatelessWidget {
                 autoReturnColor: true,
                 fontsize: 15,
                 tapUpFunc: () {
-                  showDialog<bool>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return new UpdateBody();
-                    },
-                  ).then((val) {
-                    if(val == true){
-                      goalKey.currentState.setState(() {});
-                      chartKey.currentState.repaintData();
-                    }
-                  });
+                  User u = User.getInstance();
+                  u.plan.solveUpdateWeight(context);
                 },
               ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
             ],
           ),
           SizedBox(height: 10),
-          //TODO: 体重折线图
           Container(
             width: ScreenTool.partOfScreenWidth(0.95),
             decoration: BoxDecoration(

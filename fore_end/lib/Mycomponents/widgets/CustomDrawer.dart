@@ -126,7 +126,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     fontWeight: FontWeight.normal,
                     fontFamily: "Futura",
                     color: Colors.black)),
-            Text(CustomLocalizations.of(context).registerDuration+" xxx "+CustomLocalizations.of(context).days,
+            Text(CustomLocalizations.of(context).registerDuration+ User.getInstance().registerTime().toString()+CustomLocalizations.of(context).days,
                 style: TextStyle(
                     decoration: TextDecoration.none,
                     fontSize: 15,

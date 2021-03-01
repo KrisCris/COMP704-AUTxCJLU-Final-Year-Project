@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -8,10 +10,16 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class ExtendTimeHint extends StatelessWidget {
-  int extendDays;
-  Function onAcceptDelay;
-  Function onFinishPlan;
-  ExtendTimeHint({Key key, this.extendDays,this.onAcceptDelay,this.onFinishPlan}) : super(key: key);
+  Function onClickAccept;
+  Function onClickFinish;
+  String title;
+  String delayText;
+  String finishText;
+  ExtendTimeHint({Key key,this.onClickAccept,this.onClickFinish,String title,String delayText,String finishText}) : super(key: key){
+   this.title = title;
+   this.delayText = delayText;
+   this.finishText = finishText;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,27 +38,35 @@ class ExtendTimeHint extends StatelessWidget {
             children: [
               SizedBox(height: 10),
               TitleText(
-                text: "Your Plan will be delayed for " +
-                    extendDays.toString() +
-                    " days, do you accept it or finish the plan?",
+                text: this.title,
                 maxHeight: 55,
                 maxWidth: 0.6,
                 underLineLength: 0.6,
               ),
               SizedBox(height: 20),
               CustomButton(
-                text: "Accept Delay",
+                text: this.delayText ?? CustomLocalizations.of(context).acceptDelayButton,
                 width: 0.6,
                 radius: 5,
-                tapFunc: this.acceptDelay,
+                tapFunc: () async {
+                  if(this.onClickAccept != null){
+                    await this.onClickAccept();
+                  }
+                  Navigator.of(context).pop(true);
+                  },
               ),
               SizedBox(height: 5),
               CustomButton(
-                text: "Finish Plan",
+                text: this.finishText ?? CustomLocalizations.of(context).finishPlanButton,
                 width: 0.6,
                 radius: 5,
                 firstColorName: ThemeColorName.Error,
-                tapFunc: this.finishPlan,
+                tapFunc: ()async{
+                  if(this.onClickFinish != null){
+                    await this.onClickFinish();
+                  }
+                  Navigator.of(context).pop(false);
+                }
               ),
               SizedBox(height: 10),
               SizedBox(height: 10),
@@ -59,26 +75,5 @@ class ExtendTimeHint extends StatelessWidget {
         ),
       ),
     );
-  }
-  void acceptDelay() async {
-    User u = User.getInstance();
-    Response res =await Requests.delayPlan({
-      "uid":u.uid,
-      "token":u.token,
-      "pid":u.plan.id
-    });
-    if(res != null && res.data['code'] == 1){
-      u.plan.extendDays = res.data['data']['ext'];
-    }
-    if(onAcceptDelay!= null){
-      onAcceptDelay();
-    }
-  }
-  //TODO:结束计划的接口
-  void finishPlan() async {
-    print("unimplemented yet");
-    if(onFinishPlan != null){
-      onFinishPlan();
-    }
   }
 }
