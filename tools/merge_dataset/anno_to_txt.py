@@ -5,6 +5,7 @@ from os import listdir, getcwd
 from os.path import join
 
 sets = ['train', 'test', 'val']
+# 数据集中含有的所有标签
 classes = ['rice', 'eels on rice', 'pilaf', "chicken-'n'-egg on rice", 'pork cutlet on rice', 'beef curry', 'sushi',
            'chicken rice', 'fried rice', 'tempura bowl', 'bibimbap', 'toast', 'croissant', 'roll bread',
            'raisin bread', 'chip butty', 'hamburger', 'pizza', 'sandwiches', 'udon noodle', 'tempura udon',
