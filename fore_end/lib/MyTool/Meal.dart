@@ -110,7 +110,7 @@ class Meal {
   }
 
   static List<Food> decode(String str) {
-    if (str == null) return [];
+    if (str == null || !str.contains(",")) return [];
     List<Food> result = [];
     List<String> foodInfo = str.split(',');
     for (String fi in foodInfo) {
