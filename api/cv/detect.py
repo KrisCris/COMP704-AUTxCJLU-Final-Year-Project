@@ -64,7 +64,7 @@ def _img_handle(b64, img_size):
 
 def _detect(b64, output):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
-        'cv/inference/output', b64, 'weights/v2/m_v1.pt', \
+        'cv/inference/output', b64, 'weights/v3/m_v2.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
 
     # Initialize
@@ -134,6 +134,6 @@ def detect(img, output):
 
 
 # if __name__ == '__main__':
-#     b64 = image_to_base64_path('/Users/paul/PycharmProjects/Final_Year_Project/api/cv/cv/inference/input/img.png')
+#     b64 = image_to_base64_path('/Users/paul/PycharmProjects/Final_Year_Project/api/cv/cv/inference/input/img_1.png')
 #     img = base64_to_image(b64)
 #     out = detect(img, False)
