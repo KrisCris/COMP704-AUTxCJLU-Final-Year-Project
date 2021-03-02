@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/BorderPainter.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
@@ -47,6 +48,7 @@ class ValueBar<T extends num> extends StatefulWidget
 
   ValueBar(
       {double width = 100,
+        Key key,
       this.barThickness = 10,
       this.borderThickness = 2,
       this.onChange,
@@ -78,7 +80,7 @@ class ValueBar<T extends num> extends StatefulWidget
       : assert(initVal != null),
         assert(minVal != null),
         assert(maxVal != null),
-        assert(adjustVal != null) {
+        assert(adjustVal != null),super(key:key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.widgetValue = ValueNotifier(initVal);
     this.minVal = ValueNotifier(minVal);
@@ -221,7 +223,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             position: widget.valuePosition,
             str: this.getDisplayValue(),
             fontColor: this.textColorAnimation.value,
-            color: Color(0x77AAAAAA)),
+            color: MyTheme.convert(ThemeColorName.TransparentShadow)),
         foregroundPainter: BorderPainter(
             borderRadius_LT_LB_RT_RB: widget.borderRadius_LT_LB_RT_RB,
             edgeEmptySize: widget.edgeEmpty,

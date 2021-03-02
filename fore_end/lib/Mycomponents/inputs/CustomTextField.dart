@@ -519,7 +519,6 @@ class CustomTextFieldState extends State<CustomTextField>
                 offset: Offset(this.calculatePosition(), 0),
                 child: Container(
                     width: this.lengthAnimation.value,
-                    margin: new EdgeInsets.fromLTRB(5, 5, 5, 5),
                     child: child),
               ));
         });
@@ -594,7 +593,6 @@ class CustomTextFieldState extends State<CustomTextField>
             ? null
             : widget.errorText,
 
-        //TODO: icon缩小为0，或被禁止时，真正消失，而不是设置大小到0
         suffixIcon: widget.disableSuffix?null:Transform.translate(
             offset: Offset(10, 5),
             child: Icon(

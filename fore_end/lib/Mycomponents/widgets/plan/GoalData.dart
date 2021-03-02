@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
+import 'package:fore_end/Pages/main/PlanDetailPage.dart';
 
-class GoalData extends StatelessWidget {
+class GoalData extends StatefulWidget {
   double width;
   double height;
   double margin;
@@ -16,67 +21,84 @@ class GoalData extends StatelessWidget {
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white,
-      this.textColor = Colors.white}) {
+      Color backgroundColor,
+      Color textColor,Key k}):super(key:k) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
-  }
-  @override
-  Widget build(BuildContext context) {
-    return DotColumn(
-        width: this.width,
-        height: this.height,
-        borderRadius: 6,
-        mainAxisAlignment: MainAxisAlignment.start,
-        backgroundColor: this.backgroundColor,
-        children: getGoal(User.getInstance()));
+    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
+    this.textColor = textColor ?? MyTheme.convert(ThemeColorName.NormalText);
   }
 
-  List<Widget> getGoal(User u) {
+
+  @override
+  State<StatefulWidget> createState() {
+    return GoalDataState();
+  }
+}
+class GoalDataState extends State<GoalData>{
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HistoryPlanPage();
+        }));
+      },
+      child: DotColumn(
+          width: widget.width,
+          height: widget.height,
+          borderRadius: 6,
+          mainAxisAlignment: MainAxisAlignment.start,
+          backgroundColor: widget.backgroundColor,
+          children: getGoal(User.getInstance(),context)),
+    );
+  }
+
+  List<Widget> getGoal(User u,BuildContext context) {
     List<Widget> goals = [
-      SizedBox(height: margin),
+      SizedBox(height: widget.margin),
       TitleText(
-        text: "Plan Continues For " + u.plan.getKeepDays().toString() + " days",
-        maxWidth: this.width - 2 * margin,
-        maxHeight: 30,
-        underLineDistance: 1,
-        underLineLength: this.width * 2 / 3,
-        fontColor: this.textColor,
-        dividerColor: this.textColor,
-        fontSize: 17,
+            text: CustomLocalizations.of(context).planKeep + u.plan.getKeepDays().toString() + CustomLocalizations.of(context).days,
+            maxWidth: widget.width - 2 * widget.margin,
+            maxHeight: 30,
+            underLineDistance: 1,
+            underLineLength: widget.width * 2 / 3,
+            fontColor: widget.textColor,
+            dividerColor: widget.textColor,
+            fontSize: 17,
       ),
-      SizedBox(height: margin),
+      SizedBox(height: widget.margin),
     ];
     List<Widget> weight = [SizedBox(height: 0)];
     if (u.plan.planType == 1) {
-      weight = this.getLoseWeight(u);
+      weight = this.getLoseWeight(u,context);
     }else if(u.plan.planType == 2){
-      weight = this.getMaintain(u);
+      weight = this.getMaintain(u,context);
     }else if(u.plan.planType == 3){
       //TODO: 增肌类型得数值表示暂时和maintain一样
-      weight = this.getMaintain(u);
+      weight = this.getMaintain(u,context);
     }
     goals.add(Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: weight,
     ));
-    goals.add(SizedBox(height: margin));
+    goals.add(SizedBox(height: widget.margin));
     return goals;
   }
-  List<Widget> getMaintain(User u){
+  List<Widget> getMaintain(User u, BuildContext context){
     List<Widget> weight = [];
     weight.add(Container(
-      width: this.width  - margin*2,
+      width: widget.width  - widget.margin*2,
       alignment: Alignment.center,
       child: Column(
         children: [
           Text(
-            "current weight",
+            CustomLocalizations.of(context).currentWeight,
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color:this.textColor,
+                color:widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -85,7 +107,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -93,20 +115,20 @@ class GoalData extends StatelessWidget {
     ));
     return weight;
   }
-  List<Widget> getLoseWeight(User u){
+  List<Widget> getLoseWeight(User u, BuildContext context){
     List<Widget> weight = [];
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width: widget.width / 3 - widget.margin*2/3,
       alignment: Alignment.centerLeft,
       child: Column(
         children: [
           Text(
-            "current weight",
+            CustomLocalizations.of(context).currentWeight,
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -115,24 +137,24 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
       ),
     ));
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width: widget.width / 3 - widget.margin*2/3,
       alignment:Alignment.center,
       child: Column(
         children: [
           Text(
-            "goal weight",
+            CustomLocalizations.of(context).goalWeight,
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -141,33 +163,34 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
       ),
     ));
+    double remainWeight = u.getRemainWeight();
     weight.add(Container(
-      width: this.width / 3 - margin*2/3,
+      width:widget.width / 3 - widget.margin*2/3,
       alignment:Alignment.centerRight,
       child: Column(
         children: [
           Text(
-            "remain weight",
+            CustomLocalizations.of(context).remainWeight,
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
-            (u.bodyWeight - u.plan.goalWeight).toString() + "   KG",
+            remainWeight.toString() + "   KG",
             style: TextStyle(
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: this.textColor,
+                color: widget.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -175,4 +198,5 @@ class GoalData extends StatelessWidget {
     ));
     return weight;
   }
+
 }

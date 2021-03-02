@@ -1,14 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/PaintedColumn.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
+import 'package:fore_end/Pages/account/SettingPage.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
 import 'package:fore_end/Pages/main/PlanDetailPage.dart';
@@ -41,12 +47,17 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>()
     ];
-    this.ctl = TabController(length: 3, vsync: this,initialIndex: 1);
+    this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
+    WidgetsBinding.instance.addPostFrameCallback((msg){
+      widget.user.solvePastDeadline(context);
+      widget.user.remindUpdateWeight(context);
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    this.setNavigator();
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
@@ -61,27 +72,17 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       child: Container(
                         width: ScreenTool.partOfScreenWidth(1),
                         height: ScreenTool.partOfScreenHeight(1),
-                        color: Color(0xFF172632),
+                        color: MyTheme.convert(ThemeColorName.PageBackground),
                       ),
                     ),
                     TabBarView(
-                      //physics: new NeverScrollableScrollPhysics(),
+                        //physics: new NeverScrollableScrollPhysics(),
                         controller: ctl,
                         children: [
                           new TakePhotoPage(key: this.photoKey),
                           new DietPage(),
                           new PlanDetailPage(),
                         ]),
-                    Column(
-                      children: [
-                        SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-                        SizedBox(height: 60),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [this.setNavigator()],
-                        ),
-                      ],
-                    )
                   ],
                 ));
           },
@@ -89,9 +90,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   CustomDrawer getDrawer(BuildContext context) {
-    Widget account = this.getAccount();
-    Widget setting = this.getSetting();
-    Widget aboutUs = this.getAboutUs();
+    Widget account = this.getAccount(context);
+    Widget setting = this.getSetting(context);
+    Widget aboutUs = this.getAboutUs(context);
     Widget logOut = this.getLogOut();
 
     List<Widget> drawerItems = [
@@ -121,7 +122,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomDrawer(widthPercent: 1, children: drawerItems);
   }
 
-  Widget getAccount() {
+  Widget getAccount(BuildContext context) {
     return ListTile(
       onTap: () {
         //这里写setting pages的跳转
@@ -129,7 +130,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           return AccountPage();
         }));
       },
-      title: Text("ACCOUNTS",
+      title: Text(CustomLocalizations.of(context).drawerAccount,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
@@ -139,10 +140,14 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getSetting() {
+  Widget getSetting(BuildContext context) {
     return ListTile(
-      onTap: () {},
-      title: Text("SETTINGS",
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return SettingPage();
+        }));
+      },
+      title: Text(CustomLocalizations.of(context).drawerSetting,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
@@ -152,9 +157,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget getAboutUs() {
+  Widget getAboutUs(BuildContext context) {
     return ListTile(
-      title: Text("ABOUT US",
+      title: Text(CustomLocalizations.of(context).drawerAbout,
           style: TextStyle(
               decoration: TextDecoration.none,
               fontSize: 35,
@@ -199,8 +204,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       buttonSize: 30,
       iconSize: 10,
       borderRadius: 10,
-      onClick: () {
-      },
+      onClick: () {},
       navigatorCallback: () {
         User.getInstance().refreshMeal();
       },
@@ -214,8 +218,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       borderRadius: 10,
       iconSize: 15,
       fontSize: 12,
-      onClick: () {
-      },
+      onClick: () {},
       navigatorCallback: () {
         this.photoKey.currentState.getCamera();
         // this.takePhotoPart.getCamera();
@@ -230,8 +233,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         buttonSize: 30,
         iconSize: 10,
         fontSize: 12,
-        onClick: () {
-        });
-    return [takePhotoButton, myDietButton,addPlanButton];
+        onClick: () {});
+    return [takePhotoButton, myDietButton, addPlanButton];
   }
 }

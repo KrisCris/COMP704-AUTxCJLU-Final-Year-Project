@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -65,7 +66,7 @@ class GoalInputerState extends State<GoalInputer> {
       fontsize: 15,
       width: 0.8,
       height: 50,
-      text: "Next Step",
+      text: CustomLocalizations.of(context).next,
       disabled: false,
       tapFunc: widget.nextDo,
     );
@@ -107,7 +108,7 @@ class GoalInputerState extends State<GoalInputer> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-        Text("Set Your Goal",
+        Text(CustomLocalizations.of(context).setGoal,
             style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
@@ -130,7 +131,7 @@ class GoalInputerState extends State<GoalInputer> {
       minVal: 1,
       adjustVal: 1,
       valueName:'',
-      unit: 'Days',
+      unit: CustomLocalizations.of(context).days,
       initVal: 30,
       borderThickness: 4,
       showValue: true,
@@ -180,7 +181,7 @@ class GoalInputerState extends State<GoalInputer> {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: "How Many Days Do You Want To Spend To Lose Your Weight?",
+                text: CustomLocalizations.of(context).planShedWeightDayQuestion,
                 maxWidth: 0.6,
                 maxHeight: 50,
                 underLineLength: 0,
@@ -198,7 +199,7 @@ class GoalInputerState extends State<GoalInputer> {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: "How Much Weight Do You Want To Lose (KG) ?",
+                text: CustomLocalizations.of(context).planShedWeightQuestion,
                 maxWidth: 0.6,
                 maxHeight: 50,
                 underLineLength: 0,
@@ -220,7 +221,7 @@ class GoalInputerState extends State<GoalInputer> {
       adjustVal: 1,
       minVal: 1,
       valueName:'',
-      unit: 'Days',
+      unit: CustomLocalizations.of(context).days,
       initVal: 30,
       borderThickness: 4,
       showValue: true,
@@ -246,7 +247,8 @@ class GoalInputerState extends State<GoalInputer> {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: "How Many Days Do You Want To Spend To Build Your Muscle?",
+                text: CustomLocalizations.of(context).planBuildMuscleDayQuestion,
+                //"How Many Days Do You Want To Spend To Build Your Muscle?",
                 maxWidth: 0.6,
                 maxHeight: 50,
                 underLineLength: 0,

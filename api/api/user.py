@@ -3,6 +3,8 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from werkzeug.security import generate_password_hash
 
+from db.PlanDetail import PlanDetail
+from db.Plan import Plan
 from db.User import User
 import util.user as func
 
@@ -57,6 +59,8 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
+            from util.func import get_current_time
+            u.register_date = get_current_time()
             User.add(u)
     return func.reply_json(1)
 
@@ -209,6 +213,14 @@ def send_security_code():
 def get_basic_info():
     uid = request.form.get('uid')
     u = User.getUserByID(uid)
+
+    # pal
+    pal = None
+    p = Plan.getLatest(u.id)
+    if p is not None:
+        sp = PlanDetail.getLatest(p.id)
+        pal = sp.activityLevel
+
     import base64
     with open(u.avatar, "rb") as avatar_file:
         b2s_avatar = base64.b64encode(avatar_file.read()).decode('utf-8')
@@ -220,7 +232,9 @@ def get_basic_info():
         'age': u.age,
         'needGuide': u.guide,
         'weight': u.weight,
-        'height': u.height
+        'height': u.height,
+        'register_date': u.register_date,
+        'activityLevel': pal
     })
 
 
@@ -252,16 +266,3 @@ def modify_basic_info():
 
     u.add()
     return func.reply_json(1)
-
-# @user.route('modify_avatar', methods=['POST'])
-# @func.require_login
-# def modify_avatar():
-#     uid = request.form.get('uid')
-#     avatar_data = base64.b64decode(request.form.get('avatar'))
-#     u = User.getUserByID(uid)
-#     if u.avatar == "static/user/avatar/default.png":
-#         u.avatar = "static/user/avatar/" + str(u.id) + ".png"
-#         u.add()
-#     with open(u.avatar, 'wb') as avatar:
-#         avatar.write(avatar_data)
-#     return func.reply_json(1)

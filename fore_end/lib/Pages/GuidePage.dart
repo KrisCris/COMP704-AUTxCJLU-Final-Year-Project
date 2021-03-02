@@ -117,6 +117,7 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
           "duration": days,
           "goalWeight": goalWeight,
           "calories": (data["goalCal"] as int),
+          "pal":exerciseRatio,
           "maintCalories": (data["completedCal"] as int)
         });
         if(res.data['code'] == 1){
@@ -154,6 +155,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
     Response res = await Requests.finishPlan({
       "uid":u.uid,
       "token":u.token,
+      "pid":u.plan?.id ?? -1,
+      "weight":u.bodyWeight.floor()
     });
     return res;
   }

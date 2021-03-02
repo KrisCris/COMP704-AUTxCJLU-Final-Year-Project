@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
@@ -125,7 +126,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     fontWeight: FontWeight.normal,
                     fontFamily: "Futura",
                     color: Colors.black)),
-            Text("Registered For xxx Days",
+            Text(CustomLocalizations.of(context).registerDuration+ User.getInstance().registerTime().toString()+CustomLocalizations.of(context).days,
                 style: TextStyle(
                     decoration: TextDecoration.none,
                     fontSize: 15,

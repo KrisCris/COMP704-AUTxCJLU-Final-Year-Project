@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Plan.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
@@ -18,11 +20,13 @@ class PlanNotifier extends StatelessWidget {
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white,
-        this.effectColor
+      Color backgroundColor,
+        Color effectColor
       }) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
+    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
+    this.effectColor = effectColor;
   }
 
   @override
@@ -32,7 +36,7 @@ class PlanNotifier extends StatelessWidget {
     double barThickness = 15;
     ValueBar calories = ValueBar<int>(
       minVal: 0,
-      maxVal: p.dailyCaloriesUpperLimit.floor(),
+      maxVal: p.dailyCaloriesUpperLimit.floor(),  ///可以作为柱状图的上限
       adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,
@@ -40,7 +44,7 @@ class PlanNotifier extends StatelessWidget {
       valuePosition: ValuePosition.right,
       borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
       roundNum: 1,
-      initVal: u.getTodayCaloriesIntake(),
+      initVal: u.getTodayCaloriesIntake(),  ///获取今天的calories 目前是本地的，应该获取数据库里的
       showBorder: false,
       couldExpand: true,
       showAdjustButton: false,
@@ -60,12 +64,11 @@ class PlanNotifier extends StatelessWidget {
                   offset: Offset(
                       0, -barThickness - ValueBar.backgroundExtraSpace * 2),
                   child: TitleText(
-                    text: "Today's Calories",
+                    text: CustomLocalizations.of(context).todayCal,
                     fontSize: 15,
                     underLineLength: 0,
                     maxHeight: 25,
                     maxWidth: 0.7,
-                    fontColor: Color(0xFFD1D1D1),
                   ))
             ],
           ),
@@ -91,7 +94,6 @@ class PlanNotifier extends StatelessWidget {
         showValue: true,
         unit: "/ " + p.dailyProteinUpperLimit.floor().toString(),
         barColor: Color(0xFF72DEEF),
-        fontColor: Color(0xFF5079AF),
         barThickness: barThickness,
       );
       content.addAll([
@@ -109,7 +111,6 @@ class PlanNotifier extends StatelessWidget {
                       underLineLength: 0,
                       maxHeight: 25,
                       maxWidth: 0.7,
-                      fontColor: Color(0xFFD1D1D1),
                     ))
               ],
             ),

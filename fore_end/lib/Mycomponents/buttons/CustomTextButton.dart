@@ -46,10 +46,8 @@ class CustomTextButton extends StatefulWidget
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
-    this.textColor =
-        MyTheme.convert(ThemeColorName.NormalText, color: textColor);
-    this.clickColor =
-        MyTheme.convert(ThemeColorName.HighLightText, color: clickColor);
+    this.textColor = MyTheme.convert(ThemeColorName.NormalText, color: textColor);
+    this.clickColor = MyTheme.convert(ThemeColorName.HighLightText, color: clickColor);
     this.tapUpFunc = tapUpFunc == null ? () {} : tapUpFunc;
     this.widgetValue = ValueNotifier<String>(text);
     this.disabled = ValueNotifier(disabled);
@@ -76,6 +74,18 @@ class CustomTextButtonState extends State<CustomTextButton>
   TweenAnimation<CalculatableColor> animation =
       new TweenAnimation<CalculatableColor>();
   TapGestureRecognizer recognizer = new TapGestureRecognizer();
+
+  @override
+  void didUpdateWidget(covariant CustomTextButton oldWidget) {
+    this.widget.disabled.value = oldWidget.disabled.value;
+    //初始化value监听器，实现在ValueableStateMixIn中
+    this.initValueListener(this.widget.widgetValue);
+    //初始化disable监听器，实现在DisbaleStateMxiIn中
+    this.initDisableListener(this.widget.disabled);
+
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   void initState() {
     super.initState();

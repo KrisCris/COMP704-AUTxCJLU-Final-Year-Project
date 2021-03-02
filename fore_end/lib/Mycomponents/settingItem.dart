@@ -43,7 +43,7 @@ class SettingItem extends StatefulWidget
         errorText: "",
         disableSuffix: true,
         isAutoCheck: false,
-        bottomPadding: -50,
+        bottomPadding: -10,
         textAlign: TextAlign.right,
       );
     }else{
@@ -101,7 +101,7 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
               Expanded(child: SizedBox()),
               // (widget.rightComponent as Widget),
               Container(
-                margin: EdgeInsets.only(top:20,left: 20 ),
+                margin: EdgeInsets.only(top:10,left: 10 ),
                 child: (widget.rightComponent as Widget),
               ),
             ],

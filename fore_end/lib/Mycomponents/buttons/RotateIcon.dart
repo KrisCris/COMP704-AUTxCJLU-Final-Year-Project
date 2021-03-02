@@ -58,7 +58,6 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(covariant RotateIcon oldWidget) {
-    // TODO: implement didUpdateWidget
     widget.isRotate = oldWidget.isRotate;
   }
   @override

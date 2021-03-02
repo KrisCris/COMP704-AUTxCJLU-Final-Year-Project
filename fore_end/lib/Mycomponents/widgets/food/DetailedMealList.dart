@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fore_end/MyTool/Meal.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
 
 class DetailedMealList extends StatelessWidget{
@@ -43,7 +43,7 @@ class DetailedMealList extends StatelessWidget{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(this.meal.mealName,style: TextStyle(
+                      Text(CustomLocalizations.of(context).getContent(this.meal.mealName),style: TextStyle(
                           fontSize: 16,
                           color: MyTheme.convert(ThemeColorName.HeaderText),
                           fontFamily: "Futura",
@@ -51,7 +51,8 @@ class DetailedMealList extends StatelessWidget{
                           fontWeight: FontWeight.bold
                       )),
                       Expanded(child: SizedBox()),
-                      Text("Total "+this.meal.calculateTotalCalories().toString()+" KCal",style: TextStyle(
+                      Text(CustomLocalizations.of(context).total+" "+
+                          this.meal.calculateTotalCalories().toString()+" KCal",style: TextStyle(
                             fontSize: 16,
                             color: MyTheme.convert(ThemeColorName.HeaderText),
                             fontFamily: "Futura",
@@ -62,17 +63,17 @@ class DetailedMealList extends StatelessWidget{
                   ),
                   SizedBox(height: 10),
                   Container(
-                    width: this.width-2*this.paddingHorizontal,
+                    width: this.width,
                     height: this.dragAreaHeight,
                     decoration: BoxDecoration(
-                      color: MyTheme.convert(ThemeColorName.PageBackground),
+                      color: MyTheme.convert(ThemeColorName.ComponentBackground),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: ListView.builder(
                       itemCount: this.meal.foods.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext ctx, int idx){
-                        return SmallFoodBox(food: this.meal.foods[idx]);
+                        return SmallFoodBox(food: this.meal.foods[idx],pictureSize: this.dragAreaHeight-10,);
                       },
                     ),
                   )

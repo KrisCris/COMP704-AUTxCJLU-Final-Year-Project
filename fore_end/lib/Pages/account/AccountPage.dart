@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Picker_Tool.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
@@ -25,10 +27,11 @@ class AccountPage extends StatefulWidget {
   String email;
   String imageSource = User.getInstance().avatar;
   User user = User.getInstance();
-  var genderData = ['Male', 'Female'];
+  var genderData = ['Male', 'Female',];
   bool visible = true;
   PageState state;
 
+  //CustomLocalizations.of(context).detail,
   String getUserGender(int i) {
     if (i == 0) {
       return "Male";
@@ -39,9 +42,10 @@ class AccountPage extends StatefulWidget {
   }
 
   int setGender(String gender) {
-    if (gender == "Male")
+    if (gender == "Male"|| gender == "男性")
       return 0;
-    else if (gender == "Female") return 1;
+    else if (gender == "Female"|| gender == "女性")
+      return 1;
     return null;
   }
 
@@ -65,12 +69,17 @@ class AccountPage extends StatefulWidget {
 class PageState extends State<AccountPage> {
   EditableArea basicInfoEditableArea;
 
+
+
   @override
   Widget build(BuildContext context) {
+
+
+
     this.basicInfoEditableArea = EditableArea(
         width: 0.7,
         height: 320,
-        title: "Basic information",
+        title: CustomLocalizations.of(context).accountInformation,
         displayContent: [
           this.getAvatarItem(),
           this.getUserNameItem(),
@@ -92,7 +101,7 @@ class PageState extends State<AccountPage> {
           "avatar": widget.imageSource,
         });
         if (res.data['code'] == 1) {
-          EasyLoading.showSuccess("Change success!",
+          EasyLoading.showSuccess(CustomLocalizations.of(context).changeSuccess,
               duration: Duration(milliseconds: 4000));
           user.userName = basicInfo[1];
           user.age = int.parse(basicInfo[2]);
@@ -117,21 +126,35 @@ class PageState extends State<AccountPage> {
                 color: MyTheme.convert(ThemeColorName.PageBackground),
               ),
               ListView(
+                // padding: EdgeInsets.only(),
                 children: <Widget>[
                   //Account Page的最上面标题
-                  Container(
-                    // margin: EdgeInsets.all(20),
-                    margin: EdgeInsets.fromLTRB(
-                        ScreenTool.partOfScreenWidth(20), 20, 10, 10),
-                    child: Text(
-                      "ACCOUNT INFO",
-                      style: TextStyle(
-                        color: MyTheme.convert(ThemeColorName.HeaderText),
-                        fontSize: 35,
-                        fontFamily: "Futura",
+                  Row(
+                    children: [
+                      SizedBox(width: 10,),
+                      GestureDetector(
+                        child: Icon(FontAwesomeIcons.arrowAltCircleLeft,size: 35,color: MyTheme.convert(ThemeColorName.NormalIcon),),
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
                       ),
-                    ),
+
+                      Container(
+                        // margin: EdgeInsets.all(20),
+                        margin: EdgeInsets.fromLTRB(20, 18, 10, 10),
+                        child: Text(
+                          CustomLocalizations.of(context).accountPageTitle,
+                          style: TextStyle(
+                            color: MyTheme.convert(ThemeColorName.HeaderText),
+                            fontSize: 32,
+                            fontFamily: "Futura",
+                          ),
+                        ),
+                      ),
+
+                    ],
                   ),
+
 
                   SizedBox(
                     height: 10,
@@ -139,7 +162,7 @@ class PageState extends State<AccountPage> {
                   EditableArea(
                       width: 0.7,
                       height: 190,
-                      title: "Account information",
+                      title: CustomLocalizations.of(context).accountInformation,
                       displayContent: [
                         this.getEmailItem(),
                         this.getPwdItem(context),
@@ -151,12 +174,7 @@ class PageState extends State<AccountPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  OutlineButton(
-                    child: Text("Back MainPage"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+
                 ],
               )
             ],
@@ -166,7 +184,7 @@ class PageState extends State<AccountPage> {
   Widget getEmailItem() {
     SettingItem item = new SettingItem(
       leftIcon: Icon(FontAwesomeIcons.envelope,color: MyTheme.convert(ThemeColorName.NormalIcon),),
-      leftText: "Email",
+      leftText: CustomLocalizations.of(context).email,
       rightComponent: CustomTextButton(
         widget.user.email,
       ),
@@ -184,7 +202,7 @@ class PageState extends State<AccountPage> {
         color: MyTheme.convert(ThemeColorName.NormalIcon),
         size: 23,
       ),
-      leftText: "Password",
+      leftText: CustomLocalizations.of(context).password,
       disabled: false,
       canChangeDisabled: true,
       rightComponent: CustomTextButton(
@@ -206,7 +224,7 @@ class PageState extends State<AccountPage> {
     User u = User.getInstance();
     SettingItem item = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.userCircle,color: MyTheme.convert(ThemeColorName.NormalIcon)),
-      leftText: "Profile Photo",
+      leftText: CustomLocalizations.of(context).profilePhoto,
       rightComponent: ValueableImage(
         base64: u.avatar,
         disabled: true,
@@ -232,7 +250,7 @@ class PageState extends State<AccountPage> {
   Widget getGenderItem(BuildContext context) {
     SettingItem genderItem = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.transgender,color: MyTheme.convert(ThemeColorName.NormalIcon)),
-      leftText: "Gender",
+      leftText: CustomLocalizations.of(context).gender,
       disabled: true,
       rightComponent: CustomTextButton(
         widget.getUserGender(widget.user.gender),
@@ -244,16 +262,16 @@ class PageState extends State<AccountPage> {
     genderItem.onTap = () {
       User user = User.getInstance();
       int newGender;
-      if (genderItem.getValue() == "Female") {
+      if (genderItem.getValue() == "Female" || genderItem.getValue() == "女性") {
         newGender = 1;
-      } else if (genderItem.getValue() == "Male") {
+      } else if (genderItem.getValue() == "Male"|| genderItem.getValue() == "男性") {
         newGender = 0;
       }
 
       JhPickerTool.setInitialState();
 
       JhPickerTool.showStringPicker(context,
-          title: 'Gender',
+          title: CustomLocalizations.of(context).gender,
           normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
         genderItem.setValue(item);
@@ -271,7 +289,7 @@ class PageState extends State<AccountPage> {
   Widget getUserNameItem() {
     return SettingItem(
       leftIcon: Icon(FontAwesomeIcons.user,color: MyTheme.convert(ThemeColorName.NormalIcon)),
-      leftText: "Username",
+      leftText: CustomLocalizations.of(context).username,
       text: widget.user.userName,
       inputFieldWidth: 0.45,
       disabled: true,
@@ -281,7 +299,7 @@ class PageState extends State<AccountPage> {
   Widget getAgeItem() {
     return SettingItem(
       leftIcon: Icon(Icons.calendar_today,color: MyTheme.convert(ThemeColorName.NormalIcon)),
-      leftText: "Age",
+      leftText: CustomLocalizations.of(context).age,
       text: widget.user.age.toString(),
       inputFieldWidth: 0.45,
       disabled: true,

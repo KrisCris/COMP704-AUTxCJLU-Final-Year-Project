@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -18,6 +19,7 @@ class UpdatePwdPage extends StatefulWidget {
 class UpdatePasswordPageState extends State<UpdatePwdPage> {
   // FocusNode focusNode = new FocusNode();
   static const double leftRightGap = 0.1;
+  static const double componentWidth = 0.8;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController codeController = TextEditingController();
@@ -56,21 +58,22 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
   @override
   Widget build(BuildContext context) {
     this.saveButton = CustomButton(
-      text: "SAVE",
+      text: CustomLocalizations.of(context).save,
       width: 100,
       height: 40,
     );
 
     this.emailTextField = CustomTextField(
-      placeholder: 'Email',
+      placeholder: CustomLocalizations.of(context).email,
       inputType: InputFieldType.email,
       // autoChangeState: false,
-      errorText: "Wrong email address!",
-      width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "Please input correct email!",
+      errorText: CustomLocalizations.of(context).wrongEmail,
+      width: componentWidth,
+      disableSuffix: true,
+      helpText: CustomLocalizations.of(context).emailHint,
       maxlength: 30,
       onError: () {
-        this.emailTextField.setErrorText("please input correct email format");
+        this.emailTextField.setErrorText(CustomLocalizations.of(context).emailHint+"!");
         this.emailTextField.setError();
         this.verifyTextField.setButtonDisabled(true);
         // this.nextButton.setDisable(true);
@@ -85,11 +88,11 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     };
 
     this.oldPasswordTextField = CustomTextField(
-      placeholder: 'Old password',
+      placeholder: CustomLocalizations.of(context).oldPassword,
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "At least 7 length",
+      width: componentWidth,
+      helpText: CustomLocalizations.of(context).passwordHint,
       maxlength: 30,
       onCorrect: () {
         this.oldPasswordDone = true;
@@ -110,11 +113,11 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     this.pwdOneTextField = CustomTextField(
-      placeholder: 'New password',
+      placeholder: CustomLocalizations.of(context).newPassword,
       // next: pwdTwoTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: "At least 7 length",
+      width: componentWidth,
+      helpText: CustomLocalizations.of(context).passwordHint,
       maxlength: 30,
 
       onCorrect: () {
@@ -140,12 +143,12 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     this.pwdTwoTextField = CustomTextField(
-      placeholder: 'Confirm password',
-      helpText: "re-enter the password",
+      placeholder: CustomLocalizations.of(context).confirmPassword,
+      helpText: CustomLocalizations.of(context).confirmPasswordHint,
       // next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       isAutoChangeState: false,
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: componentWidth,
 
       maxlength: 30,
       onCorrect: () {
@@ -164,23 +167,21 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
           this.pwdTwoTextField.setError();
           this.nextButton.setDisabled(true);
           this.pwdTwoTextField.setErrorText(
-              "two password different"); //bug有一个就是如果先输入pwdTwo的密码再输入pwdOne会显示不一样，就是这个验证的顺序问题，回头可能要改
+              CustomLocalizations.of(context).differentPasswordHint);
         }
       },
       onError: () {
         this.repasswordDone = false;
         this.pwdTwoTextField.setError();
         this.nextButton.setDisabled(true);
-        this.pwdTwoTextField.setErrorText("two password different");
+        this.pwdTwoTextField.setErrorText(CustomLocalizations.of(context).differentPasswordHint);
       },
     );
 
     this.backButton = CustomButton(
       disabled: false,
-      text: "Back",
+      text: CustomLocalizations.of(context).back,
       isBold: true,
-      rightMargin: 20,
-      bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
       tapFunc: () {
         Navigator.pop(context);
@@ -189,10 +190,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
 
     this.nextButton = CustomButton(
       disabled: true,
-      text: "Save",
+      text: CustomLocalizations.of(context).save,
       isBold: true,
-      rightMargin: 20,
-      bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.3),
     );
 
@@ -200,14 +199,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       User user = User.getInstance();
       String oldPassword = oldPasswordTextField.getValue();
       String newPassword = pwdTwoTextField.getValue();
-      print("目前的四个信息分别是： " +
-          user.uid.toString() +
-          "  " +
-          user.token +
-          "  " +
-          oldPassword +
-          "  " +
-          newPassword);
       try {
         Response res = await Requests.modifyPassword({
           "uid": user.uid,
@@ -216,18 +207,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
           "new_password": newPassword,
         });
 
-        print("目前的四个信息分别是： " +
-            user.uid.toString() +
-            "  " +
-            user.token +
-            "  " +
-            oldPassword +
-            "  " +
-            newPassword);
-
         if (res.data['code'] == 1) {
-          print("密码修改成功!!!!!!!");
-          EasyLoading.showSuccess("Change success!",
+          EasyLoading.showSuccess(CustomLocalizations.of(context).changeSuccess,
               duration: Duration(milliseconds: 2000));
         }
         if (res.data['code'] == -1) {
@@ -256,67 +237,67 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     return FlutterEasyLoading(
       child: Container(
         color: MyTheme.convert(ThemeColorName.PageBackground),
-        child: ListView(
+        child: Column(
+
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
           children: <Widget>[
             Container(
-              // margin: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(60, 20, 10, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.15),
+              margin: EdgeInsets.only(top: 35),
               child: Text(
-                "Change login PASSWORD",
+                CustomLocalizations.of(context).changePasswordPageTitle,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: MyTheme.convert(ThemeColorName.NormalText),
                   fontSize: 35,
                   fontFamily: "Futura",
                 ),
               ),
             ),
-            SizedBox(
-              height: 20,
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.emailTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
-            Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-              child: this.emailTextField,
+            SizedBox(height: 10),
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.verifyTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
             ),
             Row(
               children: [
-                SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                this.verifyTextField,
-                SizedBox(width: ScreenTool.partOfScreenWidth(0.1))
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.oldPasswordTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.pwdOneTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
+                this.pwdTwoTextField,
+                SizedBox(width: ScreenTool.partOfScreenWidth(leftRightGap)),
               ],
             ),
             Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-              child: this.oldPasswordTextField,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-              child: this.pwdOneTextField,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
-              child: this.pwdTwoTextField,
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  // border: Border.all(),
-                  ),
-              padding: EdgeInsets.fromLTRB(60, 1, 40, 10),
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: ScreenTool.partOfScreenHeight(0.1),
+              margin: EdgeInsets.only(top: 10,bottom: 10),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   this.backButton,
                   this.nextButton,

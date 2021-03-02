@@ -11,9 +11,9 @@ DB_CHARSET = 'utf8mb4'
 # SENDER_NAME = 'DietLens<rnd_mail@mail.connlost.online>'
 # SMTP_URL = 'smtp.yandex.com'
 # SMTP_PORT = 465
-SENDER = 'twr9738@autuni.ac.nz'
-SENDER_NAME = 'DietLens<twr9738@autuni.ac.nz>'
-SENDER_PW = 'Genius910189033'
+SENDER = 'sofop_rnd@outlook.com'
+SENDER_NAME = 'DietLens<sofop_rnd@outlook.com>'
+SENDER_PW = 'sofop#rnd'
 SMTP_URL = 'smtp.office365.com'
 SMTP_PORT = 587
 

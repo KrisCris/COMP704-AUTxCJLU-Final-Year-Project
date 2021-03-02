@@ -300,7 +300,12 @@ class CustomButtonState extends State<CustomButton>
           this.isTap = false;
           this.transparentAnimation.reverseAnimation();
           if (widget.tapFunc != null) {
-            widget.tapFunc();
+            var res = widget.tapFunc();
+            if(res is Future){
+              (res as Future).then((value){
+                  print("Future执行完毕");
+              });
+            }
           }
         },
         onTapCancel: () {

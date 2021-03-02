@@ -7,7 +7,7 @@ class Food(db.Model):
     id = db.Column(db.INTEGER, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = db.Column(db.VARCHAR(255), unique=True, nullable=False, comment='food name')
     category = db.Column(db.ForeignKey('category.id'), index=True, comment='food category, details in category table.')
-    image = db.Column(db.VARCHAR(255), server_default='', comment='image for a food')
+    image = db.Column(db.Text(16777216), comment='image for a food')
     calories = db.Column(db.FLOAT)
     fat = db.Column(db.FLOAT)
     carbohydrate = db.Column(db.FLOAT)
@@ -35,5 +35,18 @@ class Food(db.Model):
         db.session.commit()
 
     @staticmethod
-    def searchByName(exact_name):
+    def getByExactName(exact_name) -> 'Food':
         return Food.query.filter(Food.name == exact_name).first()
+
+    @staticmethod
+    def getById(fid) -> 'Food':
+        return Food.query.filter(Food.id == fid).first()
+
+    @staticmethod
+    def search(name: str):
+        return Food.query.filter(Food.name.like('%' + name + '%')).all()
+
+    def toDict(self):
+        return {'id': self.id, 'name': self.name, 'category': self.category, 'img': self.image,
+                'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate, 'protein': self.protein,
+                'cholesterol': self.cholesterol, 'cellulose': self.cellulose}
