@@ -105,6 +105,9 @@ class Meal {
   }
 
   static List<Food> decode(String str) {
+    if(str == null){
+      return [];
+    }
     var data = jsonDecode(str);
     List<Food> res = [];
     for(Map m in data){
