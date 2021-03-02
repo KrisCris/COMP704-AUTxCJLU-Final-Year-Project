@@ -75,6 +75,24 @@ class Requests{
     Response res = await dio.post("/user/get_basic_info",data: dt);
     return res;
   }
+  static Future<Response> previewPlan(Map data) async {
+    Dio dio = Req.instance;
+    String urlPara = _readUrlPara(data);
+    Response res = await dio.get("/plan/query_plan"+urlPara);
+    return res;
+  }
+  static Future<Response> setPlan(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/plan/set_plan",data: dt);
+    return res;
+  }
+  static Future<Response> getPlan(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/plan/get_current_plan",data: dt);
+    return res;
+  }
 
   static Future<Response> modifyBasicInfo(data) async{
     Dio dio = Req.instance;
@@ -116,7 +134,7 @@ class Requests{
   static String _readUrlPara(Map data){
     String urlPara = "?";
     data.forEach((key, value) {
-      urlPara+=key+"="+value+"&";
+      urlPara+=key+"="+value.toString()+"&";
     });
     return urlPara;
   }

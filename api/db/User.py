@@ -14,12 +14,15 @@ class User(db.Model):
     avatar = db.Column(db.VARCHAR(255), server_default=db.text("'static/user/avatar/default.png'"))
     gender = db.Column(db.INTEGER, comment='male=1, female=2, others=0')
     age = db.Column(db.INTEGER)
+    weight = db.Column(db.FLOAT)
+    height = db.Column(db.FLOAT)
     auth_code = db.Column(db.VARCHAR(20), comment='verification code')
     last_code_sent = db.Column(db.INTEGER, nullable=False, comment='timestamp the last time server sent a auth_code')
     code_check = db.Column(db.INTEGER, server_default=db.FetchedValue())
+    guide = db.Column(db.BOOLEAN)
 
-    def __init__(self, email, auth_code, gender=0, age=0, last_code_sent=get_current_time(), nickname='', password='',
-                 group=0, token='', code_check=0):
+    def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(), nickname='', password='',
+                 group=0, token='', code_check=0, guide=1):
         self.email = email
         self.nickname = nickname
         self.password = password
@@ -29,7 +32,10 @@ class User(db.Model):
         self.last_code_sent = last_code_sent
         self.gender = gender
         self.age = age
+        self.weight = weight
+        self.height = height
         self.code_check = code_check
+        self.guide = guide
 
     def add(self):
         db.session.add(self)

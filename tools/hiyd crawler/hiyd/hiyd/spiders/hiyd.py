@@ -4,29 +4,41 @@ from hiyd.items import FoodCrawlerItem
 
 class HiydSpider(scrapy.Spider):
     name = 'hiyd'
-    allowed_domains = ['food.hiyd.com']
-    start_urls = ['https://food.hiyd.com/list-1-html']
+    allowed_domains = ['hiyd.com']
+    start_urls = ['https://m.food.hiyd.com/list-1-html/',
+                  'https://m.food.hiyd.com/list-2-html',
+                  'https://m.food.hiyd.com/list-3-html',
+                  'https://m.food.hiyd.com/list-4-html',
+                  'https://m.food.hiyd.com/list-5-html',
+                  'https://m.food.hiyd.com/list-6-html',
+                  'https://m.food.hiyd.com/list-9-html',
+                  'https://m.food.hiyd.com/list-132-html'
+                  ]
 
     def parse(self, response):
-        selector = response.xpath('//div[@class="box-bd"]/ul/li')
+        selector = response.xpath('//ul[@id="foodList"]/li')
 
         for food in selector:
 
             food_obj = FoodCrawlerItem()
-            cate_name = response.xpath('//div[@class="box"]/div[@class="box-hd"]/h2/text()').get().strip()
-            food_obj['cate_name'] = cate_name
+            # cate_name = response.xpath('//div[@class="box"]/div[@class="box-hd"]/h2/text()').get().strip()
+            # food_obj['cate_name'] = cate_name
 
-            food_name = food.xpath('a/div[@class="cont"]/h3/text()').get().strip()
+            food_name = food.xpath('a/div[@class="cont"]/h3/text()').get()
+            if food_name:
+                food_name = food_name.strip()
             food_obj['food_name'] = food_name
 
             food_url = food.xpath('a/@href').get().strip()
+            if food_url:
+                food_url = response.urljoin(food_url)
             food_obj['food_url'] = food_url
-            print('food_url', food_url)
+            # print('food_url', food_url)
 
             if food_url:
                 yield scrapy.Request(url=food_url, meta={'item': food_obj}, callback=self.parse_detail)
 
-        next_page_url = response.xpath('//a[@title="下一页"]/@href').get()
+        next_page_url = response.xpath('//div[@id="hiyd_loader"]/a/@href').get()
         # print(next_page_url)
         if next_page_url:
             next_url = response.urljoin(next_page_url)
@@ -38,76 +50,89 @@ class HiydSpider(scrapy.Spider):
     def parse_detail(self, response):
         food_obj = response.meta['item']
 
-        selector = response.xpath('//div[@class="nurt-list"]')
+        cate_name = response.xpath('//div[@class="cont"]/p/a/text()').get().strip()
+        food_obj['cate_name'] = cate_name
 
-        for food_detail in selector:
-            calories = food_detail.xpath('ul[not(@class="no-margin")]/li[2]').get().strip()
-            food_obj['calories'] = calories
+        # selector = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul')
 
-            fat = food_detail.xpath('ul[not(@class="no-margin")]/li[3]').get().strip()
-            food_obj['fat'] = fat
+        # for response in selector:
+        normal_weight = response.xpath('//div[@class="info-unit"]/div[@class="box-bd"]/ul/li[2]/p[1]/text()').get()
+        if normal_weight:
+            normal_weight = normal_weight.strip()
+        food_obj['normal_weight'] = normal_weight
 
-            carbohydrate = food_detail.xpath('ul[not(@class="no-margin")]/li[4]').get().strip()
-            food_obj['carbohydrate'] = carbohydrate
+        normal_calories = response.xpath('//div[@class="info-unit"]/div[@class="box-bd"]/ul/li[2]/p[2]/text()').get()
+        if normal_calories:
+            normal_calories = normal_calories.strip()
+        food_obj['normal_calories'] = normal_calories
 
-            protein = food_detail.xpath('ul[not(@class="no-margin")]/li[5]').get().strip()
-            food_obj['protein'] = protein
+        calories = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[2]/p[2]/text()').get().strip()
+        food_obj['calories'] = calories
 
-            cholesterol = food_detail.xpath('ul[not(@class="no-margin")]/li[6]').get().strip()
-            food_obj['cholesterol'] = cholesterol
+        fat = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[3]/p[2]/text()').get().strip()
+        food_obj['fat'] = fat
 
-            cellulose = food_detail.xpath('ul[not(@class="no-margin")]/li[8]').get().strip()
-            food_obj['cellulose'] = cellulose
+        carbohydrate = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[4]/p[2]/text()').get().strip()
+        food_obj['carbohydrate'] = carbohydrate
 
-            v_a = food_detail.xpath('ul[not(@class="no-margin")]/li[9]').get().strip()
-            food_obj['v_a'] = v_a
+        protein = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[5]/p[2]/text()').get().strip()
+        food_obj['protein'] = protein
 
-            v_c = food_detail.xpath('ul[not(@class="no-margin")]/li[10]').get().strip()
-            food_obj['v_c'] = v_c
+        cholesterol = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[6]/p[2]/text()').get().strip()
+        food_obj['cholesterol'] = cholesterol
 
-            v_e = food_detail.xpath('ul[not(@class="no-margin")]/li[11]').get().strip()
-            food_obj['v_e'] = v_e
+        cellulose = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[2]/p[2]/text()').get().strip()
+        food_obj['cellulose'] = cellulose
 
-            carotene = food_detail.xpath('ul[not(@class="no-margin")]/li[12]').get().strip()
-            food_obj['carotene'] = carotene
+        v_a = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[3]/p[2]/text()').get().strip()
+        food_obj['v_a'] = v_a
 
-            thiamine = food_detail.xpath('ul[not(@class="no-margin")]/li[13]').get().strip()
-            food_obj['thiamine'] = thiamine
+        v_c = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[4]/p[2]/text()').get().strip()
+        food_obj['v_c'] = v_c
 
-            riboflavin = food_detail.xpath('ul[not(@class="no-margin")]/li[14]').get().strip()
-            food_obj['riboflavin'] = riboflavin
+        v_e = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[5]/p[2]/text()').get().strip()
+        food_obj['v_e'] = v_e
 
-            niacin = food_detail.xpath('ul[not(@class="no-margin")]/li[15]').get().strip()
-            food_obj['niacin'] = niacin
+        carotene = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[6]/p[2]/text()').get().strip()
+        food_obj['carotene'] = carotene
 
-            magnesium = food_detail.xpath('ul[contains(@class,"no-margin")]/li[2]').get().strip()
-            food_obj['magnesium'] = magnesium
+        thiamine = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[7]/p[2]/text()').get().strip()
+        food_obj['thiamine'] = thiamine
 
-            calcium = food_detail.xpath('ul[contains(@class,"no-margin")]/li[3]').get().strip()
-            food_obj['calcium'] = calcium
+        riboflavin = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[8]/p[2]/text()').get().strip()
+        food_obj['riboflavin'] = riboflavin
 
-            iron = food_detail.xpath('ul[contains(@class,"no-margin")]/li[4]').get().strip()
-            food_obj['iron'] = iron
+        niacin = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[9]/p[2]/text()').get().strip()
+        food_obj['niacin'] = niacin
 
-            zinc = food_detail.xpath('ul[contains(@class,"no-margin")]/li[5]').get().strip()
-            food_obj['zinc'] = zinc
+        magnesium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[2]/p[2]/text()').get().strip()
+        food_obj['magnesium'] = magnesium
 
-            copper = food_detail.xpath('ul[contains(@class,"no-margin")]/li[6]').get().strip()
-            food_obj['copper'] = copper
+        calcium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[3]/p[2]/text()').get().strip()
+        food_obj['calcium'] = calcium
 
-            manganese = food_detail.xpath('ul[contains(@class,"no-margin")]/li[7]').get().strip()
-            food_obj['manganese'] = manganese
+        iron = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[4]/p[2]/text()').get().strip()
+        food_obj['iron'] = iron
 
-            potassium = food_detail.xpath('ul[contains(@class,"no-margin")]/li[8]').get().strip()
-            food_obj['potassium'] = potassium
+        zinc = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[5]/p[2]/text()').get().strip()
+        food_obj['zinc'] = zinc
 
-            phosphorus = food_detail.xpath('ul[contains(@class,"no-margin")]/li[9]').get().strip()
-            food_obj['phosphorus'] = phosphorus
+        copper = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[6]/p[2]/text()').get().strip()
+        food_obj['copper'] = copper
 
-            sodium = food_detail.xpath('ul[contains(@class,"no-margin")]/li[10]').get().strip()
-            food_obj['sodium'] = sodium
+        manganese = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[7]/p[2]/text()').get().strip()
+        food_obj['manganese'] = manganese
 
-            selenium = food_detail.xpath('ul[contains(@class,"no-margin")]/li[11]').get().strip()
-            food_obj['selenium'] = selenium
+        potassium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[8]/p[2]/text()').get().strip()
+        food_obj['potassium'] = potassium
+
+        phosphorus = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[9]/p[2]/text()').get().strip()
+        food_obj['phosphorus'] = phosphorus
+
+        sodium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[10]/p[2]/text()').get().strip()
+        food_obj['sodium'] = sodium
+
+        selenium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[11]/p[2]/text()').get().strip()
+        food_obj['selenium'] = selenium
 
         yield food_obj

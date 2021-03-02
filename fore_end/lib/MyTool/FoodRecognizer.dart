@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
 import 'Food.dart';
 import 'Req.dart';
@@ -23,6 +25,7 @@ class FoodRecognizer{
   ValueNotifier<Queue<RequestItem>> targetPicInfo;
   List<FoodBox> foods;
   Function onRecognizedDone;
+  GlobalKey relatedKey;
 
   static void addFoodPic(String targetPicBase64, Uint8List byte, int rotate){
     if(_instance == null) {
@@ -57,18 +60,39 @@ class FoodRecognizer{
         }else if(info['calories'] is double){
           cal = info['calories'];
         }
-        FoodRecognizer._instance.foods.add(
-            FoodBox(
-              food: Food(name: position['name'], calorie: cal),
-              picture: position['img'],
-            )
+        String name = position['name'];
+        FoodBox fd = FoodBox(
+          food: Food(name: name, calorie: cal),
+          picture: position['img'],
+          borderRadius: 5,
+        );
+        fd.setRemoveFunc((){
+          List<FoodBox> list = FoodRecognizer._instance.foods;
+          FoodRecognizer._instance.foods.remove(fd);
+          FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
+        });
+        FoodRecognizer._instance.foods.add(fd);
+        Fluttertoast.showToast(
+          msg: "Food Recognized Done",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.black26,
+          fontSize: 13,
         );
       }
       if(FoodRecognizer.instance.onRecognizedDone != null){
         FoodRecognizer.instance.onRecognizedDone();
       }
     }else{
-      print("No Food Found, Asshole!");
+      Fluttertoast.showToast(
+        msg: "No Food Found",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.black45,
+        fontSize: 13,
+      );
     }
   }
   bool isEmpty(){
@@ -79,6 +103,9 @@ class FoodRecognizer{
   }
   void removeOnRecognizedDone(){
     this.onRecognizedDone = null;
+  }
+  void setKey(Key k){
+    this.relatedKey = k;
   }
 
 }

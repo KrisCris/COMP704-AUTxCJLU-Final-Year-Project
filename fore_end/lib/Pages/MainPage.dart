@@ -10,6 +10,9 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomAppBar.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomNavigator.dart';
+import 'package:fore_end/Mycomponents/widgets/My.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/GoalData.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/TakePhotoPage.dart';
 import 'AccountPage.dart';
@@ -26,14 +29,17 @@ class MainPage extends StatefulWidget {
   MainState state;
   User user;
   MySearchBarDelegate searchBarDelegate;
-  CustomAppBar appBar;
-  MainPage({@required User user, Key key}) : super(key: key) {
+
+  MainPage({@required User user, bool needSetPlan=false, Key key}) : super(key: key) {
     this.myDietPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("myDietPage"),
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          GoalData(width: 0.85, height: 100,backgroundColor:Color(0xFFF1F1F1),),
+          SizedBox(height: 20),
+          PlanNotifier(width: 0.85, height: 100,backgroundColor: Color(0xFFF1F1F1))
         ],
       ),
     );
@@ -41,9 +47,10 @@ class MainPage extends StatefulWidget {
     this.addPlanPart = new Container(
       width: ScreenTool.partOfScreenWidth(1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("addPlanPart"),
+          SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
+          My()
         ],
       ),
     );
@@ -55,7 +62,6 @@ class MainPage extends StatefulWidget {
       iconSize: 25,
       borderRadius: 10,
       onClick: () {
-        this.appBar.reverseTransparency();
         this.navigator.reverseOpacity();
       },
     );
@@ -68,7 +74,6 @@ class MainPage extends StatefulWidget {
       iconSize: 25,
       fontSize: 12,
       onClick: () {
-        this.appBar.startTransparency();
         this.navigator.beginOpacity();
       },
       navigatorCallback: () {
@@ -84,7 +89,6 @@ class MainPage extends StatefulWidget {
         iconSize: 25,
         fontSize: 12,
         onClick: () {
-          this.appBar.reverseTransparency();
           this.navigator.reverseOpacity();
         });
     this.user = user;
@@ -99,7 +103,6 @@ class MainPage extends StatefulWidget {
 class MainState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
-    widget.appBar = this.getAppBar();
     this.setNavigator();
     super.initState();
   }
@@ -109,24 +112,23 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         drawer: this.getDrawer(context),
-        body: BackGround(
-            sigmaX: 2,
-            sigmaY: 2,
-            opacity: 0.39,
-            backgroundImage: "image/food.jpg",
-            color: Colors.white,
-            child: Builder(
+        body: Builder(
               builder: (BuildContext ctx) {
                 return Container(
                     alignment: Alignment.center,
                     height: ScreenTool.partOfScreenHeight(1),
                     child: Stack(
                       children: [
+                        ClipRect(
+                          child: Container(
+                            width: ScreenTool.partOfScreenWidth(1),
+                            height: ScreenTool.partOfScreenHeight(1),
+                            color: Color(0xFF172632),
+                          ),
+                        ),
                         widget.bodyContent,
                         Column(
                           children: [
-                            SizedBox(height: ScreenTool.partOfScreenHeight(0.025),),
-                            widget.appBar,
                             Expanded(child: SizedBox()),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -137,14 +139,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                       ],
                     ));
               },
-            )));
-  }
-
-  Widget getAppBar() {
-    return CustomAppBar(
-      userAvatarContainer: this.getCircleAvatar(size: 45),
-      username: widget.user.userName,
-    );
+            ));
   }
 
   CustomDrawer getDrawer(BuildContext context) {
@@ -181,26 +176,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       widthPercent: 1,
       children: drawerItems
     );
-  }
-
-  Widget getCircleAvatar({double size = 60}) {
-    return Container(
-        width: size,
-        height: size,
-        decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-                image: MemoryImage(widget.user.getAvatarBin()),
-                fit: BoxFit.cover),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 10, //阴影范围
-                spreadRadius: 1, //阴影浓度
-                color: Color(0x33000000), //阴影颜色
-              ),
-            ])
-        // child: , //增加文字等
-        );
   }
 
   Widget getAccount() {

@@ -7,6 +7,6 @@ class Food {
   Food({this.name,this.calorie});
 
   String getCalorie(){
-    return calorie.toString() + "KJ";
+    return calorie.toString() + "Kcal";
   }
 }

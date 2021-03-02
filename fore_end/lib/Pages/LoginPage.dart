@@ -14,6 +14,8 @@ import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Pages/MainPage.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
+import 'GuidePage.dart';
+
 class Login extends StatelessWidget {
   CustomButton backButton;
   CustomButton nextButton;
@@ -153,13 +155,23 @@ class Login extends StatelessWidget {
         int code = await u.synchronize();
         if(code == 1){
           EasyLoading.dismiss();
-          Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-            return new MainPage(user:u);
-          }),(ct)=>false);
+          if(u.needGuide){
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new GuidePage();
+            }),(ct)=>false);
+          }else{
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new MainPage(user:u);
+            }),(ct)=>false);
+          }
         }else{
           EasyLoading.showError("Login token invalid",
               duration: Duration(milliseconds: 2000));
         }
+      }else if(res.data['code'] == -6){
+        EasyLoading.showError("User does not exist",
+            duration: Duration(milliseconds: 2000));
+        this.passwordField.clearInput();
       }
     }on DioError catch(e){
       print("Exception when login\n");

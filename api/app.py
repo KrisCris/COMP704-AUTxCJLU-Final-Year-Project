@@ -8,6 +8,7 @@ from util.constants import SECRET_KEY
 
 from api.user import user
 from api.food import food
+from api.plan import plan
 
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ app.config.from_object(DevConfig())
 
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(food, url_prefix='/food')
+app.register_blueprint(plan, url_prefix='/plan')
 
 swagger = Swagger(app)
 
