@@ -363,7 +363,7 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-        Map<String, Uint8List> res = await this.pictureToBase64(image);
+        Map<String, List<int>> res = await this.pictureToBase64(image);
         var entry = res.entries.first;
         FoodRecognizer.addFoodPic(entry.key, entry.value, res['rotate'][0]);
       },
@@ -412,6 +412,9 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Future<int> getImageRotateAngular(List<int> bytes) async {
     Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
+    if(tags == null){
+      return 0;
+    }
     var orientation = tags['Orientation']; //获取该照片的拍摄方向
     switch (orientation) {
       case 3:
