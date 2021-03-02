@@ -2,13 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Themeable.dart';
 
-class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMixIn {
+class CustomButton extends StatefulWidget with DisableWidgetMixIn {
   ///The radius of border
   final double radius;
 
@@ -59,9 +60,6 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
   ///the opacity that flash animation end at
   double endOpac;
 
-  ///the color of flash cover
-  CalculatableColor flashColor;
-
   ///does the button have shadow
   bool hasShadow;
 
@@ -80,19 +78,15 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
   ///该组件的State,供外部调用state的方法. 历史遗留问题，不推荐通过这种方式调用state方法
   CustomButtonState state;
 
-  ///第一次渲染组件时的主题状态
-  ComponentThemeState firstThemeState;
-
   CustomButton(
       {this.text = "Button",
-      @required MyTheme theme,
       this.fontsize = 18.0,
       this.sizeChangeMode = 0,
       this.isBold = false,
-        bool disabled = false,
-        bool canChangeDisabled = true,
+      bool disabled = false,
+      bool canChangeDisabled = true,
       this.radius = 30.0,
-        this.hasShadow = false,
+      this.hasShadow = false,
       this.width = 120.0,
       this.height = 40.0,
       this.leftMargin = 0.0,
@@ -105,24 +99,32 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
       this.flucDura = 150,
       this.colorDura = 200,
       this.lengthDura = 200,
-      this.flashColor = CalculatableColor.white,
-      this.tapFunc = null,
-      this.doubleTapFunc = null,
-      this.firstThemeState = ComponentThemeState.normal,
+      Color bgColor,
+      Color textColor,
+      Color flashColor,
+      ThemeColorName firstColorName,
+      this.tapFunc,
+      this.doubleTapFunc,
       Key key})
       : super(key: key) {
-    this.theme = theme;
+    this.bgColor = MyTheme.convert(ThemeColorName.Button, color: bgColor);
+    this.textColor =
+        MyTheme.convert(ThemeColorName.NormalText, color: textColor);
+
+    if (firstColorName != null) {
+      this.bgColor = MyTheme.convert(firstColorName);
+    }
+
     this.canChangeDisable = canChangeDisabled;
     this.width = ScreenTool.partOfScreenWidth(this.width);
     this.height = ScreenTool.partOfScreenHeight(this.height);
-    this.textColor = CalculatableColor.transform(this.theme.lightTextColor);
     this.disabled = ValueNotifier<bool>(disabled);
   }
 
   ///创建State,并将S状态保存到私有变量. 历史遗留问题, 不推荐用这种方式保存state的引用
   @override
   State<StatefulWidget> createState() {
-    this.state = CustomButtonState(this.firstThemeState);
+    this.state = CustomButtonState();
     return this.state;
   }
 
@@ -167,16 +169,14 @@ class CustomButton extends StatefulWidget with ThemeWidgetMixIn,DisableWidgetMix
 ///混入了用于控制Disable状态的 [DisableStateMixIn]
 ///
 class CustomButtonState extends State<CustomButton>
-    with TickerProviderStateMixin, ThemeStateMixIn, DisableStateMixIn {
-
-  ///控制按钮点击后的闪烁动画
-  TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
-
+    with TickerProviderStateMixin, DisableStateMixIn {
   ///控制按钮长度变化的动画
   TweenAnimation<double> lengthAnimation = new TweenAnimation<double>();
 
   ///控制disable状态下, 点击按钮后的抖动动画
   TweenAnimation<double> fluctuateAnimation = new TweenAnimation<double>();
+
+  TweenAnimation<double> transparentAnimation = new TweenAnimation<double>();
 
   ///控制颜色变化的动画
   TweenAnimation<CalculatableColor> colorAnimation =
@@ -185,13 +185,11 @@ class CustomButtonState extends State<CustomButton>
   ///是否被点击
   bool isTap = false;
 
+  bool disableChangeDone = true;
+
   ///初次渲染组件时的宽度
   double firstWidth;
 
-  CustomButtonState(ComponentThemeState the)
-      : super() {
-    this.themeState = the;
-  }
   @override
   void didUpdateWidget(covariant CustomButton oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -203,11 +201,28 @@ class CustomButtonState extends State<CustomButton>
   void initBgColor() {
     //as button, only disabled state need set color
     if (widget.disabled.value) {
-      widget.bgColor = widget.theme.getDisabledColor();
+      Color color = MyTheme.convert(ThemeColorName.DisabledButton);
+      this.colorAnimation.initAnimation(color, color, widget.colorDura, this,
+          () {
+        if (mounted) setState(() {});
+      });
     } else {
-      //if not disabled state, just get the theme color
-      widget.bgColor = widget.theme.getThemeColor(this.themeState);
+      this.colorAnimation.initAnimation(
+          widget.bgColor, widget.bgColor, widget.colorDura, this, () {
+        if (mounted) setState(() {});
+      });
     }
+    this.transparentAnimation.initAnimation(0, 0.5, widget.colorDura, this, () {
+      setState(() {});
+    });
+    //闪烁动画执行到最高亮度后，若放开手指，就反向播放闪烁动画
+    this.transparentAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (!isTap) {
+          this.transparentAnimation.reverseAnimation();
+        }
+      }
+    });
   }
 
   @override
@@ -226,30 +241,9 @@ class CustomButtonState extends State<CustomButton>
         .fluctuateAnimation
         .initAnimation(0.0, 5.0, (widget.flucDura / 4).round(), this, null);
     this.lengthAnimation.initAnimation(
-        widget.width, widget.width, widget.lengthDura, this, null);
-    this.flashAnimation.initAnimation(
-        widget.startOpac, widget.endOpac, widget.flashDura, this, null);
+        widget.width, widget.width, widget.lengthDura, this, (){setState(() {
 
-    this.colorAnimation.initAnimation(
-        widget.bgColor, widget.bgColor, widget.colorDura, this, () {
-      if(mounted)setState(() {});
-    });
-
-    //颜色动画执行完毕后，更新当前的背景色。
-    //历史遗留问题，不建议在State中更改Widget的某些属性
-    this.colorAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.bgColor = widget.theme.getThemeColor(this.themeState);
-      }
-    });
-    //闪烁动画执行到最高亮度后，若放开手指，就反向播放闪烁动画
-    this.flashAnimation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (!isTap) {
-          this.flashAnimation.reverseAnimation();
-        }
-      }
-    });
+        });});
     //控制抖动动画次数，每次抖动的偏移量
     this.fluctuateAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -274,7 +268,7 @@ class CustomButtonState extends State<CustomButton>
     this.colorAnimation.dispose();
     this.lengthAnimation.dispose();
     this.fluctuateAnimation.dispose();
-    this.flashAnimation.dispose();
+    this.transparentAnimation.dispose();
     super.dispose();
   }
 
@@ -287,25 +281,24 @@ class CustomButtonState extends State<CustomButton>
           if (widget.doubleTapFunc != null) {
             widget.doubleTapFunc();
           } else if (widget.tapFunc != null) {
-            this.flashAnimation.beginAnimation();
+            this.transparentAnimation.beginAnimation();
             widget.tapFunc();
           }
         },
         onTapDown: (TapDownDetails tpd) {
           if (widget.disabled.value) {
             this.fluctuateAnimation.forward();
-          } else {
+          } else if (this.disableChangeDone) {
             this.isTap = true;
-            this.flashAnimation.beginAnimation();
+            this.transparentAnimation.beginAnimation();
           }
         },
         onTapUp: (TapUpDetails tpu) {
           if (widget.disabled.value) {
             return;
           }
-
           this.isTap = false;
-          this.flashAnimation.reverseAnimation();
+          this.transparentAnimation.reverseAnimation();
           if (widget.tapFunc != null) {
             widget.tapFunc();
           }
@@ -314,31 +307,57 @@ class CustomButtonState extends State<CustomButton>
           if (widget.disabled.value) return;
 
           this.isTap = false;
-          this.flashAnimation.reverseAnimation();
+          this.transparentAnimation.reverseAnimation();
         },
-        child: this.buttonUI);
+        child: this.buttonShape);
     AnimatedBuilder offset = AnimatedBuilder(
         animation: this.fluctuateAnimation.ctl,
         child: gesture,
         builder: (BuildContext context, Widget child) {
           return Transform.translate(
               offset: Offset(
-                  this.fluctuateAnimation.getValue() + this.calculatePosition(),
-                  0),
+                  this.fluctuateAnimation.value + this.calculatePosition(), 0),
               child: child);
         });
     return offset;
   }
 
-  Widget get buttonUI {
-    return Stack(
-        alignment: Alignment.center,
-        children: <Widget>[this.buttonShape, this.buttonCover]);
-  }
-
   Widget get buttonShape {
-    return AnimatedBuilder(
-        animation: this.lengthAnimation.ctl,
+    return CustomPaint(
+      foregroundPainter: ColorPainter(
+          borderRadius: widget.radius,
+          leftExtra: -widget.leftMargin,
+          rightExtra: -widget.rightMargin,
+          topExtra: -widget.topMargin,
+          bottomExtra: -widget.bottomMargin,
+          animation: this.transparentAnimation,
+          color: MyTheme.convert(ThemeColorName.TransparentShadow)
+              .withOpacity(this.transparentAnimation.value)),
+      child: Container(
+        width: this.lengthAnimation.value,
+        height: widget.height,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.radius),
+            color: this.colorAnimation.value,
+            boxShadow: [
+              widget.hasShadow
+                  ? BoxShadow(
+                      blurRadius: 12, //阴影范围
+                      spreadRadius: 3, //阴影浓度
+                      color: Color(0x33000000), //阴影颜色
+                    )
+                  : BoxShadow(
+                      blurRadius: 0, //阴影范围
+                      spreadRadius: 0, //阴影浓度
+                      color: Color(0x33000000), //阴影颜色
+                    )
+            ]
+        ),
+        margin: EdgeInsets.only(
+            left: widget.leftMargin,
+            right: widget.rightMargin,
+            top: widget.topMargin,
+            bottom: widget.bottomMargin),
         child: Center(
           child: Text(
             widget.text,
@@ -349,66 +368,11 @@ class CustomButtonState extends State<CustomButton>
                 fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight:
-                    widget.isBold ? FontWeight.bold : FontWeight.normal),
+                widget.isBold ? FontWeight.bold : FontWeight.normal),
           ),
-        ),
-        builder: (BuildContext context, Widget child) {
-          return Container(
-            width: this.lengthAnimation.getValue(),
-            height: widget.height,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(widget.radius),
-                color: this.colorAnimation.getValue(),
-                boxShadow: [
-                  widget.hasShadow?BoxShadow(
-                    blurRadius: 12, //阴影范围
-                    spreadRadius: 3, //阴影浓度
-                    color: Color(0x33000000), //阴影颜色
-                  ):BoxShadow(
-                    blurRadius: 0, //阴影范围
-                    spreadRadius: 0, //阴影浓度
-                    color: Color(0x33000000), //阴影颜色
-                  )
-                ]
-            ),
-            margin: EdgeInsets.only(
-                left: widget.leftMargin,
-                right: widget.rightMargin,
-                top: widget.topMargin,
-                bottom: widget.bottomMargin),
-            child: child,
-          );
-        });
-  }
-
-  Widget get buttonCover {
-    AnimatedBuilder container = AnimatedBuilder(
-        animation: this.lengthAnimation.ctl,
-        builder: (BuildContext context, Widget child) {
-          return Container(
-            width: this.lengthAnimation.getValue(),
-            height: widget.height,
-            margin: EdgeInsets.only(
-                left: widget.leftMargin,
-                right: widget.rightMargin,
-                top: widget.topMargin,
-                bottom: widget.bottomMargin),
-            decoration: new BoxDecoration(
-              color: widget.flashColor,
-              borderRadius: BorderRadius.all(Radius.circular(widget.radius)),
-            ),
-          );
-        });
-    AnimatedBuilder opacity = AnimatedBuilder(
-        animation: this.flashAnimation.ctl,
-        child: container,
-        builder: (BuildContext context, Widget child) {
-          return Opacity(
-            opacity: this.flashAnimation.getValue(),
-            child: child,
-          );
-        });
-    return opacity;
+        )
+      ),
+    );
   }
 
   ///用以计算长度变化后的按钮位置
@@ -418,10 +382,10 @@ class CustomButtonState extends State<CustomButton>
     if (widget.sizeChangeMode == 0)
       return 0;
     else if (widget.sizeChangeMode == 1) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return -(gap / 2);
     } else if (widget.sizeChangeMode == 2) {
-      double gap = this.firstWidth - this.lengthAnimation.getValue();
+      double gap = this.firstWidth - this.lengthAnimation.value;
       return gap / 2;
     }
   }
@@ -430,59 +394,16 @@ class CustomButtonState extends State<CustomButton>
     if (this.mounted) this.setState(() {});
   }
 
-  ///设置correct状态的动画效果，并返回旧的状态
-  @override
-  ComponentThemeState setCorrect() {
-    ComponentThemeState stt = super.setCorrect();
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
-    this.colorAnimation.beginAnimation();
-    return stt;
-  }
-
-  ///设置error状态的动画效果，并返回旧的状态
-  @override
-  ComponentThemeState setError() {
-    ComponentThemeState stt = super.setError();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
-    this.colorAnimation.beginAnimation();
-    return stt;
-  }
-
-  ///设置normal状态的动画效果，并返回旧的状态
-  @override
-  ComponentThemeState setNormal() {
-    ComponentThemeState stt = super.setNormal();
-
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
-    this.colorAnimation.beginAnimation();
-    return stt;
-  }
-
-  ///设置warning状态的动画效果，并返回旧的状态
-  @override
-  ComponentThemeState setWarning() {
-    ComponentThemeState stt = super.setWarning();
-    Color newColor = widget.theme.getThemeColor(this.themeState);
-    this.colorAnimation.initAnimation(
-        widget.bgColor, newColor, widget.colorDura, this, (){if(mounted)setState(() {});});
-    this.colorAnimation.beginAnimation();
-    return stt;
-  }
-
   ///设置变成disable状态时播放的动画
   @override
   void setDisabled() {
     this.colorAnimation.initAnimation(
         widget.bgColor,
-        widget.theme.getDisabledColor(),
-        widget.colorDura, this, (){if(mounted)setState(() {});});
+        MyTheme.convert(ThemeColorName.DisabledButton),
+        widget.colorDura,
+        this, () {
+      if (mounted) setState(() {});
+    });
     this.colorAnimation.beginAnimation();
   }
 
@@ -490,9 +411,22 @@ class CustomButtonState extends State<CustomButton>
   @override
   void setEnabled() {
     this.colorAnimation.initAnimation(
+        MyTheme.convert(ThemeColorName.DisabledButton),
         widget.bgColor,
-        widget.theme.getThemeColor(this.themeState),
-        widget.colorDura, this,(){if(mounted)setState(() {});});
+        widget.colorDura,
+        this, () {
+      if (mounted) setState(() {});
+    });
     this.colorAnimation.beginAnimation();
+  }
+
+  @override
+  void initDisabled() {
+    this.setDisabled();
+  }
+
+  @override
+  void initEnabled() {
+   this.setEnabled();
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 abstract class ContextPainter extends CustomPainter{
   BuildContext context;
 
+  ContextPainter({Listenable repaint}):super(repaint: repaint);
+
   void setContext(BuildContext ctx){
     this.context = ctx;
   }
@@ -11,10 +13,14 @@ abstract class ContextPainter extends CustomPainter{
     double height = size.height;
     double width = size.width;
     if(height == 0){
-      height = context.size.height;
+      if(context != null){
+        height = context.size.height;
+      }
     }
     if(width == 0){
-      width = context.size.width;
+      if(context != null){
+        width = context.size.width;
+      }
     }
     return new Size(width,height);
   }

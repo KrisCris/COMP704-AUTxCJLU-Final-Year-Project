@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
@@ -20,7 +20,7 @@ class Welcome extends StatelessWidget {
               decoration: TextDecoration.none,
               fontSize: 50.0,
               fontFamily: "Futura",
-              color: Colors.black),
+              color: MyTheme.convert(ThemeColorName.HeaderText)),
         ),
         SizedBox(height: 60.0),
         CustomButton(
@@ -30,7 +30,6 @@ class Welcome extends StatelessWidget {
             height: 55.0,
             radius: 30.0,
             sizeChangeMode: 2,
-            theme: MyTheme.blueStyle,
             isBold: true,
             tapFunc: () {
               Navigator.pushNamed(context, "register");
@@ -39,7 +38,6 @@ class Welcome extends StatelessWidget {
         CustomTextButton(
           "Already have account?",
           fontsize: 16.0,
-          theme: MyTheme.blueStyle,
           tapUpFunc: () {
             Navigator.pushNamed(context, "login");
           },
@@ -53,17 +51,13 @@ class Welcome extends StatelessWidget {
         height: 55.0,
         radius: 30.0,
         sizeChangeMode: 2,
-        theme: MyTheme.blueStyle,
         isBold: true,
         tapFunc: () {
           Navigator.pushNamed(context, "register");
         });
-    return  BackGround(
-          sigmaX: 15.0,
-          sigmaY: 15.0,
-          backgroundImage: "image/fruit-main.jpg",
-          color: Colors.white,
-          opacity: 0.79,
-          child: col);
+    return  Container(
+      color: MyTheme.convert(ThemeColorName.PageBackground),
+      child: col,
+    );
   }
 }

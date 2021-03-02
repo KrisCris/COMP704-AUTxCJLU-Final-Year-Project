@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
-import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
-import 'package:fore_end/Mycomponents/widgets/ExpandListView.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 
 ///自定义的AppBar，显示一些基本信息
@@ -105,7 +103,6 @@ class CustomAppBarState extends State<CustomAppBar>
             children: [
               SizedBox(height: 5),
               CustomIconButton(
-                theme: MyTheme.blueStyle,
                 icon: FontAwesomeIcons.doorOpen,
                 gap: 7,
                 text: "Log out",

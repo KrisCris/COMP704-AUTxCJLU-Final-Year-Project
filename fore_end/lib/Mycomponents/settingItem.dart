@@ -1,11 +1,7 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
-import 'package:fore_end/Mycomponents/widgets/ValueableImage.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
@@ -40,7 +36,6 @@ class SettingItem extends StatefulWidget
       this.rightComponent = CustomTextField(
         disabled: disabled,
         canChangeDisabled: canChangeDisabled,
-        theme: MyTheme.blueStyleForInput,
         defaultContent: text,
         ulDefaultWidth: 0,
         width: this.inputFieldWidth,
@@ -90,7 +85,7 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
         child: Container(
           width: double.infinity,
           height: 60,
-          color: Colors.white,
+          color: MyTheme.convert(ThemeColorName.ComponentBackground),
           margin: EdgeInsets.only(left: 20, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -100,7 +95,7 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
                 margin: EdgeInsets.only(left: 15),
                 child: Text(
                   widget.leftText,
-                  style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                  style: TextStyle(fontSize: 15.0, color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
               ),
               Expanded(child: SizedBox()),

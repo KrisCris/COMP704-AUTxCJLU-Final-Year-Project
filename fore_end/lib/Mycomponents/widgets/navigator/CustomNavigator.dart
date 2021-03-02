@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import '../buttons/CustomIconButton.dart';
+import '../../buttons/CustomIconButton.dart';
 
 ///自定义的导航器，用于多个标签页之间的切换
 class CustomNavigator extends StatefulWidget {
@@ -33,17 +33,18 @@ class CustomNavigator extends StatefulWidget {
   CustomNavigatorState state;
 
   CustomNavigator({
+    Key key,
     this.width,
     this.height,
     this.opacity = 1,
     this.backgroundColor = Colors.white,
     this.controller,
     List<CustomIconButton> buttons,
-  }) {
+  }):super(key:key) {
     this.buttons = buttons;
     //遍历数组，设置对应按钮所属的导航器
     for (CustomIconButton bt in this.buttons) {
-      bt.setParentNavigator(this);
+
     }
     //默认选中第一个标签按钮
     this.buttons[0].addDelayInit(() {
@@ -74,50 +75,6 @@ class CustomNavigator extends StatefulWidget {
         this.buttons[j].setFocus(false);
       }
     }
-  }
-
-  ///根据按钮实例 [button] 选重某个按钮
-  void activateButtonByObject(CustomIconButton button) {
-    for (CustomIconButton bt in this.buttons) {
-      if (bt == button) {
-        bt.setFocus(true);
-        this.activateButton = bt;
-      } else {
-        bt.setFocus(false);
-      }
-    }
-  }
-
-  ///获取当前选中的标签页索引
-  int getActivatePageNo() {
-    return this.controller.index;
-  }
-
-  ///获取标签页控制器 [TabController]
-  TabController getController() {
-    return this.controller;
-  }
-
-  ///根据按钮实例 [button] 切换标签页
-  void switchPageByObject(CustomIconButton button) {
-    for (int i = 0; i < this.buttons.length; i++) {
-      if (this.buttons[i] == button) {
-        this.controller.animateTo(i);
-        return;
-      }
-    }
-  }
-
-  ///历史遗留问题，不推荐使用这种方式调用State的函数
-  ///开始播放透明度动画
-  void beginOpacity() {
-    this.state.beginOpacity();
-  }
-
-  ///历史遗留问题，不推荐使用这种方式调用State的函数
-  ///逆向播放透明度动画
-  void reverseOpacity() {
-    this.state.reverseOpacity();
   }
 }
 
@@ -196,18 +153,18 @@ class CustomNavigatorState extends State<CustomNavigator>
         ),
         builder: (BuildContext context, Widget child) {
           return Container(
-              width: this.lengthChange.getValue(),
+              width: this.lengthChange.value(),
               height: widget.height,
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
               decoration: new BoxDecoration(
                   color: widget.backgroundColor
-                      .withOpacity(this.backgroundOpacity.getValue()),
+                      .withOpacity(this.backgroundOpacity.value()),
                   borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: this.shadowSize.getValue(), //阴影范围
-                      spreadRadius: this.shadowDense.getValue(), //阴影浓度
+                      blurRadius: this.shadowSize.value(), //阴影范围
+                      spreadRadius: this.shadowDense.value(), //阴影浓度
                       color: Color(0x33000000), //阴影颜色
                     ),
                   ]),
@@ -219,7 +176,7 @@ class CustomNavigatorState extends State<CustomNavigator>
       child: container,
       builder: (BuildContext context, Widget child) {
         return Transform.translate(
-          offset: Offset(this.positionChange.getValue(), 0),
+          offset: Offset(this.positionChange.value(), 0),
           child: child,
         );
       },

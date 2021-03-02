@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/Pages/ComponentTestPage.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'MyTool/User.dart';
-import 'Pages/AccountPage.dart';
+import 'Pages/account/AccountPage.dart';
 import 'Pages/GuidePage.dart';
 import 'Pages/LoginPage.dart';
-import 'Pages/MainPage.dart';
+import 'Pages/main/MainPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
 
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     this._preCacheAllImage();
     return MaterialApp(
       home: CoverPage(),
+      // home: ComponentTestPage(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

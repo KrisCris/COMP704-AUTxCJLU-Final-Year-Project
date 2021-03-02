@@ -1,20 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 
 class GoalData extends StatelessWidget {
   double width;
   double height;
   double margin;
   Color backgroundColor;
+  Color textColor;
+
   GoalData(
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white}) {
+      this.backgroundColor = Colors.white,
+      this.textColor = Colors.white}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
   }
@@ -38,8 +41,8 @@ class GoalData extends StatelessWidget {
         maxHeight: 30,
         underLineDistance: 1,
         underLineLength: this.width * 2 / 3,
-        fontColor: Color(0xFF5079AF),
-        dividerColor: Color(0xFF5079AF),
+        fontColor: this.textColor,
+        dividerColor: this.textColor,
         fontSize: 17,
       ),
       SizedBox(height: margin),
@@ -73,7 +76,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: Color(0xFF5079AF),
+                color:this.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -82,12 +85,13 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           )
         ],
       ),
     ));
+    return weight;
   }
   List<Widget> getLoseWeight(User u){
     List<Widget> weight = [];
@@ -102,7 +106,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -111,7 +115,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -128,7 +132,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -137,7 +141,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           )
         ],
@@ -154,7 +158,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           ),
           Text(
@@ -163,7 +167,7 @@ class GoalData extends StatelessWidget {
                 fontFamily: "Futura",
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
-                color: Color(0xFF5079AF),
+                color: this.textColor,
                 decoration: TextDecoration.none),
           )
         ],

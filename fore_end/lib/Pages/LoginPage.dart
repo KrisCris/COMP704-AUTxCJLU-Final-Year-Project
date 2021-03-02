@@ -3,17 +3,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
-import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/Pages/MainPage.dart';
-import 'package:fore_end/interface/Themeable.dart';
-
+import 'package:fore_end/Pages/main/MainPage.dart';
 import 'GuidePage.dart';
 
 class Login extends StatelessWidget {
@@ -32,8 +29,7 @@ class Login extends StatelessWidget {
       leftMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       tapFunc: () {
         Navigator.pop(context);
       },
@@ -44,7 +40,6 @@ class Login extends StatelessWidget {
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
-      theme: MyTheme.blueStyle,
       disabled: true,
       width: ScreenTool.partOfScreenWidth(0.20),
       tapFunc: () async {
@@ -58,7 +53,6 @@ class Login extends StatelessWidget {
     this.emailField = CustomTextField(
       placeholder: "Email address",
       // keyboardAction: TextInputAction.next,
-      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.email,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -72,7 +66,6 @@ class Login extends StatelessWidget {
     );
     this.passwordField = CustomTextField(
       placeholder: "Password",
-      theme: MyTheme.blueStyleForInput,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
       onCorrect: () {
@@ -86,12 +79,8 @@ class Login extends StatelessWidget {
     );
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: BackGround(
-          sigmaX: 15,
-          sigmaY: 15,
-          opacity: 0.79,
-          backgroundImage: "image/fruit-main.jpg",
-          color: Colors.white,
+      body: Container(
+          color: MyTheme.convert(ThemeColorName.PageBackground),
           child: this.LoginUI)
     );
   }
@@ -111,7 +100,7 @@ class Login extends StatelessWidget {
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
                     fontFamily: "Futura",
-                    color: Colors.black)),
+                    color: MyTheme.convert(ThemeColorName.HeaderText))),
           ),
           SizedBox(height: ScreenTool.partOfScreenHeight(0.08)),
           this.emailField,

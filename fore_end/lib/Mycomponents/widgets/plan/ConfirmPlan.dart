@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/text/ValueText.dart';
 
@@ -51,7 +50,6 @@ class ConfirmPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
       width: 0.35,
@@ -62,9 +60,8 @@ class ConfirmPlan extends StatelessWidget {
     );
 
     CustomButton backButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       fontsize: 15,
       width: 0.35,
       height: 50,

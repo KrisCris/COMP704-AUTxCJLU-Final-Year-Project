@@ -218,7 +218,9 @@ def get_basic_info():
         'avatar': b2s_avatar,
         'gender': u.gender,
         'age': u.age,
-        'needGuide': u.guide
+        'needGuide': u.guide,
+        'weight': u.weight,
+        'height': u.height
     })
 
 

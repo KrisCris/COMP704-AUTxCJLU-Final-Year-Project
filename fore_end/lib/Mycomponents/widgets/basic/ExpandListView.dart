@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/clipper/DownTopClipper.dart';
 import 'package:fore_end/Mycomponents/clipper/TopDownClipper.dart';
 
@@ -117,7 +117,7 @@ with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return  ClipRect(
-      clipper: this.activateClipper == 0 ? TopDownClipper(clipAnimation.getValue()) : DownTopClipper(clipAnimation.getValue()),
+      clipper: this.activateClipper == 0 ? TopDownClipper(clipAnimation.value) : DownTopClipper(clipAnimation.value),
       child: Container(
           width: widget.width,
           height: widget.height,

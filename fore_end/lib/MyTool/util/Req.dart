@@ -87,13 +87,30 @@ class Requests{
     Response res = await dio.post("/plan/set_plan",data: dt);
     return res;
   }
+  static Future<Response> finishPlan(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/plan/finish_plan",data: dt);
+    return res;
+  }
   static Future<Response> getPlan(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/plan/get_current_plan",data: dt);
     return res;
   }
-
+  static Future<Response> consumeFoods(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/plan/consume_foods",data: dt);
+    return res;
+  }
+  static Future<Response> addMealFoods(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/plan/consume_foods",data: dt);
+    return res;
+  }
   static Future<Response> modifyBasicInfo(data) async{
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);

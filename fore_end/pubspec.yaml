@@ -18,11 +18,14 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
+  #sdk: ">=2.8.0 <3.0.0"
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  material_floating_search_bar: ^0.2.6
   keyboard_avoider: ^0.1.2
   font_awesome_flutter: 8.10.0
+  syncfusion_flutter_charts: ^18.4.39
   dio: ^3.0.10
   path_provider: ^1.6.22
   cookie_jar: ^1.0.0

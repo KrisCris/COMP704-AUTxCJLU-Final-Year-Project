@@ -2,22 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Plan.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/DotBox.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 
 class PlanNotifier extends StatelessWidget {
   double width;
   double height;
   double margin;
   Color backgroundColor;
+  Color effectColor;
   PlanNotifier(
       {@required double width,
       @required double height,
       this.margin = 20,
-      this.backgroundColor = Colors.white}) {
+      this.backgroundColor = Colors.white,
+        this.effectColor
+      }) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
   }
@@ -27,22 +30,22 @@ class PlanNotifier extends StatelessWidget {
     User u = User.getInstance();
     Plan p = u.plan;
     double barThickness = 15;
-    ValueBar calories = ValueBar<double>(
-      minVal: 0.0,
-      maxVal: p.dailyCaloriesUpperLimit,
-      adjustVal: 1.0,
+    ValueBar calories = ValueBar<int>(
+      minVal: 0,
+      maxVal: p.dailyCaloriesUpperLimit.floor(),
+      adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,
       showDragHead: false,
       valuePosition: ValuePosition.right,
       borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
       roundNum: 1,
-      initVal: 100,
+      initVal: u.getTodayCaloriesIntake(),
       showBorder: false,
       couldExpand: true,
       showAdjustButton: false,
       showValue: true,
-      unit: "/ " + p.dailyCaloriesUpperLimit.toString(),
+      unit: "/ " + p.dailyCaloriesUpperLimit.floor().toString(),
       barColor: Color(0xFFAFEC71),
       fontColor: Color(0xFF5079AF),
       barThickness: barThickness,
@@ -62,7 +65,7 @@ class PlanNotifier extends StatelessWidget {
                     underLineLength: 0,
                     maxHeight: 25,
                     maxWidth: 0.7,
-                    fontColor: Color(0xFF5079AF),
+                    fontColor: Color(0xFFD1D1D1),
                   ))
             ],
           ),
@@ -70,23 +73,23 @@ class PlanNotifier extends StatelessWidget {
         ],
       ),
     ];
-    if (p.planType == 1) {
-      ValueBar protein = ValueBar<double>(
-        minVal: 0.0,
-        maxVal: p.dailyProteinUpperLimit,
-        adjustVal: 1.0,
+    if (p.planType == 3) {
+      ValueBar protein = ValueBar<int>(
+        minVal: 0,
+        maxVal: p.dailyProteinUpperLimit.floor(),
+        adjustVal: 1,
         width: this.width - 2 * margin,
         borderThickness: 6,
         showDragHead: false,
         valuePosition: ValuePosition.right,
         borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
         roundNum: 1,
-        initVal: 5,
+        initVal: u.getTodayProteinIntake(),
         showBorder: false,
         showAdjustButton: false,
         couldExpand: true,
         showValue: true,
-        unit: "/ " + p.dailyProteinUpperLimit.toString(),
+        unit: "/ " + p.dailyProteinUpperLimit.floor().toString(),
         barColor: Color(0xFF72DEEF),
         fontColor: Color(0xFF5079AF),
         barThickness: barThickness,
@@ -106,22 +109,23 @@ class PlanNotifier extends StatelessWidget {
                       underLineLength: 0,
                       maxHeight: 25,
                       maxWidth: 0.7,
-                      fontColor: Color(0xFF5079AF),
+                      fontColor: Color(0xFFD1D1D1),
                     ))
               ],
             ),
             protein
           ],
         ),
-        SizedBox(height: this.margin)
       ]);
     }
+    content.add(SizedBox(height: this.margin));
     DotColumn box = DotColumn(
         width: this.width,
         height: this.height,
         borderRadius: 6,
         mainAxisAlignment: MainAxisAlignment.start,
         backgroundColor: this.backgroundColor,
+        paintColor: this.effectColor,
         children: content);
     return box;
   }

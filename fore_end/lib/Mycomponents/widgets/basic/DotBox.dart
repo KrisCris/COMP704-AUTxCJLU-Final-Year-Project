@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 
 class DotColumn extends StatefulWidget{
@@ -57,7 +59,7 @@ class DotColumn extends StatefulWidget{
     this._width = ScreenTool.partOfScreenWidth(width);
     this._height = ScreenTool.partOfScreenHeight(height);
     if(backgroundColor == null){
-      backgroundColor = Color(0xFFF1F1F1);
+      backgroundColor = MyTheme.convert(ThemeColorName.ComponentBackground);
     }
     this._dotAnimationDuration = dotAnimationDuration;
     this._paddingLeft = paddingLeft;
@@ -98,15 +100,11 @@ with TickerProviderStateMixin{
     dotMoveAnimation = new TweenAnimation();
 
     dotMoveAnimation.initAnimation(
-        0.0, widget._dotGap, widget._dotAnimationDuration, this, () {
-      setState(() {});
-    });
+        0.0, widget._dotGap, widget._dotAnimationDuration, this, null);
     dotMoveAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         dotMoveAnimation.initAnimation(
-            0.0, widget._dotGap, widget._dotAnimationDuration, this, () {
-          setState(() {});
-        });
+            0.0, widget._dotGap, widget._dotAnimationDuration, this, null);
         dotMoveAnimation.forward();
       }
     });
@@ -116,34 +114,43 @@ with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     List<Widget> rowContent = [];
-    rowContent.add(SizedBox(width: widget._paddingLeft));
+    if(widget._paddingLeft != 0){
+      rowContent.add(SizedBox(width: widget._paddingLeft));
+    }
     rowContent.add(Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: widget.mainAxisAlignment,
       children: widget.children,
     ));
-    rowContent.add(SizedBox(width: widget._paddingRight));
+    if(widget._paddingRight != 0){
+      rowContent.add(SizedBox(width: widget._paddingRight));
+    }
     Widget res = ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
             child: Stack(
               children: [
+                CustomPaint(
+                  foregroundPainter: ColorPainter(
+                      color: widget._backgroundColor,
+                      context:context,
+                      animation: this.dotMoveAnimation,
+                      contextPainter: DotPainter(
+                          color: widget._paintColor,
+                          dotGap: widget._dotGap,
+                          context: context,
+                          moveAnimation: this.dotMoveAnimation),
+                  ),
+                  child: Container(
+                    width: widget._width,
+                  ),
+                ),
                 Container(
                   // alignment: Alignment.center,
-                  color: widget._backgroundColor,
+                  // color: widget._backgroundColor,
                   width: widget._width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: rowContent,
-                  ),
-                ),
-                CustomPaint(
-                  foregroundPainter: DotPainter(
-                      color: widget._paintColor,
-                      dotGap: widget._dotGap,
-                      context: context,
-                      moveVal: this.dotMoveAnimation.getValue()),
-                  child: Container(
-                    width: widget._width,
                   ),
                 ),
               ],

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
-import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
 class BodyDataInputer extends StatelessWidget {
@@ -25,14 +24,17 @@ class BodyDataInputer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();
+    if(u.gender != null){
+      this.gender = u.gender;
+      this.genderRatio = u.gender==1?5:-161;
+    }
     CustomButton nextButton = CustomButton(
-      theme: MyTheme.blueStyle,
       radius: 5,
       fontsize: 15,
       width: 0.8,
       height: 50,
       text: "Next Step",
-      disabled: true,
+      disabled: u.gender==null,
       tapFunc: this.nextDo,
     );
 
@@ -82,7 +84,7 @@ class BodyDataInputer extends StatelessWidget {
       unit: "KG",
       maxVal: 150,
       minVal: 30,
-      initVal: u.bodyWeight == null?50:u.bodyWeight,
+      initVal: u.bodyWeight == null?50:u.bodyWeight.floor(),
       adjustVal: 1,
       barColor: Color(0xFFBCA5D6),
       borderThickness: 4,
@@ -109,7 +111,6 @@ class BodyDataInputer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       gap: ScreenTool.partOfScreenWidth(0.1),
     );
-
     genderChoose.addValueChangeListener(() {
       if (genderChoose.getValue() >= 0) {
         this.genderRatio = genderChoose.getValue();

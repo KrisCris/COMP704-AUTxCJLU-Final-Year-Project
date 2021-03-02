@@ -2,17 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/Picker_Tool.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
+import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 
 class ResultPage extends StatefulWidget {
   static const String defaultBackground = "image/fruit-main.jpg";
   String backgroundBase64;
   FoodRecognizer recognizer;
+  CustomButton breakfastButton;
+  CustomButton lunchButton;
+  CustomButton dinnerButoon;
 
   ResultPage({Key key, String backgroundBase64}) : super(key: key) {
     this.backgroundBase64 = backgroundBase64;
@@ -30,6 +34,7 @@ class ResultPage extends StatefulWidget {
 
 class ResultPageState extends State<ResultPage> {
   bool scrolling = false;
+  var mealsName = ['breakfast', 'lunch','dinner'];
 
   @override
   void initState() {
@@ -49,14 +54,59 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字 ====参考中间的提示文字
+    Widget addMealTextButton =GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        child: Text(
+          "Add foods to Meal？",
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Futura',
+            color: MyTheme.convert(ThemeColorName.NormalText),
+            decoration: TextDecoration.none,
+          ),
+
+
+        ),
+      ),
+      onTap: (){
+        ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
+        ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
+        ///这里还可以计算总的其他营养数据 比如protein
+        double cal = 0;
+        widget.recognizer.foods.forEach((fd) {
+          cal += fd.food.calorie*fd.food.weight;
+        });
+
+        String totalCalories=cal.toString();
+        JhPickerTool.showStringPicker(context,
+            title: 'Total: '+totalCalories+ ' Kcal',
+            normalIndex: 0,
+            isChangeColor: true,
+            data: this.mealsName, clickCallBack: (int index, var item) {
+              if(item=="breakfast"){
+                FoodRecognizer.addFoodToMealName("breakfast");
+              }else if(item=="lunch"){
+                FoodRecognizer.addFoodToMealName("lunch");   ///添加到午餐会报错
+              }else if(item=="dinner"){
+                FoodRecognizer.addFoodToMealName("dinner");
+              }
+            });
+
+
+      },
+    );
+
     Widget header = Row(
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
           text: "Your Foods Here",
           fontSize: 18,
-          fontColor: Colors.white,
-          dividerColor: Colors.white,
+          fontColor: MyTheme.convert(ThemeColorName.NormalText),
+          dividerColor: MyTheme.convert(ThemeColorName.NormalText),
           underLineDistance: 3,
           maxHeight: 25,
           maxWidth: 200,
@@ -64,12 +114,11 @@ class ResultPageState extends State<ResultPage> {
         ),
         Expanded(child: SizedBox()),
         CustomIconButton(
-            theme: MyTheme.WhiteAndBlack,
             icon: FontAwesomeIcons.times,
             iconSize: 23,
             buttonSize: 35,
             backgroundOpacity: 0,
-          onClick: (){
+            onClick: (){
               Navigator.pop(context);
           },
         ),
@@ -84,6 +133,8 @@ class ResultPageState extends State<ResultPage> {
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
             duration: Duration(milliseconds: 100)));
+
+
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
@@ -95,6 +146,11 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
+          ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
+          widget.recognizer.isEmpty()? Container():addMealTextButton,
+
+
+
         ],
       ),
     );
@@ -111,7 +167,7 @@ class ResultPageState extends State<ResultPage> {
             style: TextStyle(
                 fontSize: 16,
                 decoration: TextDecoration.none,
-                color: Colors.white,
+                color: MyTheme.convert(ThemeColorName.NormalText),
                 fontFamily: "Futura"),
           ),
         ),

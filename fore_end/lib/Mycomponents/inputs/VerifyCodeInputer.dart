@@ -1,19 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fore_end/MyTool/MyCounter.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/Req.dart';
+import 'package:fore_end/MyTool/util/MyCounter.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/interface/Themeable.dart';
 
 import 'CustomTextField.dart';
 
 ///用于输入验证码的组件
-class VerifyCodeInputer extends StatefulWidget{
-
+class VerifyCodeInputer extends StatefulWidget {
   ///根据该输入框获取要发送的邮箱
-  //TODO: 也可支持手机短信
-  @required CustomTextField emailField;
+  @required
+  CustomTextField emailField;
 
   ///当验证码正确时的回调
   Function onCheckSuccess;
@@ -42,10 +41,19 @@ class VerifyCodeInputer extends StatefulWidget{
   ///历史遗留问题，不推荐用这种方式保存State的引用
   VerifyCodeState state;
 
-  VerifyCodeInputer({Key key,this.transVerifyType=false, this.emailField, this.onCheckFailed,this.onCheckSuccess,
-    this.firstShowText="Acquire Verify Code",this.repeatShowText="Acquire again",
-    this.checkWrongText="Wrong verify code",this.placeHolder="input verify code",
-    this.width = 0.7}):super(key:key);
+  VerifyCodeInputer(
+      {Key key,
+      this.transVerifyType = false,
+      this.emailField,
+      this.onCheckFailed,
+      this.onCheckSuccess,
+      this.firstShowText = "Acquire Verify Code",
+      this.repeatShowText = "Acquire again",
+      this.checkWrongText = "Wrong verify code",
+      this.placeHolder = "input verify code",
+      double width = 0.7}): super(key: key){
+      this.width = ScreenTool.partOfScreenWidth(width);
+  }
 
   ///历史遗留问题，不推荐用这种方式保存State的引用
   @override
@@ -56,38 +64,36 @@ class VerifyCodeInputer extends StatefulWidget{
 
   ///历史遗留问题，不推荐用这种方式调用state的函数
   ///设置按钮禁用状态
-  void setButtonDisabled(bool dis){
+  void setButtonDisabled(bool dis) {
     this.state.button.setDisabled(dis);
   }
 
   ///历史遗留问题，不推荐用这种方式调用state的函数
   ///设置输入框error状态
-  void setError(){
+  void setError() {
     this.state.textField.setError();
   }
 
   ///历史遗留问题，不推荐用这种方式调用state的函数
   ///设置输入框correct状态
-  void setCorrect(){
+  void setCorrect() {
     this.state.textField.setCorrect();
   }
 
   //TODO: zsk 补充注释
-  bool getCodeType(){
+  bool getCodeType() {
     return this.transVerifyType;
   }
 
   ///历史遗留问题，不推荐用这种方式调用state的函数
   ///获取用户点击获取验证码按钮时，输入框里的内容
-  String getContentWhenClickButton(){
+  String getContentWhenClickButton() {
     return this.state.contentWhenClickButton;
   }
-
 }
 
 ///VerifyCodeInputer的State类
-class VerifyCodeState extends State<VerifyCodeInputer>{
-
+class VerifyCodeState extends State<VerifyCodeInputer> {
   ///当用户点击获取验证码按钮时，输入框里的内容
   String contentWhenClickButton;
 
@@ -98,15 +104,13 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   CustomTextField textField;
 
   ///按钮本体
-  CustomButton  button;
+  CustomButton button;
 
   ///计时器，用于控制重复获取验证码的间隔
   MyCounter counter;
 
-
   @override
   void initState() {
-
     ///设置计时器的间隔，默认1000毫秒进行一次倒数，总共进行60次
     //TODO: 可以由外部设置倒数间隔
     this.counter = new MyCounter(times: 60, duration: 1000);
@@ -125,68 +129,71 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
     };
     super.initState();
   }
+
   @override
   void dispose() {
-    if(this.counter != null){
+    if (this.counter != null) {
       this.counter.stop();
     }
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Positioned(
-            left: 0,
-            child: this.getInput()
-        ),
-        Positioned(
-            child: this.getButton()
-        )
-
-      ],
+    return Container(
+      width: widget.width,
+      child: Stack(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                this.getInput()
+              ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [this.getButton()],
+          )
+        ],
+      ),
     );
   }
 
-  Widget getButton(){
+  Widget getButton() {
     this.button = CustomButton(
         text: widget.firstShowText,
         fontsize: 20,
         width: widget.width,
         height: 50,
         radius: 8,
-        theme: MyTheme.blueStyle,
         disabled: true,
         sizeChangeMode: 2,
-        tapFunc: ()async {
+        tapFunc: () async {
           this.verified = false;
           this.contentWhenClickButton = widget.emailField.getValue();
           this.button.fontsize = 20;
           this.button.setDisabled(true);
-          this.button.setWidth(0.3*widget.width);
-          this.textField.setWidth(0.65*widget.width);
+          this.button.setWidth(0.3 * widget.width);
+          this.textField.setWidth(widget.width * 0.65);
           if (this.counter.isStop()) {
             this.counter.start();
           }
           ////////////zsk修改
-          if(widget.getCodeType()){
+          if (widget.getCodeType()) {
             this.sendSecurityCode(this.contentWhenClickButton);
-          }else{
+          } else {
             this.sendEmail(this.contentWhenClickButton);
           }
-
         },
         isBold: true);
     return this.button;
   }
 
-  Widget getInput(){
+  Widget getInput() {
     this.textField = CustomTextField(
       placeholder: widget.placeHolder,
       isAutoChangeState: false,
       inputType: InputFieldType.verifyCode,
-      theme: MyTheme.blueStyleForInput,
       width: 0,
       sizeChangeMode: 0,
       onCorrect: () async {
@@ -197,7 +204,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
           this.textField.setErrorText("verify code invalid");
           return;
         }
-        if(this.verified)return;
+        if (this.verified) return;
         String codeVal = this.textField.getValue();
         this.checkVerifyCode(emailVal, codeVal);
         if (!this.counter.isStop()) return;
@@ -212,11 +219,9 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
   ///参数 [codeVal]  用户输入的验证码
   ///
   Future<void> checkVerifyCode(String emailVal, String codeVal) async {
-    try{
-      Response res = await Requests.checkVerifyCode({
-        "email": emailVal,
-        "auth_code": codeVal
-      });
+    try {
+      Response res = await Requests.checkVerifyCode(
+          {"email": emailVal, "auth_code": codeVal});
       if (res.data['code'] == -4) {
         widget.onCheckFailed();
         this.textField.setError();
@@ -226,7 +231,7 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
         this.textField.setCorrect();
         this.verified = true;
       }
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("Exception when check verify code\n");
       print(e.toString());
     }
@@ -234,26 +239,21 @@ class VerifyCodeState extends State<VerifyCodeInputer>{
 
   ///向邮箱中发送验证码
   Future<void> sendEmail(String emailVal) async {
-    try{
-      Response res = await Requests.sendRegisterEmail({
-        "email": emailVal
-      });
-    } on DioError catch(e){
+    try {
+      Response res = await Requests.sendRegisterEmail({"email": emailVal});
+    } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());
     }
   }
 
   //TODO: zsk 补充注释
-  Future<void> sendSecurityCode(String emailVal) async{
-    try{
-      Response res = await Requests.sendSecurityCode({
-        "email": emailVal
-      });
-    } on DioError catch(e){
+  Future<void> sendSecurityCode(String emailVal) async {
+    try {
+      Response res = await Requests.sendSecurityCode({"email": emailVal});
+    } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());
     }
   }
-
 }

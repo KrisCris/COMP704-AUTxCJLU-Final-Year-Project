@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'package:fore_end/MyTool/CalculatableColor.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
@@ -120,6 +118,10 @@ with ValueableWidgetMixIn<T>{
   void setUnChosen() {
     this._chosen.value = false;
   }
+
+  bool isChosen(){
+    return this._chosen.value;
+  }
 }
 
 class CardChooserState extends State<CardChooser>
@@ -176,6 +178,10 @@ class CardChooserState extends State<CardChooser>
   }
 
   void initChosenNotifier() {
+    if(widget._chosen.value){
+      fontSizeAnimation.beginAnimation();
+      dotMoveAnimation.beginAnimation();
+    }
     widget._chosen.addListener(() {
       if (widget._chosen.value == false) {
         dotMoveAnimation.stop();
@@ -198,7 +204,7 @@ class CardChooserState extends State<CardChooser>
     rowContent.add(Text(widget._text,
         textDirection: TextDirection.ltr,
         style: TextStyle(
-            fontSize: fontSizeAnimation.getValue(),
+            fontSize: fontSizeAnimation.value,
             color: widget._textColor,
             fontFamily: "Futura",
             decoration: TextDecoration.none,
@@ -208,6 +214,9 @@ class CardChooserState extends State<CardChooser>
     Widget res = GestureDetector(
         onTapDown: (TapDownDetails dt) {
           this.sizeChangeAnimation.beginAnimation();
+        },
+        onTapCancel: (){
+          this.sizeChangeAnimation.reverse();
         },
         onTapUp: (TapUpDetails dt) {
           widget._chosen.value = true;
@@ -221,8 +230,8 @@ class CardChooserState extends State<CardChooser>
         child: ClipRRect(
           borderRadius: BorderRadius.circular(widget._borderRadius),
           child: Container(
-            width: widget._width * sizeChangeAnimation.getValue(),
-            height: widget._height * sizeChangeAnimation.getValue(),
+            width: widget._width * sizeChangeAnimation.value,
+            height: widget._height * sizeChangeAnimation.value,
             color: widget._backgroundColor,
             child: Stack(
               children: [
@@ -230,10 +239,10 @@ class CardChooserState extends State<CardChooser>
                   foregroundPainter: DotPainter(
                       color: widget._paintColor,
                       dotGap: widget._dotGap,
-                      moveVal: this.dotMoveAnimation.getValue()),
+                      moveAnimation: this.dotMoveAnimation),
                   child: Container(
-                    width: widget._width * sizeChangeAnimation.getValue(),
-                    height: widget._height * sizeChangeAnimation.getValue(),
+                    width: widget._width * sizeChangeAnimation.value,
+                    height: widget._height * sizeChangeAnimation.value,
                   ),
                 ),
                 Container(

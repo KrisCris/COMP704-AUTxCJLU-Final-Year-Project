@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/UnderLinePainter.dart';
 
 class TitleText extends StatelessWidget {
@@ -11,9 +11,10 @@ class TitleText extends StatelessWidget {
   double maxHeight;
   double underLineDistance;
   double underLineLength;
+  Alignment alignment;
   Color fontColor;
   Color dividerColor;
-  TitleText({this.text="", this.underLineDistance=5,double underLineLength, this.fontSize=14,this.lineWidth=3,double maxWidth=100,double maxHeight=20, this.fontColor=Colors.white, this.dividerColor=Colors.white}){
+  TitleText({this.text="", this.alignment,this.underLineDistance=5,double underLineLength, this.fontSize=14,this.lineWidth=3,double maxWidth=100,double maxHeight=20, this.fontColor=Colors.white, this.dividerColor=Colors.white}){
     this.maxWidth = ScreenTool.partOfScreenWidth(maxWidth);
     this.maxHeight = ScreenTool.partOfScreenHeight(maxHeight);
     if(underLineLength == null){
@@ -32,6 +33,7 @@ class TitleText extends StatelessWidget {
       child: Container(
         width: maxWidth,
         height: maxHeight,
+        alignment: this.alignment,
         child: Text(this.text,
             style: TextStyle(
                 fontSize: this.fontSize,

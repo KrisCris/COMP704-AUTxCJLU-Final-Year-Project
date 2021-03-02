@@ -22,11 +22,13 @@ abstract class DisableStateMixIn{
   ///As the callback of valueNotifier<bool>
   void setDisabled();
   void setEnabled();
+  void initDisabled(){setDisabled();}
+  void initEnabled(){setEnabled();}
   void initDisableListener(ValueNotifier<bool> dis){
     if(dis.value){
-      this.setDisabled();
+      this.initDisabled();
     }else{
-      this.setEnabled();
+      this.initEnabled();
     }
     dis.addListener((){
       if(dis.value){

@@ -4,19 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/MyTheme.dart';
-import 'package:fore_end/MyTool/Req.dart';
-import 'package:fore_end/MyTool/ScreenTool.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
-import 'package:fore_end/interface/Themeable.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import 'GuidePage.dart';
-import 'MainPage.dart';
 import 'WelcomePage.dart';
 
 void main() {
@@ -48,7 +46,6 @@ class Register extends StatelessWidget {
     this.emailTextField = CustomTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
-      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
@@ -86,7 +83,6 @@ class Register extends StatelessWidget {
     this.confirmPasswordTextField = CustomTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "re-enter the password",
@@ -119,7 +115,6 @@ class Register extends StatelessWidget {
       placeholder: 'password',
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
@@ -146,7 +141,6 @@ class Register extends StatelessWidget {
       placeholder: 'Nick name',
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
-      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "please input your nick name",
       maxlength: 30,
@@ -168,7 +162,7 @@ class Register extends StatelessWidget {
 
     this.emailTextField.addListener(() {
       String contentWhenClickButton = this.verifyTextField.getContentWhenClickButton();
-      if (contentWhenClickButton.isEmpty) return;
+      if (contentWhenClickButton == null||contentWhenClickButton.isEmpty) return;
 
       if (this.emailTextField.getValue() != emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
@@ -186,8 +180,7 @@ class Register extends StatelessWidget {
       leftMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
-      firstThemeState: ComponentThemeState.error,
+      firstColorName: ThemeColorName.Error,
       tapFunc: () {
         Navigator.pop(context);
       },
@@ -200,7 +193,6 @@ class Register extends StatelessWidget {
       rightMargin: 20,
       bottomMargin: 20,
       width: ScreenTool.partOfScreenWidth(0.20),
-      theme: MyTheme.blueStyle,
     );
 
     nextButton.tapFunc = () async {
@@ -313,11 +305,8 @@ class Register extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BackGround(
-          sigmaY: 15,
-          sigmaX: 15,
-          color: Colors.white,
-          opacity: 0.79,
+      body: Container(
+          color: MyTheme.convert(ThemeColorName.PageBackground),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -333,7 +322,7 @@ class Register extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,
                         fontFamily: "Futura",
-                        color: Colors.black),
+                        color: MyTheme.convert(ThemeColorName.HeaderText)),
                   ),
                 ),
                 listScrool,

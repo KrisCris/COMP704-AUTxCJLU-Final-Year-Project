@@ -5,9 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fore_end/Mycomponents/widgets/FoodBox.dart';
+import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 import 'Food.dart';
-import 'Req.dart';
+import 'Meal.dart';
+import 'util/Req.dart';
 import 'package:image/image.dart' as cropper;
 
 class FoodRecognizer{
@@ -39,6 +41,51 @@ class FoodRecognizer{
       rotate: rotate
     ));
   }
+  static void addFoodToMeal(Meal m){
+    User u = User.getInstance();
+    List<FoodBox> l = FoodRecognizer.instance.foods;
+    for(FoodBox fb in l){
+      m.addFood(fb.food);
+    }
+    u.refreshMeal();
+    u.saveMeal();
+    l.clear();
+    FoodRecognizer._instance?.relatedKey?.currentState?.setState(() {});
+  }
+
+  ///这里是按照三餐的名字保存记录，上传服务器和本地保存
+  static void addFoodToMealName(String mealName) async{
+    User u = User.getInstance();
+    Meal m = u.getMealByName(mealName);
+    int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
+    if(m != null){
+      FoodRecognizer.addFoodToMeal(m);
+      List<List> totalFoodInfo=new List<List>();
+      for(Food food in m.foods){
+        int foodId=food.id;
+        List singleFoodInfo=[];
+        //TODO:现在fid就是食物在数据库里的id，现在还没有这个数据，等数据库有了再写上去
+        singleFoodInfo.add(foodId);
+        singleFoodInfo.add(food.name);
+        singleFoodInfo.add(food.calorie);
+        singleFoodInfo.add(food.protein);
+        totalFoodInfo.add(singleFoodInfo);
+      }
+      Response res = await Requests.consumeFoods({
+        "uid": u.uid,
+        "pid": u.plan.id,
+        "type": mealsType.toString(),
+        "foods_info":totalFoodInfo,
+      });
+
+      if (res.data["code"] == 1) {
+        print("保存成功");
+        print(res.data);
+      }else {
+        print("保存失败");
+      }
+    }
+  }
 
   static void _sendFoodRecognizeRequest(String bs64,Uint8List byte,int rotate) async{
     if(_instance == null) {
@@ -55,15 +102,61 @@ class FoodRecognizer{
         var position = r['basic'];
         var info = r['info'];
         double cal = 0;
+        double fat= 0;
+        double cholesterol= 0;
+        double cellulose= 0;
+        double protein= 0;
+        double carbohydrate= 0;
+        int foodID=info['id'];
+        int foodCategory=info['category'];
+
+
         if(info['calories'] is int){
           cal = (info['calories'] as int).toDouble();
         }else if(info['calories'] is double){
           cal = info['calories'];
         }
+        if(info['carbohydrate'] is int){
+          carbohydrate = (info['carbohydrate'] as int).toDouble();
+        }else if(info['carbohydrate'] is double){
+          carbohydrate = info['carbohydrate'];
+        }
+
+        if(info['fat'] is int){
+          fat = (info['fat'] as int).toDouble();
+        }else if(info['fat'] is double){
+          fat = info['fat'];
+        }
+        if(info['protein'] is int){
+          protein = (info['protein'] as int).toDouble();
+        }else if(info['protein'] is double){
+          protein = info['protein'];
+        }
+        if(info['cholesterol'] is int){
+          cholesterol = (info['cholesterol'] as int).toDouble();
+        }else if(info['cholesterol'] is double){
+          cholesterol = info['cholesterol'];
+        }
+        if(info['cellulose'] is int){
+          cellulose = (info['cellulose'] as int).toDouble();
+        }else if(info['cellulose'] is double){
+          cellulose = info['cellulose'];
+        }
+
         String name = position['name'];
         FoodBox fd = FoodBox(
-          food: Food(name: name, calorie: cal),
-          picture: position['img'],
+          food: Food(
+            name: name,
+            id: foodID,
+            category: foodCategory,
+            picture: position['img'],
+            calorie: cal,
+            protein: protein,
+            fat: fat,
+            carbohydrate: carbohydrate,
+            cellulose: cellulose,
+            cholesterol: cholesterol,
+          ),
           borderRadius: 5,
         );
         fd.setRemoveFunc((){
