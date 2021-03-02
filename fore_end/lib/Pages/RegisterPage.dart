@@ -40,54 +40,10 @@ class Register extends StatelessWidget {
     // this.counter = new MyCounter(times: 60, duration: 1000);
     this.scrollCtl = new ScrollController();
 
-    // this.verifyTextField = CustomTextField(
-    //   placeholder: 'Verify Code',
-    //   autoChangeState: false,
-    //   inputType: InputFieldType.verifyCode,
-    //   theme: MyTheme.blueStyle,
-    //   width: 0,
-    //   sizeChangeMode: 0,
-    //   onCorrect: () async {
-    //     String emailVal = this.emailTextField.getInput();
-    //     if (emailVal != this.emailWhenClickButton) {
-    //       this.verifyTextField.setError();
-    //       this.nextButton.setDisable(true);
-    //       this.verifyTextField.setErrorText("verify code invalid");
-    //       return;
-    //     }
-    //
-    //     if(this.verified)return;
-    //
-    //     String codeVal = this.verifyTextField.getInput();
-    //     try{
-    //       Response res = await Requests.checkVerifyCode({
-    //         "email": emailVal,
-    //         "auth_code": codeVal
-    //       });
-    //       if (res.data['code'] == -4) {
-    //         EasyLoading.showError("Verify failed",
-    //             duration: Duration(milliseconds: 2000));
-    //         this.nextButton.setDisable(true);
-    //         this.verifyTextField.setError();
-    //         this.verifyTextField.setErrorText("verify code wrong");
-    //       } else {
-    //         this.nextButton.setDisable(false);
-    //         this.verifyTextField.setCorrect();
-    //         this.verified = true;
-    //       }
-    //     }on DioError catch(e){
-    //       print("Exception when check verify code\n");
-    //       print(e.toString());
-    //     }
-    //     if (!this.counter.isStop()) return;
-    //     this.verifyButton.setDisable(false);
-    //   },
-    // );
-
     this.emailTextField = CustomTextField(
       placeholder: 'Email',
       inputType: InputFieldType.email,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
@@ -125,7 +81,7 @@ class Register extends StatelessWidget {
     this.confirmPasswordTextField = CustomTextField(
       placeholder: 'confirm password',
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "re-enter the password",
@@ -158,7 +114,7 @@ class Register extends StatelessWidget {
       placeholder: 'password',
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "At least 6 length, contain number \nand english characters",
       maxlength: 30,
@@ -185,7 +141,7 @@ class Register extends StatelessWidget {
       placeholder: 'Nick name',
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
-      theme: MyTheme.blueStyle,
+      theme: MyTheme.blueStyleForInput,
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "please input your nick name",
       maxlength: 30,
@@ -206,8 +162,10 @@ class Register extends StatelessWidget {
     );
 
     this.emailTextField.addListener(() {
-      if (this.emailWhenClickButton.isEmpty) return;
-      if (this.emailTextField.getValue() != this.emailWhenClickButton) {
+      String contentWhenClickButton = this.verifyTextField.getContentWhenClickButton();
+      if (contentWhenClickButton.isEmpty) return;
+
+      if (this.emailTextField.getValue() != emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
           this.verifyTextField.setError();
         }
@@ -217,18 +175,6 @@ class Register extends StatelessWidget {
         this.nextButton.setDisabled(false);
       }
     });
-
-    // this.verifyButton = CustomButton(
-    //     text: "Acquire verify code",
-    //     fontsize: 20,
-    //     width: 0.7,
-    //     height: 50,
-    //     radius: 8,
-    //     theme: MyTheme.blueStyle,
-    //     firstReactState: ComponentReactState.disabled,
-    //     sizeChangeMode: 2,
-    //     tapFunc: () {},
-    //     isBold: true);
     this.backButton = CustomButton(
       text: "Back",
       isBold: true,
@@ -241,36 +187,6 @@ class Register extends StatelessWidget {
         Navigator.pop(context);
       },
     );
-    // verifyButton.tapFunc = () async {
-    //   this.verified = false;
-    //   this.emailWhenClickButton = this.emailTextField.getInput();
-    //   try{
-    //     verifyButton.fontsize = 20;
-    //     verifyButton.setDisable(true);
-    //     verifyButton.setWidth(0.2);
-    //     verifyTextField.setWidth(0.45);
-    //     if (this.counter.isStop()) {
-    //       this.counter.start();
-    //     }
-    //     Response res = await Requests.sendRegisterEmail({
-    //       "email": this.emailWhenClickButton
-    //     });
-    //   } on DioError catch(e){
-    //     print("Exception when sending email:\n");
-    //     print(e.toString());
-    //   }
-    // };
-
-    // this.counter.calling = () {
-    //   if (!verifyButton.isMonted()) return;
-    //   verifyButton.text = this.counter.getRemain().toString();
-    //   verifyButton.refresh();
-    //   if (this.counter.isStop()) {
-    //     verifyButton.text = "Acquire\nagain";
-    //     verifyButton.fontsize = 13;
-    //     if (this.emailTextField.isCorrect()) verifyButton.setDisable(false);
-    //   }
-    // };
 
     this.nextButton = CustomButton(
       disabled: true,
@@ -293,7 +209,7 @@ class Register extends StatelessWidget {
         EasyLoading.showToast("Waiting for register...");
         try{
           Response res = await Requests.signUp({
-            "email": this.emailWhenClickButton,
+            "email": this.verifyTextField.getContentWhenClickButton(),
             "password": this.passwordTextField.getValue(),
             "nickname": this.nicknameTextField.getValue()
           });

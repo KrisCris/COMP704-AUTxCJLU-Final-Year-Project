@@ -44,6 +44,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
   CustomButton nextButton;
   CustomButton backButton;
 
+  User user=User.getInstance();
 
   @override
   void initState() {
@@ -78,21 +79,6 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       width: ScreenTool.partOfScreenWidth(0.7),
       helpText: "Please input correct email!",
       maxlength: 30,
-      onCorrect: () async {
-        // if (!this.counter.isStop()) return;
-        this.emailTextField.setHelpText("checking whether email has been registered...");
-        Response res = await Requests.checkEmailRepeat({
-          "email":this.emailTextField.getValue()
-        });
-        if(res.data['code'] == 1){
-          this.verifyTextField.setButtonDisabled(false);
-          this.emailTextField.setCorrect();
-        }else{
-          this.verifyTextField.setButtonDisabled(true);
-          this.emailTextField.setErrorText("This Email has already been registered");
-          this.emailTextField.setError();
-        }
-      },
       onError: () {
         this.emailTextField.setErrorText("please input correct email format");
         this.emailTextField.setError();
@@ -100,6 +86,15 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
         // this.nextButton.setDisable(true);
       },
     );
+
+    this.emailTextField.onCorrect=(){
+      if(this.emailTextField.getValue()==this.user.email){
+        this.verifyTextField.setButtonDisabled(false);
+        this.emailTextField.setCorrect();
+      }
+    };
+
+
 
 
     this.oldPasswordTextField= CustomTextField(
@@ -119,6 +114,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
     );
 
     this.verifyTextField = VerifyCodeInputer(
+      transVerifyType: true,
       onCheckSuccess: (){ this.nextButton.setDisabled(false); this.verifySuccess=true;},
       onCheckFailed: (){this.nextButton.setDisabled(true);},
       emailField: this.emailTextField,
@@ -216,25 +212,44 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       User user= User.getInstance();
       String oldPassword=oldPasswordTextField.getValue();
       String newPassword=pwdTwoTextField.getValue();
-
+      print("目前的四个信息分别是： "+ user.uid.toString()+"  "+ user.token+"  "+ oldPassword+ "  "+ newPassword);
       try{
-        Response res = await Requests.modifyBasicInfo({
+        Response res = await Requests.modifyPassword({
           "uid": user.uid,
           "token": user.token,
           "password": oldPassword,
           "new_password": newPassword,
-
         });
+
+        print("目前的四个信息分别是： "+ user.uid.toString()+"  "+ user.token+"  "+ oldPassword+ "  "+ newPassword);
+
         if (res.data['code'] == 1) {
+          print("密码修改成功!!!!!!!");
           EasyLoading.showSuccess("Change success!",
               duration: Duration(milliseconds: 2000));
         }
+        if (res.data['code'] == -1 ) {
+          print("Login Required");
+        }
+        if (res.data['code'] == -2 ) {
+          print("Wrong Username or Password");
+        }
+        if (res.data['code'] == -4 ) {
+          print("Code Expired");
+        }
+        if (res.data['code'] == -6 ) {
+          print("User Not Exist");
+        }
+        if (res.data['code'] == -8) {
+          print("Code Check Required");
+        }
+
       } on DioError catch(e){
         print("Exception when change password\n");
         print(e.toString());
       }
 
-      Navigator.pop(context);
+      // Navigator.pop(context);
     };
 
 

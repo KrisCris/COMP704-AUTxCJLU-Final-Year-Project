@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
+import 'package:exifdart/exifdart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/MyTheme.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Pages/ResultPage.dart';
 import 'package:fore_end/Pages/TestPicturePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,14 +39,13 @@ class TakePhotoState extends State<TakePhotoPage>
   CameraController _ctl;
   Future<void> _initDone;
   bool _hasCamera = true;
-  List<String> picQueue;
   TweenAnimation<double> loadingCameraAnimation = new TweenAnimation<double>();
+  TweenAnimation<double> flashAnimation = new TweenAnimation<double>();
   String _path;
 
   @override
   void initState() {
     super.initState();
-    this.picQueue = new List<String>();
     this.loadingCameraAnimation.initAnimation(0.0, -10.0, 1000, this, () {
       setState(() {});
     });
@@ -55,12 +57,15 @@ class TakePhotoState extends State<TakePhotoPage>
       }
     });
     this.loadingCameraAnimation.beginAnimation();
+    this.flashAnimation.initAnimation(0.0, 0.0, 200, this, () {setState(() {
+    });});
   }
 
   @override
   void dispose() {
     this._ctl.dispose();
     this.loadingCameraAnimation.dispose();
+    this.flashAnimation.dispose();
     super.dispose();
   }
 
@@ -236,7 +241,6 @@ class TakePhotoState extends State<TakePhotoPage>
     }else{
       scale = previewRatio/deviceRatio;
     }
-    print(scale.toString());
     Widget content = Stack(
         children: [
           Center(
@@ -248,6 +252,12 @@ class TakePhotoState extends State<TakePhotoPage>
               ),
             ),
           ),
+          Opacity(
+            opacity: this.flashAnimation.getValue(),
+            child: Container(
+              color: Colors.grey,
+            ),
+          ),
           Column(
             children: [
               SizedBox(height:ScreenTool.topPadding),
@@ -255,7 +265,15 @@ class TakePhotoState extends State<TakePhotoPage>
                 children: [
                   Expanded(child: SizedBox()),
                   this.getAlbumButton(),
-                  SizedBox(width: 10)
+                  SizedBox(width: 10),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: SizedBox()),
+                  this.getResultButton(),
+                  SizedBox(width: 10),
                 ],
               ),
               Expanded(child: SizedBox()),
@@ -267,7 +285,7 @@ class TakePhotoState extends State<TakePhotoPage>
               ),
               SizedBox(height: ScreenTool.partOfScreenHeight(0.1))
             ],
-          )
+          ),
         ],
       );
     return content;
@@ -276,11 +294,13 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget getPhotoButton() {
     return new CustomIconButton(
       theme: MyTheme.blackAndWhite,
-      icon: FontAwesomeIcons.camera,
-      iconSize: 34,
-      buttonRadius: 45,
+      icon: FontAwesomeIcons.circle,
+      iconSize: 38,
+      adjustHeight: 2.5,
+      sizeChangeWhenClick: true,
+      buttonSize: 45,
       backgroundOpacity: 1,
-      borderRadius: 10,
+      borderRadius: 45,
       shadows: [
         BoxShadow(
           blurRadius: 10,
@@ -290,14 +310,12 @@ class TakePhotoState extends State<TakePhotoPage>
       ],
       onClick: () async {
         await _ctl.takePicture(this._path);
+        this.startFlash();
         File pic = File(this._path);
-        String bs64 = await this.pictureToBase64(pic);
-        this.picQueue.add(bs64);
+        Map<String,List<int>> res  = await this.pictureToBase64(pic);
         pic.delete();
-        Navigator.push(context,
-            new MaterialPageRoute(builder: (BuildContext ctx) {
-          return TestPicturePage(bs64);
-        }));
+        var entry = res.entries.first;
+        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
       },
     );
   }
@@ -307,7 +325,7 @@ class TakePhotoState extends State<TakePhotoPage>
       theme: MyTheme.blackAndWhite,
       icon: FontAwesomeIcons.image,
       iconSize: 34,
-      buttonRadius: 45,
+      buttonSize: 45,
       backgroundOpacity: 1,
       borderRadius: 10,
       shadows: [
@@ -320,20 +338,64 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-
-        String bs64 = await this.pictureToBase64(image);
-        this.picQueue.add(bs64);
+        Map<String,List<int>> res = await this.pictureToBase64(image);
+        var entry = res.entries.first;
+        FoodRecognizer.addFoodPic(entry.key,entry.value,res['rotate'][0]);
       },
     );
   }
 
-  Future<String> pictureToBase64(File f) async {
-    Uint8List byteData = await f.readAsBytes();
-    String bs64 = base64Encode(byteData);
-    print("picture convert complete:\n" + bs64);
-    return bs64;
+  Widget getResultButton() {
+    return new CustomIconButton(
+      theme: MyTheme.blackAndWhite,
+      icon: FontAwesomeIcons.appleAlt,
+      iconSize: 34,
+      buttonSize: 45,
+      backgroundOpacity: 1,
+      borderRadius: 10,
+      shadows: [
+        BoxShadow(
+          blurRadius: 10,
+          spreadRadius: 3,
+          color: Color(0x33000000),
+        )
+      ],
+      onClick: () async {
+        Navigator.push(context,MaterialPageRoute(builder: (context){
+          return ResultPage();
+        }));
+      },
+    );
+  }
+  void startFlash(){
+    this.flashAnimation.initAnimation(0.5, 0, 300, this, () {setState(() {
+    });});
+    this.flashAnimation.beginAnimation();
   }
 
+  Future<Map<String,List<int>>> pictureToBase64(File f) async {
+    Uint8List byteData = await f.readAsBytes();
+    int rotateAngle = await this.getImageRotateAngular(byteData);
+    String bs64 = base64Encode(byteData);
+    return {bs64:byteData,"rotate":[rotateAngle]};
+  }
+  Future<int> getImageRotateAngular(List<int> bytes) async {
+    Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
+    if(tags == null){
+      return 0;
+    }
+    var orientation = tags['Orientation']; //获取该照片的拍摄方向
+    switch (orientation) {
+      case 3:
+        return 180;
+      case 6:
+        return 90;
+      case 8:
+        return -90;
+      default:
+        return 0;
+    }
+  }
   @override
   bool get wantKeepAlive => true;
 }

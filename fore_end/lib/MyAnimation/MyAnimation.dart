@@ -29,6 +29,7 @@ class TweenAnimation<T> implements MyAnimation<T>{
   List<AnimationStatusListener> statusListenerList = new List<AnimationStatusListener>();
   TweenAnimation():super() {}
   void initAnimation(T tweenStart, T tweenEnd, int duration, TickerProvider tk,VoidCallback listener) {
+    this.isFinish = false;
     this.completeTime = 0;
     this.tween = new Tween<T>(begin: tweenStart, end: tweenEnd);
     this.ctl = new AnimationController(
@@ -51,6 +52,10 @@ class TweenAnimation<T> implements MyAnimation<T>{
     this.tween.end = end;
     this.animation = this.tween.animate(this.ctl);
   }
+  bool isDismissed(){
+    return this.animation.status == AnimationStatus.dismissed;
+  }
+
   void setNewEnd(T end){
     this.tween.end = end;
     this.animation = this.tween.animate(this.ctl);
@@ -62,13 +67,22 @@ class TweenAnimation<T> implements MyAnimation<T>{
     } else if (status == AnimationStatus.dismissed) {
       this.isFinish = false;
     }
+
   }
   void addListener(VoidCallback listener) {
     this.listenerList.add(listener);
     this.ctl.addListener(listener);
     this.animation = this.tween.animate(this.ctl);
   }
-
+  void popListener(){
+    Function f = this.listenerList.removeLast();
+    this.animation.removeListener(f);
+  }
+  Function popStatusListener(){
+    Function f = this.statusListenerList.removeLast();
+    this.animation.removeStatusListener(f);
+    return f;
+  }
   void addStatusListener(AnimationStatusListener listener) {
     this.statusListenerList.add(listener);
     this.ctl.addStatusListener(listener);

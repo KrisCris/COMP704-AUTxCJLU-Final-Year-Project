@@ -9,6 +9,7 @@ import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 
+///自定义的侧边栏，基本与官方侧边栏一样
 class CustomDrawer extends StatefulWidget {
   final double elevation;
   final List<Widget> children;

@@ -1,6 +1,6 @@
 # Miscellaneous
 api/cv/inference/output
-api/cv/inference/images
+api/cv/cv/inference/images
 *.class
 *.log
 *.pyc
@@ -49,3 +49,9 @@ __pycache__
 pyApp/cv/inference/images/
 
 fore_end/lib/Pages/UpdateAgePage.dart~
+
+fore_end/ios/Podfile.lock
+
+fore_end/ios/Runner.xcodeproj/project.pbxproj
+
+fore_end/pubspec.lock

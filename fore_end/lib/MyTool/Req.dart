@@ -25,36 +25,6 @@ class Req {
     dio.options.connectTimeout = connectOut;
     dio.options.receiveTimeout = receiveOut;
   }
-  // static void saveCookies(Map cookies) async {
-  //   List<Cookie> ck = List<Cookie>();
-  //   cookies.forEach((key, value){
-  //     ck.add(new Cookie(key,value));
-  //   });
-  //   if(_cookieJar == null){
-  //     Directory appDocDir = await getApplicationDocumentsDirectory();
-  //     String appDocPath  = appDocDir.path;
-  //     print('获取的文件系统目录 appDocPath： ' + appDocPath);
-  //     _cookieJar = new PersistCookieJar(dir: appDocPath);
-  //     Req.instance.interceptors.add(CookieManager(_cookieJar));
-  //   }
-  //   _cookieJar.saveFromResponse(Uri.parse(baseUrl), ck);
-  // }
-  //
-  // static Future<Map<String,String>> getCookies() async{
-  //   if(_cookieJar == null){
-  //   Directory appDocDir = await getApplicationDocumentsDirectory();
-  //   String appDocPath  = appDocDir.path;
-  //   _cookieJar = new PersistCookieJar(dir: appDocPath);
-  //   Req.instance.interceptors.add(CookieManager(_cookieJar));
-  //   }
-  //   List<Cookie> cookies = _cookieJar.loadForRequest(Uri.parse(baseUrl));
-  //   Map<String,String> res = Map<String,String>();
-  //   for(Cookie k in cookies){
-  //     res.addAll({k.name:k.value});
-  //   }
-  //   return res;
-  // }
-
   static Dio _getInstance() {
     if (_instance == null) {
       _instance = new Req._internal();
@@ -64,12 +34,15 @@ class Req {
 }
 
 class Requests{
-  // static void saveCookies(Map cookies){
-  //   Req.saveCookies(cookies);
-  // }
-  // static Future<Map<String,String>> getCookies() async {
-  //   return Req.getCookies();
-  // }
+  ///POST
+  ///param: food_b64 - String
+  static Future<Response> foodDetect(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/food/detect",data: dt);
+    return res;
+  }
+
   static Future<Response> sendRegisterEmail(data) async {
       Dio dio = Req.instance;
       FormData dt = FormData.fromMap(data);
@@ -117,12 +90,21 @@ class Requests{
     return res;
   }
 
+  static Future<Response> sendSecurityCode(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/user/send_security_code", data: dt);
+    return res;
+  }
+
   static Future<Response> checkEmailRepeat(Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
     Response res = await dio.get("/user/is_new_email"+urlPara);
     return res;
   }
+
+
 
   static Future<Response> logout(data) async {
     Dio dio = Req.instance;

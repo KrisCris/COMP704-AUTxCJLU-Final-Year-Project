@@ -51,7 +51,7 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.utensils,
       backgroundOpacity: 0.0,
-      buttonRadius: 65,
+      buttonSize: 65,
       iconSize: 25,
       borderRadius: 10,
       onClick: () {
@@ -63,7 +63,7 @@ class MainPage extends StatefulWidget {
       theme: MyTheme.blueAndWhite,
       icon: FontAwesomeIcons.camera,
       backgroundOpacity: 0.0,
-      buttonRadius: 65,
+      buttonSize: 65,
       borderRadius: 10,
       iconSize: 25,
       fontSize: 12,
@@ -80,7 +80,7 @@ class MainPage extends StatefulWidget {
         icon: FontAwesomeIcons.folderPlus,
         backgroundOpacity: 0.0,
         borderRadius: 10,
-        buttonRadius: 65,
+        buttonSize: 65,
         iconSize: 25,
         fontSize: 12,
         onClick: () {
@@ -125,6 +125,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         widget.bodyContent,
                         Column(
                           children: [
+                            SizedBox(height: ScreenTool.partOfScreenHeight(0.025),),
                             widget.appBar,
                             Expanded(child: SizedBox()),
                             Row(
@@ -280,8 +281,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       buttons: buttons,
       controller: ctl,
       opacity: 0.25,
-      edgeWidth: 0.5,
-      width: ScreenTool.partOfScreenWidth(0.7),
+      width: ScreenTool.partOfScreenWidth(0.85),
       height: ScreenTool.partOfScreenHeight(0.08),
     );
     widget.bodyContent = TabBarView(

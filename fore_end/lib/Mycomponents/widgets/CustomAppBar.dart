@@ -1,41 +1,71 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/inputs/ExpandInputField.dart';
-import 'package:fore_end/Mycomponents/mySearchBarDelegate.dart';
+import 'package:fore_end/Mycomponents/widgets/ExpandListView.dart';
 
-class CustomAppBar extends StatefulWidget{
+///自定义的AppBar，显示一些基本信息
+class CustomAppBar extends StatefulWidget {
+
+  ///用户头像的组件
   Widget userAvatarContainer;
+
+  ///用户名
   String username;
+
+  ///历史遗留问题，不推荐使用这种方式保存State的引用
   CustomAppBarState state;
-  CustomAppBar({Key key, this.userAvatarContainer, this.username}):super(key:key){}
+
+  CustomAppBar({Key key, this.userAvatarContainer, this.username})
+      : super(key: key) {}
+
+  ///历史遗留问题，不推荐使用这种方式保存State的引用
   @override
   State<StatefulWidget> createState() {
     this.state = CustomAppBarState();
     return this.state;
   }
-  void startTransparency(){
+
+  ///历史遗留问题，不推荐使用这种方式调用State的函数
+  ///开始播放透明度动画，使组件变得透明
+  void startTransparency() {
     this.state.startTransparency();
   }
-  void reverseTransparency(){
+
+  ///历史遗留问题，不推荐使用这种方式调用State的函数
+  ///反向播放透明度动画，使组件变得不透明
+  void reverseTransparency() {
     this.state.reverseTransparency();
   }
 }
 
-class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixin{
+///CustomAppBar的State类
+///混入了 [TickerProviderStateMixin] 用于控制动画
+///
+class CustomAppBarState extends State<CustomAppBar>
+    with TickerProviderStateMixin {
+
+  ///控制透明度的动画
   TweenAnimation<double> headerTransparency;
+
   @override
   void initState() {
     this.headerTransparency = new TweenAnimation<double>();
-    this.headerTransparency.initAnimation(1.0, 0.0, 300, this,
-            () {setState(() {}); });
+    this.headerTransparency.initAnimation(1.0, 0.0, 300, this, () {
+      setState(() {});
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    Container container = Container(
+    ExpandListView historySearch = new ExpandListView(
+      width: 0.85,
+      height: 200,
+      open: false,
+    );
+    Widget container = Container(
       width: ScreenTool.partOfScreenWidth(0.85),
       height: 70,
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -56,7 +86,7 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
           ),
           GestureDetector(
             onTap: () {
-              if(this.headerTransparency.getValue() == 0)return;
+              if (this.headerTransparency.getValue() == 0) return;
               this.openDrawer(context);
             },
             child: widget.userAvatarContainer,
@@ -73,30 +103,59 @@ class CustomAppBarState extends State<CustomAppBar> with TickerProviderStateMixi
                 fontFamily: "Futura",
                 color: Colors.black),
           ),
-          Expanded(child:SizedBox()),
-          ExpandInputField(
-            width: 0.4,
-            foregroundColor: Colors.white,
-            disabled: this.headerTransparency.getValue() == 0),
+          SizedBox(width: 10,),
+          Expanded(
+            child: ExpandInputField(
+              width: 0.4,
+              disabled: this.headerTransparency.getValue() == 0,
+              isFirstFocusDoFunction: true,
+              onEmpty: () {
+                historySearch.open();
+              },
+              onNotEmpty: () {
+                historySearch.close();
+              },
+            ),
+          ),
           SizedBox(width: 5)
         ],
       ),
     );
+    container = Offstage(
+      offstage:this.headerTransparency.getValue() == 0,
+      child:container,
+    );
     return AnimatedBuilder(
         animation: this.headerTransparency.ctl,
-        builder: (BuildContext context, Widget child){
+        builder: (BuildContext context, Widget child) {
           return Opacity(
-              opacity:this.headerTransparency.getValue(),
-              child:container
-          );
+              opacity: this.headerTransparency.getValue(),
+              child: Column(
+                children: [
+                  container,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      historySearch,
+                    ],
+                  )
+                ],
+              ));
         });
   }
-  void startTransparency(){
+
+  void startTransparency() {
     this.headerTransparency.beginAnimation();
   }
-  void reverseTransparency(){
+
+  void reverseTransparency() {
     this.headerTransparency.reverse();
   }
+
+  ///打开侧边栏，前提是context中需要有侧边栏
   void openDrawer(BuildContext ctx) {
     Scaffold.of(ctx).openDrawer();
   }

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/LocalDataManager.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
@@ -64,7 +65,7 @@ class CoverState extends State<CoverPage> {
           if (snapShot.hasData) {
             int resCode = snapShot.data;
             if(resCode == 0){
-              Future.delayed(Duration(milliseconds: 2500),(){
+              Future.delayed(Duration(milliseconds: 1500),(){
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context){return new Welcome();}),
                         (route){return route==null;}
@@ -72,7 +73,7 @@ class CoverState extends State<CoverPage> {
               });
               return this.getPage("welcome to here!");
             }else if(resCode == 1){
-              Future.delayed(Duration(milliseconds: 1500),(){
+              Future.delayed(Duration(milliseconds: 1000),(){
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context){return new MainPage(user: User.getInstance());}),
                     (route){return route==null;}
@@ -90,6 +91,9 @@ class CoverState extends State<CoverPage> {
 
   Future<int> attemptLogin() async {
     await LocalDataManager.init();
+    //init FoodRecognizer instance
+    FoodRecognizer fd = FoodRecognizer.instance;
+    //init User instance
     User u = User.getInstance();
     if(u.token == null){
       return 0;

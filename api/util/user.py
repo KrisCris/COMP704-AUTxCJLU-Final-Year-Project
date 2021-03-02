@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash
 from util.constants import DEBUG
 from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
 
-from util.func import reply_json, get_time_gap,get_current_time
+from util.func import reply_json, get_time_gap, get_current_time
 
 '''
   -1:
@@ -32,6 +32,8 @@ from util.func import reply_json, get_time_gap,get_current_time
           type: array
           example: []
 '''
+
+
 def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
@@ -105,9 +107,13 @@ def require_login(func):
           type: array
           example: []
 '''
+
+
 def require_code_check(func):
     @functools.wraps(func)
     def inner(*args, **kwargs):
+        email = None
+        uid = None
         if request.method == 'POST':
             if 'email' in request.form.keys():
                 email = request.form['email']

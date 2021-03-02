@@ -8,8 +8,10 @@ import 'package:fore_end/MyTool/Picker_Tool.dart';
 import 'package:fore_end/MyTool/Req.dart';
 import 'package:fore_end/MyTool/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
+import 'package:fore_end/Mycomponents/widgets/ValueableImage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -21,7 +23,7 @@ class AccountPage extends StatefulWidget {
   String gender;
   String age;
   String email;
-  String imageSource;
+  String imageSource = User.getInstance().avatar;
   User user = User.getInstance();
   var genderData = ['Male', 'Female'];
   bool visible = true;
@@ -31,16 +33,18 @@ class AccountPage extends StatefulWidget {
   String getUserGender(int i) {
     if (i == 0) {
       return "Male";
-    } else {
+    } else if(i==1){
       return "Female";
     }
+      return null;
   }
 
   int setGender(String gender) {
     if (gender == "Male")
       return 0;
-    else
+    else if(gender== "Female")
       return 1;
+    return null;
   }
 
   Future<String> pictureToBase64(File f) async {
@@ -66,8 +70,7 @@ class PageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    this.basicInfoEditableArea= EditableArea(
+    this.basicInfoEditableArea = EditableArea(
         theme: MyTheme.blueStyle,
         width: 0.7,
         height: 320,
@@ -75,114 +78,115 @@ class PageState extends State<AccountPage> {
         displayContent: [
           this.getAvatarItem(),
           this.getUserNameItem(),
-          this.getGenderItem(context),
           this.getAgeItem(),
+          this.getGenderItem(context),
+
         ]
     );
 
-
-    return Scaffold(
-        body: ListView(
-           children: <Widget>[
-             //Account Page的最上面标题
-         Container(
-          // margin: EdgeInsets.all(20),
-          margin:
-              EdgeInsets.fromLTRB(ScreenTool.partOfScreenWidth(20), 20, 10, 10),
-          child: Text(
-            "ACCOUNT INFO",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35,
-              fontFamily: "Futura",
-            ),
-          ),
-        ),
-
-
-          SizedBox(
-          height: 10,
-        ),
-
-          EditableArea(
-              theme: MyTheme.blueStyle,
-              width: 0.7,
-              height: 190,
-              title: "Account information",
-              displayContent: [
-                this.getEmailItem(),
-                this.getPwdItem(context),
-              ]
-          ),
-
-             SizedBox(
-               height: 10,
-             ),
-
-           this.basicInfoEditableArea,
+    this.basicInfoEditableArea.onEditComplete= () async {
+      User user = User.getInstance();
+      List<String> basicInfo = new List<String>();
+      basicInfo = this.basicInfoEditableArea.getAllValue();
+      try {
+        Response res = await Requests.modifyBasicInfo({
+          "uid": widget.user.uid,
+          "token": widget.user.token,
+          "age": int.parse(basicInfo[2]),
+          "gender": widget.setGender(basicInfo[3]),
+          "nickname": basicInfo[1],
+          "avatar": widget.imageSource,
+        });
+        if (res.data['code'] == 1) {
+          EasyLoading.showSuccess("Change success!",
+              duration: Duration(milliseconds: 4000));
+          user.userName = basicInfo[1];
+          user.age = int.parse(basicInfo[2]);
+          user.gender = widget.setGender(basicInfo[3]);
+          user.avatar = widget.imageSource;
+          widget.user.save();
+        }
+      } on DioError catch (e) {
+        print("Exception when sign up\n");
+        print(e.toString());
+      }
+      // Navigator.pop(context);
+    };
 
 
+    return FlutterEasyLoading(
+        child: Scaffold(
+            body: ListView(
+              children: <Widget>[
+                //Account Page的最上面标题
+                Container(
+                  // margin: EdgeInsets.all(20),
+                  margin:
+                  EdgeInsets.fromLTRB(
+                      ScreenTool.partOfScreenWidth(20), 20, 10, 10),
+                  child: Text(
+                    "ACCOUNT INFO",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 35,
+                      fontFamily: "Futura",
+                    ),
+                  ),
+                ),
 
-             SizedBox(
-          height: 10,
-        ),
 
-             OutlineButton(
-               child: Text("Save Changes"),
-               onPressed:  () async {
-                 User user= User.getInstance();
-                 List<String> basicInfo = new List<String>();
-                 basicInfo= this.basicInfoEditableArea.getAllValue();
-                 user.userName=basicInfo[0];
-                 user.gender=widget.setGender(basicInfo[1]);
-                 user.age=int.parse(basicInfo[2]);
+                SizedBox(
+                  height: 10,
+                ),
 
-                 try{
-                   Response res = await Requests.modifyBasicInfo({
-                     "uid": widget.user.uid,
-                     "token": widget.user.token,
-                     "age": widget.user.age.toString(),
-                     "gender": widget.getUserGender(user.gender),
-                     "nickname": widget.user.userName,
-                   });
-                   if (res.data['code'] == 1) {
-                     EasyLoading.showSuccess("Change success!",
-                         duration: Duration(milliseconds: 2000));
+                EditableArea(
+                    theme: MyTheme.blueStyle,
+                    width: 0.7,
+                    height: 190,
+                    title: "Account information",
+                    displayContent: [
+                      this.getEmailItem(),
+                      this.getPwdItem(context),
+                    ]
+                ),
 
-                     widget.user.save();
+                SizedBox(
+                  height: 10,
+                ),
 
-                   }
-                 } on DioError catch(e){
-                   print("Exception when sign up\n");
-                   print(e.toString());
-                 }
-               },
+                this.basicInfoEditableArea,
 
-             ),
-             SizedBox(
-               height: 10,
-             ),
 
-             OutlineButton(
-                child: Text("Back MainPage"),
-              onPressed: () {
-                Navigator.pop(context);
-          },
-        ),
-      ],
-    ));
+                SizedBox(
+                  height: 10,
+                ),
+
+                OutlineButton(
+                  child: Text("Back MainPage"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+        )
+    );
   }
+
+
+
 
 
   Widget getEmailItem(){
     SettingItem item =new SettingItem(
       leftIcon: Icon(FontAwesomeIcons.envelope),
       leftText: "Email",
-      rightText: widget.user.email,
-      isChange: false,
-      isRightText: false,
-      isRightUneditText: true,
-      onTap: () {},
+      rightComponent: CustomTextButton(
+        widget.user.email,
+        theme: MyTheme.blueStyle,
+      ),
+      disabled: true,
+      canChangeDisabled: false,
     );
 
     return item;
@@ -195,17 +199,18 @@ class PageState extends State<AccountPage> {
         size: 23,
       ),
       leftText: "Password",
-      rightText: "*******",
-      isChange: false,
-      isRightText: false,
-      isRightUneditText: true,
+      disabled: false,
+      canChangeDisabled: true,
+      rightComponent: CustomTextButton(
+        "******",
+        theme: MyTheme.blueStyle,
+        ignoreTap: true,
+        autoReturnColor: false,
+      ),
       onTap: () {
-
         Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UpdatePwdPage();}
             ));
-
-
       },
     );
 
@@ -220,9 +225,13 @@ class PageState extends State<AccountPage> {
     SettingItem item = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.userCircle),
       leftText: "Profile Photo",
-      isRightText: false,
-      isRightImage: true,
-      image: u.getAvatar(40, 40),
+      rightComponent: ValueableImage(
+        base64: u.avatar,
+        disabled: true,
+        behavior: HitTestBehavior.translucent,
+        ignoreTap: true,
+      ),
+      disabled: true,
     );
     item.onTap = () async {
       File image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -230,12 +239,11 @@ class PageState extends State<AccountPage> {
         return;
       } else {
         widget.imageSource = await widget.pictureToBase64(image);
-        u.avatar = widget.imageSource;
-        u.save();
-        item.image = u.getAvatar(40, 40);
-        item.refresh();
+        u.avatar=widget.imageSource;
+        item.setValue(u.avatar);
       }
     };
+
     return item;
   }
 
@@ -243,26 +251,34 @@ class PageState extends State<AccountPage> {
     SettingItem genderItem = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.transgender),
       leftText: "Gender",
-      isRightText: false,
-      isRightUneditText: true,
-      rightText: widget.getUserGender(widget.user.gender),
+      disabled: true,
+      rightComponent: CustomTextButton(
+        widget.getUserGender(widget.user.gender),
+        theme: MyTheme.blueStyle,
+        ignoreTap: true,
+        autoReturnColor: false,
+      ),
     );
 
     genderItem.onTap = () {
-      print("click gender Item");
-      User u = User.getInstance();
+      User user = User.getInstance();
       int newGender;
+      if(genderItem.getValue()=="Female"){
+        newGender=1;
+      }else if(genderItem.getValue()=="Male"){
+        newGender=0;
+      }
+
       JhPickerTool.showStringPicker(context,
           title: 'Gender',
-          normalIndex: u.gender,
+          normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
-        newGender = widget.setGender(item);
-        print("newGender现在的值是" + newGender.toString());
-        u.gender = newGender;
-        u.save();
-
-        genderItem.rightText = widget.getUserGender(u.gender);
-        genderItem.refresh();
+        genderItem.setValue(item);
+        if(item=="Male"){
+          user.gender=0;
+        }else if(item=="Female"){
+          user.gender=1;
+        }
       });
     };
 
@@ -273,8 +289,9 @@ class PageState extends State<AccountPage> {
     return SettingItem(
       leftIcon: Icon(FontAwesomeIcons.user),
       leftText: "Username",
-      rightText: widget.user.userName,
+      text: widget.user.userName,
       inputFieldWidth: 0.45,
+      disabled: true,
     );
   }
 
@@ -282,8 +299,9 @@ class PageState extends State<AccountPage> {
     return SettingItem(
       leftIcon: Icon(Icons.calendar_today),
       leftText: "Age",
-      rightText: widget.user.age.toString(),
+      text: widget.user.age.toString(),
       inputFieldWidth: 0.45,
+      disabled: true,
     );
   }
 }
