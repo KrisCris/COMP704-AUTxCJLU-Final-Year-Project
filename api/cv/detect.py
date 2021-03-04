@@ -134,6 +134,6 @@ def detect(img, output):
 
 
 # if __name__ == '__main__':
-#     b64 = image_to_base64_path('/Users/paul/PycharmProjects/Final_Year_Project/api/cv/cv/inference/input/img.png')
+#     b64 = image_to_base64_path('/Users/paul/PycharmProjects/Final_Year_Project/api/cv/cv/inference/input/img_1.png')
 #     img = base64_to_image(b64)
 #     out = detect(img, False)
