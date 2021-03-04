@@ -460,9 +460,11 @@ def getPastPlans():
                 'exts': 0,
                 'consumption': consumptionRecords
             }
+            
+        dataMap[result.pid]['weeklyDetails'].append(result.toDict())
         if result.ext != dataMap[result.pid]['weeklyDetails'][-1].ext:
             dataMap[result.pid]['exts'] += 1
-        dataMap[result.pid]['weeklyDetails'].append(result.toDict())
+
 
     return reply_json(1, data=list(dataMap.values()))
 
