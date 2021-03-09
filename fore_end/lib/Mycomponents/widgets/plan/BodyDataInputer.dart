@@ -160,7 +160,7 @@ class BodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
                     width: ScreenTool.partOfScreenWidth(0.8),
-                    height: 50,
+                    height: 80,
                     child: Text(
                         CustomLocalizations.of(context).collectBodyDataInfo,
                         style: TextStyle(

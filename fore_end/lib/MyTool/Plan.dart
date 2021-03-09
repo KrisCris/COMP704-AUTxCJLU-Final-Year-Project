@@ -286,7 +286,7 @@ class ShedWeightPlan extends Plan {
   }
 
   @override
-  void solveUpdateWeight(BuildContext context) {
+  void solveUpdateWeight(BuildContext context) async {
     User u = User.getInstance();
     showDialog<int>(
       context: context,
@@ -306,7 +306,8 @@ class ShedWeightPlan extends Plan {
           if (res == null) return;
 
           if (res.data['code'] == 1) {
-            u.bodyWeight = updt.weight.widgetValue.value;
+            double v = updt.getWeight().toDouble();
+            u.bodyWeight = v;
             //计划完成
             if (res.data['data'] == null) {
               Navigator.of(context).pop(-1);
@@ -327,7 +328,8 @@ class ShedWeightPlan extends Plan {
           }
           //可能延期
           else if (res.data['code'] == -2) {
-            u.bodyWeight = updt.weight.widgetValue.value;
+            int v = updt.weight.widgetValue.value;
+            u.bodyWeight = v.toDouble();
             this.calculatedDelayDays = res.data['data']['recommend_ext'];
             Navigator.of(context).pop(-2);
           }
@@ -536,7 +538,7 @@ class BuildMusclePlan extends Plan {
   }
 
   @override
-  void solveUpdateWeight(BuildContext context) {
+  void solveUpdateWeight(BuildContext context) async {
     User u = User.getInstance();
     showDialog<int>(
         context: context,

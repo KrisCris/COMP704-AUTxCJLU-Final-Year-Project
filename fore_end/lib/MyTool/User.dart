@@ -419,7 +419,7 @@ class User {
     this._shouldUpdateWeight = value;
   }
   set bodyWeight(double weight){
-    this.bodyWeight = weight;
+    this._bodyWeight = weight;
   }
   set isOffline(bool value) {
     _isOffline = value;

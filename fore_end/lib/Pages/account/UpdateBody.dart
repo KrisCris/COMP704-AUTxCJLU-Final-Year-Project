@@ -22,7 +22,12 @@ class UpdateBody extends StatelessWidget {
 
   UpdateBody({this.onUpdate,this.text,this.needHeight = true,this.needWeight = true,this.needCancel = true});
   double getHeight(){
-    return this.height!=null ? this.height.widgetValue.value : User.getInstance().bodyHeight;
+    if(this.height != null){
+      return this.height.widgetValue.value;
+    }else{
+      double ht = User.getInstance().bodyHeight*100;
+      return ht;
+    }
   }
   int getWeight(){
     return this.weight!=null ? this.weight.widgetValue.value : User.getInstance().bodyWeight;
