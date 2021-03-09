@@ -227,7 +227,7 @@ class Register extends StatelessWidget {
               u.uid = res.data['data']['uid'];
               u.email = this.verifyTextField.getContentWhenClickButton();
               int code = await u.synchronize();
-              if(code == 1){
+              if(code == 4){
                 EasyLoading.dismiss();
                 Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
                   return new GuidePage();
