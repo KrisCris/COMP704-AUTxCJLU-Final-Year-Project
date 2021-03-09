@@ -39,7 +39,7 @@ class ExtendTimeHint extends StatelessWidget {
               SizedBox(height: 10),
               TitleText(
                 text: this.title,
-                maxHeight: 55,
+                maxHeight: 70,
                 maxWidth: 0.6,
                 underLineLength: 0.6,
               ),

@@ -392,6 +392,10 @@ class User {
     pre.remove("userName");
     pre.remove("avatar");
     pre.remove("needSetPlan");
+    pre.remove("localCalories");
+    pre.remove("localHistoryMeals");
+    pre.remove("localBodyChanges");
+    pre.remove("localHistoryPlan");
     this.meals.value.forEach((element) {
       element.delete();
     });
@@ -419,7 +423,7 @@ class User {
     this._shouldUpdateWeight = value;
   }
   set bodyWeight(double weight){
-    this.bodyWeight = weight;
+    this._bodyWeight = weight;
   }
   set isOffline(bool value) {
     _isOffline = value;

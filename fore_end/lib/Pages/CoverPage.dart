@@ -170,27 +170,28 @@ class CoverState extends State<CoverPage> {
       String json = jsonEncode(res.data['data']);
       pre.setString("localCalories", json);
     }
-    res = await Requests.historyMeal({
+    Requests.historyMeal({
       'begin':beginTime,
       'end':endTime,
       "uid": u.uid,
       "token": u.token,
-    });
-    if(res != null){
-      Map<String,List<Map>> timeMap = new Map<String,List<Map>>();
-      for(Map m in res.data['data']){
-        DateTime dt = DateTime.fromMillisecondsSinceEpoch(m['time']*1000);
-        dt = DateTime(dt.year,dt.month,dt.day);
-        String stringTime = dt.millisecondsSinceEpoch.toString();
-        if(timeMap.containsKey(stringTime)){
-          timeMap[stringTime].add(m);
-        }else{
-          timeMap[stringTime] = [m];
+    }).then((res){
+      if(res != null){
+        Map<String,List<Map>> timeMap = new Map<String,List<Map>>();
+        for(Map m in res.data['data']){
+          DateTime dt = DateTime.fromMillisecondsSinceEpoch(m['time']*1000);
+          dt = DateTime(dt.year,dt.month,dt.day);
+          String stringTime = dt.millisecondsSinceEpoch.toString();
+          if(timeMap.containsKey(stringTime)){
+            timeMap[stringTime].add(m);
+          }else{
+            timeMap[stringTime] = [m];
+          }
         }
+        String json = jsonEncode(timeMap);
+        pre.setString("localHistoryMeals", json);
       }
-      String json = jsonEncode(timeMap);
-      pre.setString("localHistoryMeals", json);
-    }
+    });
     res = await Requests.getWeightTrend({
       "uid":u.uid,
       "token":u.token,
