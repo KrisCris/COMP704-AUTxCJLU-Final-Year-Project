@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -35,6 +36,9 @@ class CustomButton extends StatefulWidget with DisableWidgetMixIn {
 
   ///whether text is bold or not
   final bool isBold;
+
+  ///whether show loading effect if click event is future
+  final bool futureLoading;
 
   ///width of the button. When this value <=1
   ///it will be regard as the ratio of screen
@@ -83,6 +87,7 @@ class CustomButton extends StatefulWidget with DisableWidgetMixIn {
       this.fontsize = 18.0,
       this.sizeChangeMode = 0,
       this.isBold = false,
+        this.futureLoading = true,
       bool disabled = false,
       bool canChangeDisabled = true,
       this.radius = 30.0,
@@ -186,7 +191,7 @@ class CustomButtonState extends State<CustomButton>
   bool isTap = false;
 
   bool disableChangeDone = true;
-
+  bool loading = false;
   ///初次渲染组件时的宽度
   double firstWidth;
 
@@ -302,8 +307,14 @@ class CustomButtonState extends State<CustomButton>
           if (widget.tapFunc != null) {
             var res = widget.tapFunc();
             if(res is Future){
+              if(widget.futureLoading){
+                this.loading = true;
+              }
+              widget.disabled.value = true;
               (res as Future).then((value){
-                  print("Future执行完毕");
+                this.loading = false;
+                widget.disabled.value = false;
+                print("Future执行完毕");
               });
             }
           }
@@ -363,19 +374,27 @@ class CustomButtonState extends State<CustomButton>
             right: widget.rightMargin,
             top: widget.topMargin,
             bottom: widget.bottomMargin),
-        child: Center(
-          child: Text(
-            widget.text,
-            textDirection: TextDirection.ltr,
-            style: TextStyle(
-                fontSize: widget.fontsize,
-                color: widget.textColor,
-                fontFamily: "Futura",
-                decoration: TextDecoration.none,
-                fontWeight:
-                widget.isBold ? FontWeight.bold : FontWeight.normal),
+        child: AnimatedCrossFade(
+          firstChild: Center(
+            child: Text(
+              widget.text,
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                  fontSize: widget.fontsize,
+                  color: widget.textColor,
+                  fontFamily: "Futura",
+                  decoration: TextDecoration.none,
+                  fontWeight:
+                  widget.isBold ? FontWeight.bold : FontWeight.normal),
+            ),
           ),
+          secondChild: Center(
+            child: Icon(FontAwesomeIcons.spinner,color: MyTheme.convert(ThemeColorName.NormalIcon))
+          ),
+          crossFadeState: this.loading?CrossFadeState.showSecond:CrossFadeState.showFirst,
+          duration: Duration(milliseconds: 300),
         )
+
       ),
     );
   }
