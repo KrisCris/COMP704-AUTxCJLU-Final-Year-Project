@@ -118,7 +118,7 @@ abstract class Plan {
         json['startTime'],
         json['endTime'],
         json['goalWeight'],
-        json['extendDays'],
+        json['extendDays'] ?? 0,
         json['caloriesUpper'],
         json['caloriesLower'],
         json['proteinUpper'],
@@ -231,8 +231,10 @@ class ShedWeightPlan extends Plan {
       builder: (BuildContext context) {
         return ExtendTimeHint(
           title: CustomLocalizations.of(context).planDelayFor +
-              this.calculatedDelayDays.toString() + CustomLocalizations.of(context).days+
-              ","+CustomLocalizations.of(context).planDelayChoose,
+              this.calculatedDelayDays.toString() +
+              CustomLocalizations.of(context).days +
+              "," +
+              CustomLocalizations.of(context).planDelayChoose,
           onClickAccept: () async {
             Response res = await Requests.delayPlan(
                 {"uid": u.uid, "token": u.token, "pid": this.id});
@@ -288,11 +290,11 @@ class ShedWeightPlan extends Plan {
   @override
   void solveUpdateWeight(BuildContext context) async {
     User u = User.getInstance();
-    showDialog<int>(
+    int valueIntStart = await showDialog<int>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext context2) {
         UpdateBody updt = UpdateBody(
-          text: CustomLocalizations.of(context).updateBodyTitle,
+          text: CustomLocalizations.of(context2).updateBodyTitle,
           needHeight: false,
           needCancel: true,
         );
@@ -310,7 +312,7 @@ class ShedWeightPlan extends Plan {
             u.bodyWeight = v;
             //计划完成
             if (res.data['data'] == null) {
-              Navigator.of(context).pop(-1);
+              Navigator.of(context2).pop(-1);
             }
             //正常更新体重
             else {
@@ -323,7 +325,7 @@ class ShedWeightPlan extends Plan {
               this.dailyProteinLowerLimit =
                   NumUtil.getNumByValueDouble(res.data['data']['pl'], 1);
               this.save();
-              Navigator.of(context).pop(0);
+              Navigator.of(context2).pop(0);
             }
           }
           //可能延期
@@ -331,100 +333,96 @@ class ShedWeightPlan extends Plan {
             int v = updt.weight.widgetValue.value;
             u.bodyWeight = v.toDouble();
             this.calculatedDelayDays = res.data['data']['recommend_ext'];
-            Navigator.of(context).pop(-2);
+            Navigator.of(context2).pop(-2);
           }
         };
         return updt;
       },
-    ).then((value) async {
-      //计划完成
-      if (value == -1) {
-        showDialog<int>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return Container(
-                height: ScreenTool.partOfScreenHeight(1),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DotColumn(borderRadius: 5, children: [
-                      SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                      Container(
-                        child: Text(
-                          CustomLocalizations.of(context).planSuccessCreateNew,
-                          style: TextStyle(
-                              fontFamily: "Futura",
-                              fontSize: 15,
-                              color:
-                                  MyTheme.convert(ThemeColorName.NormalText)),
-                        ),
-                        width: ScreenTool.partOfScreenWidth(0.6),
-                      ),
-                      SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
-                    ])
-                  ],
-                ),
-              );
-            }).then((value) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-            return GuidePage(firstTime: false);
-          }), (route) {
-            return route == null;
-          });
-        });
-        await Future.delayed(Duration(seconds: 3));
-        Navigator.of(context).pop();
-      }
-      //正常更新体重
-      else if (value == 0) {
-      }
-      //计划延期
-      else if (value == -2) {
-        showDialog<bool>(
+    );
+    //计划完成
+    if (valueIntStart == -1) {
+      int valueInt = await showDialog<int>(
           context: context,
-          builder: (BuildContext context) {
-            return ExtendTimeHint(
-              title:CustomLocalizations.of(context).planDelayFor +
-                  this.calculatedDelayDays.toString() + CustomLocalizations.of(context).days+
-                  ","+CustomLocalizations.of(context).planDelayChoose,
-              onClickAccept: () async {
-                Response res = await Requests.delayAndUpdatePlan(
-                    {"uid": u.uid, "token": u.token, "pid": this.id});
-                if (res != null && res.data['code'] == 1) {
-                  this.extendDays = res.data['data']['ext'];
-                  this.save();
-                }
-                Navigator.of(context).pop(true);
-              },
-              onClickFinish: () async {
-                Response res = await Requests.finishPlan({
-                  "uid": u.uid,
-                  "token": u.token,
-                  "pid": this.id,
-                  "weight": u.bodyWeight,
-                });
-                Navigator.of(context).pop(false);
-              },
+          barrierDismissible: false,
+          builder: (BuildContext context3) {
+            return Container(
+              height: ScreenTool.partOfScreenHeight(1),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DotColumn(borderRadius: 5, children: [
+                    SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                    Container(
+                      child: Text(
+                        CustomLocalizations.of(context3).planSuccessCreateNew,
+                        style: TextStyle(
+                            fontFamily: "Futura",
+                            fontSize: 15,
+                            color: MyTheme.convert(ThemeColorName.NormalText)),
+                      ),
+                      width: ScreenTool.partOfScreenWidth(0.6),
+                    ),
+                    SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
+                  ])
+                ],
+              ),
             );
-          },
-        ).then((value) async {
-          //accept delay
-          if (value == true) {
-          }
-          //finish plan
-          else {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) {
-              return GuidePage(firstTime: false);
-            }), (route) {
-              return route == null;
-            });
-          }
+          });
+      await Future.delayed(Duration(seconds: 3));
+      Navigator.of(context).pop();
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
+        return GuidePage(firstTime: false);
+      }), (route) {
+        return route == null;
+      });
+    }
+    //正常更新体重
+    else if (valueIntStart == 0) {
+    }
+    //计划延期
+    else if (valueIntStart == -2) {
+      bool valueBool = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context4) {
+          return ExtendTimeHint(
+            title: CustomLocalizations.of(context4).planDelayFor +
+                this.calculatedDelayDays.toString() +
+                CustomLocalizations.of(context4).days +
+                "," +
+                CustomLocalizations.of(context4).planDelayChoose,
+            onClickAccept: () async {
+              Response res = await Requests.delayAndUpdatePlan(
+                  {"uid": u.uid, "token": u.token, "pid": this.id});
+              if (res != null && res.data['code'] == 1) {
+                this.extendDays = res.data['data']['ext'];
+                this.save();
+              }
+            },
+            onClickFinish: () async {
+              Response res = await Requests.finishPlan({
+                "uid": u.uid,
+                "token": u.token,
+                "pid": this.id,
+                "weight": u.bodyWeight,
+              });
+            },
+          );
+        },
+      );
+      //accept delay
+      if (valueBool == true) {
+      }
+      //finish plan
+      else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+          return GuidePage(firstTime: false);
+        }), (route) {
+          return route == null;
         });
       }
-    });
+    }
   }
 }
 
@@ -481,8 +479,7 @@ class BuildMusclePlan extends Plan {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return ExtendTimeHint(
-          title:
-              CustomLocalizations.of(context).planSuccessTwoChoise,
+          title: CustomLocalizations.of(context).planSuccessTwoChoise,
           delayText: CustomLocalizations.of(context).continuePlanButton,
           finishText: CustomLocalizations.of(context).changePlanButton,
         );
@@ -555,11 +552,11 @@ class BuildMusclePlan extends Plan {
               "weight": updt.getWeight(),
               "height": updt.getHeight(),
             });
-            if(res == null)return;
+            if (res == null) return;
             //正常更新体重
-            if(res.data['code'] == 1){
+            if (res.data['code'] == 1) {
               Navigator.of(context).pop(1);
-            }else if(res.data['code'] == -2){
+            } else if (res.data['code'] == -2) {
               //TODO:处理失衡的问题
             }
           };
@@ -628,13 +625,13 @@ class MaintainPlan extends Plan {
             Response res = await Requests.updateBody({
               "uid": u.uid,
               "token": u.token,
-              "weight":updt.getWeight(),
+              "weight": updt.getWeight(),
             });
-            if(res == null)return;
+            if (res == null) return;
             //正常更新体重
-            if(res.data['code'] == 1){
+            if (res.data['code'] == 1) {
               Navigator.of(context).pop(1);
-            }else if(res.data['code'] == -2){
+            } else if (res.data['code'] == -2) {
               //TODO:处理失衡的问题
             }
           };
