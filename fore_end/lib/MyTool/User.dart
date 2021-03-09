@@ -78,6 +78,7 @@ class User {
     this._needGuide = needGuide;
     this._isOffline = offline;
     this.stillHaveDialog = false;
+    this.shouldUpdateWeight = false;
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -118,6 +119,7 @@ class User {
         bodyHeight: pre.getDouble("bodyHeight"),
         bodyWeight: pre.getDouble("bodyWeight"),
         registerDate: pre.getInt("registerDate"),
+        offline:false,
         age: pre.getInt('age'),
         plan: Plan.readLocal(),
         avatar: pre.getString("avatar"),
@@ -126,7 +128,6 @@ class User {
     }
     return User._instance;
   }
-
   static bool isInit() {
     return User._instance != null;
   }
@@ -212,17 +213,17 @@ class User {
           NumUtil.getNumByValueDouble(res.data['data']['ph'], 1),
           NumUtil.getNumByValueDouble(res.data['data']['pl'], 1),
         );
-      }
-      //计算可能延期多久
-      if (this._plan.pastDeadline) {
-        await this._plan.calculateDelayDays();
+        //计算可能延期多久
+        if (this._plan.pastDeadline) {
+          await this._plan.calculateDelayDays();
+        }
+        res = await Requests.shouldUpdateWeight(
+            {"uid": this._uid, "token": this._token, "pid": this._plan.id});
+        if (res != null && res.data['code'] == 1) {
+          this._shouldUpdateWeight = res.data['data']['shouldUpdate'];
+        }
       }
       this.save();
-      res = await Requests.shouldUpdateWeight(
-          {"uid": this._uid, "token": this._token, "pid": this._plan.id});
-      if (res != null && res.data['code'] == 1) {
-        this._shouldUpdateWeight = res.data['data']['shouldUpdate'];
-      }
       return 4;
     } else if (res.data['code'] == -1) {
       return 3;
