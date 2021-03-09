@@ -18,11 +18,11 @@ class CustomLocalizations {
 
     //主题色的多语言翻译-------起始
     "dark blue":{
-      "en":"dark blue",
+      "en":"dark",
       "zh":"深蓝"
     },
     "light blue":{
-      "en":"light blue",
+      "en":"light",
       "zh":"浅蓝"
     },
     //主题色的多语言翻译-------结束

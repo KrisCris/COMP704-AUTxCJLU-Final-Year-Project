@@ -144,13 +144,18 @@ class BodyDataInputer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
-                  Text(CustomLocalizations.of(context).collectBodyData,
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontFamily: "Futura",
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.bold)),
+                  Container(
+                    height: 80,
+                    width: ScreenTool.partOfScreenWidth(0.8),
+                    child: Text(CustomLocalizations.of(context).collectBodyData,
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.white,
+                            fontFamily: "Futura",
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.bold)),
+                  )
+
                 ],
               ),
               SizedBox(height: 10),
@@ -160,7 +165,7 @@ class BodyDataInputer extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
                     width: ScreenTool.partOfScreenWidth(0.8),
-                    height: 50,
+                    height: 80,
                     child: Text(
                         CustomLocalizations.of(context).collectBodyDataInfo,
                         style: TextStyle(

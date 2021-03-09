@@ -123,9 +123,10 @@ class PlanDetailPage extends StatelessWidget {
                 CustomLocalizations.of(context).updateWeight,
                 autoReturnColor: true,
                 fontsize: 15,
-                tapUpFunc: () {
+                tapUpFunc: () async {
                   User u = User.getInstance();
-                  u.plan.solveUpdateWeight(context);
+                  await u.plan.solveUpdateWeight(context);
+                  chartKey.currentState.repaintData();
                 },
               ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),

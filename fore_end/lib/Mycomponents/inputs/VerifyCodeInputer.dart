@@ -168,7 +168,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
         radius: 8,
         disabled: true,
         sizeChangeMode: 2,
-        tapFunc: () async {
+        tapFunc: (){
           this.verified = false;
           this.contentWhenClickButton = widget.emailField.getValue();
           this.button.fontsize = 20;
