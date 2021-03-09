@@ -263,7 +263,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void setValue(List pagesData){
     String foodNames;
     double foodCalorie;
-    this.index=pagesData.length;
+    // this.index=pagesData.length;
     pagesData.forEach((element) {
       element.forEach((key, value) { 
         if(key=="consumption"){
@@ -285,10 +285,15 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         }
         if(key=="planBrief"){
 
+
           ///计算时间用 begin和finish 的时间应该也可以?
           // this.standardCaloriesDays=this.startedPlanTime.difference(this.finishedPlanTime).inDays - (this.overCaloriesDays+this.lessCaloriesDays);
           Map info=value;
           this.finishedWeight=info["achievedWeight"].toInt();
+          if(info["hasCompleted"]!=Null){
+            this.index++;
+          }
+
           DateTime begin=DateTime.fromMillisecondsSinceEpoch(info["begin"]*1000);
           DateTime end=DateTime.fromMillisecondsSinceEpoch(info["realEnd"]*1000);
           this.standardCaloriesDays=end.difference(begin).inDays-this.overCaloriesDays-this.lessCaloriesDays;
