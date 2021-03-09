@@ -392,6 +392,10 @@ class User {
     pre.remove("userName");
     pre.remove("avatar");
     pre.remove("needSetPlan");
+    pre.remove("localCalories");
+    pre.remove("localHistoryMeals");
+    pre.remove("localBodyChanges");
+    pre.remove("localHistoryPlan");
     this.meals.value.forEach((element) {
       element.delete();
     });
