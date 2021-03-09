@@ -290,8 +290,10 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
           // this.standardCaloriesDays=this.startedPlanTime.difference(this.finishedPlanTime).inDays - (this.overCaloriesDays+this.lessCaloriesDays);
           Map info=value;
           this.finishedWeight=info["achievedWeight"].toInt();
-          if(info["hasCompleted"]!=Null){
+          if(info["hasCompleted"]){
             this.index++;
+          }else {
+            
           }
 
           DateTime begin=DateTime.fromMillisecondsSinceEpoch(info["begin"]*1000);
