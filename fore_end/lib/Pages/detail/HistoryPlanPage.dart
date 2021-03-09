@@ -223,16 +223,6 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       this.searchData();
     }
 
-
-    setState(() {
-
-    });
-    // //第一次页面渲染完毕再执行接口查询
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //
-    //
-    //
-    // });
   }
 
   void clearData() {
@@ -257,7 +247,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     }
     setValue(this.pagesData);
     this.searching = false;
-
+    setState(() {
+    });
   }
 
   void setValue(List pagesData){
