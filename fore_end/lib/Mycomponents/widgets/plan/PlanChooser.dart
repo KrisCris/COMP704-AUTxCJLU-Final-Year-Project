@@ -128,7 +128,7 @@ class PlanChooser extends StatelessWidget {
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
                     width: ScreenTool.partOfScreenWidth(0.75),
-                    height: 65,
+                    height: 75,
                     child: info,
                   ),
                 ],
