@@ -171,7 +171,7 @@ def modify_password():
 
 @user.route('retrieve_password', methods=['POST'])
 @func.require_code_check
-# @swag_from('docs/user/modify/retrieve_password.yml')
+@swag_from('docs/user/retrieve_password.yml')
 def retrieve_password():
     email = request.form.get('email')
     password = request.form.get('new_password')

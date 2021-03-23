@@ -30,4 +30,4 @@ def estimateExt(u: User, pal, remain, goalWeight):
             lastAvaDay = accumDay
             accumDay = accumDay - (day / 2 if day >= 14 else day)
 
-        return EXT
+    return EXT

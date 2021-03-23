@@ -64,7 +64,7 @@ def _img_handle(b64, img_size):
 
 def _detect(b64, output):
     out, source, weights, imgsz, device, augment, conf_thres, iou_thres, agnostic_nms = \
-        'cv/inference/output', b64, 'cv/weights/v2/m_v1.pt', \
+        'cv/inference/output', b64, 'cv/weights/v1/s_v1.pt', \
         640, 'cpu', 'store_true', 0.25, 0.45, 'store_true'
 
     # Initialize

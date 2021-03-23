@@ -14,6 +14,9 @@ class Food(db.Model):
     protein = db.Column(db.FLOAT)
     cholesterol = db.Column(db.FLOAT)
     cellulose = db.Column(db.FLOAT)
+    ratioP = db.Column(db.FLOAT)
+    ratioCH = db.Column(db.FLOAT)
+    ratioF = db.Column(db.FLOAT)
 
     def __init__(self, name, category, calories, fat, carbohydrate, protein, cholesterol, cellulose, image=''):
         self.name = name
@@ -25,6 +28,10 @@ class Food(db.Model):
         self.protein = protein
         self.cholesterol = cholesterol
         self.cellulose = cellulose
+        accumulatedWeight = protein + carbohydrate + fat
+        self.ratioP = round(protein / accumulatedWeight, 3)
+        self.ratioCH = round(carbohydrate / accumulatedWeight, 3)
+        self.ratioF = 1 - self.ratioP - self.ratioCH
 
     def add(self):
         db.session.add(self)
@@ -49,4 +56,6 @@ class Food(db.Model):
     def toDict(self):
         return {'id': self.id, 'name': self.name, 'category': self.category, 'img': self.image,
                 'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate, 'protein': self.protein,
-                'cholesterol': self.cholesterol, 'cellulose': self.cellulose}
+                'cholesterol': self.cholesterol, 'cellulose': self.cellulose,
+                'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
+                }
