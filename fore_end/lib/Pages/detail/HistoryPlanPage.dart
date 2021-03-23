@@ -223,16 +223,6 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       this.searchData();
     }
 
-
-    setState(() {
-
-    });
-    // //第一次页面渲染完毕再执行接口查询
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //
-    //
-    //
-    // });
   }
 
   void clearData() {
@@ -257,13 +247,14 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     }
     setValue(this.pagesData);
     this.searching = false;
-
+    setState(() {
+    });
   }
 
   void setValue(List pagesData){
     String foodNames;
     double foodCalorie;
-    this.index=pagesData.length;
+    // this.index=pagesData.length;
     pagesData.forEach((element) {
       element.forEach((key, value) { 
         if(key=="consumption"){
@@ -285,9 +276,15 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         }
         if(key=="planBrief"){
 
+
           ///计算时间用 begin和finish 的时间应该也可以?
           // this.standardCaloriesDays=this.startedPlanTime.difference(this.finishedPlanTime).inDays - (this.overCaloriesDays+this.lessCaloriesDays);
           Map info=value;
+          if(info["hasCompleted"]){
+            this.index++;
+          }else{
+            return;
+          }
           this.finishedWeight=info["achievedWeight"].toInt();
           DateTime begin=DateTime.fromMillisecondsSinceEpoch(info["begin"]*1000);
           DateTime end=DateTime.fromMillisecondsSinceEpoch(info["realEnd"]*1000);

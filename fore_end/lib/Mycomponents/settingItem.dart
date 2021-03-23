@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -43,7 +44,7 @@ class SettingItem extends StatefulWidget
         errorText: "",
         disableSuffix: true,
         isAutoCheck: false,
-        bottomPadding: -10,
+        bottomPadding: 0,
         textAlign: TextAlign.right,
       );
     }else{
@@ -100,10 +101,13 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
               ),
               Expanded(child: SizedBox()),
               // (widget.rightComponent as Widget),
-              Container(
-                margin: EdgeInsets.only(top:10,left: 10 ),
-                child: (widget.rightComponent as Widget),
-              ),
+              Transform.translate(
+                offset: Offset(0,10),
+                child:Container(
+                  margin: EdgeInsets.only(left: 10 ),
+                  child: (widget.rightComponent as Widget),
+                ),
+              )
             ],
           ),
         ));

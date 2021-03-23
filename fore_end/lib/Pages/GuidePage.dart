@@ -63,7 +63,7 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
             duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
       }
     });
-    goal.setNextDo((){this.askForPreview(context, plan, body, body2, goal, planPreview);});
+    goal.setNextDo(() async { await this.askForPreview(context, plan, body, body2, goal, planPreview);});
 
     return TabBarView(
       controller: ctl,
