@@ -1,5 +1,9 @@
 import scrapy
 from hiyd.items import FoodCrawlerItem
+import requests as req
+from PIL import Image
+import os, base64
+from io import BytesIO
 
 
 class HiydSpider(scrapy.Spider):
@@ -50,6 +54,13 @@ class HiydSpider(scrapy.Spider):
     def parse_detail(self, response):
         food_obj = response.meta['item']
 
+        img_url = response.xpath('//div[@class="img-wrap"]/img/@src').get()
+        img_b64 = ''
+        if img_url:
+            img_url = img_url.strip()
+            img_b64 = self.imgurl2b64(img_url)
+        food_obj['img'] = img_b64
+
         cate_name = response.xpath('//div[@class="cont"]/p/a/text()').get().strip()
         food_obj['cate_name'] = cate_name
 
@@ -66,22 +77,26 @@ class HiydSpider(scrapy.Spider):
             normal_calories = normal_calories.strip()
         food_obj['normal_calories'] = normal_calories
 
-        calories = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[2]/p[2]/text()').get().strip()
+        calories = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[2]/p[2]/text()').get().strip()
         food_obj['calories'] = calories
 
         fat = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[3]/p[2]/text()').get().strip()
         food_obj['fat'] = fat
 
-        carbohydrate = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[4]/p[2]/text()').get().strip()
+        carbohydrate = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[4]/p[2]/text()').get().strip()
         food_obj['carbohydrate'] = carbohydrate
 
         protein = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[5]/p[2]/text()').get().strip()
         food_obj['protein'] = protein
 
-        cholesterol = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[6]/p[2]/text()').get().strip()
+        cholesterol = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[1]/li[6]/p[2]/text()').get().strip()
         food_obj['cholesterol'] = cholesterol
 
-        cellulose = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[2]/p[2]/text()').get().strip()
+        cellulose = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[2]/p[2]/text()').get().strip()
         food_obj['cellulose'] = cellulose
 
         v_a = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[3]/p[2]/text()').get().strip()
@@ -93,19 +108,23 @@ class HiydSpider(scrapy.Spider):
         v_e = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[5]/p[2]/text()').get().strip()
         food_obj['v_e'] = v_e
 
-        carotene = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[6]/p[2]/text()').get().strip()
+        carotene = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[6]/p[2]/text()').get().strip()
         food_obj['carotene'] = carotene
 
-        thiamine = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[7]/p[2]/text()').get().strip()
+        thiamine = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[7]/p[2]/text()').get().strip()
         food_obj['thiamine'] = thiamine
 
-        riboflavin = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[8]/p[2]/text()').get().strip()
+        riboflavin = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[8]/p[2]/text()').get().strip()
         food_obj['riboflavin'] = riboflavin
 
         niacin = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[2]/li[9]/p[2]/text()').get().strip()
         food_obj['niacin'] = niacin
 
-        magnesium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[2]/p[2]/text()').get().strip()
+        magnesium = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[2]/p[2]/text()').get().strip()
         food_obj['magnesium'] = magnesium
 
         calcium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[3]/p[2]/text()').get().strip()
@@ -120,19 +139,30 @@ class HiydSpider(scrapy.Spider):
         copper = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[6]/p[2]/text()').get().strip()
         food_obj['copper'] = copper
 
-        manganese = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[7]/p[2]/text()').get().strip()
+        manganese = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[7]/p[2]/text()').get().strip()
         food_obj['manganese'] = manganese
 
-        potassium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[8]/p[2]/text()').get().strip()
+        potassium = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[8]/p[2]/text()').get().strip()
         food_obj['potassium'] = potassium
 
-        phosphorus = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[9]/p[2]/text()').get().strip()
+        phosphorus = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[9]/p[2]/text()').get().strip()
         food_obj['phosphorus'] = phosphorus
 
         sodium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[10]/p[2]/text()').get().strip()
         food_obj['sodium'] = sodium
 
-        selenium = response.xpath('//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[11]/p[2]/text()').get().strip()
+        selenium = response.xpath(
+            '//div[@class="info-nurt"]/div[@class="box-bd"]/ul[3]/li[11]/p[2]/text()').get().strip()
         food_obj['selenium'] = selenium
 
         yield food_obj
+
+    def imgurl2b64(self, url):
+        response = req.get(url)
+        image = Image.open(BytesIO(response.content))
+        b64 = base64.b64encode(BytesIO(response.content).read())
+        return b64
+        # print(b64)
