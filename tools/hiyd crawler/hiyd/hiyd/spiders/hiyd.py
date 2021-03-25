@@ -9,13 +9,14 @@ from io import BytesIO
 class HiydSpider(scrapy.Spider):
     name = 'hiyd'
     allowed_domains = ['hiyd.com']
-    start_urls = ['https://m.food.hiyd.com/list-1-html/',
-                  'https://m.food.hiyd.com/list-2-html',
-                  'https://m.food.hiyd.com/list-3-html',
-                  'https://m.food.hiyd.com/list-4-html',
-                  'https://m.food.hiyd.com/list-5-html',
-                  'https://m.food.hiyd.com/list-6-html',
-                  'https://m.food.hiyd.com/list-9-html',
+    start_urls = [
+                  # 'https://m.food.hiyd.com/list-1-html/',
+                  # 'https://m.food.hiyd.com/list-2-html',
+                  # 'https://m.food.hiyd.com/list-3-html'
+                  # 'https://m.food.hiyd.com/list-4-html'
+                  # 'https://m.food.hiyd.com/list-5-html'
+                  # 'https://m.food.hiyd.com/list-6-html'
+                  # 'https://m.food.hiyd.com/list-9-html'
                   'https://m.food.hiyd.com/list-132-html'
                   ]
 
