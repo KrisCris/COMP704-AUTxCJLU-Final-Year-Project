@@ -1,1 +1,4 @@
-test = cate_name, food_name, food_url, calories, fat, carbohydrate, protein, cholesterol, cellulose, v_a, v_c, v_e, carotene, thiamine, riboflavin, niacin, magnesium, calcium, iron, zinc, copper, manganese, potassium, phosphorus, sodium, selenium
+import pymysql
+
+pymysql.connect(host='localhost', user='root', passwd='D12346789.p', database='test', port=3306)
+print('connection established')
