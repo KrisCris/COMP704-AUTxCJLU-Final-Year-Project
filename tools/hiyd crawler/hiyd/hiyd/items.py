@@ -37,3 +37,4 @@ class FoodCrawlerItem(scrapy.Item):
     phosphorus = scrapy.Field()  # 磷
     sodium = scrapy.Field()  # 钠
     selenium = scrapy.Field()  # 硒
+    img = scrapy.Field() # 图片
