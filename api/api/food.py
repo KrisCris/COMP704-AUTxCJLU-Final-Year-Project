@@ -14,6 +14,7 @@ food = Blueprint(name='food', import_name=__name__)
 
 
 @food.route('detect', methods=['POST'])
+@swag_from('docs/food/detect.yml')
 def detect():
     img = base64_to_image(request.form.get('food_b64'))
     rotation = int(request.form.get('rotation'))
@@ -52,6 +53,7 @@ def detect():
 
 
 @food.route('search', methods=['GET'])
+@swag_from('docs/food/search.yml')
 def search():
     name: str = request.values.get('name').strip()
     nameArr = name.split(' ')
@@ -71,6 +73,7 @@ def search():
 
 
 @food.route('food_info', methods=['GET'])
+@swag_from('docs/food/food_info.yml')
 def getFoodInfo():
     fid = request.values.get('fid')
     f = Food.getById(fid)
@@ -82,6 +85,7 @@ def getFoodInfo():
 
 @food.route('consume_foods', methods=['POST'])
 @require_login
+@swag_from('docs/food/consume_foods.yml')
 def consume_foods():
     uid = request.form.get('uid')
     pid = request.form.get('pid')
@@ -114,6 +118,7 @@ def consume_foods():
 
 @food.route('get_consume_history', methods=['POST'])
 @require_login
+@swag_from('docs/food/get_consume_history.yml')
 def getConsumeHistory():
     begin = request.form.get('begin')
     end = request.form.get('end')
@@ -126,6 +131,7 @@ def getConsumeHistory():
 
 @food.route('get_daily_consumption', methods=['POST'])
 @require_login
+@swag_from('docs/food/get_daily_consumption.yml')
 def getDailyConsumption():
     begin = request.form.get('begin')
     end = request.form.get('end')
@@ -138,6 +144,7 @@ def getDailyConsumption():
 
 @food.route('accumulated_calories_intake', methods=['POST'])
 @require_login
+@swag_from('docs/food/accumulated_calories_intake.yml')
 def getAccumulatedCaloriesIntake():
     begin = request.form.get('begin')
     end = request.form.get('end')
@@ -150,6 +157,7 @@ def getAccumulatedCaloriesIntake():
 
 @food.route('listed_calories_intake', methods=['POST'])
 @require_login
+@swag_from('docs/food/listed_calories_intake.yml')
 def listedCaloriesIntake():
     begin = request.form.get('begin')
     end = request.form.get('end')

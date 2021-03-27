@@ -233,7 +233,7 @@ def __send_email(receivers: list, content: str, subject: str):
 
 def send_verification_code(receiver: str, code: str):
     content = '''
-            Your verification code is: {0}.
-            This code will expire in 10 minutes.
+            Your code is: {0}.
+            It will expire in 10 minutes.
     '''.format(code)
-    return __send_email(receivers=[receiver], content=content, subject='DietLens verification code')
+    return __send_email(receivers=[receiver], content=content, subject='R&D Code')

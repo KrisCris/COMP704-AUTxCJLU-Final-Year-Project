@@ -14,6 +14,7 @@ plan = Blueprint(name='plan', import_name=__name__)
 
 
 @plan.route('query_plan', methods=['GET'])
+@swag_from('docs/plan/query_plan.yml')
 def query_plan():
     # params
     height = float(request.values.get('height'))
@@ -52,6 +53,7 @@ def query_plan():
 
 @plan.route('set_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/set_plan.yml')
 def set_plan():
     # params
     uid = request.form.get('uid')
@@ -123,6 +125,7 @@ def set_plan():
 
 @plan.route('finish_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/finish_plan.yml')
 def finish_plan():
     weight = request.form.get('weight')
     pid = request.form.get('pid')
@@ -144,6 +147,7 @@ def finish_plan():
 
 @plan.route('get_current_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/get_current_plan.yml')
 def get_current_plan():
     uid = request.form.get('uid')
     p: 'Plan' = Plan.getUnfinishedPlanByUID(uid).first()
@@ -163,6 +167,7 @@ def get_current_plan():
 
 @plan.route('get_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/get_plan.yml')
 def get_plan():
     pid = request.form.get('pid')
     p = Plan.getPlanByID(pid)
@@ -183,6 +188,7 @@ def get_plan():
 
 @plan.route('update_body_info', methods=['POST'])
 @require_login
+@swag_from('docs/plan/update_body_info.yml')
 def update_body_info():
     FLAG = False
     FLAG_EXT = 0
@@ -341,6 +347,7 @@ def update_body_info():
 
 @plan.route('get_weight_trend', methods=['POST'])
 @require_login
+@swag_from('docs/plan/get_weight_trend.yml')
 def get_weight_trend():
     uid = request.form.get('uid')
     begin = request.form.get('begin')
@@ -352,6 +359,7 @@ def get_weight_trend():
 
 @plan.route('get_plan_weight_trend', methods=['POST'])
 @require_login
+@swag_from('docs/plan/get_plan_weight_trend.yml')
 def get_plan_weight_trend():
     pid = request.form.get('pid')
     trend = PlanDetail.getWeightTrendInPlan(pid)
@@ -360,6 +368,7 @@ def get_plan_weight_trend():
 
 @plan.route('extend_update_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/extend_update_plan.yml')
 def extendAndUpdatePlan():
     # only called by type 1 for fixing the end date
     uid = request.form.get('uid')
@@ -383,6 +392,7 @@ def extendAndUpdatePlan():
 
 @plan.route('extend_plan', methods=['POST'])
 @require_login
+@swag_from('docs/plan/extend_plan.yml')
 def extendPlan():
     pid = request.form.get('pid')
     days = request.form.get('days')
@@ -391,6 +401,7 @@ def extendPlan():
 
 @plan.route('should_update_weight', methods=['POST'])
 @require_login
+@swag_from('docs/plan/should_update_weight.yml')
 def shouldUpdateWeight():
     pid = request.form.get('pid')
     subPlan = PlanDetail.getLatest(pid)
@@ -402,6 +413,7 @@ def shouldUpdateWeight():
 
 @plan.route('get_past_plans', methods=['POST'])
 @require_login
+@swag_from('docs/plan/get_past_plans.yml')
 def getPastPlans():
     uid = request.form.get('uid')
     begin = request.form.get('begin')
@@ -450,9 +462,9 @@ def getPastPlans():
                 detail = dc.toDict()
                 detail.pop('img')
                 consumptionRecords['detailedRecords'].append(detail)
-
-            consumptionRecords['avgCalories'] = consumptionRecords['accumCalories'] / counter
-            consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / counter
+            if counter > 0:
+                consumptionRecords['avgCalories'] = consumptionRecords['accumCalories'] / counter
+                consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / counter
 
             dataMap[result.pid] = {
                 'planBrief': p.toDict(),
@@ -462,15 +474,16 @@ def getPastPlans():
             }
             
         dataMap[result.pid]['weeklyDetails'].append(result.toDict())
-        if result.ext != dataMap[result.pid]['weeklyDetails'][-1].ext:
-            dataMap[result.pid]['exts'] += 1
 
+        if result.ext != dataMap[result.pid]['weeklyDetails'][-1]['ext']:
+            dataMap[result.pid]['exts'] += 1
 
     return reply_json(1, data=list(dataMap.values()))
 
 
 @plan.route('estimate_extension', methods=['POST'])
 @require_login
+@swag_from('docs/plan/estimate_extension.yml')
 def estimateExtension():
     uid = request.form.get('uid')
     pid = request.form.get('pid')
