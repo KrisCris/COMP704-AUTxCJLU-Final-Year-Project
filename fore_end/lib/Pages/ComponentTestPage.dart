@@ -14,6 +14,8 @@ import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'dart:math' as math;
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+import 'FoodDetailsPage.dart';
+
 
 
 
@@ -43,7 +45,7 @@ class ComponentTestState extends State<ComponentTestPage>
 
   @override
   Widget build(BuildContext context) {
-    return CustomFloatingSearchBar();
+    return FoodDetails();
   }
 
 
