@@ -128,6 +128,7 @@ class PlanNotifier extends StatelessWidget {
         backgroundColor: this.backgroundColor,
         paintColor: this.effectColor,
         children: content);
+
     return box;
   }
 }
