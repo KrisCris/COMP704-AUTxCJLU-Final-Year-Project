@@ -11,11 +11,13 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
 import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/RecommendBox.dart';
+import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 
 class FoodDetails extends StatefulWidget {
   List<Map> foodInfoList=new List<Map>();
   Map<String,Map> foodsInfo=new Map<String,Map>();
+  GlobalKey<ValueAdjusterState> valueAdjusterKey;
   String foodName;
   double calories;
   double carbohydrate;
@@ -47,7 +49,7 @@ class FoodDetails extends StatefulWidget {
     this.cellulose=10;
     this.cholesterol=10;
     this.fat=10;
-
+    this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
   }
 
   @override
@@ -86,6 +88,12 @@ class _FoodDetailsState extends State<FoodDetails> {
       CustomLocalizations.of(context).lunch,
       CustomLocalizations.of(context).dinner
     ];
+
+    ValueAdjuster a = ValueAdjuster<double>(valueWeight: 10.0,key: this.widget.valueAdjusterKey);
+    a.onValueChange = (){
+      print("ValueAdjuster onValueChange");
+      // this.totalProtein =  this.widget.valueAdjusterKey.currentState.getVal()*widget.protein/100;
+    };
 
     return  Container(
         // padding: EdgeInsets.only(top: ScreenTool.partOfScreenHeight(0.05)),
@@ -131,23 +139,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                 width: ScreenTool.partOfScreenWidth(0.95),
                 child: Image.asset('image/fruit-main.jpg',fit: BoxFit.cover,),
               ),
-              // Container(
-              //   // margin: EdgeInsets.only(left: 10,right: 10,),
-              //   // padding: EdgeInsets.only(left: 20,right: 20,),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10),
-              //     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
-              //   ),
-              //   height: ScreenTool.partOfScreenHeight(0.2),
-              //   width: ScreenTool.partOfScreenWidth(0.95),
-              //
-              //   child: Card(
-              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              //     color: MyTheme.convert(ThemeColorName.ComponentBackground),
-              //     child: Icon(FontAwesomeIcons.hamburger,size: 80,color: MyTheme.convert(ThemeColorName.NormalIcon),),
-              //   ),
-              //
-              // ),
+
               SizedBox(height:15),
 
 
@@ -228,14 +220,14 @@ class _FoodDetailsState extends State<FoodDetails> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 15,),
+                      a,
                     ],
                   )
                 // Column(
                 //   // mainAxisAlignment: MainAxisAlignment.center,
                 //   // crossAxisAlignment: CrossAxisAlignment.start,
                 //   children: [
-                //
-                //
                 //     SizedBox(height: 5,),
                 //     PlanTextItem(leftText: CustomLocalizations.of(context).calories, rightText: "Kcal/100g", rightValue: widget.calories.toInt(),),
                 //     PlanTextItem(leftText: CustomLocalizations.of(context).protein, rightText: "g/100g", rightValue: widget.protein.toInt(),),
