@@ -11,7 +11,7 @@ import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 class PlanChooser extends StatelessWidget {
   Function nextDo;
   int planType;
-
+  GlobalKey<CrossFadeTextState> txt = new GlobalKey<CrossFadeTextState>();
   PlanChooser({this.nextDo});
 
   void setNextDo(Function f){
@@ -24,6 +24,7 @@ class PlanChooser extends StatelessWidget {
       text: "",
       fontSize: 14,
       fontColor: Colors.white,
+      key: txt,
     );
     CustomButton nextButton = CustomButton(
       radius: 5,
@@ -65,15 +66,15 @@ class PlanChooser extends StatelessWidget {
       borderRadius: 10,
     );
     addMuscle.setOnTap(() {
-      info.changeTo(
+      txt.currentState.changeTo(
           CustomLocalizations.of(context).buildMuscleInfo);
     });
     loseWeight.setOnTap(() {
-      info.changeTo(
+      txt.currentState.changeTo(
           CustomLocalizations.of(context).shedWeightInfo);
     });
     keep.setOnTap(() {
-      info.changeTo(CustomLocalizations.of(context).maintainInfo);
+      txt.currentState.changeTo(CustomLocalizations.of(context).maintainInfo);
     });
     CardChooserGroup<int> group = CardChooserGroup<int>(
       initVal: -1,

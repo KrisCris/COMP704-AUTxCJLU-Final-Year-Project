@@ -10,6 +10,8 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 
+import 'ValueAdjuster.dart';
+
 ///用于显示检测到食物后，展示食物数据的组件
 class FoodBox extends StatefulWidget {
   ///未提供食物图片，或者未加载图片时，采用的默认图片
@@ -57,6 +59,7 @@ class FoodBox extends StatefulWidget {
   GlobalKey<FoodBoxState> key;
   GlobalKey<RotateIconState> iconKey;
   GlobalKey fadeKey;
+  GlobalKey<ValueAdjusterState> valueAdjusterKey;
 
   FoodBox({
     @required Food food,
@@ -88,6 +91,7 @@ class FoodBox extends StatefulWidget {
     this.shouldShowPic = ValueNotifier(shouldShowPic);
     this.iconKey = GlobalKey<RotateIconState>();
     this.fadeKey = GlobalKey();
+    this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
   }
 
   void setRemoveFunc(Function f) {
@@ -123,22 +127,22 @@ class FoodBoxState extends State<FoodBox>
   int foodWeight =1;
 
   ///增加和减少重量
-  void plusWeight(){
-    setState(() {
-      foodWeight++;
-      widget.food.setWeight(foodWeight);
-    });
-
-  }
-  void minusWeight(){
-    setState(() {
-      if(foodWeight>1){
-        foodWeight--;
-        widget.food.setWeight(foodWeight);
-      }
-    });
-
-  }
+  // void plusWeight(){
+  //   setState(() {
+  //     foodWeight++;
+  //     widget.food.setWeight(foodWeight);
+  //   });
+  //
+  // }
+  // void minusWeight(){
+  //   setState(() {
+  //     if(foodWeight>1){
+  //       foodWeight--;
+  //       widget.food.setWeight(foodWeight);
+  //     }
+  //   });
+  //
+  // }
 
   @override
   void dispose() {
@@ -167,8 +171,17 @@ class FoodBoxState extends State<FoodBox>
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    //
+    // ValueAdjuster valueAdjuster = ValueAdjuster<int>(valueWeight: 25,key: this.widget.valueAdjusterKey);
+    // valueAdjuster.onValueChange = (){
+    //   print("ValueAdjuster onValueChange");
+    //   // this.totalProtein =  this.widget.valueAdjusterKey.currentState.getVal()*widget.protein/100;
+    // };
+
     return this.getBorderBox();
   }
 
@@ -306,6 +319,17 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(valueWeight: 1,key: this.widget.valueAdjusterKey);
+    valueAdjuster.onValueChange = (){
+      setState(() {
+        print("ValueAdjuster onValueChange");
+        this.foodWeight=this.widget.valueAdjusterKey.currentState.getVal();
+        widget.food.setWeight(foodWeight);
+      });
+
+    };
+
+
     List<Widget> col = [
       this.propertyLine("Calorie", widget.food.getCaloriePerUnit()),
       this.propertyLine("Fat", widget.food.getFatPerUnit()),
@@ -318,49 +342,7 @@ class FoodBoxState extends State<FoodBox>
         SizedBox(
           height: 10,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CustomButton(
-              firstColorName: ThemeColorName.Error,
-              text: "Remove",
-              width: 0.35,
-              tapFunc: () {
-                widget.removeFunc();
-              },
-            ),
-            Row(
-              children: [
-                ///customIconButton在按下的时候没有动画效果
-                CustomIconButton(
-                  icon: FontAwesomeIcons.minus,
-                  buttonSize: 40,
-                  sizeChangeWhenClick: true,
-                  backgroundSizeChange: true,
-                  onClick: (){
-                    print("按下了减少按钮");
-                    minusWeight();
-                  },
-                ),
-
-                SizedBox(width: 20,),
-                CustomIconButton(
-                  sizeChangeWhenClick: true,
-                  backgroundSizeChange: true,
-                    icon: FontAwesomeIcons.plus,
-                  buttonSize: 40,
-                  onClick: (){
-                    print("按下了增加按钮");
-                    plusWeight();
-
-                  },
-                ),
-
-              ],
-            ),
-
-          ],
-        )
+        valueAdjuster,
 
       ]);
     }
