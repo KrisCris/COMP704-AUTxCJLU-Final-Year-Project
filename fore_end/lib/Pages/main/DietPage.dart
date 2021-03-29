@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +181,27 @@ class DietPageState extends State<DietPage> {
       },
     );
   }
-
+  OpenContainer buildOpenContainer(){
+    return OpenContainer(
+      closedColor: Colors.transparent,
+      closedBuilder: (context, action) {
+        return PlanNotifier(
+          width: 0.95,
+          height: 100,
+          effectColor: Colors.black12,
+        );
+      },
+      transitionType: ContainerTransitionType.fade,
+      transitionDuration: const Duration(milliseconds: 3500),
+      openBuilder: (context, action) {
+        return Container(
+          color: Colors.grey,
+          height: 120,
+          margin: EdgeInsets.all(20),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -207,11 +228,7 @@ class DietPageState extends State<DietPage> {
                     ],
                   ),
                   SizedBox(height: 5),
-                  PlanNotifier(
-                    width: 0.95,
-                    height: 100,
-                    effectColor: Colors.black12,
-                  ),
+                  buildOpenContainer(),
                   // Expanded(child:SizedBox()),
                   SizedBox(height: 10),
                   Container(
