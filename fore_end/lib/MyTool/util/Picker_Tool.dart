@@ -12,8 +12,9 @@ const double _kPickerHeight=216.0;
 const double _kItemHeigt=40.0;
 // const Color _kBtnColor=Color(0xFF323232);
 // const Color _kTitleColor=Color(0xFF787878);
-Color _kBtnColor=MyTheme.convert(ThemeColorName.PickerToolText);
-Color _kTitleColor=MyTheme.convert(ThemeColorName.PickerToolText);
+///修改了这里的背景颜色
+Color _kBtnColor=MyTheme.convert(ThemeColorName.ComponentBackground);
+Color _kTitleColor=MyTheme.convert(ThemeColorName.ComponentBackground);
 const double _kTextFontSize=17.0;
 
 ///通过mealTheme来改变布局颜色，目前就是默认的白黑和下面的暗色系，true为暗色系
@@ -21,8 +22,11 @@ const double _kTextFontSize=17.0;
 bool mealTheme=false;
 Color cancelAndConfirmColor=MyTheme.convert(ThemeColorName.NormalText);
 Color titleColor=MyTheme.convert(ThemeColorName.NormalText);
-Color bottomBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
-Color upBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
+// Color bottomBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
+// Color upBackgroundColor=MyTheme.convert(ThemeColorName.PickerToolBackground);
+
+Color bottomBackgroundColor=MyTheme.convert(ThemeColorName.ComponentBackground);
+Color upBackgroundColor=MyTheme.convert(ThemeColorName.ComponentBackground);
 Color itemTextColor=MyTheme.convert(ThemeColorName.NormalText);
 
 
@@ -94,8 +98,8 @@ class JhPickerTool{
     new Picker(
 
         ///修改背景颜色，通过mealTheme? xxx : xxx 判断，下面也是一样，所有的颜色都是下面修改
-        headercolor: mealTheme?upBackgroundColor:MyTheme.convert(ThemeColorName.NormalBackground),
-        backgroundColor:mealTheme?bottomBackgroundColor:MyTheme.convert(ThemeColorName.NormalBackground),
+        headercolor: mealTheme?upBackgroundColor:MyTheme.convert(ThemeColorName.ComponentBackground),
+        backgroundColor:mealTheme?bottomBackgroundColor:MyTheme.convert(ThemeColorName.ComponentBackground),
 
         adapter: adapter,
         title: new Text(title??"Please Select",style: TextStyle(color: mealTheme?titleColor: _kTitleColor,fontSize: _kTextFontSize),),
