@@ -13,6 +13,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
   Function nextDo;
   double exerciseRatio;
   int age;
+  GlobalKey<CrossFadeTextState> txt = new GlobalKey<CrossFadeTextState>();
 
   ExtraBodyDataInputer({this.nextDo}) {}
   void setNextDo(Function f) {
@@ -72,21 +73,23 @@ class ExtraBodyDataInputer extends StatelessWidget {
       text: "",
       fontSize: 15,
       fontColor: Colors.white,
+      key: txt,
     );
     exerciseChoise.setOnChange(() {
       this.exerciseRatio = exerciseChoise.widgetValue.value;
+      CrossFadeTextState stt = this.txt.currentState;
       if (exerciseChoise.widgetValue.value == 1.4) {
-        describeText.changeTo(CustomLocalizations.of(context).veryLightInfo);
+        stt.changeTo(CustomLocalizations.of(context).veryLightInfo);
       } else if (exerciseChoise.widgetValue.value == 1.5) {
-        describeText.changeTo(CustomLocalizations.of(context).lightInfo);
+        stt.changeTo(CustomLocalizations.of(context).lightInfo);
       } else if (exerciseChoise.widgetValue.value == 1.7) {
-        describeText.changeTo(CustomLocalizations.of(context).moderateInfo);
+        stt.changeTo(CustomLocalizations.of(context).moderateInfo);
       } else if (exerciseChoise.widgetValue.value == 1.9) {
-        describeText.changeTo(CustomLocalizations.of(context).activeInfo);
+        stt.changeTo(CustomLocalizations.of(context).activeInfo);
       } else if (exerciseChoise.widgetValue.value == 2.1) {
-        describeText.changeTo(CustomLocalizations.of(context).veryActiveInfo);
+        stt.changeTo(CustomLocalizations.of(context).veryActiveInfo);
       } else if (exerciseChoise.widgetValue.value == 2.3) {
-        describeText.changeTo(CustomLocalizations.of(context).heavyInfo);
+        stt.changeTo(CustomLocalizations.of(context).heavyInfo);
       }
     });
     age.setOnChange(() {
