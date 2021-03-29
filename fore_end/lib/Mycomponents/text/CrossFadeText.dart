@@ -1,21 +1,30 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fore_end/MyTool/util/MyTheme.dart';
 
 class CrossFadeText extends StatefulWidget{
-  String textA;
-  String textB;
-
   double fontSize;
   Color fontColor;
+  String initText;
 
-  ValueNotifier<bool> showFirst;
-
-  CrossFadeText({String text="",double fontSize=12,Color fontColor}){
-    this.textA = text;
-    this.textB = "";
+  CrossFadeText({Key key,String text="",double fontSize=12,Color fontColor}):super(key:key){
+    this.initText = text;
     this.fontSize = fontSize;
-    this.fontColor = fontColor;
-    this.showFirst = ValueNotifier(true);
+    this.fontColor = MyTheme.convert(ThemeColorName.NormalText, color:fontColor);
+
   }
+
+
+  @override
+  State<StatefulWidget> createState() {
+      return CrossFadeTextState();
+  }
+}
+
+class CrossFadeTextState extends State<CrossFadeText>
+with TickerProviderStateMixin{
+  String textA;
+  String textB;
+  ValueNotifier<bool> showFirst;
 
   void changeTo(String s){
     if(this.showFirst.value){
@@ -27,43 +36,31 @@ class CrossFadeText extends StatefulWidget{
     }
   }
   @override
-  State<StatefulWidget> createState() {
-      return CrossFadeTextState();
-  }
-}
-
-class CrossFadeTextState extends State<CrossFadeText>
-with TickerProviderStateMixin{
-
-  @override
-  void didUpdateWidget(covariant CrossFadeText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    widget.showFirst.addListener(() {setState(() {
-    });});
-  }
-  @override
   void initState() {
     super.initState();
-    widget.showFirst.addListener(() {setState(() {
+    this.textA=widget.initText;
+    this.textB="";
+    this.showFirst = ValueNotifier(true);
+    this.showFirst.addListener(() {setState(() {
     });});
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
-        firstChild: Text(widget.textA,style: TextStyle(
+        firstChild: Text(this.textA,style: TextStyle(
             fontSize: widget.fontSize,
             color: widget.fontColor,
             fontFamily: "Futura",
             decoration: TextDecoration.none,
             fontWeight: FontWeight.normal)),
-        secondChild:Text(widget.textB,style: TextStyle(
+        secondChild:Text(this.textB,style: TextStyle(
             fontSize: widget.fontSize,
             color: widget.fontColor,
             fontFamily: "Futura",
             decoration: TextDecoration.none,
             fontWeight: FontWeight.normal),),
-        crossFadeState: widget.showFirst.value?CrossFadeState.showFirst:CrossFadeState.showSecond,
+        crossFadeState:this.showFirst.value?CrossFadeState.showFirst:CrossFadeState.showSecond,
         duration:Duration(milliseconds: 150));
   }
 
