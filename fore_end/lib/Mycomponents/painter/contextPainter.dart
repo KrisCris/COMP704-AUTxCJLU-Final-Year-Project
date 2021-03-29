@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 abstract class ContextPainter extends CustomPainter{
   BuildContext context;
 
-  ContextPainter({Listenable repaint}):super(repaint: repaint);
+  ContextPainter({Listenable repaint,this.context}):super(repaint: repaint);
 
   void setContext(BuildContext ctx){
     this.context = ctx;
