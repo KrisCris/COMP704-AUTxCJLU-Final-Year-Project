@@ -10,10 +10,8 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 
-import 'ValueAdjuster.dart';
-
 ///用于显示检测到食物后，展示食物数据的组件
-class FoodBox extends StatefulWidget {
+class RecommendBox extends StatefulWidget {
   ///未提供食物图片，或者未加载图片时，采用的默认图片
   static const String defaultPicturePath = "image/defaultFood.png";
 
@@ -22,6 +20,7 @@ class FoodBox extends StatefulWidget {
 
   ///该组件展示的食物
   Food food;
+  String title;
 
   ///未显示详情时，组件的高度
   double height;
@@ -50,19 +49,14 @@ class FoodBox extends StatefulWidget {
   ///展开详细内容的动画持续时间
   int expandDuration;
 
-  ///是否可以被删除
-  bool couldRemove;
 
-  ///删除时执行的回调
-  Function removeFunc;
-
-  GlobalKey<FoodBoxState> key;
+  GlobalKey<RecommendBoxState> key;
   GlobalKey<RotateIconState> iconKey;
   GlobalKey fadeKey;
-  GlobalKey<ValueAdjusterState> valueAdjusterKey;
 
-  FoodBox({
-    @required Food food,
+  RecommendBox({
+    // @required Food food,
+    String title = "推荐的相关食物",
     double height = 60,
     double detailedPaddingLeft = 30,
     double paddingLeft = 10,
@@ -70,15 +64,16 @@ class FoodBox extends StatefulWidget {
     double paddingTop = 0,
     double paddingRight = 30,
     int expandDuration = 150,
-    double borderRadius = 35,
+    double borderRadius = 10,
     bool shouldShowPic = false,
-    this.couldRemove = true,
-    this.removeFunc,
+
     this.key,
     double width = 1,
-  })  : assert(food != null),
+  })  :
+        // assert(food != null),
         super(key: key) {
-    this.food = food;
+
+    // this.food = food;
     this.height = ScreenTool.partOfScreenHeight(height);
     this.width = ScreenTool.partOfScreenWidth(width);
     this.detailedPaddingLeft = detailedPaddingLeft;
@@ -88,19 +83,14 @@ class FoodBox extends StatefulWidget {
     this.paddingRight = paddingRight;
     this.expandDuration = expandDuration;
     this.borderRadius = borderRadius;
-    this.shouldShowPic = ValueNotifier(shouldShowPic);
-    this.iconKey = GlobalKey<RotateIconState>();
-    this.fadeKey = GlobalKey();
-    this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
+    this.title=title;
+
   }
 
-  void setRemoveFunc(Function f) {
-    this.removeFunc = f;
-  }
 
   @override
   State<StatefulWidget> createState() {
-    return new FoodBoxState();
+    return new RecommendBoxState();
   }
 
   ///展开详细内容
@@ -109,7 +99,7 @@ class FoodBox extends StatefulWidget {
   }
 }
 
-class FoodBoxState extends State<FoodBox>
+class RecommendBoxState extends State<RecommendBox>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   ///是否应该展开，主要用于辅助判断展开按钮的图标旋转动画方向
   bool shouldExpand = false;
@@ -123,27 +113,6 @@ class FoodBoxState extends State<FoodBox>
   Container pic;
 
 
-  ///全局重量 点击按钮刷新组件
-  int foodWeight =1;
-
-  ///增加和减少重量
-  // void plusWeight(){
-  //   setState(() {
-  //     foodWeight++;
-  //     widget.food.setWeight(foodWeight);
-  //   });
-  //
-  // }
-  // void minusWeight(){
-  //   setState(() {
-  //     if(foodWeight>1){
-  //       foodWeight--;
-  //       widget.food.setWeight(foodWeight);
-  //     }
-  //   });
-  //
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -151,37 +120,28 @@ class FoodBoxState extends State<FoodBox>
 
   ///父组件更新时，重新为监听器添加回调
   @override
-  void didUpdateWidget(covariant FoodBox oldWidget) {
+  void didUpdateWidget(covariant RecommendBox oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.shouldShowPic.addListener(() {
-      if (widget.shouldShowPic.value && mounted) {
-        setState(() {});
-      }
-    });
+    // widget.shouldShowPic.addListener(() {
+    //   if (widget.shouldShowPic.value && mounted) {
+    //     setState(() {});
+    //   }
+    // });
   }
 
   @override
   void initState() {
     super.initState();
     //给监听器添加回调
-    widget.shouldShowPic.addListener(() {
-      if (widget.shouldShowPic.value && mounted) {
-        setState(() {});
-      }
-    });
+    // widget.shouldShowPic.addListener(() {
+    //   if (widget.shouldShowPic.value && mounted) {
+    //     setState(() {});
+    //   }
+    // });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-    //
-    // ValueAdjuster valueAdjuster = ValueAdjuster<int>(valueWeight: 25,key: this.widget.valueAdjusterKey);
-    // valueAdjuster.onValueChange = (){
-    //   print("ValueAdjuster onValueChange");
-    //   // this.totalProtein =  this.widget.valueAdjusterKey.currentState.getVal()*widget.protein/100;
-    // };
-
     return this.getBorderBox();
   }
 
@@ -191,13 +151,13 @@ class FoodBoxState extends State<FoodBox>
       duration: Duration(milliseconds: widget.expandDuration),
       width: widget.width,
       margin: EdgeInsets.only(
-          bottom: 15,
-          left: ScreenTool.partOfScreenWidth(0.05),
-          right: ScreenTool.partOfScreenWidth(0.05)),
+          // bottom: 15,
+          left: ScreenTool.partOfScreenWidth(0.025),
+          right: ScreenTool.partOfScreenWidth(0.025)),
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: Colors.white,
+          color:MyTheme.convert(ThemeColorName.ComponentBackground),
           boxShadow: [
             BoxShadow(
               blurRadius: 12, //阴影范围
@@ -237,7 +197,6 @@ class FoodBoxState extends State<FoodBox>
         height: widget.height,
         child: Row(children: [
           SizedBox(width: widget.paddingLeft),
-          getFoodPic(),
           SizedBox(width: 20),
           Expanded(child: getFoodName()),
           getExpandIcon(),
@@ -267,44 +226,44 @@ class FoodBoxState extends State<FoodBox>
         height: 40,
       );
     } else {
-        img = Image.memory(
-          base64Decode(widget.food.picture),
-          gaplessPlayback: true,
-          fit: BoxFit.cover,
-          width: 40,
-          height: 40,);
-        this.picType = 1;
+      img = Image.memory(
+        base64Decode(widget.food.picture),
+        gaplessPlayback: true,
+        fit: BoxFit.cover,
+        width: 40,
+        height: 40,);
+      this.picType = 1;
     }
     this.pic = Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ClipOval(
-        child: img,
-      )
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ClipOval(
+          child: img,
+        )
     );
     return this.pic;
   }
 
   Widget getFoodName() {
     return Text(
-      widget.food.name,
+      widget.title,
       style: TextStyle(
           decoration: TextDecoration.none,
           fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: "Futura",
-          color: Colors.black),
+          color: MyTheme.convert(ThemeColorName.NormalText)),
     );
   }
 
   Widget getExpandIcon() {
     return RotateIcon(
-        icon:  FontAwesomeIcons.chevronDown,
-        iconColor: Colors.blue,
+      icon:  FontAwesomeIcons.chevronDown,
+      iconColor: Colors.blue,
       key: widget.iconKey,
       onTap: (){
         if (this.shouldExpand) {
@@ -319,38 +278,28 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(valueWeight: 1,key: this.widget.valueAdjusterKey);
-    valueAdjuster.onValueChange = (){
-      setState(() {
-        print("ValueAdjuster onValueChange");
-        this.foodWeight=this.widget.valueAdjusterKey.currentState.getVal();
-        widget.food.setWeight(foodWeight);
-      });
-
-    };
-
-
     List<Widget> col = [
-      this.propertyLine("Calorie", widget.food.getCaloriePerUnit()),
-      this.propertyLine("Fat", widget.food.getFatPerUnit()),
-      this.propertyLine("Protein", widget.food.getProteinPerUnit()),
-      this.propertyLine("Carbohydrate", widget.food.getCarbohydratePerUnit()),
-      this.propertyLine("Weight", foodWeight.toString()+"00g"),
-    ];
-    if (widget.couldRemove) {
-      col.addAll([
-        SizedBox(
-          height: 10,
-        ),
-        valueAdjuster,
+      Container(
+        margin: EdgeInsets.only(left: 30,right: 30),
+        child: Text("评价：这个食物[Name]不适合您的计划[减肥].",
+            // overflow: ,
+            softWrap: true,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Futura",
+                color: MyTheme.convert(ThemeColorName.NormalText))),
 
-      ]);
-    }
+      ),
+
+    ];
+
     col.add(SizedBox(
       height: widget.paddingBottom,
     ));
     return Column(
-      children: col
+        children: col
     );
   }
 
@@ -368,7 +317,7 @@ class FoodBoxState extends State<FoodBox>
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   fontFamily: "Futura",
-                  color: Colors.black)),
+                  color: MyTheme.convert(ThemeColorName.NormalText))),
         ),
         Text(
           value,
@@ -377,7 +326,7 @@ class FoodBoxState extends State<FoodBox>
               fontSize: 20,
               fontWeight: FontWeight.normal,
               fontFamily: "Futura",
-              color: Colors.black),
+              color: MyTheme.convert(ThemeColorName.NormalText)),
         ),
         SizedBox(
           width: widget.paddingRight,
@@ -386,6 +335,7 @@ class FoodBoxState extends State<FoodBox>
     );
   }
 
+  //控制是否可以展开
   void clickFunc() {
 
     if (this.shouldExpand) {
