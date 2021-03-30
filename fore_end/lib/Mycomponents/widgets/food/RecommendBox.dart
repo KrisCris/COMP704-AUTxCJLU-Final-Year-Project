@@ -278,29 +278,58 @@ class RecommendBoxState extends State<RecommendBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    List<Widget> col = [
-      Container(
-        margin: EdgeInsets.only(left: 30,right: 30),
-        child: Text("评价：这个食物[Name]不适合您的计划[减肥].",
-            // overflow: ,
-            softWrap: true,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Futura",
-                color: MyTheme.convert(ThemeColorName.NormalText))),
+    // List<Widget> col = [
+      return Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 30,right: 30),
+            child: Text("评价：这个食物[Hamburger]不适合您的计划[减肥],建议选择下面的推荐食物.",
+                // overflow: ,
+                softWrap: true,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Futura",
+                    color: MyTheme.convert(ThemeColorName.NormalText))),
 
-      ),
+          ),
+          Container(
+            height: 70,
+            margin: EdgeInsets.only(left: 30,right: 30),
+            // padding: EdgeInsets.only(left: 1,),
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (BuildContext ctx, int idx) {
+                  GestureDetector foodImage = GestureDetector(
+                    child: Icon(
+                      FontAwesomeIcons.hamburger,
+                      size: 50,
+                      color: Colors.yellow,
+                    ),
+                    onTap:(){
+                      print("click the food"+ idx.toString());
+                    },
+                  );
+                  return Container(
+                      margin: EdgeInsets.only(right: 10,),
+                      child: foodImage);
+                }),
+          ),
 
-    ];
+        ],
+      );
 
-    col.add(SizedBox(
-      height: widget.paddingBottom,
-    ));
-    return Column(
-        children: col
-    );
+
+    // ];
+
+    // col.add(SizedBox(
+    //   height: widget.paddingBottom,
+    // ));
+    // return Column(
+    //     children: col
+    // );
   }
 
   Widget propertyLine(String name, String value) {
