@@ -33,7 +33,7 @@ class PersentPainter extends ContextPainter {
       if(idx == changingIndex){
         if(animation.value.persent <=0)continue;
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
-        double endPos = animation.value.persent * size.width-pen.strokeWidth/2;
+        double endPos = (lastPersent+animation.value.persent) * size.width-pen.strokeWidth/2;
         if(endPos < startPos)endPos = startPos;
 
         this.pen.color = animation.value.color;
@@ -43,7 +43,7 @@ class PersentPainter extends ContextPainter {
       }else{
         if(sec.persent <=0)continue;
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
-        double endPos = sec.persent * size.width-pen.strokeWidth/2;
+        double endPos = (lastPersent+sec.persent) * size.width-pen.strokeWidth/2;
         if(endPos < startPos)endPos = startPos;
 
         this.pen.color = sec.color;
