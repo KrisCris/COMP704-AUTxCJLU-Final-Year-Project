@@ -8,7 +8,9 @@ import 'package:fore_end/MyTool/util/Picker_Tool.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Mycomponents/widgets/NutritionBox.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/PersentBar.dart';
 import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/RecommendBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
@@ -28,28 +30,33 @@ class FoodDetails extends StatefulWidget {
   Food basicFood;
 
 
+  bool testExclamition;
+
 
   ///构建函数
   FoodDetails(
       { Key key,
         this.foodInfoList,
-        this.foodName,
-        this.calories,
-        this.fat,
-        this.cholesterol,
-        this.cellulose,
-        this.carbohydrate,
-        this.protein,
+        this.foodName="defaultFood",
+        this.calories=100,
+        this.fat=10,
+        this.cholesterol=10,
+        this.cellulose=10,
+        this.carbohydrate=10,
+        this.protein=10,
+        this.testExclamition=true,
 
       }):super(key:key){
-    this.foodName="defaultFood";
-    this.calories=100;
-    this.protein=10;
-    this.carbohydrate=10;
-    this.cellulose=10;
-    this.cholesterol=10;
-    this.fat=10;
+    this.foodInfoList=foodInfoList;
+    this.foodName=foodName;
+    this.calories=calories;
+    this.protein=protein;
+    this.carbohydrate=carbohydrate;
+    this.cellulose=cellulose;
+    this.cholesterol=cholesterol;
+    this.fat=fat;
     this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
+    this.testExclamition=testExclamition;
   }
 
   @override
@@ -57,7 +64,7 @@ class FoodDetails extends StatefulWidget {
 }
 
 class _FoodDetailsState extends State<FoodDetails> {
-
+  GlobalKey<PersentBarState> persentBar;
 
 
   void assignValue(){
@@ -148,80 +155,86 @@ class _FoodDetailsState extends State<FoodDetails> {
               SizedBox(height:15),
 
 
+              ///进度条
+              PersentBar(key: persentBar,
+                  width: 0.95,
+                  height: 5,
+                  sections: [
+                    PersentSection(
+                      color: Colors.red,
+                      persent: 1000/2000,  ///这里的数字先暂时写死 来测试
+                      name: "Calorie Persent",
+                    ),
+                    PersentSection(
+                      color: Colors.yellow,
+                      persent: 500/2000,  ///这里的数字先暂时写死 来测试
+                      name: "Fat Persent",
+                    ),
+                    PersentSection(
+                      color: Colors.blue,
+                      persent: 500/2000,  ///这里的数字先暂时写死 来测试
+                      name: "Protein Persent",
+                    ),
+                  ]),
               ///这个食物的营养信息详情
               Container(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: 10,),
                   decoration: BoxDecoration(
                     color:MyTheme.convert(ThemeColorName.ComponentBackground),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
                   height: ScreenTool.partOfScreenHeight(0.3),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          TitleText(
-                            text: "卡路里",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.red,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "卡路里",
+                            value: 100.0,
+                            color: Colors.red,
+                            isUnSuitable: this.widget.testExclamition,
                           ),
-                          TitleText(
-                            text: "脂肪",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.yellow,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "脂肪",
+                            value: 50.0,
+                            color: Colors.yellow,
                           ),
-                          TitleText(
-                            text: "蛋白质",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.blue,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "蛋白质",
+                            value: 50.0,
+                            color: Colors.blue,
                           ),
                         ],
                       ),
+
                       SizedBox(height: 15,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          TitleText(
-                            text: "碳水",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.greenAccent,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "碳水",
+                            value: 50.0,
+                            color: Colors.green,
                           ),
-                          TitleText(
-                            text: "纤维素",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.deepOrange,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "纤维素",
+                            value: 50.0,
+                            color: Colors.deepOrange,
                           ),
-                          TitleText(
-                            text: "胆固醇",
-                            underLineLength: 0.2,
-                            dividerColor: Colors.purple,
-                            fontSize: 18,
-                            maxWidth: 0.2,
-                            maxHeight: 30,
+                          NutritionBox(
+                            title: "胆固醇",
+                            value: 50.0,
+                            color: Colors.purple,
                           ),
                         ],
                       ),
                       SizedBox(height: 15,),
-                      a,
+                      // a,
                     ],
                   )
                 // Column(
@@ -247,22 +260,27 @@ class _FoodDetailsState extends State<FoodDetails> {
                 isBold: true,
                 width: ScreenTool.partOfScreenWidth(0.95),
                 tapFunc: () {
-                  JhPickerTool.showStringPicker(context,
-                      title: CustomLocalizations.of(context).total + '1200 Kcal',
-                      normalIndex: 0,
-                      isChangeColor: true,
-                      data: mealsName, clickCallBack: (int index, var item) {
-                        if(index == 0){
-                          print("点击了早餐");
-                          // FoodRecognizer.addFoodToMealName("breakfast");
-                        }else if(index == 1){
-                          print("点击了午餐");
-                          // FoodRecognizer.addFoodToMealName("lunch");
-                        }else if(index == 2){
-                          print("点击了晚餐");
-                          // FoodRecognizer.addFoodToMealName("dinner");
-                        }
-                      });
+
+                  setState(() {
+                    this.widget.testExclamition=!this.widget.testExclamition;
+                  });
+
+                  // JhPickerTool.showStringPicker(context,
+                  //     title: CustomLocalizations.of(context).total + '1200 Kcal',
+                  //     normalIndex: 0,
+                  //     isChangeColor: true,
+                  //     data: mealsName, clickCallBack: (int index, var item) {
+                  //       if(index == 0){
+                  //         print("点击了早餐");
+                  //         // FoodRecognizer.addFoodToMealName("breakfast");
+                  //       }else if(index == 1){
+                  //         print("点击了午餐");
+                  //         // FoodRecognizer.addFoodToMealName("lunch");
+                  //       }else if(index == 2){
+                  //         print("点击了晚餐");
+                  //         // FoodRecognizer.addFoodToMealName("dinner");
+                  //       }
+                  //     });
                 },
               ),
 
