@@ -16,7 +16,7 @@ class HiydPipeline:
 
     def process_item(self, item, spider):
         self.cursor.execute(
-            'update new set img = %s where food_url= %s',
+            'update model set img = %s where food_url= %s',
             (item['img'], item['food_url'])
         )
         self.connect.commit()
