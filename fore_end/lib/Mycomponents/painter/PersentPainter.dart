@@ -37,9 +37,9 @@ class PersentPainter extends ContextPainter {
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
         ///此进度条section的结束位置
         double endPersent = animation.value.persent;
-        ///判断是否超过了此进度条section的最大占比。若超过，不绘制超出部分的长度
-        if(sec.maxPersent != null && endPersent > sec.maxPersent){
-          endPersent = sec.maxPersent;
+        ///判断是否超过了此进度条。若超过，不绘制超出部分的长度
+        if(endPersent > 1){
+          endPersent = 1;
         }
 
         double endPos = (lastPersent + endPersent) * size.width-pen.strokeWidth/2;
@@ -56,9 +56,9 @@ class PersentPainter extends ContextPainter {
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
         ///此进度条section的结束位置
         double endPersent = sec.persent;
-        ///计算是否超过了此进度条section的最大占比。若超过，不绘制超出部分的长度
-        if(sec.maxPersent != null && endPersent > sec.maxPersent){
-          endPersent = sec.maxPersent;
+        ///计算是否超过了此进度条。若超过，不绘制超出部分的长度
+        if(endPersent > sec.warningPersent){
+          endPersent = sec.warningPersent;
         }
         double endPos = (lastPersent + endPersent) * size.width-pen.strokeWidth/2;
         if(endPos < startPos)endPos = startPos;

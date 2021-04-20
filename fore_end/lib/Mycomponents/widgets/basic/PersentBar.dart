@@ -49,8 +49,8 @@ class PersentBarState extends State<PersentBar> with TickerProviderStateMixin {
     this.changingIndex = index;
     this.painter.changingIndex = this.changingIndex;
     Color newColor = sections[index].normalColor;
-    if (sections[index].maxPersent != null &&
-        persent > sections[index].maxPersent) {
+    if (sections[index].warningPersent != null &&
+        persent > sections[index].warningPersent) {
       newColor = sections[index].highColor;
     } else if (sections[index].minPersent != null &&
         persent < sections[index].minPersent) {
@@ -65,7 +65,7 @@ class PersentBarState extends State<PersentBar> with TickerProviderStateMixin {
           normalColor: sections[index].normalColor,
           name: sections[index].name,
           persent: persent,
-          maxPersent: sections[index].maxPersent,
+          maxPersent: sections[index].warningPersent,
           minPersent: sections[index].minPersent,
         ),
         200,
@@ -97,7 +97,7 @@ class PersentSection {
 
   String name;
   double persent;
-  double maxPersent;
+  double warningPersent;
   double minPersent;
 
   PersentSection(
@@ -119,7 +119,7 @@ class PersentSection {
     this.highColor = CalculatableColor.transform(highColor ?? normalColor);
     this.name = name;
     this.persent = persent ?? 0;
-    this.maxPersent = maxPersent;
+    this.warningPersent = maxPersent;
     this.minPersent = minPersent;
     this.supportColorChannel = channel;
   }
@@ -132,7 +132,7 @@ class PersentSection {
       normalColor: this.normalColor,
       name: this.name,
       persent: this.persent + another.persent,
-      maxPersent: this.maxPersent,
+      maxPersent: this.warningPersent,
       minPersent: this.minPersent,
     );
   }
@@ -146,7 +146,7 @@ class PersentSection {
       normalColor: another.normalColor,
       name: another.name,
       persent: this.persent - another.persent,
-      maxPersent: another.maxPersent,
+      maxPersent: another.warningPersent,
       minPersent: another.minPersent,
     );
   }
@@ -160,7 +160,7 @@ class PersentSection {
       normalColor: this.normalColor,
       name: this.name,
       persent: this.persent * t,
-      maxPersent: this.maxPersent,
+      maxPersent: this.warningPersent,
       minPersent: this.minPersent,
     );
   }
