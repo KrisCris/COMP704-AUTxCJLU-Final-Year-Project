@@ -56,7 +56,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
           SizedBox(height: 20),
           SwitchFoodInfoArea(key: this.foodinfo, width: 0.9, height: 0.4,onWeightChange: (Food f){
             this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString() + " Kcal");
-            this.persentBar.currentState.changePersentByIndex(0, this.calculateTotalCalorie()/2000);
+            this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
           },),
           Expanded(child: SizedBox()),
           CalorieHint(),
@@ -141,12 +141,12 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 w.onCheck = () {
                   this.selectedFood.add(w.food);
                   this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString() + " Kcal");
-                  this.persentBar.currentState.changePersentByIndex(0, this.calculateTotalCalorie()/2000);
+                  this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
                 };
                 w.onUnCheck = () {
                   this.selectedFood.remove(w.food);
                   this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString()+ " Kcal");
-                  this.persentBar.currentState.changePersentByIndex(0, this.calculateTotalCalorie()/2000);
+                  this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
                 };
                 return Container(
                     margin: EdgeInsets.only(
@@ -173,6 +173,13 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 width: 0.9,
                 height: 5,
                 sections: [
+                  PersentSection(
+                    normalColor: Colors.purple,
+                    highColor: MyTheme.convert(ThemeColorName.Error),
+                    persent: 0.1,
+                    maxPersent: 0.7,
+                    name: "test Persent",
+                  ),
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
