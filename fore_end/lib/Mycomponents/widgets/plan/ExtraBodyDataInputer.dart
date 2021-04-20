@@ -69,12 +69,6 @@ class ExtraBodyDataInputer extends StatelessWidget {
       },
       barColor: Color(0xFF824682),
     );
-    CrossFadeText describeText = CrossFadeText(
-      text: "",
-      fontSize: 15,
-      fontColor: Colors.white,
-      key: txt,
-    );
     exerciseChoise.setOnChange(() {
       this.exerciseRatio = exerciseChoise.widgetValue.value;
       CrossFadeTextState stt = this.txt.currentState;
@@ -92,6 +86,28 @@ class ExtraBodyDataInputer extends StatelessWidget {
         stt.changeTo(CustomLocalizations.of(context).heavyInfo);
       }
     });
+    CrossFadeText describeText = CrossFadeText(
+      text: "",
+      fontSize: 15,
+      fontColor: Colors.white,
+      key: txt,
+      onStateInitDone: (Duration timeStamp){
+        CrossFadeTextState stt = this.txt.currentState;
+        if (exerciseChoise.widgetValue.value == 1.4) {
+          stt.changeTo(CustomLocalizations.of(context).veryLightInfo);
+        } else if (exerciseChoise.widgetValue.value == 1.5) {
+          stt.changeTo(CustomLocalizations.of(context).lightInfo);
+        } else if (exerciseChoise.widgetValue.value == 1.7) {
+          stt.changeTo(CustomLocalizations.of(context).moderateInfo);
+        } else if (exerciseChoise.widgetValue.value == 1.9) {
+          stt.changeTo(CustomLocalizations.of(context).activeInfo);
+        } else if (exerciseChoise.widgetValue.value == 2.1) {
+          stt.changeTo(CustomLocalizations.of(context).veryActiveInfo);
+        } else if (exerciseChoise.widgetValue.value == 2.3) {
+          stt.changeTo(CustomLocalizations.of(context).heavyInfo);
+        }
+      }
+    );
     age.setOnChange(() {
       this.age = age.getValue();
     });

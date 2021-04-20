@@ -106,7 +106,6 @@ class PlanChooser extends StatelessWidget {
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: ScreenTool.partOfScreenHeight(0.05)),
               Row(
@@ -134,10 +133,9 @@ class PlanChooser extends StatelessWidget {
                   ),
                 ],
               ),
-              Expanded(
-                  child: group
-              ),
-              SizedBox(height: 50),
+              SizedBox(height: ScreenTool.partOfScreenHeight(0.03)),
+              Expanded(child:group),
+              SizedBox(height: 10),
               nextButton,
               SizedBox(height: 50),
             ],

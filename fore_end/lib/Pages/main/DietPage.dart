@@ -18,6 +18,7 @@ import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import '../FoodDetailsPage.dart';
+import '../FoodRecommandation.dart';
 
 class DietPage extends StatefulWidget {
 
@@ -192,13 +193,9 @@ class DietPageState extends State<DietPage> {
         );
       },
       transitionType: ContainerTransitionType.fade,
-      transitionDuration: const Duration(milliseconds: 3500),
+      transitionDuration: const Duration(milliseconds: 350),
       openBuilder: (context, action) {
-        return Container(
-          color: Colors.grey,
-          height: 120,
-          margin: EdgeInsets.all(20),
-        );
+        return FoodRecommandation(mealType:CustomLocalizations.of(context).lunch);
       },
     );
   }
