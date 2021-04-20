@@ -6,6 +6,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/NutritionText.dart';
 import 'package:fore_end/Mycomponents/text/ValueText.dart';
+import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 
 class SwitchFoodInfoArea extends StatefulWidget {
   double width;
@@ -87,6 +88,11 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
   }
 
   Widget detailedInfo(Food f) {
+    GlobalKey<ValueAdjusterState> valueAdjusterKey = new GlobalKey<ValueAdjusterState>();
+    ValueAdjuster vaj = ValueAdjuster<int>(valueWeight: 10,initValue: f.weight.floor(),key: valueAdjusterKey);
+    vaj.onValueChange = (){
+      f.weight = valueAdjusterKey.currentState.valueNotifier.value;
+    };
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -116,11 +122,11 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
                   NutritionText(name: "Fat", value: f.fat, unit: "g/100g", width: 0.3*widget.width),
                 ],
               ),
-              SizedBox(height: 0.1*widget.height),
+              SizedBox(height: 0.3*widget.height),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-
+                  vaj
                 ],
               ),
             ],

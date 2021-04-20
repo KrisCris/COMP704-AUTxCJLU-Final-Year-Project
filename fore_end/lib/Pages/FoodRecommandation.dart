@@ -127,7 +127,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         rnd.nextDouble() * rnd.nextInt(300), 1),
                     protein: NumUtil.getNumByValueDouble(
                         rnd.nextDouble() * rnd.nextInt(300), 1),
-                    weight: 1
+                    weight: 10
                   ),
                   pictureSize: ScreenTool.partOfScreenHeight(0.075),
                 );
