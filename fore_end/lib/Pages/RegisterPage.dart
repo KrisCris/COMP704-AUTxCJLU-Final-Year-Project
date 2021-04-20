@@ -18,10 +18,6 @@ import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'GuidePage.dart';
 import 'WelcomePage.dart';
 
-void main() {
-  runApp(Register());
-}
-
 class Register extends StatelessWidget {
   CustomTextField emailTextField;
   VerifyCodeInputer verifyTextField;
