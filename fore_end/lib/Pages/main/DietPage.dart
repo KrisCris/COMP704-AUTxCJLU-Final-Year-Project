@@ -159,21 +159,38 @@ class DietPageState extends State<DietPage> {
                 cal=foodCaloriesList[index];
               }
 
+
+              ///跳转到食物识别页的代码，先给一个静态页面
               return GestureDetector(
                 child: Card(
                   color: MyTheme.convert(ThemeColorName.ComponentBackground),
                   child: ListTile(
                     leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
-                    title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
-                    subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+                    title: Text("TestFood",style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+                    subtitle: Text("100"+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
                     trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
                 ),
                 onTap: ( ){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
+                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'TestFood')));
                 },
               );
+              // return GestureDetector(
+              //   child: Card(
+              //     color: MyTheme.convert(ThemeColorName.ComponentBackground),
+              //     child: ListTile(
+              //       leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
+              //       title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+              //       subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+              //       trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
+              //     ),
+              //   ),
+              //   onTap: ( ){
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
+              //   },
+              // );
             },
             itemCount: foodNameList.length,
           ),

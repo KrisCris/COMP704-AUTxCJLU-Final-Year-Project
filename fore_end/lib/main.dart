@@ -5,6 +5,7 @@ import 'package:fore_end/Pages/CoverPage.dart';
 import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
 import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'Pages/ComponentTestPage.dart';
+import 'Pages/FoodRecommandation.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
        // home: CoverPage(),
       home: ComponentTestPage(),
-      // home: HistoryPlanPage(),
+      // home: FoodRecommandation(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

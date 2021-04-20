@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
+import 'package:fore_end/Pages/FoodDetailsPage.dart';
 
 ///用于显示检测到食物后，展示食物数据的组件
 class RecommendBox extends StatefulWidget {
@@ -309,6 +310,9 @@ class RecommendBoxState extends State<RecommendBox>
                       color: Colors.yellow,
                     ),
                     onTap:(){
+                      ///点击食物图片会自动跳转
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'TestFood')));
                       print("click the food"+ idx.toString());
                     },
                   );
