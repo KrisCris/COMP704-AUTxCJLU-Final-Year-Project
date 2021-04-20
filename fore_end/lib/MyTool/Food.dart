@@ -22,8 +22,8 @@ class Food {
   double protein;
   ///碳水
   double carbohydrate;
-  /// 因为数据库里面的数据都基于100g计算的，所以默认就是100g，拍照的时候允许用户增加克数，然后营养和卡路里就乘以这个克数（份数）就好了。
-  int weight;     ///重量 ~ 份数  所以默认1
+  ///重量
+  int weight;
 
   Food({
     this.name,
@@ -66,19 +66,19 @@ class Food {
     return calorie.toString() + "Kcal/100g";
   }
   int getCalories(){
-    return (calorie*weight).floor();
+    return (calorie*weight/100).floor();
   }
   String getProteinPerUnit(){
     return protein.toString() + "g/100g";
   }
   int getProtein(){
-    return (protein*weight).floor();
+    return (protein*weight/100).floor();
   }
   String getFatPerUnit(){
     return fat.toString() + "g/100g";
   }
   int getFat(){
-    return (fat*weight).floor();
+    return (fat*weight/100).floor();
   }
   String getCholesterolPerUnit(){
     return cholesterol.toString() + "mg/100g";
