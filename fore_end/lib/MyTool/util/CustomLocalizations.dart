@@ -630,6 +630,11 @@ class CustomLocalizations {
       "en":"Protein",
       "zh":"蛋白质"
     },
+    "recommendBoxTitle":{
+      "en":"Food recommended list:",
+      "zh":"更适合食物推荐列表："
+    },
+
 
 
 
@@ -967,7 +972,8 @@ class CustomLocalizations {
   get  cellulose=> getContent("cellulose");
   get  cholesterol=> getContent("cholesterol");
   get  fat=> getContent("fat");
-  get  protein=> getContent("protein");
+  get  protein => getContent("protein");
+  get  recommendBoxTitle => getContent("recommendBoxTitle");
 
 }
 

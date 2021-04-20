@@ -96,8 +96,8 @@ class _FoodDetailsState extends State<FoodDetails> {
       CustomLocalizations.of(context).dinner
     ];
 
-    ValueAdjuster a = ValueAdjuster<double>(valueWeight: 10.0,key: this.widget.valueAdjusterKey);
-    a.onValueChange = (){
+    ValueAdjuster valueAdjuster = ValueAdjuster<double>(initValue:0.0,valueWeight: 10.0,key: this.widget.valueAdjusterKey,upper: 990.0,);
+    valueAdjuster.onValueChange = (){
       print("ValueAdjuster onValueChange");
       // this.totalProtein =  this.widget.valueAdjusterKey.currentState.getVal()*widget.protein/100;
     };
@@ -151,7 +151,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
 
               ///推荐食物可展开区域
-              RecommendBox(),
+              RecommendBox(title:CustomLocalizations.of(context).recommendBoxTitle ,),
               SizedBox(height:15),
 
 
@@ -161,17 +161,17 @@ class _FoodDetailsState extends State<FoodDetails> {
                   height: 5,
                   sections: [
                     PersentSection(
-                      color: Colors.red,
+                      normalColor: Colors.red,
                       persent: 1000/2000,  ///这里的数字先暂时写死 来测试
                       name: "Calorie Persent",
                     ),
                     PersentSection(
-                      color: Colors.yellow,
+                      normalColor: Colors.yellow,
                       persent: 500/2000,  ///这里的数字先暂时写死 来测试
                       name: "Fat Persent",
                     ),
                     PersentSection(
-                      color: Colors.blue,
+                      normalColor: Colors.blue,
                       persent: 500/2000,  ///这里的数字先暂时写死 来测试
                       name: "Protein Persent",
                     ),
@@ -194,18 +194,18 @@ class _FoodDetailsState extends State<FoodDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           NutritionBox(
-                            title: "卡路里",
+                            title: CustomLocalizations.of(context).calories,
                             value: 100.0,
                             color: Colors.red,
                             isUnSuitable: this.widget.testExclamition,
                           ),
                           NutritionBox(
-                            title: "脂肪",
+                            title: CustomLocalizations.of(context).fat,
                             value: 50.0,
                             color: Colors.yellow,
                           ),
                           NutritionBox(
-                            title: "蛋白质",
+                            title: CustomLocalizations.of(context).protein,
                             value: 50.0,
                             color: Colors.blue,
                           ),
@@ -217,24 +217,31 @@ class _FoodDetailsState extends State<FoodDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           NutritionBox(
-                            title: "碳水",
+                            title: CustomLocalizations.of(context).carbohydrate,
                             value: 50.0,
                             color: Colors.green,
                           ),
                           NutritionBox(
-                            title: "纤维素",
+                            title: CustomLocalizations.of(context).cellulose,
                             value: 50.0,
                             color: Colors.deepOrange,
                           ),
                           NutritionBox(
-                            title: "胆固醇",
+                            title: CustomLocalizations.of(context).cholesterol,
                             value: 50.0,
                             color: Colors.purple,
                           ),
                         ],
                       ),
                       SizedBox(height: 15,),
-                      // a,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text("选择食物重量(g):", style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 18,fontFamily: 'Futura'),),
+                          valueAdjuster,
+                        ],
+                      )
+
                     ],
                   )
                 // Column(
@@ -256,35 +263,38 @@ class _FoodDetailsState extends State<FoodDetails> {
               SizedBox(height:15),
               CustomButton(
                 disabled: false,
-                text: "加入到一日三餐？",
+                text: CustomLocalizations.of(context).resultPageQuestion,
                 isBold: true,
                 width: ScreenTool.partOfScreenWidth(0.95),
                 tapFunc: () {
 
-                  setState(() {
-                    this.widget.testExclamition=!this.widget.testExclamition;
-                  });
+                  ///测试警示标志
+                  // setState(() {
+                  //   this.widget.testExclamition=!this.widget.testExclamition;
+                  // });
 
-                  // JhPickerTool.showStringPicker(context,
-                  //     title: CustomLocalizations.of(context).total + '1200 Kcal',
-                  //     normalIndex: 0,
-                  //     isChangeColor: true,
-                  //     data: mealsName, clickCallBack: (int index, var item) {
-                  //       if(index == 0){
-                  //         print("点击了早餐");
-                  //         // FoodRecognizer.addFoodToMealName("breakfast");
-                  //       }else if(index == 1){
-                  //         print("点击了午餐");
-                  //         // FoodRecognizer.addFoodToMealName("lunch");
-                  //       }else if(index == 2){
-                  //         print("点击了晚餐");
-                  //         // FoodRecognizer.addFoodToMealName("dinner");
-                  //       }
-                  //     });
+                  ///点击展开添加食物计划
+                  JhPickerTool.showStringPicker(context,
+                      title: CustomLocalizations.of(context).total + '1200 Kcal',
+                      normalIndex: 0,
+                      isChangeColor: true,
+                      data: mealsName, clickCallBack: (int index, var item) {
+                        if(index == 0){
+                          print("点击了早餐");
+                          // FoodRecognizer.addFoodToMealName("breakfast");
+                        }else if(index == 1){
+                          print("点击了午餐");
+                          // FoodRecognizer.addFoodToMealName("lunch");
+                        }else if(index == 2){
+                          print("点击了晚餐");
+                          // FoodRecognizer.addFoodToMealName("dinner");
+                        }
+                      });
                 },
               ),
 
               SizedBox(height:15),
+              // a,
 
 
 
