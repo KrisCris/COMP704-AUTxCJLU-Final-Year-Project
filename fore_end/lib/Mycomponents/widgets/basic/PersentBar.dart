@@ -89,15 +89,22 @@ class PersentBarState extends State<PersentBar> with TickerProviderStateMixin {
 }
 
 class PersentSection {
+  ///当前显示的颜色
   CalculatableColor color;
+  ///TODO: 低于阈值时显示的颜色
   CalculatableColor lowColor;
+  ///高于阈值时显示的颜色
   CalculatableColor highColor;
+  ///正常情况显示的颜色
   CalculatableColor normalColor;
+  ///用于辅助计算颜色渐变动画，使用PersentSection时，不需要为此属性赋值
   ColorChannel supportColorChannel;
 
   String name;
   double persent;
+  ///达到偏高提醒的百分比
   double warningPersent;
+  ///TODO： 达到偏低提醒的百分比
   double minPersent;
 
   PersentSection(

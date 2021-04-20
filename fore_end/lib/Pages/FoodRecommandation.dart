@@ -54,23 +54,29 @@ class FoodRecommandationState extends State<FoodRecommandation> {
           SizedBox(height: 20),
           foodSelectArea(),
           SizedBox(height: 20),
-          SwitchFoodInfoArea(key: this.foodinfo, width: 0.9, height: 0.4,onWeightChange: (Food f){
-            this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString() + " Kcal");
-            this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
-          },),
+          SwitchFoodInfoArea(
+            key: this.foodinfo,
+            width: 0.9,
+            height: 0.4,
+            onWeightChange: (Food f) {
+              this.updateCalories();
+            },
+          ),
           Expanded(child: SizedBox()),
           CalorieHint(),
         ],
       ),
     );
   }
-  double calculateTotalCalorie({Food food}){
+
+  double calculateTotalCalorie({Food food}) {
     double total = 0;
-    for(Food f in this.selectedFood){
+    for (Food f in this.selectedFood) {
       total += f.getCalories();
     }
     return total;
   }
+
   Widget backArrow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -123,15 +129,14 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               itemBuilder: (BuildContext ctx, int idx) {
                 RecommandFoodCircle w = RecommandFoodCircle(
                   food: Food(
-                    name: "test food - " + idx.toString(),
-                    calorie: NumUtil.getNumByValueDouble(
-                        rnd.nextDouble() * rnd.nextInt(300), 1),
-                    fat: NumUtil.getNumByValueDouble(
-                        rnd.nextDouble() * rnd.nextInt(300), 1),
-                    protein: NumUtil.getNumByValueDouble(
-                        rnd.nextDouble() * rnd.nextInt(300), 1),
-                    weight: 10
-                  ),
+                      name: "test food - " + idx.toString(),
+                      calorie: NumUtil.getNumByValueDouble(
+                          rnd.nextDouble() * rnd.nextInt(300), 1),
+                      fat: NumUtil.getNumByValueDouble(
+                          rnd.nextDouble() * rnd.nextInt(300), 1),
+                      protein: NumUtil.getNumByValueDouble(
+                          rnd.nextDouble() * rnd.nextInt(300), 1),
+                      weight: 10),
                   pictureSize: ScreenTool.partOfScreenHeight(0.075),
                 );
                 w.onClick = () {
@@ -140,13 +145,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 };
                 w.onCheck = () {
                   this.selectedFood.add(w.food);
-                  this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString() + " Kcal");
-                  this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
+                  this.updateCalories();
                 };
                 w.onUnCheck = () {
                   this.selectedFood.remove(w.food);
-                  this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString()+ " Kcal");
-                  this.persentBar.currentState.changePersentByIndex(1, this.calculateTotalCalorie()/2000);
+                  this.updateCalories();
                 };
                 return Container(
                     margin: EdgeInsets.only(
@@ -161,7 +164,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       ],
     );
   }
-  Widget CalorieHint(){
+
+  Widget CalorieHint() {
     double totalCal = calculateTotalCalorie();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -169,39 +173,40 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         Column(
           children: [
-            PersentBar(key: persentBar,
-                width: 0.9,
-                height: 5,
-                sections: [
-                  PersentSection(
-                    normalColor: Colors.purple,
-                    highColor: MyTheme.convert(ThemeColorName.Error),
-                    persent: 0.1,
-                    maxPersent: 0.7,
-                    name: "test Persent",
-                  ),
+            PersentBar(key: persentBar, width: 0.9, height: 5, sections: [
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
-                persent: totalCal/2000,
+                persent: totalCal / 2000,
                 maxPersent: 0.7,
                 name: "Calorie Persent",
               )
             ]),
             Container(
-              width:ScreenTool.partOfScreenWidth(0.9),
+              width: ScreenTool.partOfScreenWidth(0.9),
               height: ScreenTool.partOfScreenHeight(0.07),
               decoration: BoxDecoration(
-                color:  MyTheme.convert(ThemeColorName.ComponentBackground),
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5),bottomRight: Radius.circular(5))
-              ),
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: 100),
-                  CrossFadeText(key: this.totalCal, text: totalCal.toString()+" Kcal",fontSize: 13,),
-                  Expanded(child:SizedBox()),
-                  CustomButton(text: "Add to Meal",firstColorName: ThemeColorName.Success,textColor: MyTheme.convert(ThemeColorName.NormalText),fontsize: 13,radius: 5,),
+                  CrossFadeText(
+                    key: this.totalCal,
+                    text: totalCal.toString() + " Kcal",
+                    fontSize: 13,
+                  ),
+                  Expanded(child: SizedBox()),
+                  CustomButton(
+                    text: "Add to Meal",
+                    firstColorName: ThemeColorName.Success,
+                    textColor: MyTheme.convert(ThemeColorName.NormalText),
+                    fontsize: 13,
+                    radius: 5,
+                  ),
                   SizedBox(width: 20)
                 ],
               ),
@@ -211,5 +216,15 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
+  }
+
+  void redrawProgressBar(){
+    this.persentBar.currentState.changePersentByIndex(
+        0, this.calculateTotalCalorie() / 2000);
+  }
+  void updateCalories(){
+    this.totalCal.currentState.changeTo(
+        this.calculateTotalCalorie().toString() + " Kcal");
+    this.redrawProgressBar();
   }
 }
