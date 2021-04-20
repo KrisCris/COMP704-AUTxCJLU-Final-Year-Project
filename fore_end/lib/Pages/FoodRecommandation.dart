@@ -54,14 +54,17 @@ class FoodRecommandationState extends State<FoodRecommandation> {
           SizedBox(height: 20),
           foodSelectArea(),
           SizedBox(height: 20),
-          SwitchFoodInfoArea(key: this.foodinfo, width: 0.9, height: 0.4),
+          SwitchFoodInfoArea(key: this.foodinfo, width: 0.9, height: 0.4,onWeightChange: (Food f){
+            this.totalCal.currentState.changeTo(this.calculateTotalCalorie().toString() + " Kcal");
+            this.persentBar.currentState.changePersentByIndex(0, this.calculateTotalCalorie()/2000);
+          },),
           Expanded(child: SizedBox()),
           CalorieHint(),
         ],
       ),
     );
   }
-  double calculateTotalCalorie(){
+  double calculateTotalCalorie({Food food}){
     double total = 0;
     for(Food f in this.selectedFood){
       total += f.getCalories();
@@ -171,8 +174,10 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 height: 5,
                 sections: [
               PersentSection(
-                color: Colors.green,
+                normalColor: Colors.green,
+                highColor: MyTheme.convert(ThemeColorName.Error),
                 persent: totalCal/2000,
+                maxPersent: 0.7,
                 name: "Calorie Persent",
               )
             ]),

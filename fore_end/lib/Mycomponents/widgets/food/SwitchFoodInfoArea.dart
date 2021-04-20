@@ -11,7 +11,8 @@ import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 class SwitchFoodInfoArea extends StatefulWidget {
   double width;
   double height;
-  SwitchFoodInfoArea({Key key, double width, double height}) : super(key: key) {
+  Function(Food f) onWeightChange;
+  SwitchFoodInfoArea({Key key, double width, double height,this.onWeightChange}) : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
   }
@@ -92,6 +93,9 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
     ValueAdjuster vaj = ValueAdjuster<int>(valueWeight: 10,initValue: f.weight.floor(),key: valueAdjusterKey);
     vaj.onValueChange = (){
       f.weight = valueAdjusterKey.currentState.valueNotifier.value;
+      if(this.widget.onWeightChange!=null){
+        this.widget.onWeightChange(f);
+      }
     };
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
