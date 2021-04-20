@@ -4,6 +4,8 @@ import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'package:fore_end/Pages/FoodRecommandation.dart';
 import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
+import 'MyTool/SoftwarePreference.dart';
+import 'MyTool/util/LocalDataManager.dart';
 import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'Pages/ComponentTestPage.dart';
 import 'Pages/LoginPage.dart';

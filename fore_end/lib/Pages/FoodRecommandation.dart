@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -17,6 +18,10 @@ import 'package:fore_end/Mycomponents/widgets/food/RecommandFoodCircle.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SwitchFoodInfoArea.dart';
 
 class FoodRecommandation extends StatefulWidget {
+  String mealType;
+
+  FoodRecommandation({this.mealType});
+
   @override
   State<StatefulWidget> createState() {
     return FoodRecommandationState();
@@ -36,6 +41,9 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
     this.totalCal = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
+    if(widget.mealType == null){
+        widget.mealType = "";
+    }
     super.initState();
   }
 
@@ -84,7 +92,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         CustomIconButton(
             icon: FontAwesomeIcons.arrowLeft, backgroundOpacity: 0),
         TitleText(
-          text: "Recommand Meal",
+          text: CustomLocalizations.of(context).recommandMeal,
           underLineLength: 0,
           maxHeight: 20,
           fontSize: 15,
@@ -98,7 +106,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: "Recommanded Lunch",
+          text: CustomLocalizations.of(context).recommand + this.widget.mealType,
           underLineLength: 200,
           maxHeight: 20,
           maxWidth: 0.95,
@@ -179,7 +187,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 highColor: MyTheme.convert(ThemeColorName.Error),
                 persent: totalCal / 2000,
                 maxPersent: 0.7,
-                name: "Calorie Persent",
+                name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
               )
             ]),
             Container(
@@ -201,7 +209,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                   ),
                   Expanded(child: SizedBox()),
                   CustomButton(
-                    text: "Add to Meal",
+                    text: CustomLocalizations.of(context).add+" "+CustomLocalizations.of(context).to+" "+this.widget.mealType,
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
