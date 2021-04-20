@@ -90,7 +90,9 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CustomIconButton(
-            icon: FontAwesomeIcons.arrowLeft, backgroundOpacity: 0),
+            icon: FontAwesomeIcons.arrowLeft, backgroundOpacity: 0,onClick: (){
+              Navigator.of(context).pop();
+        },),
         TitleText(
           text: CustomLocalizations.of(context).recommandMeal,
           underLineLength: 0,

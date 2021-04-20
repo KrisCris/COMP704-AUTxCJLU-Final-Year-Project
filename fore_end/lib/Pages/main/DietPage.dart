@@ -193,7 +193,7 @@ class DietPageState extends State<DietPage> {
         );
       },
       transitionType: ContainerTransitionType.fade,
-      transitionDuration: const Duration(milliseconds: 3500),
+      transitionDuration: const Duration(milliseconds: 350),
       openBuilder: (context, action) {
         return FoodRecommandation(mealType:CustomLocalizations.of(context).lunch);
       },
