@@ -228,7 +228,10 @@ class CustomLocalizations {
       "en":"Two passwords are different!",
       "zh":"两次密码不一致！"
     },
-
+    "persent":{
+      "en":"persent",
+      "zh":"百分比"
+    },
     "email":{
       "en":"Email",
       "zh":"电子邮箱"
@@ -256,6 +259,10 @@ class CustomLocalizations {
     "resultPageQuestion":{
       "en":"Add Foods To Meals?",
       "zh":"将食物添加到一日三餐"
+    },
+    "add":{
+      "en":"add",
+      "zh":"添加"
     },
     "breakfast":{
       "en":"Breakfast",
@@ -638,6 +645,14 @@ class CustomLocalizations {
 
 
 
+    "recommand meal":{
+      "en":"recommand meal",
+      "zh":"推荐餐食"
+    },
+    "recommand":{
+      "en":"recommand",
+      "zh":"推荐"
+    }
 };
 
   get createPlan => getContent("createPlan");
@@ -899,7 +914,7 @@ class CustomLocalizations {
     return getContent("caloriesChartTitle");
   }
 
-
+  get add=>getContent("add");
   get male => getContent("male");
   get female => getContent("female");
   get collectBodyData => getContent("collectBodyData");
@@ -952,6 +967,7 @@ class CustomLocalizations {
   get activeProteinInfo => getContent("achieveProteinInfo");
   get achieveMaintainInfo => getContent("achieveMaintainInfo");
 
+  get persent=>getContent("persent");
   get from => getContent("From");
   get  to => getContent("To");
   get  totalNutrition=> getContent("totalNutrition");
@@ -972,9 +988,11 @@ class CustomLocalizations {
   get  cellulose=> getContent("cellulose");
   get  cholesterol=> getContent("cholesterol");
   get  fat=> getContent("fat");
-  get  protein => getContent("protein");
   get  recommendBoxTitle => getContent("recommendBoxTitle");
 
+  get  protein=> getContent("protein");
+  get recommandMeal => getContent("recommand meal");
+  get recommand => getContent("recommand");
 }
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<CustomLocalizations>{

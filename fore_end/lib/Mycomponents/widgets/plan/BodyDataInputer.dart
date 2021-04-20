@@ -145,7 +145,7 @@ class BodyDataInputer extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   Container(
-                    height: 80,
+                    // height: 80,
                     width: ScreenTool.partOfScreenWidth(0.8),
                     child: Text(CustomLocalizations.of(context).collectBodyData,
                         style: TextStyle(

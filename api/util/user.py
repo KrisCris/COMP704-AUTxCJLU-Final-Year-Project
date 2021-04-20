@@ -217,7 +217,8 @@ def __send_email(receivers: list, content: str, subject: str):
     try:
         # mail = smtplib.SMTP_SSL(SMTP_URL, SMTP_PORT)
 
-        mail = smtplib.SMTP(SMTP_URL, SMTP_PORT)
+        # mail = smtplib.SMTP(SMTP_URL, SMTP_PORT)
+        mail = smtplib.SMTP(SMTP_URL)
         mail.set_debuglevel(DEBUG)
         mail.ehlo()
         mail.starttls()

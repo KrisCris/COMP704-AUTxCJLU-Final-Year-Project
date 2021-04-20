@@ -193,7 +193,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.textColorAnimation.initAnimation(widget.fontColor, widget.warningColor, 200, this, () {setState(() {});});
     this.barColorAnimation.initAnimation(widget.barColor, widget.warningColor, 200, this, () {setState(() {
     });});
-    this.onChangeValue();
+    this.drawProgress();
     super.initState();
   }
 
@@ -387,6 +387,9 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     if (widget.onChange != null) {
       widget.onChange();
     }
+    this.drawProgress();
+  }
+  void drawProgress(){
     if (!this.needBarAnimation) return;
     double persent = 0.0;
     if (widget.mapper != null) {
@@ -421,7 +424,6 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.barWidthAnimation.forward();
     this.moveAnimation.forward();
   }
-
   void solveDragSpace(double dx, int addOrMinus) {
     dx = dx - widget.blockWidth / 2;
     if (dx > widget.width - 2 * widget.borderThickness - widget.blockWidth) {
