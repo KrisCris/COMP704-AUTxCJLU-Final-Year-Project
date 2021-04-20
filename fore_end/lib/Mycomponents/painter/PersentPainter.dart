@@ -30,26 +30,42 @@ class PersentPainter extends ContextPainter {
     double lastPersent = 0;
     int idx = 0;
     for (PersentSection sec in sections) {
+      ///对正在变化的进度条做动态绘制
       if(idx == changingIndex){
         if(animation.value.persent <=0)continue;
+        ///此进度条section的开始位置
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
-        double endPos = animation.value.persent * size.width-pen.strokeWidth/2;
+        ///此进度条section的结束位置
+        double endPersent = animation.value.persent;
+        ///判断是否超过了此进度条。若超过，不绘制超出部分的长度
+        if(endPersent + lastPersent > 1){
+          endPersent = 1 - lastPersent;
+        }
+
+        double endPos = (lastPersent + endPersent) * size.width-pen.strokeWidth/2;
         if(endPos < startPos)endPos = startPos;
 
         this.pen.color = animation.value.color;
         canvas.drawLine(Offset(startPos, size.height / 2),
             Offset(endPos, size.height / 2), pen);
-        lastPersent += animation.value.persent;
+        lastPersent += endPersent;
       }else{
+        ///绘制没有变化的进度条section
         if(sec.persent <=0)continue;
+        ///此进度条section的开始位置
         double startPos = lastPersent * size.width+pen.strokeWidth/2;
-        double endPos = sec.persent * size.width-pen.strokeWidth/2;
+        ///此进度条section的结束位置
+        double endPersent = sec.persent;
+        ///计算是否超过了此进度条。若超过，不绘制超出部分的长度
+        if(endPersent+lastPersent > 1){
+          endPersent = 1- lastPersent;
+        }
+        double endPos = (lastPersent + endPersent) * size.width-pen.strokeWidth/2;
         if(endPos < startPos)endPos = startPos;
-
         this.pen.color = sec.color;
         canvas.drawLine(Offset(startPos, size.height / 2),
             Offset(endPos, size.height / 2), pen);
-        lastPersent += sec.persent;
+        lastPersent += endPersent;
       }
       idx++;
     }
