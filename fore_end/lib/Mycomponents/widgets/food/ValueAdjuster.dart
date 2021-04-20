@@ -8,11 +8,21 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
   ///T继承自num 这样就可以定义泛型变量，外部创建这个widget就可以定义变量的类型
   T valueWeight;
 
+  ///初始值
+  T initValue;
+
+  ///上下限
+  T upper;
+  T lower;
+
   ///onValueChange是当变量发生改变时调用的方法
   Function onValueChange;
 
   ValueAdjuster({
-    T valueWeight,
+    @required T valueWeight,
+    @required this.initValue,
+    this.upper,
+    this.lower,
     Function onValueChange,
     Key key,
   }) : super(key: key) {
@@ -20,6 +30,12 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
     ///GlobalKey<ValueAdjusterState> valueAdjusterKey;
     ///this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
     ///this.widget.valueAdjusterKey.currentState.getVal();
+    if(valueWeight == null){
+      throw FormatException("valueWeight is a required argument in ValueAdjuster component");
+    }
+    if(initValue == null){
+      throw FormatException("initValue is a required argument in ValueAdjuster component");
+    }
     this.valueWeight = valueWeight;
     this.onValueChange=onValueChange;
   }
@@ -53,11 +69,14 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
     super.initState();
     ///初始化valueNotifier为上面的类型，并且初始化它的值
     ///并且监听变化
-    this.valueNotifier = new ValueNotifier<T>(this.widget.valueWeight);
-    this.valueNotifier.addListener(this.widget.onValueChange);
+    this.valueNotifier = new ValueNotifier<T>(this.widget.initValue);
+    if(this.widget.onValueChange != null){
+      this.valueNotifier.addListener(this.widget.onValueChange);
+    }
   }
 
   void plusWeight() {
+    if(this.widget.upper != null && (this.valueNotifier.value+this.widget.valueWeight > this.widget.upper))return;
     setState(() {
       ///增加或减少的是valueNotifier.value的值
       this.valueNotifier.value += this.widget.valueWeight;
@@ -65,6 +84,7 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   }
 
   void minusWeight() {
+    if(this.widget.lower != null && (this.valueNotifier.value-this.widget.valueWeight < this.widget.upper))return;
     setState(() {
       if (this.valueNotifier.value >= this.widget.valueWeight) {
         this.valueNotifier.value -= this.widget.valueWeight;
