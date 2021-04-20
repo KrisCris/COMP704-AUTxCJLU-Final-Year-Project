@@ -7,14 +7,14 @@ class CalculatableColor extends Color {
     return CalculatableColor(clr.value);
   }
   ColorChannel operator -(Color another) {
-    return ColorChannel(
+    ColorChannel clr = ColorChannel(
         this.alpha -another.alpha,
         this.red - another.red,
         this.green - another.green,
-        this.blue - another.blue
-    );
+        this.blue - another.blue);
+    return clr;
   }
-  CalculatableColor operator +(ColorChannel another) {
+  Color operator +(ColorChannel another) {
     int newAlpha = this._colorRangeFilter(this.alpha + another.alpha);
     int newRed = this._colorRangeFilter(this.red + another.red);
     int newGreen = this._colorRangeFilter(this.green + another.green);
@@ -54,6 +54,14 @@ class ColorChannel{
       this.blue + ano.blue
     );
   }
+  ColorChannel operator -(ColorChannel another) {
+    ColorChannel clr = ColorChannel(
+        this.alpha -another.alpha,
+        this.red - another.red,
+        this.green - another.green,
+        this.blue - another.blue);
+    return clr;
+  }
   ColorChannel operator *(double t) {
     int newAlpha = (this.alpha * t).round();
     int newRed = (this.red * t).round();
@@ -67,3 +75,4 @@ class ColorChannel{
   int get green => this.channels[2];
   int get blue => this.channels[3];
 }
+
