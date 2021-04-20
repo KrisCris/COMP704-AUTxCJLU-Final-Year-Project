@@ -5,8 +5,9 @@ class CrossFadeText extends StatefulWidget{
   double fontSize;
   Color fontColor;
   String initText;
+  Function(Duration timeStamp) onStateInitDone;
 
-  CrossFadeText({Key key,String text="",double fontSize=12,Color fontColor}):super(key:key){
+  CrossFadeText({Key key,String text="",double fontSize=12,Color fontColor,this.onStateInitDone}):super(key:key){
     this.initText = text;
     this.fontSize = fontSize;
     this.fontColor = MyTheme.convert(ThemeColorName.NormalText, color:fontColor);
@@ -43,6 +44,9 @@ with TickerProviderStateMixin{
     this.showFirst = ValueNotifier(true);
     this.showFirst.addListener(() {setState(() {
     });});
+    if(widget.onStateInitDone != null){
+      WidgetsBinding.instance.addPostFrameCallback(widget.onStateInitDone);
+    }
   }
 
   @override
