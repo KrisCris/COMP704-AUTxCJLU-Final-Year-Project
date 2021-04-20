@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
+import 'package:fore_end/Pages/FoodRecommandation.dart';
 import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
 import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'Pages/ComponentTestPage.dart';
@@ -23,9 +24,8 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       home: CoverPage(),
-      // home: ComponentTestPage(),
-      // home: HistoryPlanPage(),
+       // home: CoverPage(),
+        home: FoodRecommandation(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

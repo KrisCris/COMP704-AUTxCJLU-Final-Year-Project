@@ -43,12 +43,16 @@ class RecommandFoodCircleState extends State<RecommandFoodCircle>
     this.circleAnimation.initAnimation(0.0, 1.0, 500, this, null);
     this.circleAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        if(this.isCheck)return;
+
         this.isCheck = true;
         if (widget.onCheck != null) {
           widget.onCheck();
         }
         setState(() {});
       } else if (status == AnimationStatus.dismissed) {
+        if(!this.isCheck)return;
+
         this.isCheck = false;
         if (widget.onUnCheck != null) {
           widget.onUnCheck();
