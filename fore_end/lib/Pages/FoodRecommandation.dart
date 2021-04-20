@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
@@ -46,7 +47,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       child: Column(
         children: [
           SizedBox(
-            height: ScreenTool.partOfScreenWidth(0.05),
+            height: ScreenTool.partOfScreenHeight(0.05),
           ),
           backArrow(),
           recommandTitle(),
@@ -177,14 +178,19 @@ class FoodRecommandationState extends State<FoodRecommandation> {
             ]),
             Container(
               width:ScreenTool.partOfScreenWidth(0.9),
+              height: ScreenTool.partOfScreenHeight(0.07),
               decoration: BoxDecoration(
                 color:  MyTheme.convert(ThemeColorName.ComponentBackground),
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5),bottomRight: Radius.circular(5))
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CrossFadeText(key: this.totalCal, text: totalCal.toString()+" Kcal",fontSize: 13,)
+                  SizedBox(width: 100),
+                  CrossFadeText(key: this.totalCal, text: totalCal.toString()+" Kcal",fontSize: 13,),
+                  Expanded(child:SizedBox()),
+                  CustomButton(text: "Add to Meal",firstColorName: ThemeColorName.Success,textColor: MyTheme.convert(ThemeColorName.NormalText),fontsize: 13,radius: 5,),
+                  SizedBox(width: 20)
                 ],
               ),
             )

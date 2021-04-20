@@ -115,7 +115,14 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
                   NutritionText(name: "Protein", value: f.protein, unit: "g/100g", width: 0.3*widget.width),
                   NutritionText(name: "Fat", value: f.fat, unit: "g/100g", width: 0.3*widget.width),
                 ],
-              )
+              ),
+              SizedBox(height: 0.1*widget.height),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+
+                ],
+              ),
             ],
           ),
         ),
