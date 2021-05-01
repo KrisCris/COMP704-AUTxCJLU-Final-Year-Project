@@ -465,6 +465,6 @@ class HiydSpider(scrapy.Spider):
     def imgurl2b64(self, url):
         response = req.get(url)
         image = Image.open(BytesIO(response.content))
-        b64 = base64.b64encode(BytesIO(response.content).read())
-        return b64
+        b64 = str(base64.b64encode(BytesIO(response.content).read()))
+        return b64[2:-1]
         # print(b64)
