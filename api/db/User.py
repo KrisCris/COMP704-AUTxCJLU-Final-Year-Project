@@ -21,6 +21,9 @@ class User(db.Model):
     code_check = db.Column(db.INTEGER, server_default=db.FetchedValue())
     guide = db.Column(db.BOOLEAN)
     register_date = db.Column(db.INTEGER)
+    b_percent = db.Column(db.INTEGER)
+    l_percent = db.Column(db.INTEGER)
+    d_percent = db.Column(db.INTEGER)
 
     def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(),
                  nickname='', password='',
@@ -39,6 +42,9 @@ class User(db.Model):
         self.code_check = code_check
         self.guide = guide
         self.register_date = register_date
+        self.b_percent = 30
+        self.l_percent = 40
+        self.d_percent = 30
 
     def add(self):
         db.session.add(self)
@@ -59,4 +65,5 @@ class User(db.Model):
     def toDict(self):
         return {'id': self.id, 'email': self.email, 'nickname': self.nickname, 'token': self.token,
                 'avatar': self.avatar, 'gender': self.gender, 'age': self.age, 'weight': self.weight,
-                'height': self.height, 'regDate': self.register_date, 'needGuide': self.guide}
+                'height': self.height, 'register_date': self.register_date, 'needGuide': self.guide,
+                'breakfast_percent': self.b_percent, 'launch_percent': self.l_percent, 'dinner_percent': self.d_percent}
