@@ -19,7 +19,7 @@ def detect():
     img = base64_to_image(request.form.get('food_b64'))
     rotation = int(request.form.get('rotation'))
 
-    # fuck flutter camera :/
+    # fix flutter camera :/
     img = fix_flutter_img_rotation_issue(img, rotation)
 
     # detect
