@@ -16,7 +16,8 @@ food = Blueprint(name='food', import_name=__name__)
 @food.route('detect', methods=['POST'])
 @swag_from('docs/food/detect.yml')
 def detect():
-    img = base64_to_image(request.form.get('food_b64'))
+    b64String = request.form.get('food_b64')
+    img = base64_to_image(b64String)
     rotation = int(request.form.get('rotation'))
 
     # fix flutter camera :/
