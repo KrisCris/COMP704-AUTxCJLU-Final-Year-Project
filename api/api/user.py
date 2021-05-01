@@ -224,18 +224,11 @@ def get_basic_info():
     import base64
     with open(u.avatar, "rb") as avatar_file:
         b2s_avatar = base64.b64encode(avatar_file.read()).decode('utf-8')
-    return func.reply_json(1, data={
-        'email': u.email,
-        'nickname': u.nickname,
-        'avatar': b2s_avatar,
-        'gender': u.gender,
-        'age': u.age,
-        'needGuide': u.guide,
-        'weight': u.weight,
-        'height': u.height,
-        'register_date': u.register_date,
-        'activityLevel': pal
-    })
+
+    data = u.toDict()
+    data['avatar'] = b2s_avatar
+    data['activityLevel'] = pal
+    return func.reply_json(1, data=data)
 
 
 @user.route('modify_basic_info', methods=['POST'])

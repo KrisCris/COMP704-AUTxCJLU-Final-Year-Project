@@ -1,3 +1,5 @@
+from typing import List, Any
+
 from flask import Blueprint, request
 from flasgger import swag_from
 
@@ -496,3 +498,17 @@ def estimateExtension():
         return reply_json(1, data={'ext': res})
     else:
         return reply_json(-2)
+
+
+@plan.route('rec_intake', methods=['POST'])
+@require_login
+def recIntake():
+    uid = request.form.get('uid')
+    pid = request.form.get('pid')
+    u = User.getUserByID(uid)
+    pd = PlanDetail.getLatest(pid)
+
+    dailyCals: List[float] = [pd.caloriesL, pd.caloriesH]
+    dailyProt: List[float] = [pd.proteinL, pd.proteinH]
+
+    DailyConsumption.getAccumulatedCaloriesIntake

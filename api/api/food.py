@@ -166,3 +166,15 @@ def listedCaloriesIntake():
         code=1,
         data=DailyConsumption.getListedCaloriesIntake(begin=begin, end=end, uid=uid)
     )
+
+
+@food.route('rec_alt_food', methods=['POST'])
+@require_login
+def recAltFood():
+    pass
+
+
+@food.route('rec_similar_food', methods=['POST'])
+@require_login
+def recSimilarFood():
+    pass
