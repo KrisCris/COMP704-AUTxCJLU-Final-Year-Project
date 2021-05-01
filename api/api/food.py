@@ -7,13 +7,14 @@ from cv.detect import detect as food_detect
 from db import Plan, DailyConsumption
 from db.Food import Food
 from util.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
-from util.func import reply_json, get_relative_days, get_current_time
+from util.func import reply_json, get_relative_days, get_current_time, echoErr
 from util.user import require_login
 
 food = Blueprint(name='food', import_name=__name__)
 
 
 @food.route('detect', methods=['POST'])
+@echoErr
 @swag_from('docs/food/detect.yml')
 def detect():
     b64String = request.form.get('food_b64')
@@ -54,6 +55,7 @@ def detect():
 
 
 @food.route('search', methods=['GET'])
+@echoErr
 @swag_from('docs/food/search.yml')
 def search():
     name: str = request.values.get('name').strip()
@@ -74,6 +76,7 @@ def search():
 
 
 @food.route('food_info', methods=['GET'])
+@echoErr
 @swag_from('docs/food/food_info.yml')
 def getFoodInfo():
     fid = request.values.get('fid')
@@ -86,6 +89,7 @@ def getFoodInfo():
 
 @food.route('consume_foods', methods=['POST'])
 @require_login
+@echoErr
 @swag_from('docs/food/consume_foods.yml')
 def consume_foods():
     uid = request.form.get('uid')
@@ -119,6 +123,7 @@ def consume_foods():
 
 @food.route('get_consume_history', methods=['POST'])
 @require_login
+@echoErr
 @swag_from('docs/food/get_consume_history.yml')
 def getConsumeHistory():
     begin = request.form.get('begin')
@@ -132,6 +137,7 @@ def getConsumeHistory():
 
 @food.route('get_daily_consumption', methods=['POST'])
 @require_login
+@echoErr
 @swag_from('docs/food/get_daily_consumption.yml')
 def getDailyConsumption():
     begin = request.form.get('begin')
@@ -145,6 +151,7 @@ def getDailyConsumption():
 
 @food.route('accumulated_calories_intake', methods=['POST'])
 @require_login
+@echoErr
 @swag_from('docs/food/accumulated_calories_intake.yml')
 def getAccumulatedCaloriesIntake():
     begin = request.form.get('begin')
@@ -158,6 +165,7 @@ def getAccumulatedCaloriesIntake():
 
 @food.route('listed_calories_intake', methods=['POST'])
 @require_login
+@echoErr
 @swag_from('docs/food/listed_calories_intake.yml')
 def listedCaloriesIntake():
     begin = request.form.get('begin')
@@ -171,11 +179,13 @@ def listedCaloriesIntake():
 
 @food.route('rec_alt_food', methods=['POST'])
 @require_login
+@echoErr
 def recAltFood():
     pass
 
 
 @food.route('rec_similar_food', methods=['POST'])
 @require_login
+@echoErr
 def recSimilarFood():
     pass

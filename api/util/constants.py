@@ -40,7 +40,8 @@ REPLY_CODES = {
     -2: 'Wrong',
     -1: 'Login Required',
     1: 'Success',
-    403: 'Bad Request'
+    403: 'Bad Request',
+    500: 'Error'
 
 }
 
