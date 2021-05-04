@@ -6,8 +6,8 @@ from werkzeug.security import generate_password_hash
 from db.PlanDetail import PlanDetail
 from db.Plan import Plan
 from db.User import User
-from util.user import *
-from util.func import *
+from util.Common.user import *
+from util.Common.func import *
 
 user = Blueprint(name='user', import_name=__name__)
 
@@ -63,7 +63,7 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
-            from util.func import get_current_time
+            from util.Common.func import get_current_time
             u.register_date = get_current_time()
             User.add(u)
     return reply_json(1)

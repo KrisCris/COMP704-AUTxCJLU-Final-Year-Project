@@ -1,8 +1,8 @@
 # type = 1, 2, 3., i.e. shed weight, maintain, build muscle
 def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
-    from util.Planer.BodyModel import BodyModel
-    from util.Planer.Intervention import Intervention
-    from util.Planer.Baseline import Baseline
+    from util.Planner.BodyModel import BodyModel
+    from util.Planner.Intervention import Intervention
+    from util.Planner.Baseline import Baseline
 
     baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal*1.05 if type == 3 else pal, bfp=True, rmr=False)
     maintainCal = round(baseline.getMaintCals())

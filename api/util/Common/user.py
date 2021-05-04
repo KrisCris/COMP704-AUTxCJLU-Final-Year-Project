@@ -10,10 +10,10 @@ from email.mime.multipart import MIMEMultipart
 
 from werkzeug.security import check_password_hash
 
-from util.constants import DEBUG
-from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
+from util.Common.constants import DEBUG
+from util.Common.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_URL
 
-from util.func import reply_json, get_time_gap, get_current_time
+from util.Common.func import reply_json, get_time_gap, get_current_time
 
 '''
   -1:

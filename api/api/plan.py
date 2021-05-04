@@ -4,10 +4,10 @@ from flask import Blueprint, request
 from flasgger import swag_from
 
 from db import User, Plan, DailyConsumption, PlanDetail
-from util.user import require_login
-from util.plan import estimateExt
-from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap, echoErr
-from util.Planer.CalsPlaner import calc_calories
+from util.Common.user import require_login
+from util.Common.plan import estimateExt
+from util.Common.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap, echoErr
+from util.Planner.CalsPlanner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
 

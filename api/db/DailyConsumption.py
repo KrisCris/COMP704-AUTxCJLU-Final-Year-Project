@@ -1,5 +1,5 @@
 from db.db import db
-from util.func import get_current_time
+from util.Common.func import get_current_time
 
 
 class DailyConsumption(db.Model):

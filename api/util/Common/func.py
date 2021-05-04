@@ -2,9 +2,9 @@ import time
 import datetime
 import functools
 
-from flask import request, jsonify
+from flask import jsonify
 
-from util.constants import REPLY_CODES, DEBUG
+from util.Common.constants import REPLY_CODES
 
 
 def reply_json(code, msg=None, data=None):

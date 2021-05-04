@@ -1,5 +1,5 @@
-from util.Planer.BodyChange import BodyChange
-from util.Planer.DailyParams import DailyParams
+from util.Planner.BodyChange import BodyChange
+from util.Planner.DailyParams import DailyParams
 import math
 
 RK4wt = [1, 2, 3, 4]

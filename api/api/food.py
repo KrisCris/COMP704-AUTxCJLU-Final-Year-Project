@@ -6,9 +6,9 @@ from flasgger import swag_from
 from cv.detect import detect as food_detect
 from db import Plan, DailyConsumption
 from db.Food import Food
-from util.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
-from util.func import reply_json, get_relative_days, get_current_time, echoErr
-from util.user import require_login
+from util.Common.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
+from util.Common.func import reply_json, get_relative_days, get_current_time, echoErr
+from util.Common.user import require_login
 
 food = Blueprint(name='food', import_name=__name__)
 

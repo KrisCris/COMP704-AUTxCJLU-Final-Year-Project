@@ -1,6 +1,6 @@
 import math
 
-from util.Planer.BodyModel import BodyModel
+from util.Planner.BodyModel import BodyModel
 
 MIN_CALORIES = 0.0,
 INITIAL_CALORIES = 2200.0,
