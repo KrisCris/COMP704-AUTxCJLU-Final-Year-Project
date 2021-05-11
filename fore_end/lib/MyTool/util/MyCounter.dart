@@ -10,8 +10,9 @@ class MyCounter {
   int times;
   int duration;
   Function calling;
+  Function callingFinish;
 
-  MyCounter({this.times = -1,bool callWhenStart = true, this.calling=null, this.duration=0}){
+  MyCounter({this.times = -1,bool callWhenStart = true, this.callingFinish, this.calling=null, this.duration=0}){
     this._isRun = false;
     this._callWhenStart = callWhenStart;
   }
@@ -38,9 +39,13 @@ class MyCounter {
       if(this._temp == 0){
         timer.cancel();
         this._isRun = false;
+        if(this.callingFinish!=null){
+          this.callingFinish();
+        }
+        return;
       }
       this.calling();
-      if(this._temp >=0)this._temp--;
+      if(this._temp >0)this._temp--;
     });
   }
 
