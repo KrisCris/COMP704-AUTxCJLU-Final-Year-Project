@@ -97,11 +97,17 @@ class Food(db.Model):
         return Food.query.filter(Food.name.like('%' + name + '%')).all()
 
     def toDict(self):
-        return {'id': self.id, 'name': self.name, 'cnName': self.cnName, 'category': self.category, 'img': self.image,
-                'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate, 'protein': self.protein,
-                'cellulose': self.cellulose,
-                'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
-                }
+        food_dict = {'id': self.id, 'name': self.name, 'cnName': self.cnName, 'category': self.category,
+                     'img': self.image,
+                     'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate,
+                     'protein': self.protein,
+                     'cellulose': self.cellulose,
+                     'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
+                     }
+        from db.Category import Category
+        cate_dict = Category.getCateByID(self.id)
+        food_dict["cate_info"] = cate_dict
+        return food_dict
 
     @staticmethod
     def getFoodsRestricted(category, protein, ch, fat):
@@ -140,12 +146,34 @@ class Food(db.Model):
 
     @staticmethod
     def randSuitableFood(planType):
+        # init dicts
         dict1 = {}
         dict2 = {}
-        for food in Food.query.filter(Food.isSuitable(planType) == True).order_by(func.rand()).limit(50):
-            dict1[food.category] = food
-        for food in Food.query.filter(Food.isSuitable(planType) == True).order_by(func.rand()).limit(50):
-            dict2[food.category] = food
+        from db.Category import Category
+        idList = Category.getIdList()
+        for i in idList:
+            dict1[i] = None
+            dict2[i] = None
+
+        def isFull(dic: dict):
+            for i in dic:
+                if i is None:
+                    return False
+            else:
+                return True
+
+        for food in Food.query.all().order_by(func.rand()):
+            if food.isSuitable(planType):
+                dict1[food.category] = food
+                if isFull(dict1):
+                    break
+
+        for food in Food.query.all().order_by(func.rand()):
+            if food.isSuitable(planType):
+                dict2[food.category] = food
+                if isFull(dict2):
+                    break
+
         set1 = set(dict1.values())
         set2 = set(dict2.values())
         finalSet = set1 | set2
