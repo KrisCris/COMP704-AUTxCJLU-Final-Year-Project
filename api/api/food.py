@@ -234,13 +234,14 @@ def recmdFood(*args, **kwargs):
     recentConsumed = DailyConsumption.getRecentConsumedSuitableFood(pid=plan.id, mealType=args[0].get("mealType"))
     randFoodSet = Food.randSuitableFood(planType)
 
-    similarSet: set = {}
+    similarSet = []
     for f in recentConsumed.values():
-        similarSet.add(f.getKNN(1, matchCate=True))
+        food = f.getKNN(1, matchCate=True)[0]
+        similarSet.append(food)
 
     data = {
-        "recentConsumed": setToDict(set(recentConsumed.values())),
-        "randFoods": setToDict(set(randFoodSet)),
+        "recentConsumed": setToDict(recentConsumed.values()),
+        "randFoods": setToDict(randFoodSet),
         "similarRecmd": setToDict(similarSet)
     }
 

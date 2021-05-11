@@ -117,13 +117,13 @@ class Food(db.Model):
         tupleList = []
         import math
         foods = Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName).filter(
-            Food.name == self.category) if matchCate else Food.query.filter(Food.name != self.name)
+            Food.category == self.category) if matchCate else Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName)
         for f in foods.all():
             tupleList.append((f.id, math.sqrt(
                 math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(
                     self.ratioCH - f.ratioCH, 2))))
-        sorted(tupleList, key=itemgetter(1), reverse=True)
-        tupleList = tupleList[0:k - 1]
+        tupleList = sorted(tupleList, key=itemgetter(1), reverse=False)
+        tupleList = tupleList[0:k]
         foodList = []
         for l in tupleList:
             foodList.append(Food.getById(l[0]))
