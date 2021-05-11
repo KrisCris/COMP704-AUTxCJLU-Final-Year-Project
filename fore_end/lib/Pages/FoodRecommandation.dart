@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:common_utils/common_utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +12,7 @@ import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -32,15 +35,18 @@ class FoodRecommandation extends StatefulWidget {
 
 class FoodRecommandationState extends State<FoodRecommandation> {
   List<Food> selectedFood;
+  List<Food> recommendedFood;
   Food nowFood;
   double caloriesLimit;
   GlobalKey<SwitchFoodInfoAreaState> foodinfo;
   GlobalKey<CrossFadeTextState> totalCal;
   GlobalKey<PersentBarState> persentBar;
 
+
   @override
   void initState() {
     this.selectedFood = new List<Food>();
+    this.recommendedFood = [];
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
     this.totalCal = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
@@ -49,7 +55,47 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     }
     User u = User.getInstance();
     this.caloriesLimit = u.plan.dailyCaloriesUpperLimit;
+    Requests.recommandFood({
+      "uid":u.uid,
+      "token":u.token,
+      "pid":u.plan.id,
+      "mealType":mealTypeConvert()
+    }).then((res){
+      if(res == null){
+        return;
+      }
+      if(res.data['code'] == 1){
+        for(List m  in res.data['data']['randFoods'].values){
+          for(Map fd in m){
+            Food f = new Food.fromJson(fd);
+            if(CustomLocalizations.of(context).nowLanguage() == 'zh'){
+              f.name = fd['cnName'];
+            }
+            this.recommendedFood.add(f);
+          }
+        }
+        setState(() {});
+      }else{
+
+      }
+    });
+
     super.initState();
+  }
+
+  int mealTypeConvert(){
+    String s = widget.mealType.toLowerCase();
+    switch(s){
+      case "breakfast":{
+        return 1;
+      }
+      case "lunch":{
+        return 2;
+      }
+      case "dinner":{
+        return 3;
+      }
+    }
   }
 
   @override
@@ -140,18 +186,10 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               borderRadius: BorderRadius.circular(5)),
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: this.recommendedFood.length,
               itemBuilder: (BuildContext ctx, int idx) {
                 RecommandFoodCircle w = RecommandFoodCircle(
-                  food: Food(
-                      name: "test food - " + idx.toString(),
-                      calorie: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      fat: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      protein: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      weight: 10),
+                  food: this.recommendedFood[idx],
                   pictureSize: ScreenTool.partOfScreenHeight(0.075),
                 );
                 w.onClick = () {
@@ -220,6 +258,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
+                    width: 60,
                     radius: 5,
                     tapFunc: ()async{
                       User u = User.getInstance();
@@ -229,13 +268,31 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         m = new Meal(mealName: widget.mealType);
                         newMeal = true;
                       }
+                      Response res = await Requests.consumeFoods({
+                        "uid": u.uid,
+                        "token":u.token,
+                        "pid": u.plan.id,
+                        "type": mealTypeConvert(),
+                        "foods_info":jsonEncode(this.selectedFood),
+                      });
+                      if(res == null){
+
+                        return;
+                      }
+                      if(res.data['code'] != 1){
+
+                        return;
+                      }
+
                       for(Food f in this.selectedFood){
                         m.addFood(f);
                       }
                       if(newMeal){
                         u.meals.value.add(m);
                       }
+                      m.time = (res.data['data']['stmp']*1000);
                       m.save();
+                      Navigator.of(context).pop(true);
                     },
                   ),
                   SizedBox(width: 20)
