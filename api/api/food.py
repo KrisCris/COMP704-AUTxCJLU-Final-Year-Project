@@ -1,11 +1,14 @@
 import cv2
+import random
 from PIL import Image
 from flask import Blueprint, request
 from flasgger import swag_from
 
 from cv.detect import detect as food_detect
-from db import Plan, DailyConsumption
+from db.Plan import Plan
+from db.DailyConsumption import DailyConsumption
 from db.Food import Food
+from db.User import User
 from util.Common.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
 from util.Common.func import reply_json, get_relative_days, get_current_time, attributes_receiver
 from util.Common.user import require_login
@@ -174,13 +177,67 @@ def listedCaloriesIntake(*args, **kwargs):
     )
 
 
-@food.route('rec_alt_food', methods=['POST'])
+@food.route('recmd_food_in_search', methods=['POST'])
+@attributes_receiver(required=["uid", "token", "fid", "pid"])
 @require_login
-def recAltFood(*args, **kwargs):
-    pass
+@swag_from('docs/food/recmd_food_in_search.yml')
+def recmdFoodInSearch(*args, **kwargs):
+    plan = Plan.getPlanByID(args[0].get("pid"))
+    food = Food.getById(args[0].get("fid"))
+    planType = plan.type
+    data = {
+        "suitable": food.isSuitable(),
+        "recmdFoods": []
+    }
+    foods = None
+    if planType == 1:
+        foods = Food.getFoodsRestricted(category=food.category, protein=0.2, fat=0.25, ch=0.5)
+    elif planType == 3:
+        foods = Food.getFoodsRestricted(category=food.category, protein=0.3, fat=0.6, ch=0.1)
+    elif planType == 2:
+        foods = food.getKNN(k=10)
+
+    foodsList = []
+    for f in foods:
+        foodsList.append(f.toDict())
+    listLen = len(foodsList)
+
+    while listLen > 10:
+        f = foodsList[random.randint(0, listLen - 1)]
+        foodsList.remove(f)
+        listLen -= 1
+
+    data["recmdFoods"] = foodsList
+
+    return reply_json(1, data=data)
 
 
-@food.route('rec_similar_food', methods=['POST'])
+@food.route('recmd_food', methods=['POST'])
+@attributes_receiver(required=["uid", "token", "pid", "mealType"])
 @require_login
-def recSimilarFood(*args, **kwargs):
-    pass
+def recmdFood(*args, **kwargs):
+    plan = Plan.getPlanByID(args[0].get("pid"))
+    planType = plan.type
+
+    def setToDict(set):
+        tmpDict = {}
+        for s in set:
+            if s.category not in tmpDict:
+                tmpDict[s.category] = []
+            tmpDict[s.category].append(s.toDict())
+        return tmpDict
+
+    recentConsumed = DailyConsumption.getRecentConsumedSuitableFood(pid=plan.id, mealType=args[0].get("mealType"))
+    randFoodSet = Food.randSuitableFood(planType)
+
+    similarSet: set = {}
+    for f in recentConsumed.values():
+        similarSet.add(f.getKNN(1, matchCate=True))
+
+    data = {
+        "recentConsumed": setToDict(set(recentConsumed.values())),
+        "randFoods": setToDict(set(randFoodSet)),
+        "similarRecmd": setToDict(similarSet)
+    }
+
+    return reply_json(1, data=data)

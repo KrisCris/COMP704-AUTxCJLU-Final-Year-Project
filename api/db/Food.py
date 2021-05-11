@@ -1,3 +1,6 @@
+from operator import itemgetter
+from sqlalchemy.sql.expression import func
+
 from db.db import db
 
 
@@ -99,3 +102,51 @@ class Food(db.Model):
                 'cellulose': self.cellulose,
                 'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
                 }
+
+    @staticmethod
+    def getFoodsRestricted(category, protein, ch, fat):
+        return Food.query.filter(Food.category == category).filter(Food.ratioF <= fat).filter(
+            Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
+
+    def getKNN(self, k, matchCate=False):
+        tupleList = []
+        import math
+        foods = Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName).filter(
+            Food.name == self.category) if matchCate else Food.query.filter(Food.name != self.name)
+        for f in foods.all():
+            tupleList.append((f.id, math.sqrt(
+                math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(
+                    self.ratioCH - f.ratioCH, 2))))
+        sorted(tupleList, key=itemgetter(1), reverse=True)
+        tupleList = tupleList[0:k - 1]
+        foodList = []
+        for l in tupleList:
+            foodList.append(Food.getById(l[0]))
+        return foodList
+
+    def isSuitable(self, planType):
+        if planType == 1:
+            if self.ratioP < 0.2 or self.ratioCH > 0.5 or self.ratioF > 0.25:
+                return False
+            else:
+                return True
+        if planType == 2:
+            return True
+        if planType == 3:
+            if self.ratioP < 0.3 and self.ratioF > 0.2:
+                return False
+            else:
+                return True
+
+    @staticmethod
+    def randSuitableFood(planType):
+        dict1 = {}
+        dict2 = {}
+        for food in Food.query.filter(Food.isSuitable(planType) == True).order_by(func.rand()).limit(50):
+            dict1[food.category] = food
+        for food in Food.query.filter(Food.isSuitable(planType) == True).order_by(func.rand()).limit(50):
+            dict2[food.category] = food
+        set1 = set(dict1.values())
+        set2 = set(dict2.values())
+        finalSet = set1 | set2
+        return finalSet
