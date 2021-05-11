@@ -16,6 +16,10 @@ class Category(db.Model):
         self.desc = desc
         self.cnDesc = cnDesc
 
+    @staticmethod
+    def getCateByID(id):
+        return Category.query.filter(Category.id == id).first()
+
     def toDict(self):
         return {
             'id': self.id,
@@ -24,3 +28,10 @@ class Category(db.Model):
             'desc': self.desc,
             'cnDesc': self.cnDesc
         }
+
+    @staticmethod
+    def getIdList():
+        idSet: list = []
+        for cate in Category.query.all():
+            idSet.append(cate.id)
+        return idSet

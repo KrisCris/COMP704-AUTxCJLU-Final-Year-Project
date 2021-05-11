@@ -40,6 +40,7 @@ def detect(*args, **kwargs):
         if f:
             f_db = f.toDict()
 
+
         # crop image based on results
         food_image = crop_image_by_coords_2(img, int(fr[0]), int(fr[1]), int(fr[2]), int(fr[3]))
 
