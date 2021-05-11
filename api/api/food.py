@@ -89,7 +89,7 @@ def getFoodInfo(*args, **kwargs):
 
 
 @food.route('consume_foods', methods=['POST'])
-@attributes_receiver(required=['uid', 'pid', 'type', 'foods_info'])
+@attributes_receiver(required=['uid', 'token', 'pid', 'type', 'foods_info'])
 @require_login
 @swag_from('docs/food/consume_foods.yml')
 def consume_foods(*args, **kwargs):
@@ -187,7 +187,7 @@ def recmdFoodInSearch(*args, **kwargs):
     food = Food.getById(args[0].get("fid"))
     planType = plan.type
     data = {
-        "suitable": food.isSuitable(),
+        "suitable": food.isSuitable(planType),
         "recmdFoods": []
     }
     foods = None
@@ -216,6 +216,7 @@ def recmdFoodInSearch(*args, **kwargs):
 @food.route('recmd_food', methods=['POST'])
 @attributes_receiver(required=["uid", "token", "pid", "mealType"])
 @require_login
+@swag_from('docs/food/recmd_food.yml')
 def recmdFood(*args, **kwargs):
     plan = Plan.getPlanByID(args[0].get("pid"))
     planType = plan.type
@@ -223,6 +224,8 @@ def recmdFood(*args, **kwargs):
     def setToDict(set):
         tmpDict = {}
         for s in set:
+            if s is None:
+                continue
             if s.category not in tmpDict:
                 tmpDict[s.category] = []
             tmpDict[s.category].append(s.toDict())
