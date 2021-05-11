@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       // home: CoverPage(),
+       home: CoverPage(),
         // home: FoodRecommandation(),
         // home: ComponentTestPage(),
-      home: FoodDetails(),
+      // home: FoodDetails(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

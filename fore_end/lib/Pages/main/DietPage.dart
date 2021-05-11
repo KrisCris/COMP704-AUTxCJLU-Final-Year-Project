@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -33,13 +36,18 @@ class DietPage extends StatefulWidget {
 class DietPageState extends State<DietPage> {
   int listIndex=0; //默认没有数据
   Map resultList=new Map();  //搜索返回的结果List，里面的每一个都是一个食物
+  Map recmdList=new Map();
+  bool isSuitable=false;
+
+
 
   List<Map> foodDetailInfoList=new List<Map>();
-
+  List<Map> recmdFoodDetailInfoList=new List<Map>();
 
   List<String> foodNameList=new List<String>();  //
   List<int> foodCaloriesList=new List<int>();  //
-
+  List<int> foodIdList=new List<int>();  //
+  List<String> foodImagesList=new List<String>();  //
 
   void queryFoods(String foodName) async {
     Response res = await Requests.searchFood({
@@ -53,19 +61,51 @@ class DietPageState extends State<DietPage> {
       print("搜索食物失败！");
     }
   }
+
+  void getRecomFoods(String foodName,int foodId) async {
+    User u= User.getInstance();
+    Response res = await Requests.getRecommandFood({
+      // "name":foodName,
+      'uid':u.uid,
+      'pid': u.plan.id,
+      'fid': foodId,
+      'token':u.token,
+    });
+
+    if(res.data['suitable'] == true){
+      print("搜索similar food！");
+      recmdList=res.data['recmdFoods'];
+      this.isSuitable=true;
+      this.setRecmdValue();
+    }else{
+      print("搜索alternative food！");
+      recmdList=res.data['recmdFoods'];
+      this.isSuitable=false;
+      this.setRecmdValue();
+    }
+
+
+  }
+
+
+
   void setValue(){
     String foodNames;
     double foodCalorie;
+    int foodId;
     // listIndex=resultList.length;
     resultList.forEach((key, value) {
       foodNames=key;
       Map info=value;
 
       foodCalorie=info["calories"];
+      foodId=info["id"];
       print("返回结果赋值成功！");
       foodNameList.add(foodNames);
       foodCaloriesList.add(foodCalorie.toInt());
       foodDetailInfoList.add({key:value});
+      foodIdList.add(foodId);
+      foodImagesList.add(info["img"]);
 
     });
 
@@ -73,6 +113,16 @@ class DietPageState extends State<DietPage> {
     print("返回结果赋值成功！");
     setState(() {});
   }
+
+  void setRecmdValue(){
+    recmdList.forEach((key, value) {
+      recmdFoodDetailInfoList.add({key:value});
+    });
+
+    print("2返回结果赋值成功！");
+    // setState(() {});
+  }
+
 
 
 
@@ -153,6 +203,8 @@ class DietPageState extends State<DietPage> {
             itemBuilder: (BuildContext context, int index) {
               String name="defaultName";
               int cal=666;
+              int fid=0;
+
               if(foodNameList.isNotEmpty){
                 name=foodNameList[index];
               }
@@ -160,38 +212,49 @@ class DietPageState extends State<DietPage> {
                 cal=foodCaloriesList[index];
               }
 
+              if(foodIdList.isNotEmpty){
+                fid=foodIdList[index];
+              }
+              String imageBase64=foodImagesList[index];
+
+
+
 
               ///跳转到食物识别页的代码，先给一个静态页面
-              return GestureDetector(
-                child: Card(
-                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
-                  child: ListTile(
-                    leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
-                    title: Text("TestFood",style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
-                    subtitle: Text("100"+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
-                    trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
-                  ),
-                ),
-                onTap: ( ){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'TestFood')));
-                },
-              );
               // return GestureDetector(
               //   child: Card(
               //     color: MyTheme.convert(ThemeColorName.ComponentBackground),
               //     child: ListTile(
               //       leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
-              //       title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
-              //       subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+              //       title: Text("TestFood",style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+              //       subtitle: Text("100"+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
               //       trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
               //     ),
               //   ),
               //   onTap: ( ){
               //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'xapple',foodInfoList: this.foodDetailInfoList,)));
+              //         MaterialPageRoute(builder: (context) => FoodDetails(foodName: 'TestFood')));
               //   },
               // );
+              return GestureDetector(
+                child: Card(
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
+                  child: ListTile(
+                    leading: Image.memory( base64.decode(imageBase64),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                    ///Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
+                    title: Text(name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+                    subtitle: Text(cal.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
+                    trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
+                  ),
+                ),
+                onTap: ( ){
+                  this.getRecomFoods(name,fid);
+
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FoodDetails(foodName: name,foodInfoList: this.foodDetailInfoList,recomdFoodInfoList: this.recmdFoodDetailInfoList)));
+                },
+              );
             },
             itemCount: foodNameList.length,
           ),
