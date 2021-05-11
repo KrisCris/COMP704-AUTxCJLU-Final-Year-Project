@@ -186,21 +186,16 @@ def recmdFoodInSearch(*args, **kwargs):
     food = Food.getById(args[0].get("fid"))
     planType = plan.type
     data = {
-        "suitable": True,
+        "suitable": food.isSuitable(),
         "recmdFoods": []
     }
     foods = None
     if planType == 1:
-        if food.ratioP < 0.2 or food.ratioCH > 0.5 or food.ratioF > 0.25:
-            data["suitable"] = False
         foods = Food.getFoodsRestricted(category=food.category, protein=0.2, fat=0.25, ch=0.5)
     elif planType == 3:
-        if food.ratioP < 0.3 and food.ratioF > 0.2:
-            data["suitable"] = False
         foods = Food.getFoodsRestricted(category=food.category, protein=0.3, fat=0.6, ch=0.1)
     elif planType == 2:
         foods = food.getKNN(k=10)
-
 
     foodsList = []
     for f in foods:
@@ -213,5 +208,36 @@ def recmdFoodInSearch(*args, **kwargs):
         listLen -= 1
 
     data["recmdFoods"] = foodsList
+
+    return reply_json(1, data=data)
+
+
+@food.route('recmd_food', methods=['POST'])
+@attributes_receiver(required=["uid", "token", "pid", "mealType"])
+@require_login
+def recmdFood(*args, **kwargs):
+    plan = Plan.getPlanByID(args[0].get("pid"))
+    planType = plan.type
+
+    def setToDict(set):
+        tmpDict = {}
+        for s in set:
+            if s.category not in tmpDict:
+                tmpDict[s.category] = []
+            tmpDict[s.category].append(s.toDict())
+        return tmpDict
+
+    recentConsumed = DailyConsumption.getRecentConsumedSuitableFood(pid=plan.id, mealType=args[0].get("mealType"))
+    randFoodSet = Food.randSuitableFood(planType)
+
+    similarSet: set = {}
+    for f in recentConsumed.values():
+        similarSet.add(f.getKNN(1, matchCate=True))
+
+    data = {
+        "recentConsumed": setToDict(set(recentConsumed.values())),
+        "randFoods": setToDict(set(randFoodSet)),
+        "similarRecmd": setToDict(similarSet)
+    }
 
     return reply_json(1, data=data)
