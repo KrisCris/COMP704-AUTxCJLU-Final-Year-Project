@@ -7,8 +7,9 @@ import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
 import 'MyTool/SoftwarePreference.dart';
 import 'MyTool/util/LocalDataManager.dart';
 import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
+import 'Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'Pages/ComponentTestPage.dart';
-import 'Pages/FoodRecommandation.dart';
+import 'Pages/FoodDetailsPage.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
@@ -27,9 +28,10 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       home: CoverPage(),
-      // home: ComponentTestPage(),
-      // home: FoodRecommandation(),
+       // home: CoverPage(),
+        // home: FoodRecommandation(),
+        // home: ComponentTestPage(),
+      home: FoodDetails(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

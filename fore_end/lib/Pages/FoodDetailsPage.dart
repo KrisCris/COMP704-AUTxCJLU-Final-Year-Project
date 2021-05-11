@@ -12,6 +12,7 @@ import 'package:fore_end/Mycomponents/widgets/NutritionBox.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PersentBar.dart';
 import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
+import 'package:fore_end/Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/RecommendBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
@@ -96,8 +97,8 @@ class _FoodDetailsState extends State<FoodDetails> {
       CustomLocalizations.of(context).dinner
     ];
 
-    ValueAdjuster valueAdjuster = ValueAdjuster<double>(initValue:0.0,valueWeight: 10.0,key: this.widget.valueAdjusterKey,upper: 990.0,);
-    valueAdjuster.onValueChange = (){
+    ValueAdjuster a = ValueAdjuster<double>(initValue:10.0,valueWeight: 10.0,key: this.widget.valueAdjusterKey);
+    a.onValueChange = (){
       print("ValueAdjuster onValueChange");
       // this.totalProtein =  this.widget.valueAdjusterKey.currentState.getVal()*widget.protein/100;
     };
@@ -184,7 +185,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.3),
+                  height: ScreenTool.partOfScreenHeight(0.6),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
@@ -234,13 +235,18 @@ class _FoodDetailsState extends State<FoodDetails> {
                         ],
                       ),
                       SizedBox(height: 15,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text("选择食物重量(g):", style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 18,fontFamily: 'Futura'),),
-                          valueAdjuster,
-                        ],
-                      )
+                      // a,  ///这里是重量调整器
+
+                      PieChartSample2(),
+
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //   children: [
+                      //     Text("选择食物重量(g):", style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 18,fontFamily: 'Futura'),),
+                      //     valueAdjuster,
+                      //   ],
+                      // )
 
                     ],
                   )
