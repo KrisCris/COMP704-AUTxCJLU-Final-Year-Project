@@ -121,12 +121,18 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
       if (!this.button.isMounted()) return;
       this.button.text = this.counter.getRemain().toString();
       this.button.refresh();
-      if (this.counter.isStop()) {
-        this.button.text = widget.repeatShowText;
-        this.button.fontsize = 13;
-        if (widget.emailField.isCorrect()) this.button.setDisabled(false);
-      }
+      // if (this.counter.isStop()) {
+      //   this.button.text = widget.repeatShowText;
+      //   this.button.fontsize = 13;
+      //   if (widget.emailField.isCorrect()) this.button.setDisabled(false);
+      // }
     };
+    this.counter.callingFinish = (){
+      this.button.text = widget.repeatShowText;
+      this.button.fontsize = 13;
+      if (widget.emailField.isCorrect()) this.button.setDisabled(false);
+    };
+
     super.initState();
   }
 
@@ -222,14 +228,14 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
     try {
       Response res = await Requests.checkVerifyCode(
           {"email": emailVal, "auth_code": codeVal});
-      if (res.data['code'] == -4) {
-        widget.onCheckFailed();
-        this.textField.setError();
-        this.textField.setErrorText(widget.checkWrongText);
-      } else {
+      if (res.data['code'] == 1) {
         widget.onCheckSuccess();
         this.textField.setCorrect();
         this.verified = true;
+      } else {
+        widget.onCheckFailed();
+        this.textField.setError();
+        this.textField.setErrorText(widget.checkWrongText);
       }
     } on DioError catch (e) {
       print("Exception when check verify code\n");
