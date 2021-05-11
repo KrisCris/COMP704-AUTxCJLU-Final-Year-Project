@@ -1,4 +1,6 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
@@ -29,6 +31,7 @@ class FoodDetails extends StatefulWidget {
   double fat;
   double protein;
   Food basicFood;
+  // double sumOfNutrition;
 
 
   bool testExclamition;
@@ -40,11 +43,12 @@ class FoodDetails extends StatefulWidget {
         this.foodInfoList,
         this.foodName="defaultFood",
         this.calories=100,
-        this.fat=10,
-        this.cholesterol=10,
-        this.cellulose=10,
-        this.carbohydrate=10,
-        this.protein=10,
+        this.fat=20,
+        this.cholesterol=20,
+        this.cellulose=20,
+        this.carbohydrate=20,
+        this.protein=20,
+        // this.sumOfNutrition,
         this.testExclamition=true,
 
       }):super(key:key){
@@ -66,7 +70,13 @@ class FoodDetails extends StatefulWidget {
 
 class _FoodDetailsState extends State<FoodDetails> {
   GlobalKey<PersentBarState> persentBar;
+  int touchedIndex;
 
+
+  int calculatePercent(double value){
+    double sumOfNutrition=this.widget.calories+this.widget.cholesterol+this.widget.carbohydrate+this.widget.fat+this.widget.cellulose+this.widget.protein; ///把所有的营养元素加一起 然后当分母
+    return value*100~/sumOfNutrition;  ///相除并且求出比例 用来生成饼图
+  }
 
   void assignValue(){
     widget.foodInfoList.forEach((element) {
@@ -91,6 +101,8 @@ class _FoodDetailsState extends State<FoodDetails> {
 
   @override
   Widget build(BuildContext context) {
+
+
     List<String> mealsName = [
       CustomLocalizations.of(context).breakfast,
       CustomLocalizations.of(context).lunch,
@@ -185,7 +197,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.6),
+                  height: ScreenTool.partOfScreenHeight(0.57),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
@@ -196,19 +208,20 @@ class _FoodDetailsState extends State<FoodDetails> {
                         children: [
                           NutritionBox(
                             title: CustomLocalizations.of(context).calories,
-                            value: 100.0,
-                            color: Colors.red,
-                            isUnSuitable: this.widget.testExclamition,
+                            // value: 100.0,
+                            value: widget.calories,
+                            color: const Color(0xffa5ef00), ///卡路里
+                            // isUnSuitable: this.widget.testExclamition,
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).fat,
-                            value: 50.0,
-                            color: Colors.yellow,
+                            value: widget.fat,
+                            color: const Color(0xfff8b250),
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).protein,
-                            value: 50.0,
-                            color: Colors.blue,
+                            value: widget.protein,
+                            color: const Color(0xffff5983),///蛋白质
                           ),
                         ],
                       ),
@@ -219,25 +232,51 @@ class _FoodDetailsState extends State<FoodDetails> {
                         children: [
                           NutritionBox(
                             title: CustomLocalizations.of(context).carbohydrate,
-                            value: 50.0,
-                            color: Colors.green,
+                            value: widget.carbohydrate,
+                            color: const Color(0xff09edfe),///碳水
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).cellulose,
-                            value: 50.0,
-                            color: Colors.deepOrange,
+                            value:widget.cellulose,
+                            color: const Color(0xff13d38e),///纤维素
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).cholesterol,
-                            value: 50.0,
-                            color: Colors.purple,
+                            value: widget.cholesterol,
+                            color: const Color(0xff845bef),  ///胆固醇
                           ),
                         ],
                       ),
-                      SizedBox(height: 15,),
                       // a,  ///这里是重量调整器
+                      AspectRatio(  ///AspectRatio 是固定宽高比的组件
+                        aspectRatio: 1/0.8,
+                        child: PieChart(
+                          PieChartData(
+                              pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
+                                setState(() {
+                                  final desiredTouch = pieTouchResponse.touchInput is! PointerExitEvent &&
+                                      pieTouchResponse.touchInput is! PointerUpEvent;
+                                  if (desiredTouch && pieTouchResponse.touchedSection != null) {
+                                    touchedIndex = pieTouchResponse.touchedSectionIndex;
+                                    // touchedIndex = pieTouchResponse.touchedSection.value.toInt();
+                                    ///之前是会报错touchedSection.touchedSectionIndex
+                                  } else {
+                                    touchedIndex = -1;
+                                  }
+                                });
+                              }),
 
-                      PieChartSample2(),
+
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 5,
+                              centerSpaceRadius: 0,  ///改变饼图中间空白的大小
+                              sections: showingSections()),
+                        ),
+                      ),
+
+                      // PieChartSample2(),
 
 
                       // Row(
@@ -309,7 +348,78 @@ class _FoodDetailsState extends State<FoodDetails> {
           ),
         ),
       );
+
+
+
   }
+
+  List<PieChartSectionData> showingSections() {
+    return List.generate(6, (i) {
+      final isTouched = i == touchedIndex;
+      final double fontSize = isTouched ? 25 : 16;
+      final double radius = isTouched ? 120 : 115;
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: const Color(0xffa5ef00), ///卡路里
+            value: this.widget.calories,
+            title: calculatePercent(this.widget.calories).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+
+          );
+        case 1:
+          return PieChartSectionData(
+            color: const Color(0xfff8b250),  ///脂肪
+            value: this.widget.fat,
+            title: calculatePercent(this.widget.fat).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 2:
+          return PieChartSectionData(
+            color: const Color(0xff845bef),  ///胆固醇
+            value: this.widget.cholesterol,
+            title: calculatePercent(this.widget.cholesterol).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 3:
+          return PieChartSectionData(
+            color: const Color(0xff13d38e),///纤维素
+            value: this.widget.cellulose,
+            title: calculatePercent(this.widget.cellulose).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 4:
+          return PieChartSectionData(
+            color: const Color(0xff09edfe),///碳水
+            value: this.widget.carbohydrate,
+            title: calculatePercent(this.widget.carbohydrate).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 5:
+          return PieChartSectionData(
+            color: const Color(0xffff5983),///蛋白质
+            value: this.widget.protein,
+            title: calculatePercent(this.widget.protein).toString()+'%',
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        default:
+          return null;
+      }
+    });
+  }
+
 
   @override
   void initState() {
