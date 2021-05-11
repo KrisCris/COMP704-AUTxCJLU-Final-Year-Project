@@ -680,6 +680,10 @@ class CustomLocalizations {
     }
     return languageCode;
   }
+
+  String nowLanguage(){
+    return this._getLanguageCode();
+  }
   String getContent(String key){
     if(!_localizedValues.containsKey(key)){
       return "no key named '"+key+"'";
