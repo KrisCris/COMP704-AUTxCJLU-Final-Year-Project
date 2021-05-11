@@ -14,7 +14,7 @@ import time
 
 from models.experimental import attempt_load
 from cv.utils.general import check_img_size, non_max_suppression, scale_coords, plot_one_box
-from util.img import base64_to_image, image_to_base64_path
+from util.Common.img import base64_to_image, image_to_base64_path
 
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):

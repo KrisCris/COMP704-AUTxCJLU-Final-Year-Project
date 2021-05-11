@@ -6,18 +6,18 @@ from werkzeug.security import generate_password_hash
 from db.PlanDetail import PlanDetail
 from db.Plan import Plan
 from db.User import User
-from util.user import *
-from util.func import *
+from util.Common.user import *
+from util.Common.func import *
 
 user = Blueprint(name='user', import_name=__name__)
 
 
 @user.route('/login', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["email", "password"])
 @swag_from('docs/user/login.yml')
-def login():
-    email = request.form.get('email').lower()
-    password = request.form.get('password')
+def login(*args, **kwargs):
+    email = args[0].get("email").lower()
+    password = args[0].get("password")
 
     # return user when true
     auth_status = auth_user(password=password, email=email)
@@ -32,11 +32,11 @@ def login():
 
 
 @user.route('/logout', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token"])
 @require_login
 @swag_from('docs/user/logout.yml')
-def logout():
-    uid = request.form.get('uid')
+def logout(*args, **kwargs):
+    uid = args[0].get("uid")
     u = User.getUserByID(uid)
     u.token = genToken(key=uid)
     User.add(u)
@@ -45,13 +45,13 @@ def logout():
 
 
 @user.route('/signup', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["email", "nickname", "password"], optional=["uid"])
 @require_code_check
 @swag_from('docs/user/signup.yml')
-def signup():
-    email = request.form.get('email').lower()
-    nickname = request.form.get('nickname')
-    password = generate_password_hash(request.form.get('password'))
+def signup(*args, **kwargs):
+    email = args[0].get('email').lower()
+    nickname = args[0].get('nickname')
+    password = generate_password_hash(args[0].get("password"))
 
     u = User.getUserByEmail(email)
     if u is None:
@@ -63,19 +63,19 @@ def signup():
             u.nickname = nickname
             u.password = password
             u.group = 1
-            from util.func import get_current_time
+            from util.Common.func import get_current_time
             u.register_date = get_current_time()
             User.add(u)
     return reply_json(1)
 
 
 @user.route('/send_register_code', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["email"])
 @swag_from('docs/user/send_register_code.yml')
-def send_register_code():
+def send_register_code(*args, **kwargs):
     remove_temp_account()
 
-    email = request.form.get('email').lower()
+    email = args[0].get('email').lower()
     u = User.getUserByEmail(email)
 
     if u is None:
@@ -100,10 +100,10 @@ def send_register_code():
 
 
 @user.route('/is_new_email', methods=['GET'])
-@echoErr
+@attributes_receiver(required=["email"])
 @swag_from('docs/user/is_new_email.yml')
-def is_new_email():
-    email = request.values.get('email')
+def is_new_email(*args, **kwargs):
+    email = args[0].get('email')
     u = User.getUserByEmail(email)
     if u is None:
         return reply_json(1)
@@ -114,15 +114,15 @@ def is_new_email():
 
 
 @user.route('/check_code', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["auth_code"], optional=["uid", "email"])
 @swag_from('docs/user/check_code.yml')
-def check_code():
-    auth_code = request.form.get('auth_code')
-    if 'uid' in request.form.keys():
-        uid = request.form.get('uid')
+def check_code(*args, **kwargs):
+    auth_code = args[0].get('auth_code')
+    if args[0].get("uid"):
+        uid = args[0].get('uid')
         u = User.getUserByID(uid)
     else:
-        email = request.form.get('email').lower()
+        email = args[0].get('email').lower()
         u = User.getUserByEmail(email)
 
     if u is None:
@@ -141,13 +141,13 @@ def check_code():
 
 
 @user.route('/cancel_account', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "password"], optional=["email"])
 @require_login
 @require_code_check
 @swag_from('docs/user/cancel_account.yml')
-def cancel_account():
-    uid = request.form.get('uid')
-    password = request.form.get('password')
+def cancel_account(*args, **kwargs):
+    uid = args[0].get('uid')
+    password = args[0].get('password')
     auth_status = auth_user(password=password, uid=uid)
 
     if type(auth_status) != User:
@@ -159,14 +159,14 @@ def cancel_account():
 
 
 @user.route('/modify_password', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "password", "token", "new_password"], optional=["email"])
 @require_login
 @require_code_check
 @swag_from('docs/user/modify_password.yml')
-def modify_password():
-    uid = request.form.get('uid')
-    password = request.form.get('password')
-    new_password = generate_password_hash(request.form.get('new_password'))
+def modify_password(*args, **kwargs):
+    uid = args[0].get('uid')
+    password = args[0].get('password')
+    new_password = generate_password_hash(args[0].get('new_password'))
     auth_status = auth_user(password=password, uid=uid)
     if type(auth_status) != User:
         return reply_json(auth_status)
@@ -179,12 +179,12 @@ def modify_password():
 
 
 @user.route('retrieve_password', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["email", "new_password"], optional=["uid"])
 @require_code_check
 @swag_from('docs/user/retrieve_password.yml')
-def retrieve_password():
-    email = request.form.get('email')
-    password = request.form.get('new_password')
+def retrieve_password(*args, **kwargs):
+    email = args[0].get('email')
+    password = args[0].get('new_password')
     u = User.getUserByEmail(email)
     if u is None:
         reply_json(-6)
@@ -193,10 +193,10 @@ def retrieve_password():
 
 
 @user.route('send_security_code', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["email"])
 @swag_from('docs/user/send_security_code.yml')
-def send_security_code():
-    email = request.form.get('email')
+def send_security_code(*args, **kwargs):
+    email = args[0].get('email')
     u = User.getUserByEmail(email)
 
     if u is None or u.group != 1:
@@ -219,11 +219,11 @@ def send_security_code():
 
 
 @user.route('get_basic_info', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token"])
 @require_login
 @swag_from('docs/user/get_basic_info.yml')
-def get_basic_info():
-    uid = request.form.get('uid')
+def get_basic_info(*args, **kwargs):
+    uid = args[0].get('uid')
     u = User.getUserByID(uid)
 
     # pal
@@ -244,17 +244,17 @@ def get_basic_info():
 
 
 @user.route('modify_basic_info', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "nickname", "gender", "age", "avatar"])
 @require_login
 @swag_from('docs/user/modify_basic_info.yml')
-def modify_basic_info():
-    uid = request.form.get('uid')
+def modify_basic_info(*args, **kwargs):
+    uid = args[0].get('uid')
 
-    nickname = request.form.get('nickname')
-    gender = request.form.get('gender')
-    age = request.form.get('age')
+    nickname = args[0].get('nickname')
+    gender = args[0].get('gender')
+    age = args[0].get('age')
 
-    avatar_data = base64.b64decode(request.form.get('avatar'))
+    avatar_data = base64.b64decode(args[0].get('avatar'))
 
     _test = nickname.replace(' ', '')
     if _test == '':

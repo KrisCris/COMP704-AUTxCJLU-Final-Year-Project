@@ -4,10 +4,11 @@ from flask import Blueprint, request
 from flasgger import swag_from
 
 from db import User, Plan, DailyConsumption, PlanDetail
-from util.user import require_login
-from util.plan import estimateExt
-from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap, echoErr
-from util.Planer.CalsPlaner import calc_calories
+from util.Common.user import require_login
+from util.Common.plan import estimateExt
+from util.Common.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap, \
+    attributes_receiver
+from util.Planner.CalsPlanner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
 
@@ -16,19 +17,20 @@ plan = Blueprint(name='plan', import_name=__name__)
 
 
 @plan.route('query_plan', methods=['GET'])
-@echoErr
+@attributes_receiver(required=["height", "weight", "age", "gender", "plan", "duration", "pal"],
+                     optional=["goal_weight"])
 @swag_from('docs/plan/query_plan.yml')
-def query_plan():
+def query_plan(*args, **kwargs):
     # params
-    height = float(request.values.get('height'))
-    weight = float(request.values.get('weight'))
-    age = int(request.values.get('age'))
+    height = float(args[0].get('height'))
+    weight = float(args[0].get('weight'))
+    age = int(args[0].get('age'))
     # male 1, female 2
-    gender = True if request.values.get('gender') == '1' else False
-    plan_type = int(request.values.get('plan'))
-    duration = int(request.values.get('duration'))
-    goal_weight = weight if plan_type == 2 or plan_type == 3 else float(request.values.get('goal_weight'))
-    physical_activity_level = float(request.values.get('pal'))
+    gender = True if args[0].get('gender') == '1' else False
+    plan_type = int(args[0].get('plan'))
+    duration = int(args[0].get('duration'))
+    goal_weight = weight if plan_type == 2 or plan_type == 3 else float(args[0].get('goal_weight'))
+    physical_activity_level = float(args[0].get('pal'))
 
     # calories calculation
     result = calc_calories(
@@ -55,23 +57,25 @@ def query_plan():
 
 
 @plan.route('set_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(
+    required=["uid", "token", "age", "gender", "weight", "goalWeight", "height", "calories", "maintCalories", "type",
+              "duration", "pal"])
 @require_login
 @swag_from('docs/plan/set_plan.yml')
-def set_plan():
+def set_plan(*args, **kwargs):
     # params
-    uid = request.form.get('uid')
+    uid = args[0].get('uid')
 
-    age = int(request.form.get('age'))
-    gender = int(request.form.get('gender'))
-    weight = float(request.form.get('weight'))
-    goal_weight = float(request.form.get('goalWeight'))
-    height = float(request.form.get('height'))
-    calories = int(request.form.get('calories'))
-    maintCalories = int(request.form.get('maintCalories'))
-    plan_type = int(request.form.get('type'))
-    duration = int(request.form.get('duration'))
-    pal = float(request.form.get('pal'))
+    age = int(args[0].get('age'))
+    gender = int(args[0].get('gender'))
+    weight = float(args[0].get('weight'))
+    goal_weight = float(args[0].get('goalWeight'))
+    height = float(args[0].get('height'))
+    calories = int(args[0].get('calories'))
+    maintCalories = int(args[0].get('maintCalories'))
+    plan_type = int(args[0].get('type'))
+    duration = int(args[0].get('duration'))
+    pal = float(args[0].get('pal'))
 
     # db
     user = User.getUserByID(uid)
@@ -128,13 +132,13 @@ def set_plan():
 
 
 @plan.route('finish_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "weight", "pid", "uid"])
 @require_login
 @swag_from('docs/plan/finish_plan.yml')
-def finish_plan():
-    weight = request.form.get('weight')
-    pid = request.form.get('pid')
-    uid = request.form.get('uid')
+def finish_plan(*args, **kwargs):
+    weight = args[0].get('weight')
+    pid = args[0].get('pid')
+    uid = args[0].get('uid')
     u = User.getUserByID(uid)
     # no more search by uid. completely eliminate unfinished plan.
     p = Plan.getPlanByID(pid)
@@ -151,11 +155,11 @@ def finish_plan():
 
 
 @plan.route('get_current_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token"])
 @require_login
 @swag_from('docs/plan/get_current_plan.yml')
-def get_current_plan():
-    uid = request.form.get('uid')
+def get_current_plan(*args, **kwargs):
+    uid = args[0].get('uid')
     p: 'Plan' = Plan.getUnfinishedPlanByUID(uid).first()
     if p:
         planDetail = PlanDetail.getLatest(p.id)
@@ -172,11 +176,11 @@ def get_current_plan():
 
 
 @plan.route('get_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "pid", "token"])
 @require_login
 @swag_from('docs/plan/get_plan.yml')
-def get_plan():
-    pid = request.form.get('pid')
+def get_plan(*args, **kwargs):
+    pid = args[0].get('pid')
     p = Plan.getPlanByID(pid)
     if p:
         planDetail = PlanDetail.getLatest(p.id)
@@ -194,16 +198,16 @@ def get_plan():
 
 
 @plan.route('update_body_info', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["token", "uid"], optional=["weight", "height", "pal"])
 @require_login
 @swag_from('docs/plan/update_body_info.yml')
-def update_body_info():
+def update_body_info(*args, **kwargs):
     FLAG = False
     FLAG_EXT = 0
-    uid = request.form.get('uid')
-    height = float(request.values.get('height')) if request.values.get('height') is not None else None
-    weight = float(request.values.get('weight')) if request.values.get('weight') is not None else None
-    pal = None if 'pal' not in request.form.keys() else request.form.get('pal')  # physical activity level
+    uid = args[0].get('uid')
+    height = float(args[0].get('height')) if args[0].get('height') is not None else None
+    weight = float(args[0].get('weight')) if args[0].get('weight') is not None else None
+    pal = None if 'pal' not in request.form.keys() else args[0].get('pal')  # physical activity level
 
     u = User.getUserByID(uid)
     if u is None:
@@ -354,37 +358,37 @@ def update_body_info():
 
 
 @plan.route('get_weight_trend', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "begin", "end"])
 @require_login
 @swag_from('docs/plan/get_weight_trend.yml')
-def get_weight_trend():
-    uid = request.form.get('uid')
-    begin = request.form.get('begin')
-    end = request.form.get('end')
+def get_weight_trend(*args, **kwargs):
+    uid = args[0].get('uid')
+    begin = args[0].get('begin')
+    end = args[0].get('end')
 
     trend = PlanDetail.getWeightTrendInPeriod(uid=uid, begin=begin, end=end)
     return reply_json(1, data={'trend': trend})
 
 
 @plan.route('get_plan_weight_trend', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "pid"])
 @require_login
 @swag_from('docs/plan/get_plan_weight_trend.yml')
-def get_plan_weight_trend():
-    pid = request.form.get('pid')
+def get_plan_weight_trend(*args, **kwargs):
+    pid = args[0].get('pid')
     trend = PlanDetail.getWeightTrendInPlan(pid)
     return reply_json(1, data={'trend': trend})
 
 
 @plan.route('extend_update_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "pid", "days"])
 @require_login
 @swag_from('docs/plan/extend_update_plan.yml')
-def extendAndUpdatePlan():
+def extendAndUpdatePlan(*args, **kwargs):
     # only called by type 1 for fixing the end date
-    uid = request.form.get('uid')
-    pid = request.form.get('pid')
-    days = request.form.get('days')
+    uid = args[0].get('uid')
+    pid = args[0].get('pid')
+    days = args[0].get('days')
     user = User.getUserByID(uid)
     subPlan = PlanDetail.getLatest(pid)
     newSubPlan = PlanDetail(
@@ -402,21 +406,21 @@ def extendAndUpdatePlan():
 
 
 @plan.route('extend_plan', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "pid", "days", "token"])
 @require_login
 @swag_from('docs/plan/extend_plan.yml')
-def extendPlan():
-    pid = request.form.get('pid')
-    days = request.form.get('days')
+def extendPlan(*args, **kwargs):
+    pid = args[0].get('pid')
+    days = args[0].get('days')
     return reply_json(1, data={'ext': PlanDetail.getLatest(pid).extend(ext=days).ext})
 
 
 @plan.route('should_update_weight', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["uid", "token", "pid"])
 @require_login
 @swag_from('docs/plan/should_update_weight.yml')
-def shouldUpdateWeight():
-    pid = request.form.get('pid')
+def shouldUpdateWeight(*args, **kwargs):
+    pid = args[0].get('pid')
     subPlan = PlanDetail.getLatest(pid)
     if get_time_gap(subPlan.time) > 3600 * 24 * 7:
         return reply_json(1, data={'shouldUpdate': True})
@@ -425,13 +429,13 @@ def shouldUpdateWeight():
 
 
 @plan.route('get_past_plans', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["token", "uid", "begin", "end"])
 @require_login
 @swag_from('docs/plan/get_past_plans.yml')
-def getPastPlans():
-    uid = request.form.get('uid')
-    begin = request.form.get('begin')
-    end = request.form.get('end')
+def getPastPlans(*args, **kwargs):
+    uid = args[0].get('uid')
+    begin = args[0].get('begin')
+    end = args[0].get('end')
     dataMap = {}
     for result in PlanDetail.getPastRecords(begin=begin, end=end, uid=uid):
         if result.pid not in dataMap.keys():
@@ -486,7 +490,7 @@ def getPastPlans():
                 'exts': 0,
                 'consumption': consumptionRecords
             }
-            
+
         dataMap[result.pid]['weeklyDetails'].append(result.toDict())
 
         if result.ext != dataMap[result.pid]['weeklyDetails'][-1]['ext']:
@@ -496,12 +500,12 @@ def getPastPlans():
 
 
 @plan.route('estimate_extension', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["token", "uid", "pid"])
 @require_login
 @swag_from('docs/plan/estimate_extension.yml')
-def estimateExtension():
-    uid = request.form.get('uid')
-    pid = request.form.get('pid')
+def estimateExtension(*args, **kwargs):
+    uid = args[0].get('uid')
+    pid = args[0].get('pid')
 
     u = User.getUserByID(uid)
     p = Plan.getPlanByID(pid)
@@ -514,11 +518,11 @@ def estimateExtension():
 
 
 @plan.route('rec_intake', methods=['POST'])
-@echoErr
+@attributes_receiver(required=["token", "uid", "pid"])
 @require_login
-def recIntake():
-    uid = request.form.get('uid')
-    pid = request.form.get('pid')
+def recIntake(*args, **kwargs):
+    uid = args[0].get('uid')
+    pid = args[0].get('pid')
     u = User.getUserByID(uid)
     pd = PlanDetail.getLatest(pid)
 
@@ -526,3 +530,24 @@ def recIntake():
     dailyProt: List[float] = [pd.proteinL, pd.proteinH]
 
     DailyConsumption.getAccumulatedCaloriesIntake
+    pass
+
+
+@plan.route("set_meals_intake_ratio", methods=['POST'])
+@attributes_receiver(required=["token", "uid", "pid", "breakfast", "launch", "dinner"])
+@require_login
+def setMealsIntakeRatio(*args):
+    plan = Plan.getPlanByID(args[0].get("pid"))
+    if plan:
+        b = args[0].get("breakfast")
+        l = args[0].get("launch")
+        d = args[0].get("dinner")
+        if (b+l+d) != 10:
+            return reply_json(-2)
+        plan.ratio_breakfast = b
+        plan.ratio_launch = l
+        plan.ratio_dinner = d
+        plan.add()
+        return reply_json(1, data=plan.toDict())
+    else:
+        return reply_json(-6)
