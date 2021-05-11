@@ -122,7 +122,8 @@ class DailyConsumption(db.Model):
             .filter(DailyConsumption.pid == pid)\
             .filter(DailyConsumption.type == mealType)\
             .order_by(DailyConsumption.time.desc()).limit(20)\
-            .order_by(DailyConsumption.time.desc())
+            .from_self()\
+            .order_by(DailyConsumption.time.asc())
         from db.Plan import Plan
         planType = Plan.getPlanByID(pid).type
         dic = {}
