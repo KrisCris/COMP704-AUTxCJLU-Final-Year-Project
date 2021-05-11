@@ -1,10 +1,12 @@
+from typing import List, Any
+
 from flask import Blueprint, request
 from flasgger import swag_from
 
 from db import User, Plan, DailyConsumption, PlanDetail
 from util.user import require_login
 from util.plan import estimateExt
-from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap
+from util.func import reply_json, get_current_time, get_future_time, get_relative_days, get_time_gap, echoErr
 from util.Planer.CalsPlaner import calc_calories
 
 plan = Blueprint(name='plan', import_name=__name__)
@@ -14,6 +16,7 @@ plan = Blueprint(name='plan', import_name=__name__)
 
 
 @plan.route('query_plan', methods=['GET'])
+@echoErr
 @swag_from('docs/plan/query_plan.yml')
 def query_plan():
     # params
@@ -52,6 +55,7 @@ def query_plan():
 
 
 @plan.route('set_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/set_plan.yml')
 def set_plan():
@@ -124,6 +128,7 @@ def set_plan():
 
 
 @plan.route('finish_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/finish_plan.yml')
 def finish_plan():
@@ -146,6 +151,7 @@ def finish_plan():
 
 
 @plan.route('get_current_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/get_current_plan.yml')
 def get_current_plan():
@@ -166,6 +172,7 @@ def get_current_plan():
 
 
 @plan.route('get_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/get_plan.yml')
 def get_plan():
@@ -187,6 +194,7 @@ def get_plan():
 
 
 @plan.route('update_body_info', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/update_body_info.yml')
 def update_body_info():
@@ -346,6 +354,7 @@ def update_body_info():
 
 
 @plan.route('get_weight_trend', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/get_weight_trend.yml')
 def get_weight_trend():
@@ -358,6 +367,7 @@ def get_weight_trend():
 
 
 @plan.route('get_plan_weight_trend', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/get_plan_weight_trend.yml')
 def get_plan_weight_trend():
@@ -367,6 +377,7 @@ def get_plan_weight_trend():
 
 
 @plan.route('extend_update_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/extend_update_plan.yml')
 def extendAndUpdatePlan():
@@ -391,6 +402,7 @@ def extendAndUpdatePlan():
 
 
 @plan.route('extend_plan', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/extend_plan.yml')
 def extendPlan():
@@ -400,6 +412,7 @@ def extendPlan():
 
 
 @plan.route('should_update_weight', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/should_update_weight.yml')
 def shouldUpdateWeight():
@@ -412,6 +425,7 @@ def shouldUpdateWeight():
 
 
 @plan.route('get_past_plans', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/get_past_plans.yml')
 def getPastPlans():
@@ -482,6 +496,7 @@ def getPastPlans():
 
 
 @plan.route('estimate_extension', methods=['POST'])
+@echoErr
 @require_login
 @swag_from('docs/plan/estimate_extension.yml')
 def estimateExtension():
@@ -496,3 +511,18 @@ def estimateExtension():
         return reply_json(1, data={'ext': res})
     else:
         return reply_json(-2)
+
+
+@plan.route('rec_intake', methods=['POST'])
+@echoErr
+@require_login
+def recIntake():
+    uid = request.form.get('uid')
+    pid = request.form.get('pid')
+    u = User.getUserByID(uid)
+    pd = PlanDetail.getLatest(pid)
+
+    dailyCals: List[float] = [pd.caloriesL, pd.caloriesH]
+    dailyProt: List[float] = [pd.proteinL, pd.proteinH]
+
+    DailyConsumption.getAccumulatedCaloriesIntake

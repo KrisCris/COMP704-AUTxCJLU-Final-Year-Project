@@ -36,3 +36,18 @@ with app.app_context():
     db.create_all()
 
 # app.run(host=HOST, port=PORT, debug=DEBUG)
+
+
+def calcNutritionRatio():
+    with app.app_context():
+        from db.Food import Food
+        for food in Food.query.all():
+            protein = food.protein if food.protein else 0
+            carbohydrate = food.carbohydrate if food.carbohydrate else 0
+            fat = food.fat if food.fat else 0
+
+            accW = protein + carbohydrate + fat
+            food.ratioP = round(protein / accW, 3) if accW != 0 else 0
+            food.ratioCH = round(carbohydrate / accW, 3) if accW != 0 else 0
+            food.ratioF = 0 if fat == 0 else 1 - food.ratioP - food.ratioCH
+            food.add()

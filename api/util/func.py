@@ -1,5 +1,6 @@
 import time
 import datetime
+import functools
 
 from flask import request, jsonify
 
@@ -41,3 +42,15 @@ def get_relative_days(base_day, day):
     d2 = datetime.datetime(t2.tm_year, t2.tm_mon, t2.tm_mday)
     interval = d2 - d1
     return interval.days
+
+
+def echoErr(func):
+    @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
+    def inner(*args, **kwargs):
+        try:
+            r = func(*args, **kwargs)
+        except Exception as e:
+            return reply_json(500, data=str(e))
+        else:
+            return r
+    return inner
