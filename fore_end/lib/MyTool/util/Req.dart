@@ -9,7 +9,7 @@ class Req {
   static Dio get instance => _getInstance();
   static Req _instance;
   static PersistCookieJar _cookieJar;
-  static const String baseUrl = "http://connlost.online:5000/";
+  static const String baseUrl = "http://connlost.online:2333/";
   static const int connectOut = 600000;
   static const int receiveOut = 600000;
   static const int maxRepeatTime = 3;
@@ -148,6 +148,9 @@ class Requests {
   }
   static Future<Response> historyMeal(data) async {
     return _postRequest("historyMeal", data, "/food/get_consume_history", "get_consume_history接口", null);
+  }
+  static Future<Response> recommandFood(data) async {
+    return _postRequest("recommandFood", data, "/food/recmd_food", "recmd_food接口", recommandFood);
   }
   static Future<Response> previewPlan(Map data) async {
     Dio dio = Req.instance;

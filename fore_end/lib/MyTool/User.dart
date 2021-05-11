@@ -79,6 +79,7 @@ class User {
     this._isOffline = offline;
     this.stillHaveDialog = false;
     this._shouldUpdateWeight = false;
+
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
     this.meals.value = [
@@ -119,7 +120,7 @@ class User {
         bodyHeight: pre.getDouble("bodyHeight"),
         bodyWeight: pre.getDouble("bodyWeight"),
         registerDate: pre.getInt("registerDate"),
-        offline:false,
+        offline: false,
         age: pre.getInt('age'),
         plan: Plan.readLocal(),
         avatar: pre.getString("avatar"),
@@ -128,6 +129,7 @@ class User {
     }
     return User._instance;
   }
+
   static bool isInit() {
     return User._instance != null;
   }
@@ -161,8 +163,12 @@ class User {
       });
       if (res != null) {
         if (res.data['code'] == 1) {
+          this.meals.value = [
+            new Meal(mealName: "breakfast"),
+            new Meal(mealName: "lunch"),
+            new Meal(mealName: "dinner")
+          ];
           for (Map m in res.data['data']['b']) {
-            this.meals.value[0].foods = [];
             this.meals.value[0].time = m['time'] * 1000;
             this.meals.value[0].addFood(new Food(
                 name: m['name'],
@@ -172,6 +178,7 @@ class User {
                 protein: m['protein'],
                 weight: (m['weight'] as double).floor()));
           }
+
           for (Map m in res.data['data']['l']) {
             this.meals.value[1].foods = [];
             this.meals.value[1].time = m['time'] * 1000;
@@ -421,9 +428,11 @@ class User {
   set shouldUpdateWeight(bool value) {
     this._shouldUpdateWeight = value;
   }
-  set bodyWeight(double weight){
+
+  set bodyWeight(double weight) {
     this._bodyWeight = weight;
   }
+
   set isOffline(bool value) {
     _isOffline = value;
   }
@@ -472,8 +481,10 @@ class User {
   Icon genderIcon() {
     return User.genderIcons[this._gender];
   }
-  int registerTime(){
-    DateTime registerDay = DateTime.fromMillisecondsSinceEpoch(this._registerDate*1000);
+
+  int registerTime() {
+    DateTime registerDay =
+        DateTime.fromMillisecondsSinceEpoch(this._registerDate * 1000);
     DateTime nowDay = DateTime.now();
     Duration duration = nowDay.difference(registerDay);
     return duration.inDays;
@@ -487,16 +498,16 @@ class BodyChangeLog {
 
   BodyChangeLog({this.time, this.weight, this.height});
 
-  Map<String, dynamic> toJson(){
-    Map<String,dynamic> res = {};
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> res = {};
     res['time'] = this.time;
     res['weight'] = this.weight;
     res['height'] = this.height;
     return res;
   }
+
   String getTime() {
     return DateUtil.formatDate(DateTime.fromMillisecondsSinceEpoch(this.time),
         format: "MM-dd");
   }
-
 }

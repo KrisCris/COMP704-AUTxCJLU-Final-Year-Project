@@ -81,6 +81,7 @@ class RecommandFoodCircleState extends State<RecommandFoodCircle>
         if (this.isCheck) {
           this.circleAnimation.reverse();
         } else {
+          print("animation forward");
           this.circleAnimation.forward();
         }
       },

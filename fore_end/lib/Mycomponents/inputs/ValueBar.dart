@@ -151,9 +151,12 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
   @override
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.widgetValue = oldWidget.widgetValue;
-    widget.minVal = oldWidget.minVal;
-    widget.onChange = oldWidget.onChange;
+    if(oldWidget.widgetValue.value != this.widget.widgetValue.value){
+      this.onChangeValue();
+    }
+    // widget.widgetValue = oldWidget.widgetValue;
+    // widget.minVal = oldWidget.minVal;
+    // widget.onChange = oldWidget.onChange;
   }
 
   @override

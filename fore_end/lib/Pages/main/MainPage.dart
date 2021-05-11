@@ -140,25 +140,26 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                 SizedBox(width: 15),
                 Expanded(
                     child: Container(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: this.hints.length,
-                      itemBuilder: (BuildContext ctx, int idx) {
-                        GlobalKey k = new GlobalKey(
-                            debugLabel: "hintBox-" + idx.toString());
-                        return CustomButton(
-                          key: k,
-                          topMargin: 15,
-                          bottomMargin: 15,
-                          width: ScreenTool.partOfScreenWidth(1) - 60,
-                          height: 80,
-                          radius: 5,
-                          text: this.hints[idx].hintContent,
-                          firstColorName: ThemeColorName.TransparentShadow,
-                          tapFunc: (){
-                            this.hints[idx].onClick(k);
-                          },
-                        );
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: this.hints.length,
+                        itemBuilder: (BuildContext ctx, int idx) {
+                          GlobalKey k = new GlobalKey(
+                              debugLabel: "hintBox-" + idx.toString());
+                          return CustomButton(
+                            key: k,
+                            topMargin: 15,
+                            bottomMargin: 15,
+                            width: ScreenTool.partOfScreenWidth(1) - 60,
+                            height: 80,
+                            radius: 5,
+                            text: this.hints[idx].hintContent,
+                            firstColorName: ThemeColorName.TransparentShadow,
+                            tapFunc: () {
+                              this.hints[idx].onClick(k);
+                            },
+                          );
                       }),
                 )),
                 SizedBox(width: 15)
@@ -300,7 +301,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
               "You are now in offline mode, most function is unavailable. Click to login.",
           instanceClose: false,
           onClick: (GlobalKey k) {
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+            Navigator.pushAndRemoveUntil(context,
+                new MaterialPageRoute(builder: (context) {
               return new Welcome();
             }), (route) => false);
             k?.currentState?.dispose();
