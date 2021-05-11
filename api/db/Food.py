@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from db.db import db
 
 
@@ -104,3 +106,17 @@ class Food(db.Model):
     def getFoodsRestricted(category, protein, ch, fat):
         return Food.query.filter(Food.category == category).filter(Food.ratioF <= fat).filter(
             Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
+
+    def getKNN(self, k):
+        tupleList = []
+        import math
+        for f in Food.query.filter(Food.name != self.name).all():
+            tupleList.append((f.id, math.sqrt(
+                math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(
+                    self.ratioCH - f.ratioCH, 2))))
+        sorted(tupleList, key=itemgetter(1), reverse=True)
+        tupleList = tupleList[0:k-1]
+        foodList = []
+        for l in tupleList:
+            foodList.append(Food.getById(l[0]))
+        return foodList
