@@ -115,3 +115,20 @@ class DailyConsumption(db.Model):
             'img': self.img,
             'weight': self.weight,
         }
+
+    @staticmethod
+    def getRecentConsumedSuitableFood(pid, mealType):
+        dcs = DailyConsumption.query\
+            .filter(DailyConsumption.pid == pid)\
+            .filter(DailyConsumption.type == mealType)\
+            .order_by(DailyConsumption.time.desc()).limit(20)\
+            .order_by(DailyConsumption.time.desc())
+        from db.Plan import Plan
+        planType = Plan.getPlanByID(pid).type
+        dic = {}
+        for record in dcs:
+            from db.Food import Food
+            food = Food.getById(record.fid)
+            if food.isSuitable(planType):
+                dic[food.category] = food
+        return dic
