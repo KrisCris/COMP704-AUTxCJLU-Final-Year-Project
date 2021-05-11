@@ -99,3 +99,8 @@ class Food(db.Model):
                 'cellulose': self.cellulose,
                 'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
                 }
+
+    @staticmethod
+    def getFoodsRestricted(category, protein, ch, fat):
+        return Food.query.filter(Food.category == category).filter(Food.ratioF <= fat).filter(
+            Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
