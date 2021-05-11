@@ -1,20 +1,28 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Hint.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
+import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PaintedColumn.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/CustomNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
+import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/SettingPage.dart';
+import 'package:fore_end/Pages/account/UpdateBody.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
 import 'package:fore_end/Pages/main/PlanDetailPage.dart';
@@ -22,7 +30,6 @@ import '../account/AccountPage.dart';
 
 class MainPage extends StatefulWidget {
   User user;
-
   MainPage({@required User user, bool needSetPlan = false, Key key})
       : super(key: key) {
     this.user = user;
@@ -38,25 +45,29 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   List<GlobalKey<CustomIconButtonState>> buttonKey;
   GlobalKey<CustomNavigatorState> navigatorKey;
   TabController ctl;
+  List<Hint> hints;
   @override
   void initState() {
     photoKey = new GlobalKey<TakePhotoState>();
     navigatorKey = new GlobalKey<CustomNavigatorState>();
+    this.hints = [];
     buttonKey = [
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>()
     ];
     this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
-    WidgetsBinding.instance.addPostFrameCallback((msg){
+
+    WidgetsBinding.instance.addPostFrameCallback((msg) {
       widget.user.solvePastDeadline(context);
-      widget.user.remindUpdateWeight(context);
+      // widget.user.remindUpdateWeight(context);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    this.receiveHint();
     this.setNavigator();
     return Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -96,24 +107,72 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     Widget logOut = this.getLogOut();
 
     List<Widget> drawerItems = [
-      account,
-      SizedBox(
-        height: 30,
-      ),
-      setting,
-      SizedBox(
-        height: 30,
-      ),
-      aboutUs,
-      Expanded(child: SizedBox()),
       Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: SizedBox()),
-          logOut,
-          SizedBox(
-            width: 15,
-          )
+          account,
+          setting,
         ],
+      ),
+      SizedBox(
+        height: 30,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          aboutUs,
+          logOut,
+        ],
+      ),
+      SizedBox(
+        height: 30,
+      ),
+      Expanded(
+        child: Container(
+          child: AnimatedCrossFade(
+            firstChild: Center(
+              child: TitleText(
+                text: "No Messages",
+              ),
+            ),
+            secondChild: Row(
+              children: [
+                SizedBox(width: 15),
+                Expanded(
+                    child: Container(
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: this.hints.length,
+                      itemBuilder: (BuildContext ctx, int idx) {
+                        GlobalKey k = new GlobalKey(
+                            debugLabel: "hintBox-" + idx.toString());
+                        return CustomButton(
+                          key: k,
+                          topMargin: 15,
+                          bottomMargin: 15,
+                          width: ScreenTool.partOfScreenWidth(1) - 60,
+                          height: 80,
+                          radius: 5,
+                          text: this.hints[idx].hintContent,
+                          firstColorName: ThemeColorName.TransparentShadow,
+                          tapFunc: (){
+                            this.hints[idx].onClick(k);
+                          },
+                        );
+                      }),
+                )),
+                SizedBox(width: 15)
+              ],
+            ),
+            crossFadeState: this.hints.length <= 0
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: Duration(milliseconds: 500),
+          ),
+          decoration: BoxDecoration(
+              color: MyTheme.convert(ThemeColorName.TransparentShadow),
+              borderRadius: BorderRadius.circular(5)),
+        ),
       ),
       SizedBox(
         height: 15,
@@ -123,49 +182,43 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget getAccount(BuildContext context) {
-    return ListTile(
-      onTap: () {
+    return CustomButton(
+      tapFunc: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return AccountPage();
         }));
       },
-      title: Text(CustomLocalizations.of(context).drawerAccount,
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 35,
-              fontWeight: FontWeight.normal,
-              fontFamily: "Futura",
-              color: Colors.black)),
+      text: CustomLocalizations.of(context).drawerAccount,
+      width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
+      height: 40,
+      firstColorName: ThemeColorName.Error,
+      radius: 5,
     );
   }
 
   Widget getSetting(BuildContext context) {
-    return ListTile(
-      onTap: () {
+    return CustomButton(
+      tapFunc: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
         }));
       },
-      title: Text(CustomLocalizations.of(context).drawerSetting,
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 35,
-              fontWeight: FontWeight.normal,
-              fontFamily: "Futura",
-              color: Colors.black)),
+      text: CustomLocalizations.of(context).drawerSetting,
+      width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
+      firstColorName: ThemeColorName.ComponentBackground,
+      height: 40,
+      radius: 5,
     );
   }
 
   Widget getAboutUs(BuildContext context) {
-    return ListTile(
-      title: Text(CustomLocalizations.of(context).drawerAbout,
-          style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 35,
-              fontWeight: FontWeight.normal,
-              fontFamily: "Futura",
-              color: Colors.black)),
+    return CustomButton(
+      text: CustomLocalizations.of(context).drawerAbout,
+      width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
+      firstColorName: ThemeColorName.Success,
+      height: 40,
+      radius: 5,
     );
   }
 
@@ -173,7 +226,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomIconButton(
       icon: FontAwesomeIcons.signOutAlt,
       backgroundOpacity: 0,
-      iconSize: 30,
+      iconSize: 20,
+      text: CustomLocalizations.of(context).logout,
       onClick: () {
         widget.user.logOut();
         Navigator.pushAndRemoveUntil(context,
@@ -235,5 +289,63 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         fontSize: 12,
         onClick: () {});
     return [takePhotoButton, myDietButton, addPlanButton];
+  }
+
+  void receiveHint() {
+    this.hints.clear();
+
+    if (widget.user.isOffline) {
+      hints.add(new Hint(
+          hintContent:
+              "You are now in offline mode, most function is unavailable. Click to login.",
+          instanceClose: false,
+          onClick: (GlobalKey k) {
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return new Welcome();
+            }), (route) => false);
+            k?.currentState?.dispose();
+          }));
+    }
+    if (widget.user.shouldUpdateWeight) {
+      hints.add(new Hint(
+          instanceClose: false,
+          hintContent:
+              "1 week had passed since your last body weight updating. It's time to update!",
+          onClick: (GlobalKey k) {
+            showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                UpdateBody updateBody = new UpdateBody(
+                    text:
+                        "Before change your plan, please record your current weight",
+                    needHeight: false);
+                updateBody.onUpdate = () async {
+                  User u = User.getInstance();
+                  Response res = await Requests.finishPlan({
+                    "uid": u.uid,
+                    "token": u.token,
+                    "pid": u.plan?.id ?? -1,
+                    "weight": updateBody.weight.widgetValue.value.floor()
+                  });
+                  if (res != null && res.data['code'] == 1) {
+                    k?.currentState?.dispose();
+                    Navigator.pop(context, true);
+                  } else {
+                    Fluttertoast.showToast(msg: "update failed");
+                  }
+                };
+                return updateBody;
+              },
+            ).then((val) {
+              if (val == true) {
+                Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                  return GuidePage(
+                    firstTime: false,
+                  );
+                }));
+              }
+            });
+          }));
+    }
   }
 }

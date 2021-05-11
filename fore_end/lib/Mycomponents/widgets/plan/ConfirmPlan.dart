@@ -304,7 +304,7 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
     Widget dailyVal = ValueText<int>(
-      numUpper: this.dailyCalories.floor(),
+      numLower: this.dailyCalories.floor(),
       unit: "KCal",
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
@@ -328,7 +328,7 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
     Widget doneVal = ValueText<int>(
-      numUpper: this.dailyCaloriesAfterDone.floor(),
+      numLower: this.dailyCaloriesAfterDone.floor(),
       unit: "KCal",
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,

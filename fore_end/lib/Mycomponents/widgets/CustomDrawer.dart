@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Hint.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 
 ///自定义的侧边栏，基本与官方侧边栏一样
 class CustomDrawer extends StatefulWidget {
@@ -73,7 +75,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       ),
       info,
       SizedBox(
-        height: 70,
+        height: 40,
       )
     ];
     items.addAll(widget.children);
@@ -89,17 +91,40 @@ class _CustomDrawerState extends State<CustomDrawer> {
            filter: ImageFilter.blur(sigmaX:5.0,sigmaY:5.0),
            child:  Opacity(
              opacity: 0.75,
-             child: ConstrainedBox(
-               constraints: BoxConstraints.expand(width: _width),
-               child: Material(
-                 elevation: widget.elevation,
-               ),
+             child: ClipRect(
+              child: CustomPaint(
+                foregroundPainter: LinePainter(
+                  k: 1,
+                  lineWidth: 2,
+                  lineGap: 4,
+                  context: context,
+                  color: MyTheme.convert(ThemeColorName.TransparentShadow),
+                ),
+                child:Container(
+                  width: ScreenTool.partOfScreenWidth(1),
+                  color: MyTheme.convert(ThemeColorName.PageBackground),
+                ),
+              ),
              ),
            ),
          ),
-         Column(
-           children: items
+         Row(
+           children: [
+             SizedBox(
+               width: 15,
+             ),
+             Expanded(
+               child:
+               Column(
+                   children: items
+               ),
+             ),
+             SizedBox(
+               width: 15,
+             ),
+           ],
          )
+
        ],
       ),
 
@@ -109,9 +134,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Widget getDrawerHeader(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 15,
-        ),
         this.getCircleAvatar(),
         SizedBox(
           width: 20,
@@ -125,14 +147,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     fontSize: 25,
                     fontWeight: FontWeight.normal,
                     fontFamily: "Futura",
-                    color: Colors.black)),
+                    color: MyTheme.convert(ThemeColorName.NormalText))),
             Text(CustomLocalizations.of(context).registerDuration+ User.getInstance().registerTime().toString()+CustomLocalizations.of(context).days,
                 style: TextStyle(
                     decoration: TextDecoration.none,
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                     fontFamily: "Futura",
-                    color: Colors.black38)),
+                    color: MyTheme.convert(ThemeColorName.NormalText))),
           ],
         ),
         Expanded(child: SizedBox()),
@@ -144,9 +166,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Navigator.of(context).pop();
           },
         ),
-        SizedBox(
-          width: 15,
-        )
       ],
     );
   }

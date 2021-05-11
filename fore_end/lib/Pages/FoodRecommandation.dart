@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/Meal.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -31,6 +33,7 @@ class FoodRecommandation extends StatefulWidget {
 class FoodRecommandationState extends State<FoodRecommandation> {
   List<Food> selectedFood;
   Food nowFood;
+  double caloriesLimit;
   GlobalKey<SwitchFoodInfoAreaState> foodinfo;
   GlobalKey<CrossFadeTextState> totalCal;
   GlobalKey<PersentBarState> persentBar;
@@ -44,6 +47,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     if(widget.mealType == null){
         widget.mealType = "";
     }
+    User u = User.getInstance();
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit;
     super.initState();
   }
 
@@ -216,6 +221,22 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
                     radius: 5,
+                    tapFunc: ()async{
+                      User u = User.getInstance();
+                      bool newMeal = false;
+                      Meal m = u.getMealByName(widget.mealType);
+                      if(m == null){
+                        m = new Meal(mealName: widget.mealType);
+                        newMeal = true;
+                      }
+                      for(Food f in this.selectedFood){
+                        m.addFood(f);
+                      }
+                      if(newMeal){
+                        u.meals.value.add(m);
+                      }
+                      m.save();
+                    },
                   ),
                   SizedBox(width: 20)
                 ],
@@ -230,7 +251,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
 
   void redrawProgressBar(){
     this.persentBar.currentState.changePersentByIndex(
-        0, this.calculateTotalCalorie() / 2000);
+        0, this.calculateTotalCalorie() / this.caloriesLimit);
   }
   void updateCalories(){
     this.totalCal.currentState.changeTo(

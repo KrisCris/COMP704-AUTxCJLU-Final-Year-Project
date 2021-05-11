@@ -9,7 +9,7 @@ class Req {
   static Dio get instance => _getInstance();
   static Req _instance;
   static PersistCookieJar _cookieJar;
-  static const String baseUrl = "http://connlost.online:23333/";
+  static const String baseUrl = "http://connlost.online:5000/";
   static const int connectOut = 600000;
   static const int receiveOut = 600000;
   static const int maxRepeatTime = 3;
