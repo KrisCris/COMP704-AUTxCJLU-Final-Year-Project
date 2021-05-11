@@ -105,8 +105,7 @@ class Food(db.Model):
                      'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
                      }
         from db.Category import Category
-        cate_dict = Category.getCateByID(self.id)
-        food_dict["cate_info"] = cate_dict
+        food_dict["cate_info"] = Category.getCateByID(self.category).toDict()
         return food_dict
 
     @staticmethod
@@ -118,13 +117,13 @@ class Food(db.Model):
         tupleList = []
         import math
         foods = Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName).filter(
-            Food.name == self.category) if matchCate else Food.query.filter(Food.name != self.name)
+            Food.category == self.category) if matchCate else Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName)
         for f in foods.all():
             tupleList.append((f.id, math.sqrt(
                 math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(
                     self.ratioCH - f.ratioCH, 2))))
-        sorted(tupleList, key=itemgetter(1), reverse=True)
-        tupleList = tupleList[0:k - 1]
+        tupleList = sorted(tupleList, key=itemgetter(1), reverse=False)
+        tupleList = tupleList[0:k]
         foodList = []
         for l in tupleList:
             foodList.append(Food.getById(l[0]))
@@ -156,19 +155,19 @@ class Food(db.Model):
             dict2[i] = None
 
         def isFull(dic: dict):
-            for i in dic:
+            for i in dic.values():
                 if i is None:
                     return False
             else:
                 return True
 
-        for food in Food.query.all().order_by(func.rand()):
+        for food in Food.query.order_by(func.rand()).all():
             if food.isSuitable(planType):
                 dict1[food.category] = food
                 if isFull(dict1):
                     break
 
-        for food in Food.query.all().order_by(func.rand()):
+        for food in Food.query.order_by(func.rand()).all():
             if food.isSuitable(planType):
                 dict2[food.category] = food
                 if isFull(dict2):

@@ -531,3 +531,23 @@ def recIntake(*args, **kwargs):
 
     DailyConsumption.getAccumulatedCaloriesIntake
     pass
+
+
+@plan.route("set_meals_intake_ratio", methods=['POST'])
+@attributes_receiver(required=["token", "uid", "pid", "breakfast", "launch", "dinner"])
+@require_login
+def setMealsIntakeRatio(*args):
+    plan = Plan.getPlanByID(args[0].get("pid"))
+    if plan:
+        b = args[0].get("breakfast")
+        l = args[0].get("launch")
+        d = args[0].get("dinner")
+        if (b+l+d) != 10:
+            return reply_json(-2)
+        plan.ratio_breakfast = b
+        plan.ratio_launch = l
+        plan.ratio_dinner = d
+        plan.add()
+        return reply_json(1, data=plan.toDict())
+    else:
+        return reply_json(-6)
