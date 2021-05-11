@@ -42,14 +42,14 @@ class Food {
   Food.fromJson(Map<String,dynamic> json){
     this.id = json['id'];
     this.name = json['name'];
-    this.picture = json['picture'];
-    this.weight = json['weight'];
+    this.picture = json['picture']??json['img'];
+    this.weight = json['weight']??0;
     this.calorie =json['calories'];
     this.protein = json['protein'];
-    this.fat = 0;
-    this.cholesterol = 0;
-    this.cellulose = 0;
-    this.category = 0;
+    this.fat = json['fat']??0;
+    this.cholesterol = json['cholesterol']??0;
+    this.cellulose = json['cellulose']??0;
+    this.category = json['category']??0;
   }
 
   Map<String, dynamic> toJson(){
