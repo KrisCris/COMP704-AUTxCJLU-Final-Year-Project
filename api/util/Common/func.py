@@ -53,4 +53,36 @@ def echoErr(func):
             return reply_json(500, data=str(e))
         else:
             return r
+
     return inner
+
+
+def attributes_receiver(required: list, optional: list = []):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            from flask import request
+            attr_map = {}
+            missing = []
+            if request.method == 'POST':
+                source = request.form
+            else:
+                source = request.values
+
+            for attr in required:
+                val = source.get(attr)
+                if val is None:
+                    missing.append(attr)
+                else:
+                    attr_map[attr] = val
+            if len(missing) > 0:
+                return reply_json(403, msg="Missing at least the following attribute(s): "+str(missing), data=None)
+            for attr in optional:
+                val = source.get(attr)
+                if val is not None:
+                    attr_map[attr] = val
+            return func(attr_map)
+
+        return wrapper
+
+    return decorator
