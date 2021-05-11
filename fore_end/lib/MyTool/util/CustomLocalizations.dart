@@ -144,6 +144,10 @@ class CustomLocalizations {
       "en":"Take a Picture of your food!",
       "zh":"为你的食物拍张照吧!"
     },
+    "logout":{
+      "en":"logout",
+      "zh":"登出"
+    },
     "loginState":{
       "en":"checking login state...",
       "zh":"正在检测登录状态..."
@@ -849,6 +853,9 @@ class CustomLocalizations {
   }
   get loginAccount{
     return getContent("loginAccount");
+  }
+  get logout{
+    return getContent("logout");
   }
   get shedWeightInfo{
     return getContent("shedWeightInfo");
