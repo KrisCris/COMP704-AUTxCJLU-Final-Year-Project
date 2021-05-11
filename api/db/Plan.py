@@ -15,13 +15,19 @@ class Plan(db.Model):
     achievedWeight = db.Column(db.FLOAT)
     realEnd = db.Column(db.INTEGER)
     completed = db.Column(db.BOOLEAN, nullable=False, default=False)
+    ratio_breakfast = db.Column(db.INTEGER, nullable=False, default=3)
+    ratio_launch = db.Column(db.INTEGER, nullable=False, default=4)
+    ratio_dinner = db.Column(db.INTEGER, nullable=False, default=3)
 
-    def __init__(self, uid, begin, end, plan_type, goal_weight):
+    def __init__(self, uid, begin, end, plan_type, goal_weight, breakfast=3, launch=4, dinner=3):
         self.uid = uid
         self.begin = begin
         self.end = end
         self.type = plan_type
         self.goalWeight = goal_weight
+        self.ratio_launch = launch
+        self.ratio_dinner = dinner
+        self.ratio_breakfast = breakfast
 
     @staticmethod
     def getUnfinishedPlanByUID(uid):
@@ -65,6 +71,6 @@ class Plan(db.Model):
             'begin': self.begin, 'end': self.end,
             'type': self.type, 'goalWeight': self.goalWeight,
             'achievedWeight': self.achievedWeight, 'realEnd': self.realEnd,
-            'hasCompleted': self.completed
+            'hasCompleted': self.completed,
+            'ratioB': self.ratio_breakfast, 'ratioL': self.ratio_launch, 'ratioD': self.ratio_dinner
         }
-
