@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 abstract class MyAnimation<T> implements ValueListenable<T>{
   AnimationController ctl;
   Animation animation;
-  bool isFinish;
+  bool _isFinish;
 
   @override
   T get value => animation.value;
@@ -26,13 +26,13 @@ class TweenAnimation<T> implements MyAnimation<T>{
   Animation animation;
   @override
   AnimationController ctl;
-  bool isFinish = false;
+  bool _isFinish = false;
   int completeTime;
   List<Function> listenerList = new List<Function>();
   List<AnimationStatusListener> statusListenerList = new List<AnimationStatusListener>();
   TweenAnimation():super() {}
   void initAnimation(T tweenStart, T tweenEnd, int duration, TickerProvider tk,VoidCallback listener) {
-    this.isFinish = false;
+    this._isFinish = false;
     this.completeTime = 0;
     this.tween = new Tween<T>(begin: tweenStart, end: tweenEnd);
     if(this.ctl != null){
@@ -53,6 +53,9 @@ class TweenAnimation<T> implements MyAnimation<T>{
     }
     this.animation = this.tween.animate(this.ctl);
   }
+  T currentValue(){
+    return this.tween.evaluate(this.ctl);
+  }
   void expandNewEnd(T end){
     this.tween.begin = this.tween.end;
     this.tween.end = end;
@@ -61,17 +64,25 @@ class TweenAnimation<T> implements MyAnimation<T>{
   bool isDismissed(){
     return this.animation.status == AnimationStatus.dismissed;
   }
-
+  bool isCompleted(){
+    return this.animation.status == AnimationStatus.completed;
+  }
+  bool isForward(){
+    return this.animation.status == AnimationStatus.forward;
+  }
+  bool isReverse(){
+    return this.animation.status == AnimationStatus.reverse;
+  }
   void setNewEnd(T end){
     this.tween.end = end;
     this.animation = this.tween.animate(this.ctl);
   }
   void basicStaticListener(AnimationStatus status){
     if (status == AnimationStatus.completed) {
-      this.isFinish = true;
+      this._isFinish = true;
       this.completeTime +=1;
     } else if (status == AnimationStatus.dismissed) {
-      this.isFinish = false;
+      this._isFinish = false;
     }
 
   }
@@ -102,14 +113,14 @@ class TweenAnimation<T> implements MyAnimation<T>{
     this.ctl.stop();
   }
   void beginAnimation(){
-    this.isFinish = false;
+    this._isFinish = false;
     this.ctl.forward();
   }
   void reverse() {
     this.ctl.reverse();
   }
   void reverseAnimation(){
-    if (this.isFinish) {
+    if (this._isFinish) {
       this.ctl.reverse();
     }
   }
