@@ -56,8 +56,12 @@ class PersentBarState extends State<PersentBar> with TickerProviderStateMixin {
         persent < sections[index].minPersent) {
       newColor = sections[index].lowColor;
     }
+    PersentSection nowSection = sections[index];
+    if(this.changes.isForward() || this.changes.isReverse()){
+      nowSection = this.changes.currentValue();
+    }
     this.changes.initAnimation(
-        sections[index],
+        nowSection,
         PersentSection(
           color: newColor,
           lowColor: sections[index].lowColor,
