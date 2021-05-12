@@ -1,12 +1,18 @@
+import 'dart:convert';
+
+import 'package:date_format/date_format.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Picker_Tool.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
@@ -20,46 +26,21 @@ import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 
 class FoodDetails extends StatefulWidget {
-  List<Map> foodInfoList=new List<Map>();
-  Map<String,Map> foodsInfo=new Map<String,Map>();
+  Food currentFood;
+  bool isSuitable;
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
-  String foodName;
-  double calories;
-  double carbohydrate;
-  double cellulose;
-  double cholesterol;
-  double fat;
-  double protein;
-  Food basicFood;
-  // double sumOfNutrition;
-
-
   bool testExclamition;
 
 
   ///构建函数
   FoodDetails(
       { Key key,
-        this.foodInfoList,
-        this.foodName="defaultFood",
-        this.calories=100,
-        this.fat=20,
-        this.cholesterol=20,
-        this.cellulose=20,
-        this.carbohydrate=20,
-        this.protein=20,
-        // this.sumOfNutrition,
+        this.currentFood,
         this.testExclamition=true,
-
+        this.isSuitable=false,
       }):super(key:key){
-    this.foodInfoList=foodInfoList;
-    this.foodName=foodName;
-    this.calories=calories;
-    this.protein=protein;
-    this.carbohydrate=carbohydrate;
-    this.cellulose=cellulose;
-    this.cholesterol=cholesterol;
-    this.fat=fat;
+
+    this.isSuitable=isSuitable;
     this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
     this.testExclamition=testExclamition;
   }
@@ -70,39 +51,43 @@ class FoodDetails extends StatefulWidget {
 
 class _FoodDetailsState extends State<FoodDetails> {
   GlobalKey<PersentBarState> persentBar;
+  List<Food> recommendFoods;
   int touchedIndex;
 
 
-  int calculatePercent(double value){
-    double sumOfNutrition=this.widget.calories+this.widget.cholesterol+this.widget.carbohydrate+this.widget.fat+this.widget.cellulose+this.widget.protein; ///把所有的营养元素加一起 然后当分母
-    return value*100~/sumOfNutrition;  ///相除并且求出比例 用来生成饼图
+  @override
+  void initState()  {
+    this.recommendFoods = [];
+    this.getRecomFoods(widget.currentFood.id);
+
   }
 
-  void assignValue(){
-    widget.foodInfoList.forEach((element) {
-      element.forEach((key, value) {
-          widget.foodName=key;
-          widget.fat=value["fat"]??10;
-          widget.cholesterol=value["cholesterol"]??10;
-          widget.cellulose=value["cellulose"]??10;
-          widget.carbohydrate=value["carbohydrate"]??10;
-          widget.protein=value["protein"]??10;
-          widget.calories=value["calories"]??10;
-      });
-    });
-    print("success");
-    setState(() {
-
-    });
+  double calculatePercent(String label){
+    return widget.currentFood.calculatePersent(label);
   }
 
 
+  void getRecomFoods(int foodId) async {
+    User u= User.getInstance();
+    Response res = await Requests.getRecommandFood({
+      'uid':u.uid,
+      'pid': u.plan.id,
+      'fid': foodId,
+      'token':u.token,
+    });
+    for(Map m in res.data['data']['recmdFoods']){
+      Food f = Food.fromJson(m);
+      this.recommendFoods.add(f);
+    }
+    if(res.data['data']['suitable'] == true) {
+      widget.isSuitable = true;
+    }
+    setState(() {});
+  }
 
 
   @override
   Widget build(BuildContext context) {
-
-
     List<String> mealsName = [
       CustomLocalizations.of(context).breakfast,
       CustomLocalizations.of(context).lunch,
@@ -155,36 +140,38 @@ class _FoodDetailsState extends State<FoodDetails> {
                   borderRadius: BorderRadius.circular(10),
                   // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.15),
+                height: ScreenTool.partOfScreenHeight(0.2),
                 width: ScreenTool.partOfScreenWidth(0.95),
-                child: Image.asset('image/fruit-main.jpg',fit: BoxFit.cover,),
+                // child: Image.asset('image/fruit-main.jpg',fit: BoxFit.cover,),
+                child: Image.memory(base64.decode(widget.currentFood.picture), height:50, width:50, fit: BoxFit.fitWidth, gaplessPlayback:true,),
               ),
 
               SizedBox(height:15),
-
-
               ///推荐食物可展开区域
-              RecommendBox(title:CustomLocalizations.of(context).recommendBoxTitle ,),
+              ///当拥有数据的时候再去生成
+              RecommendBox(
+                title:CustomLocalizations.of(context).recommendBoxTitle,
+                foods: this.recommendFoods,
+                isSuitable: this.widget.isSuitable,
+                foodName: this.widget.currentFood.name,),
               SizedBox(height:15),
-
-
               ///进度条
               PersentBar(key: persentBar,
                   width: 0.95,
                   height: 5,
                   sections: [
                     PersentSection(
-                      normalColor: Colors.red,
+                      normalColor:const Color(0xff09edfe),///碳水
                       persent: 1000/2000,  ///这里的数字先暂时写死 来测试
                       name: "Calorie Persent",
                     ),
                     PersentSection(
-                      normalColor: Colors.yellow,
+                      normalColor: const Color(0xfff8b250),
                       persent: 500/2000,  ///这里的数字先暂时写死 来测试
                       name: "Fat Persent",
                     ),
                     PersentSection(
-                      normalColor: Colors.blue,
+                      normalColor: const Color(0xffff5983),
                       persent: 500/2000,  ///这里的数字先暂时写死 来测试
                       name: "Protein Persent",
                     ),
@@ -207,20 +194,19 @@ class _FoodDetailsState extends State<FoodDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           NutritionBox(
-                            title: CustomLocalizations.of(context).calories,
-                            // value: 100.0,
-                            value: widget.calories,
-                            color: const Color(0xffa5ef00), ///卡路里
-                            // isUnSuitable: this.widget.testExclamition,
+                            title: CustomLocalizations.of(context).carbohydrate,
+                            value: widget.currentFood.carbohydrate,
+                            color: const Color(0xff09edfe),///碳水
                           ),
+
                           NutritionBox(
                             title: CustomLocalizations.of(context).fat,
-                            value: widget.fat,
+                            value: widget.currentFood.fat,
                             color: const Color(0xfff8b250),
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).protein,
-                            value: widget.protein,
+                            value: widget.currentFood.protein,
                             color: const Color(0xffff5983),///蛋白质
                           ),
                         ],
@@ -230,20 +216,24 @@ class _FoodDetailsState extends State<FoodDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          NutritionBox(
-                            title: CustomLocalizations.of(context).carbohydrate,
-                            value: widget.carbohydrate,
-                            color: const Color(0xff09edfe),///碳水
-                          ),
+
                           NutritionBox(
                             title: CustomLocalizations.of(context).cellulose,
-                            value:widget.cellulose,
+                            value:widget.currentFood.cellulose,
                             color: const Color(0xff13d38e),///纤维素
                           ),
                           NutritionBox(
                             title: CustomLocalizations.of(context).cholesterol,
-                            value: widget.cholesterol,
+                            value: widget.currentFood.cholesterol,
                             color: const Color(0xff845bef),  ///胆固醇
+                          ),
+                          NutritionBox(
+                            title: CustomLocalizations.of(context).calories,
+                            // value: 100.0,
+                            value: widget.currentFood.calorie,
+                            color: const Color(0xffa5ef00), ///卡路里
+                            units: "ka",
+                            // isUnSuitable: this.widget.testExclamition,
                           ),
                         ],
                       ),
@@ -354,26 +344,25 @@ class _FoodDetailsState extends State<FoodDetails> {
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(6, (i) {
+    return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
       final double fontSize = isTouched ? 25 : 16;
       final double radius = isTouched ? 120 : 115;
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xffa5ef00), ///卡路里
-            value: this.widget.calories,
-            title: calculatePercent(this.widget.calories).toString()+'%',
+            color: const Color(0xff09edfe),///碳水
+            value: this.widget.currentFood.carbohydrate,
+            title: (calculatePercent('carbohydrate')*100).floor().toString()+'%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-
           );
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff8b250),  ///脂肪
-            value: this.widget.fat,
-            title: calculatePercent(this.widget.fat).toString()+'%',
+            value: this.widget.currentFood.fat,
+            title: (calculatePercent('fat')*100).floor().toString().toString()+'%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -381,8 +370,8 @@ class _FoodDetailsState extends State<FoodDetails> {
         case 2:
           return PieChartSectionData(
             color: const Color(0xff845bef),  ///胆固醇
-            value: this.widget.cholesterol,
-            title: calculatePercent(this.widget.cholesterol).toString()+'%',
+            value: this.widget.currentFood.cholesterol,
+            title: (calculatePercent('cholesterol')*100).floor().toString().toString()+'%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -390,30 +379,23 @@ class _FoodDetailsState extends State<FoodDetails> {
         case 3:
           return PieChartSectionData(
             color: const Color(0xff13d38e),///纤维素
-            value: this.widget.cellulose,
-            title: calculatePercent(this.widget.cellulose).toString()+'%',
+            value: this.widget.currentFood.cellulose,
+            title: (calculatePercent('cellulose')*100).floor().toString().toString()+'%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 4:
-          return PieChartSectionData(
-            color: const Color(0xff09edfe),///碳水
-            value: this.widget.carbohydrate,
-            title: calculatePercent(this.widget.carbohydrate).toString()+'%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          );
-        case 5:
+
           return PieChartSectionData(
             color: const Color(0xffff5983),///蛋白质
-            value: this.widget.protein,
-            title: calculatePercent(this.widget.protein).toString()+'%',
+            value: this.widget.currentFood.protein,
+            title: (calculatePercent('protein')*100).floor().toString().toString()+'%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
+
         default:
           return null;
       }
@@ -421,8 +403,5 @@ class _FoodDetailsState extends State<FoodDetails> {
   }
 
 
-  @override
-  void initState() {
-    // this.assignValue();
-  }
+
 }
