@@ -73,7 +73,7 @@ class ValueBar<T extends num> extends StatefulWidget
       Color effectColor = Colors.black12,
         Color warningColor,
       Color fontColor,
-      this.blockWidth = 10,
+      this.blockWidth = 20,
       @required T minVal,
       @required T maxVal,
       @required T initVal})
