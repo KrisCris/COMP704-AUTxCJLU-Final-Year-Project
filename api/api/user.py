@@ -180,16 +180,17 @@ def modify_password(*args, **kwargs):
 
 @user.route('retrieve_password', methods=['POST'])
 @attributes_receiver(required=["email", "new_password"], optional=["uid"])
-@require_code_check
 @swag_from('docs/user/retrieve_password.yml')
 def retrieve_password(*args, **kwargs):
     email = args[0].get('email')
     password = args[0].get('new_password')
     u = User.getUserByEmail(email)
     if u is None:
-        reply_json(-6)
+        return reply_json(-6)
     else:
-        pass
+        u.password = generate_password_hash(password)
+        u.add()
+        return reply_json(1)
 
 
 @user.route('send_security_code', methods=['POST'])
@@ -272,3 +273,25 @@ def modify_basic_info(*args, **kwargs):
 
     u.add()
     return reply_json(1)
+
+
+@user.route("set_meals_intake_ratio", methods=['POST'])
+@attributes_receiver(required=["token", "uid", "breakfast", "launch", "dinner"])
+@require_login
+@swag_from('docs/user/set_meals_intake_ratio.yml')
+def setMealsIntakeRatio(*args):
+    u = User.getUserByID(args[0].get("uid"))
+
+    b = args[0].get("breakfast")
+    l = args[0].get("launch")
+    d = args[0].get("dinner")
+
+    if (b + l + d) != 10:
+        return reply_json(-2, msg="should added up to 100")
+
+    u.b_percent = b
+    u.l_percent = l
+    u.d_percent = d
+    u.add()
+
+    return reply_json(1, data=u.toDict())

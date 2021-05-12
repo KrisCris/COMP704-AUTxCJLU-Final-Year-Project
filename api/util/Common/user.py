@@ -4,7 +4,6 @@ import smtplib
 import string
 import uuid
 
-from flask import request
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
