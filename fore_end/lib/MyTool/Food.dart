@@ -61,9 +61,9 @@ class Food {
   }
 
   Map<String, dynamic> toJson(){
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this._name;
-    data['cnName'] == this._cnName;
+    data['cnName'] = this._cnName;
     data['id'] = this.id;
     data['calories'] = this.calorie;
     data['carbohydrate']= this.carbohydrate;
@@ -78,7 +78,11 @@ class Food {
   String getName(BuildContext context){
     String language = CustomLocalizations.of(context).nowLanguage();
     if(language == 'zh'){
-      return _cnName;
+      if(_cnName != null){
+        return _cnName;
+      }else{
+        return _name;
+      }
     }else{
       return _name;
     }

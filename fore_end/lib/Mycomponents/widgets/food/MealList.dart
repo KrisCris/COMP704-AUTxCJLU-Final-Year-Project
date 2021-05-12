@@ -84,30 +84,23 @@ class MealViewState extends State<MealView>{
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Icon(
+                        widget.mealsListData.getIcon(), size: 30,
+                        color: MyTheme.convert(ThemeColorName.NormalIcon)),
 
-                    Row(
-                      children: [
-                        Icon(
-                            widget.mealsListData.getIcon(), size: 30,
-                            color: MyTheme.convert(ThemeColorName.NormalIcon)),
-
-                        SizedBox(width: 20,),
-                        Text(
-                          ///标题
-                          CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Futura",
-                              fontSize: 18,
-                              letterSpacing: 0.2,
-                              color: MyTheme.convert(ThemeColorName.HeaderText)
-                          ),
-                        ),
-                      ],
+                    SizedBox(width: 20,),
+                    Text(
+                      ///标题
+                      CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Futura",
+                          fontSize: 18,
+                          letterSpacing: 0.2,
+                          color: MyTheme.convert(ThemeColorName.HeaderText)
+                      ),
                     ),
-
-                    SizedBox(height: 10,),
 
                     Expanded(
 
@@ -117,8 +110,7 @@ class MealViewState extends State<MealView>{
                         child: Container(
                           width: 100,
                           child: Text(
-                            "zhangshuaikangf\nhhheesjuaikangses\nsdjioauaikanguaikanghsdisd",
-                            // widget.mealsListData.listFoodsName(),
+                            widget.mealsListData.listFoodsName(context),
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             maxLines: 6,
@@ -132,34 +124,6 @@ class MealViewState extends State<MealView>{
                             ),
                           ),
                         ),
-                        // child: Row(
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: <Widget>[
-                        //     ///现在名字太长的食物会溢出，比如荷包蛋，应该在外面包个container，文字本身的溢出和自动换行没用
-                        //
-                        //     Container(
-                        //       width: 100,
-                        //       child: Text(
-                        //         "zhangshuaikangfoood\nhhheesjuaikangses\nsdjioauaikanguaikanghsdisd",
-                        //         // widget.mealsListData.listFoodsName(),
-                        //         overflow: TextOverflow.ellipsis,
-                        //         softWrap: false,
-                        //         maxLines: 6,
-                        //         style: TextStyle(
-                        //           decoration: TextDecoration.none,
-                        //           fontWeight: FontWeight.w500,
-                        //           fontFamily: "Futura",
-                        //           fontSize: 12,
-                        //           letterSpacing: 0.2,
-                        //           color: MyTheme.convert(ThemeColorName.NormalText),
-                        //         ),
-                        //       ),
-                        //     )
-                        //
-                        //
-                        //   ],
-                        // ),
                       ),
                     ),
                     Row(

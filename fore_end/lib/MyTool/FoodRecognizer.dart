@@ -58,6 +58,7 @@ class FoodRecognizer{
     if(m != null){
       FoodRecognizer.addFoodToMeal(m);
       // List<List> totalFoodInfo=new List<List>();
+      String temp = jsonEncode(m.foods);
       Response res = await Requests.consumeFoods({
         "uid": u.uid,
         "token":u.token,
