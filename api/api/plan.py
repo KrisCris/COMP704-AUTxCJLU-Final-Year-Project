@@ -132,7 +132,7 @@ def set_plan(*args, **kwargs):
 
 
 @plan.route('finish_plan', methods=['POST'])
-@attributes_receiver(required=["uid", "token", "weight", "pid", "uid"])
+@attributes_receiver(required=["uid", "token", "weight", "pid"])
 @require_login
 @swag_from('docs/plan/finish_plan.yml')
 def finish_plan(*args, **kwargs):

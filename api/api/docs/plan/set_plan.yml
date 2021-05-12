@@ -78,4 +78,10 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {}
+          example: {
+            'pid': newPlan.id,
+            'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+            'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+            'begin': newPlan.begin, 'end': newPlan.end,
+            'type': newPlan.type, 'goal': newPlan.goalWeight
+        }
