@@ -7,6 +7,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -25,27 +26,30 @@ class SettingPageState extends State<SettingPage> {
       listView: true,
       gap: 10,
       direction: CardChooserGroupDirection.horizontal,
-      cards: List.generate(MyTheme.AVAILABLE_THEME.length, (index){
+      cards: List.generate(MyTheme.AVAILABLE_THEME.length, (index) {
         return CardChooser<int>(
           width: 0.25,
           height: 100,
           isChosen: preference.theme == index,
           textColor: MyTheme.AVAILABLE_THEME[index].normalTextColor,
-          backgroundColor: MyTheme.AVAILABLE_THEME[index].componentBackgroundColor,
-          text: CustomLocalizations.of(context).getContent(MyTheme.AVAILABLE_THEME[index].name),
+          backgroundColor: MyTheme.AVAILABLE_THEME[index]
+              .componentBackgroundColor,
+          text: CustomLocalizations.of(context).getContent(
+              MyTheme.AVAILABLE_THEME[index].name),
           paddingLeft: 5,
           paddingRight: 5,
           value: index,
         );
       }),
     );
-    List<Map<String,String>> languages = CustomLocalizations.getLanguages(context);
+    List<Map<String, String>> languages = CustomLocalizations.getLanguages(
+        context);
     CardChooserGroup languageList = CardChooserGroup(
       initVal: preference.theme,
       listView: true,
       gap: 10,
       direction: CardChooserGroupDirection.vertical,
-      cards: List.generate(languages.length, (index){
+      cards: List.generate(languages.length, (index) {
         String code = languages[index].values.first;
         String displayName = languages[index].keys.first;
         return CardChooser<String>(
@@ -61,15 +65,15 @@ class SettingPageState extends State<SettingPage> {
         );
       }),
     );
-    group.addValueChangeListener((){
+    group.addValueChangeListener(() {
       bool success = preference.changeTheme(group.widgetValue.value);
-      if(success){
+      if (success) {
         setState(() {});
       }
     });
-    languageList.addValueChangeListener((){
+    languageList.addValueChangeListener(() {
       bool success = preference.changeLauguage(languageList.widgetValue.value);
-      if(success){
+      if (success) {
         setState(() {});
       }
     });
@@ -81,21 +85,50 @@ class SettingPageState extends State<SettingPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-                TitleText(
-                  text:CustomLocalizations.of(context).drawerSetting,
-                  underLineLength: 0.9,
-                  underLineDistance: 1,
-                  maxHeight: 35,
-                  fontSize: 20,
+                SizedBox(height: ScreenTool.partOfScreenHeight(0.03)),
+                Row(
+                    children: [
+                      GestureDetector(
+                        child: Icon(
+                          FontAwesomeIcons.arrowAltCircleLeft, size: 35,
+                          color: MyTheme.convert(ThemeColorName.NormalIcon),),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Container(
+                        // margin: EdgeInsets.all(20),
+                        margin: EdgeInsets.fromLTRB(20, 18, 10, 10),
+                        child: Text(
+                          CustomLocalizations
+                              .of(context)
+                              .drawerSetting,
+                          style: TextStyle(
+                            color: MyTheme.convert(ThemeColorName.HeaderText),
+                            fontSize: 32,
+                            fontFamily: "Futura",
+                          ),
+                        ),
+                      )
+                    ]
                 ),
+                // TitleText(
+                //   text:CustomLocalizations.of(context).drawerSetting,
+                //   underLineLength: 0.9,
+                //   underLineDistance: 1,
+                //   maxHeight: 35,
+                //   fontSize: 20,
+                // ),
                 SizedBox(height: 40),
                 TitleText(
-                  text: CustomLocalizations.of(context).theme,
+                  text: CustomLocalizations
+                      .of(context)
+                      .theme,
                   fontSize: 15,
                   maxHeight: 40,
                   underLineLength: 0,
@@ -107,7 +140,9 @@ class SettingPageState extends State<SettingPage> {
                 ),
                 SizedBox(height: 40),
                 TitleText(
-                  text: CustomLocalizations.of(context).language,
+                  text: CustomLocalizations
+                      .of(context)
+                      .language,
                   fontSize: 15,
                   maxHeight: 40,
                   underLineLength: 0,
@@ -116,7 +151,7 @@ class SettingPageState extends State<SettingPage> {
                 Container(
                   height: 250,
                   width: ScreenTool.partOfScreenWidth(0.9),
-                  child:languageList,
+                  child: languageList,
                 ),
               ],
             ),
