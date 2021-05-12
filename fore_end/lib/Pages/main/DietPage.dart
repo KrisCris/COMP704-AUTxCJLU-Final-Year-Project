@@ -37,7 +37,7 @@ class DietPageState extends State<DietPage> {
       transitionType: ContainerTransitionType.fade,
       transitionDuration: const Duration(milliseconds: 350),
       openBuilder: (context, action) {
-        return FoodRecommandation(mealType:"breakfast");
+        return FoodRecommandation();
       },
     );
   }

@@ -25,7 +25,18 @@ import 'package:fore_end/Mycomponents/widgets/food/SwitchFoodInfoArea.dart';
 class FoodRecommandation extends StatefulWidget {
   String mealType;
 
-  FoodRecommandation({this.mealType});
+  FoodRecommandation({this.mealType}){
+    if(this.mealType == null){
+      int hour = DateTime.now().hour;
+      if(hour >4 && hour <=11){
+        this.mealType = "breakfast";
+      }else if(hour >11 && hour <=16){
+        this.mealType = "lunch";
+      }else if(hour>16 && hour <=4){
+        this.mealType = "dinner";
+      }
+    }
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -75,11 +86,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
           }
         }
         setState(() {});
-      }else{
-
       }
     });
-
     super.initState();
   }
 
@@ -159,7 +167,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: CustomLocalizations.of(context).recommand + this.widget.mealType,
+          text: CustomLocalizations.of(context).recommand + CustomLocalizations.of(context).getContent(widget.mealType),
           underLineLength: 200,
           maxHeight: 20,
           maxWidth: 0.95,
@@ -276,14 +284,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         "foods_info":jsonEncode(this.selectedFood),
                       });
                       if(res == null){
-
                         return;
                       }
                       if(res.data['code'] != 1){
-
                         return;
                       }
-
                       for(Food f in this.selectedFood){
                         m.addFood(f);
                       }
