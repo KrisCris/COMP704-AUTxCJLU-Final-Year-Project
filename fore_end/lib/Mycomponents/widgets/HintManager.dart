@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fore_end/MyTool/Hint.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
+import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
 
 class HintManager extends StatefulWidget{
@@ -102,7 +105,9 @@ class HintManagerState extends State<HintManager>{
           "You are now in offline mode, most function is unavailable. Click to login.",
           instanceClose: false,
           onClick: () {
-            this.removeHint("offlineHint");
+            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+              return Welcome();
+            }), (route) => false);
           });
     }
     if (u.shouldUpdateWeight) {
@@ -145,6 +150,76 @@ class HintManagerState extends State<HintManager>{
               }
             });
           });
+    }
+    if(u.plan.pastDeadline){
+      this.hints['passDeadlineHint'] = Hint(
+          instanceClose: false,
+          hintContent:
+          "Your Plan exceeded the deadline, click here for further operation",
+        onClick: ()async{
+          bool b = await showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) {
+              return ExtendTimeHint(
+                title: CustomLocalizations.of(context).planDelayFor +
+                    u.plan.calculatedDelayDays.toString() +
+                    CustomLocalizations.of(context).days +
+                    "," +
+                    CustomLocalizations.of(context).planDelayChoose,
+                onClickAccept: () async {
+                  Response res = await Requests.delayPlan(
+                      {"uid": u.uid, "token": u.token, "pid": u.plan.id});
+                  if (res != null && res.data['code'] == 1) {
+                    u.plan.extendDays = res.data['data']['ext'];
+                    u.save();
+                  }
+                },
+              );
+            },
+          );
+          //accept delay
+          if (b == true) {
+            this.removeHint("passDeadLineHint");
+            setState(() {});
+          }
+          //finish plan
+          else {
+            bool success = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                UpdateBody updt = UpdateBody(
+                  text: CustomLocalizations.of(context).beforeChangePlan,
+                  needHeight: false,
+                  needCancel: false,
+                );
+                updt.onUpdate = () async {
+                  Response res = await Requests.finishPlan({
+                    "uid": u.uid,
+                    "token": u.token,
+                    "pid": u.plan.id,
+                    "weight": updt.getWeight()
+                  });
+                  if (res != null && res.data['code'] == 1) {
+                    u.bodyWeight = updt.weight.widgetValue.value;
+                    Navigator.of(context).pop(true);
+                  }
+                };
+                return updt;
+              },
+            );
+            //create new plan after finish plan
+            if (success) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) {
+                    return GuidePage(firstTime: false);
+                  }), (route) {
+                return route == null;
+              });
+            }
+          }
+        }
+      );
     }
   }
 }
