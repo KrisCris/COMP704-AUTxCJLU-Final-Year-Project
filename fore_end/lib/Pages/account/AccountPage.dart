@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Picker_Tool.dart';
@@ -13,6 +14,7 @@ import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/EditableArea.dart';
 import 'package:fore_end/Mycomponents/settingItem.dart';
+import 'package:fore_end/Mycomponents/widgets/MealLimitPercentBox.dart';
 import 'package:fore_end/Mycomponents/widgets/ValueableImage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
@@ -68,9 +70,21 @@ class AccountPage extends StatefulWidget {
 
 class PageState extends State<AccountPage> {
   EditableArea basicInfoEditableArea;
+  GlobalKey<MealLimitPercentBoxState> breakfast;
+  GlobalKey<MealLimitPercentBoxState> lunch;
+  GlobalKey<MealLimitPercentBoxState> dinner;
+
 
   @override
+  void initState() {
+    breakfast = GlobalKey<MealLimitPercentBoxState>();
+    lunch = GlobalKey<MealLimitPercentBoxState>();
+    dinner = GlobalKey<MealLimitPercentBoxState>();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+    User u = User.getInstance();
     this.basicInfoEditableArea = EditableArea(
         width: 0.7,
         height: 320,
@@ -168,10 +182,35 @@ class PageState extends State<AccountPage> {
                     height: 10,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      
+                      MealLimitPercentBox(
+                        name:"breakfast",
+                        lowerLimit: 0, upperLimit: 100,
+                        initVal: u.breakfastRatio, changeUnit: 1,
+                        height: 90,width: 0.3,
+                        k: breakfast,
+                        relatedBox: [lunch,dinner],
+                      ),
+                      MealLimitPercentBox(
+                        name:"lunch",
+                        lowerLimit: 0, upperLimit: 100,
+                        initVal: u.lunchRatio, changeUnit: 1,
+                        height: 90,width: 0.3,
+                        k: lunch,
+                        relatedBox: [dinner,breakfast],
+                      ),
+                      MealLimitPercentBox(
+                        name:"dinner",
+                        lowerLimit: 0, upperLimit: 100,
+                        initVal: u.dinnerRatio, changeUnit: 1,
+                        height: 90,width: 0.3,
+                        k: dinner,
+                        relatedBox: [breakfast,lunch],
+                      ),
                     ],
-                  )
+                  ),
+                  SizedBox(height: 10,)
                 ],
               )
             ],
