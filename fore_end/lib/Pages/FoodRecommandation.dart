@@ -36,7 +36,7 @@ class FoodRecommandation extends StatefulWidget {
       }else if(hour >11 && hour <=16){
         this.mealType = "lunch";
         this.persent = u.lunchRatio;
-      }else if(hour>16 && hour <=4){
+      }else if((hour>16 && hour <=24) || (hour >=0 && hour < 4) ){
         this.mealType = "dinner";
         this.persent = u.dinnerRatio;
       }
