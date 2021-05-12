@@ -294,4 +294,4 @@ def setMealsIntakeRatio(*args):
     u.d_percent = d
     u.add()
 
-    return reply_json(1, data=u.toDict())
+    return reply_json(1)

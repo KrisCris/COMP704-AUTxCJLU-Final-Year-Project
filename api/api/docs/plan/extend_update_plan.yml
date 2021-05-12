@@ -2,3 +2,40 @@ extend and update plan
 ---
 tags:
   - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: days
+    type: string
+    required: true
+    description: days
+  - in: formData
+    name: pid
+    type: string
+    required: true
+    description: plan id
+responses:
+  1: 
+    description: successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: {'ext':12}

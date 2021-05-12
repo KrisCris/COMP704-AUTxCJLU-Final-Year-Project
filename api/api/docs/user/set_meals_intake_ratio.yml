@@ -43,11 +43,7 @@ responses:
           example: 'success'
         data:
           type: object
-          example: { 'id': self.id, 'email': self.email, 'nickname': self.nickname, 'token': self.token,
-                     'avatar': self.avatar, 'gender': self.gender, 'age': self.age, 'weight': self.weight,
-                     'height': self.height, 'register_date': self.register_date, 'needGuide': self.guide,
-                     'breakfast_percent': self.b_percent, 'lunch_percent': self.l_percent, 'dinner_percent': self.d_percent,
-          }
+          example: null
   -2:
     description: sum of 3 values are not 100
     schema:
@@ -62,4 +58,4 @@ responses:
           example: 'should added up to 100'
         data:
           type: number
-          example: None
+          example: null
