@@ -41,5 +41,6 @@ abstract class ValueableStateMixIn<T>{
   void initValueListener(ValueNotifier<T> dis) {
     dis.addListener(this.onChangeValue);
   }
+
   void onChangeValue();
 }

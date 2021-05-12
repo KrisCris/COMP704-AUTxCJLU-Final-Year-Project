@@ -40,7 +40,7 @@ class Food {
     this.carbohydrate=0,
     this.cellulose=0,
     ///weight只是为了计算营养价值和显示使用 用户可以增加
-    this.weight=1,
+    this.weight=0,
   }){
     this._name = name;
     this._cnName = cnName;
@@ -50,7 +50,7 @@ class Food {
     this._name = json['name'];
     this._cnName = json['cnName'];
     this.picture = json['picture']??json['img'];
-    this.weight = json['weight']??0;
+    this.weight = json['weight'] ??0;
     this.calorie =json['calories']??0;
     this.protein = json['protein']??0;
     this.carbohydrate = json['carbohydrate']??0;
@@ -125,7 +125,7 @@ class Food {
   void setWeight(int newWeight){
     this.weight=newWeight;
   }
-  double calculatePersent(String label){
+  double calculatePercent(String label){
     Map mapper = {
       'protein':this.protein,
       'fat':this.fat,
@@ -139,4 +139,18 @@ class Food {
     double target = mapper[label];
     return target/total;
   }
+
+  double calculateThreeNutritionPercent(String label){
+    Map mapper = {
+      'protein':this.protein,
+      'fat':this.fat,
+      'carbohydrate':this.carbohydrate,
+    };
+    if(!mapper.containsKey(label))return 0;
+
+    double total = fat+protein+carbohydrate;
+    double target = mapper[label];
+    return target/total;
+  }
+
 }
