@@ -50,7 +50,7 @@ class Food {
     this._name = json['name'];
     this._cnName = json['cnName'];
     this.picture = json['picture']??json['img'];
-    this.weight = json['weight']??0;
+    this.weight = (json['weight'] as num).floor()??0;
     this.calorie =json['calories']??0;
     this.protein = json['protein']??0;
     this.carbohydrate = json['carbohydrate']??0;
