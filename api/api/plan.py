@@ -211,7 +211,7 @@ def update_body_info(*args, **kwargs):
 
     u = User.getUserByID(uid)
     if u is None:
-        return reply_json(-2)
+        return reply_json(-1)
 
     u.height = height if height else u.height
     u.weight = weight if weight else u.weight
