@@ -95,6 +95,7 @@ class _CustomFloatingSearchBarState extends State<CustomFloatingSearchBar> {
               }
 
               return Card(
+
                 child: ListTile(
                   leading: Icon(FontAwesomeIcons.hamburger,size: 56,color: Colors.blue,),
                   title: Text(name),
