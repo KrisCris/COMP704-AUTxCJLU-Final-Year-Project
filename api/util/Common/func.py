@@ -44,14 +44,34 @@ def get_relative_days(base_day, day):
     return interval.days
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def echoErr(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
+        def getInfo(f):
+            idx = f.__code__.co_filename.find("api/") + 4
+            func_info = f"{bcolors.OKGREEN}{f.__name__}{bcolors.ENDC} {bcolors.WARNING}@{bcolors.ENDC} {bcolors.OKGREEN}{f.__code__.co_filename[idx:]}"
+            return func_info
+
         try:
             r = func(*args, **kwargs)
         except Exception as e:
+            print(f"{bcolors.OKGREEN}[Debug]{bcolors.ENDC} {bcolors.WARNING}[{bcolors.ENDC}{getInfo(func)}{bcolors.ENDC}{bcolors.WARNING}]{bcolors.ENDC}: {bcolors.OKBLUE}{e}{bcolors.ENDC}")
             return reply_json(500, data=str(e))
         else:
+            r.json.get("code") != 1
+            print(f"{bcolors.OKGREEN}[Debug]{bcolors.ENDC} {bcolors.WARNING}[{bcolors.ENDC}{getInfo(func)}{bcolors.ENDC}{bcolors.WARNING}]{bcolors.ENDC}: {bcolors.OKBLUE}{str(r.json)}{bcolors.ENDC}")
             return r
 
     return inner
@@ -76,7 +96,7 @@ def attributes_receiver(required: list, optional: list = []):
                 else:
                     attr_map[attr] = val
             if len(missing) > 0:
-                return reply_json(403, msg="Missing at least the following attribute(s): "+str(missing), data=None)
+                return reply_json(403, msg="Missing at least the following attribute(s): " + str(missing), data=None)
             for attr in optional:
                 val = source.get(attr)
                 if val is not None:

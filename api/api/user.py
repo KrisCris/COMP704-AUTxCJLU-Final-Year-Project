@@ -13,6 +13,7 @@ user = Blueprint(name='user', import_name=__name__)
 
 
 @user.route('/login', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["email", "password"])
 @swag_from('docs/user/login.yml')
 def login(*args, **kwargs):
@@ -32,6 +33,7 @@ def login(*args, **kwargs):
 
 
 @user.route('/logout', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token"])
 @require_login
 @swag_from('docs/user/logout.yml')
@@ -45,6 +47,7 @@ def logout(*args, **kwargs):
 
 
 @user.route('/signup', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["email", "nickname", "password"], optional=["uid"])
 @require_code_check
 @swag_from('docs/user/signup.yml')
@@ -70,6 +73,7 @@ def signup(*args, **kwargs):
 
 
 @user.route('/send_register_code', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["email"])
 @swag_from('docs/user/send_register_code.yml')
 def send_register_code(*args, **kwargs):
@@ -100,6 +104,7 @@ def send_register_code(*args, **kwargs):
 
 
 @user.route('/is_new_email', methods=['GET'])
+@echoErr
 @attributes_receiver(required=["email"])
 @swag_from('docs/user/is_new_email.yml')
 def is_new_email(*args, **kwargs):
@@ -114,6 +119,7 @@ def is_new_email(*args, **kwargs):
 
 
 @user.route('/check_code', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["auth_code"], optional=["uid", "email"])
 @swag_from('docs/user/check_code.yml')
 def check_code(*args, **kwargs):
@@ -141,6 +147,7 @@ def check_code(*args, **kwargs):
 
 
 @user.route('/cancel_account', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "password"], optional=["email"])
 @require_login
 @require_code_check
@@ -159,6 +166,7 @@ def cancel_account(*args, **kwargs):
 
 
 @user.route('/modify_password', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "password", "token", "new_password"], optional=["email"])
 @require_login
 @require_code_check
@@ -179,6 +187,7 @@ def modify_password(*args, **kwargs):
 
 
 @user.route('retrieve_password', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["email", "new_password"], optional=["uid"])
 @swag_from('docs/user/retrieve_password.yml')
 def retrieve_password(*args, **kwargs):
@@ -194,6 +203,7 @@ def retrieve_password(*args, **kwargs):
 
 
 @user.route('send_security_code', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["email"])
 @swag_from('docs/user/send_security_code.yml')
 def send_security_code(*args, **kwargs):
@@ -220,6 +230,7 @@ def send_security_code(*args, **kwargs):
 
 
 @user.route('get_basic_info', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token"])
 @require_login
 @swag_from('docs/user/get_basic_info.yml')
@@ -245,6 +256,7 @@ def get_basic_info(*args, **kwargs):
 
 
 @user.route('modify_basic_info', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "nickname", "gender", "age", "avatar"])
 @require_login
 @swag_from('docs/user/modify_basic_info.yml')
@@ -276,17 +288,18 @@ def modify_basic_info(*args, **kwargs):
 
 
 @user.route("set_meals_intake_ratio", methods=['POST'])
-@attributes_receiver(required=["token", "uid", "breakfast", "launch", "dinner"])
+@echoErr
+@attributes_receiver(required=["token", "uid", "breakfast", "lunch", "dinner"])
 @require_login
 @swag_from('docs/user/set_meals_intake_ratio.yml')
 def setMealsIntakeRatio(*args):
     u = User.getUserByID(args[0].get("uid"))
 
-    b = args[0].get("breakfast")
-    l = args[0].get("launch")
-    d = args[0].get("dinner")
+    b = int(args[0].get("breakfast"))
+    l = int(args[0].get("lunch"))
+    d = int(args[0].get("dinner"))
 
-    if (b + l + d) != 10:
+    if (b + l + d) != 100:
         return reply_json(-2, msg="should added up to 100")
 
     u.b_percent = b

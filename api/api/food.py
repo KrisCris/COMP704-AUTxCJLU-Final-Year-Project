@@ -10,13 +10,14 @@ from db.DailyConsumption import DailyConsumption
 from db.Food import Food
 from db.User import User
 from util.Common.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
-from util.Common.func import reply_json, get_relative_days, get_current_time, attributes_receiver
+from util.Common.func import reply_json, get_relative_days, get_current_time, attributes_receiver, echoErr
 from util.Common.user import require_login
 
 food = Blueprint(name='food', import_name=__name__)
 
 
 @food.route('detect', methods=['POST'])
+@echoErr
 @attributes_receiver(required=['food_b64', 'rotation'])
 @swag_from('docs/food/detect.yml')
 def detect(*args, **kwargs):
@@ -59,6 +60,7 @@ def detect(*args, **kwargs):
 
 
 @food.route('search', methods=['GET'])
+@echoErr
 @attributes_receiver(required=["name"])
 @swag_from('docs/food/search.yml')
 def search(*args, **kwargs):
@@ -77,6 +79,7 @@ def search(*args, **kwargs):
 
 
 @food.route('food_info', methods=['GET'])
+@echoErr
 @attributes_receiver(required=["fid"])
 @swag_from('docs/food/food_info.yml')
 def getFoodInfo(*args, **kwargs):
@@ -89,6 +92,7 @@ def getFoodInfo(*args, **kwargs):
 
 
 @food.route('consume_foods', methods=['POST'])
+@echoErr
 @attributes_receiver(required=['uid', 'token', 'pid', 'type', 'foods_info'])
 @require_login
 @swag_from('docs/food/consume_foods.yml')
@@ -123,6 +127,7 @@ def consume_foods(*args, **kwargs):
 
 
 @food.route('get_consume_history', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "begin", "end"])
 @require_login
 @swag_from('docs/food/get_consume_history.yml')
@@ -137,6 +142,7 @@ def getConsumeHistory(*args, **kwargs):
 
 
 @food.route('get_daily_consumption', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "begin", "end"])
 @require_login
 @swag_from('docs/food/get_daily_consumption.yml')
@@ -151,6 +157,7 @@ def getDailyConsumption(*args, **kwargs):
 
 
 @food.route('accumulated_calories_intake', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["begin", "end", "uid", "token"])
 @require_login
 @swag_from('docs/food/accumulated_calories_intake.yml')
@@ -165,6 +172,7 @@ def getAccumulatedCaloriesIntake(*args, **kwargs):
 
 
 @food.route('listed_calories_intake', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "begin", "end"])
 @require_login
 @swag_from('docs/food/listed_calories_intake.yml')
@@ -179,6 +187,7 @@ def listedCaloriesIntake(*args, **kwargs):
 
 
 @food.route('recmd_food_in_search', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "fid", "pid"])
 @require_login
 @swag_from('docs/food/recmd_food_in_search.yml')
@@ -214,6 +223,7 @@ def recmdFoodInSearch(*args, **kwargs):
 
 
 @food.route('recmd_food', methods=['POST'])
+@echoErr
 @attributes_receiver(required=["uid", "token", "pid", "mealType"])
 @require_login
 @swag_from('docs/food/recmd_food.yml')
