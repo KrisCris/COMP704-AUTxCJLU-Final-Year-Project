@@ -197,7 +197,7 @@ class FoodBoxState extends State<FoodBox>
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: Colors.white,
+          color: MyTheme.convert(ThemeColorName.ComponentBackground),
           boxShadow: [
             BoxShadow(
               blurRadius: 12, //阴影范围
@@ -288,14 +288,14 @@ class FoodBoxState extends State<FoodBox>
           fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: "Futura",
-          color: Colors.black),
+          color: MyTheme.convert(ThemeColorName.NormalText)),
     );
   }
 
   Widget getExpandIcon() {
     return RotateIcon(
         icon:  FontAwesomeIcons.chevronDown,
-        iconColor: Colors.blue,
+        iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
       key: widget.iconKey,
       onTap: (){
         if (this.shouldExpand) {
@@ -310,7 +310,7 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:this.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:20,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");
@@ -370,7 +370,7 @@ class FoodBoxState extends State<FoodBox>
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   fontFamily: "Futura",
-                  color: Colors.black)),
+                  color: MyTheme.convert(ThemeColorName.NormalText))),
         ),
         Text(
           value,
@@ -379,7 +379,7 @@ class FoodBoxState extends State<FoodBox>
               fontSize: 20,
               fontWeight: FontWeight.normal,
               fontFamily: "Futura",
-              color: Colors.black),
+              color: MyTheme.convert(ThemeColorName.NormalText)),
         ),
         SizedBox(
           width: widget.paddingRight,

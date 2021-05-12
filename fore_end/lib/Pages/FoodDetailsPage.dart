@@ -105,7 +105,7 @@ class _FoodDetailsState extends State<FoodDetails> {
         height: ScreenTool.partOfScreenHeight(1),
         width: ScreenTool.partOfScreenWidth(1),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          // borderRadius: BorderRadius.circular(10),
           // borderRadius: BorderRadius.circular(5),
           color: MyTheme.convert(ThemeColorName.PageBackground),
         ),
@@ -184,7 +184,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.52 ),
+                  height: ScreenTool.partOfScreenHeight(0.6 ),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(

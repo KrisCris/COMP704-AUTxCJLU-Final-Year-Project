@@ -18,6 +18,8 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
   T upper;
   T lower;
 
+  ///初始化时，是否需要执行一次变化函数
+  bool shouldFirstValueChange;
   ///onValueChange是当变量发生改变时调用的方法
   Function onValueChange;
 
@@ -26,6 +28,7 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
     @required this.initValue,
     this.upper,
     this.lower,
+    this.shouldFirstValueChange = false,
     Function onValueChange,
     Key key,
   }) : super(key: key) {
@@ -93,6 +96,12 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
     if(this.widget.onValueChange != null){
       this.valueNotifier.addListener(this.widget.onValueChange);
     }
+    WidgetsBinding.instance.addPostFrameCallback((data){
+      if(widget.onValueChange != null && widget.shouldFirstValueChange){
+        widget.onValueChange();
+      }
+    });
+
   }
 
   void plusWeight() {
@@ -139,8 +148,8 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
         Text(this.valueNotifier.value.toString(),
             style: TextStyle(
                 fontSize: 20,
-                // color: MyTheme.convert(ThemeColorName.NormalText),
-                color:MyTheme.convert(ThemeColorName.PickerToolText),
+                color: MyTheme.convert(ThemeColorName.NormalText),
+                // color:MyTheme.convert(ThemeColorName.PickerToolText),
                 fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.bold)
