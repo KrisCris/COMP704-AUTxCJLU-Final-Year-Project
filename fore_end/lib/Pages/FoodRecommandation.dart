@@ -76,9 +76,10 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     ///再计算按照比例得到的建议摄入量
     double recommendLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()*this.widget.persent*0.01;
     ///比较两个量，如果当前最大可摄入量>比例建议量，则按照比例建议量作为摄入量上限
-    ///如果当前最大可摄入量<比例建议量，则按照最大可摄入量
     if(this.caloriesLimit > recommendLimit){
-      this.caloriesLimit = recommendLimit;
+      int mealidx = this.mealTypeConvert()-1;
+      ///如果当前这餐已经有了，则减去
+      this.caloriesLimit = recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
     }
     Requests.recommandFood({
       "uid":u.uid,
@@ -112,6 +113,9 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         return 2;
       }
       case "dinner":{
+        return 3;
+      }
+      default:{
         return 3;
       }
     }
@@ -249,7 +253,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
-                persent: totalCal / (this.caloriesLimit * 0.01*this.widget.persent),
+                persent: totalCal / this.caloriesLimit,
                 maxPersent: 1,
                 name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
               )
@@ -268,7 +272,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                   SizedBox(width: 100),
                   CrossFadeText(
                     key: this.calSuggest,
-                    text: totalCal.floor().toString() +" / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+ " Kcal",
+                    text: totalCal.floor().toString() +" / "+this.caloriesLimit.floor().toString()+ " Kcal",
                     fontSize: 13,
                   ),
                   Expanded(child: SizedBox()),
@@ -324,11 +328,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
 
   void redrawProgressBar(){
     this.persentBar.currentState.changePersentByIndex(
-        0, this.calculateTotalCalorie() / (this.caloriesLimit*0.01*this.widget.persent));
+        0, this.calculateTotalCalorie() / (this.caloriesLimit));
   }
   void updateCalories(){
     this.calSuggest.currentState.changeTo(
-        this.calculateTotalCalorie().floor().toString() + " / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+" Kcal");
+        this.calculateTotalCalorie().floor().toString() + " / "+this.caloriesLimit.floor().toString()+" Kcal");
     this.redrawProgressBar();
   }
 }
