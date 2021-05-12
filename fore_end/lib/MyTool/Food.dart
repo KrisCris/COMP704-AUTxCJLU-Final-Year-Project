@@ -44,8 +44,9 @@ class Food {
     this.name = json['name'];
     this.picture = json['picture']??json['img'];
     this.weight = json['weight']??0;
-    this.calorie =json['calories'];
-    this.protein = json['protein'];
+    this.calorie =json['calories']??0;
+    this.protein = json['protein']??0;
+    this.carbohydrate = json['carbohydrate']??0;
     this.fat = json['fat']??0;
     this.cholesterol = json['cholesterol']??0;
     this.cellulose = json['cellulose']??0;
@@ -57,6 +58,7 @@ class Food {
     data['name'] = this.name;
     data['id'] = this.id;
     data['calories'] = this.calorie;
+    data['carbohydrate']= this.carbohydrate;
     data['picture'] = this.picture;
     data['protein'] = this.protein;
     data['weight'] = this.weight;
@@ -103,5 +105,19 @@ class Food {
   }
   void setWeight(int newWeight){
     this.weight=newWeight;
+  }
+  double calculatePersent(String label){
+    Map mapper = {
+      'protein':this.protein,
+      'fat':this.fat,
+      'cellulose':this.cellulose,
+      'carbohydrate':this.carbohydrate,
+      'cholesterol':this.cholesterol,
+    };
+    if(!mapper.containsKey(label))return 0;
+
+    double total = fat+protein+cholesterol+carbohydrate+cellulose;
+    double target = mapper[label];
+    return target/total;
   }
 }
