@@ -66,7 +66,7 @@ class MealViewState extends State<MealView>{
             ///用来对其每个item与包裹着他们的大的ListView的内边距
             child:
             Container(
-              height: 190,
+              height: 250,
 
               ///这是ListView里面每一个item的容器高度，宽度设置在上面listView.build的itemExtent是设置每个item的宽度
               decoration: BoxDecoration(
@@ -84,48 +84,82 @@ class MealViewState extends State<MealView>{
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Icon(
-                      widget.mealsListData.getIcon(), size: 30,
-                      color: MyTheme.convert(ThemeColorName.NormalIcon)),
+
+                    Row(
+                      children: [
+                        Icon(
+                            widget.mealsListData.getIcon(), size: 30,
+                            color: MyTheme.convert(ThemeColorName.NormalIcon)),
+
+                        SizedBox(width: 20,),
+                        Text(
+                          ///标题
+                          CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Futura",
+                              fontSize: 18,
+                              letterSpacing: 0.2,
+                              color: MyTheme.convert(ThemeColorName.HeaderText)
+                          ),
+                        ),
+                      ],
+                    ),
+
                     SizedBox(height: 10,),
 
-                    Text(
-                      ///标题
-                      CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Futura",
-                        fontSize: 18,
-                        letterSpacing: 0.2,
-                        color: MyTheme.convert(ThemeColorName.HeaderText)
-                      ),
-                    ),
                     Expanded(
 
                       ///食物列表，一般只显示三个
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            ///现在名字太长的食物会溢出，比如荷包蛋，应该在外面包个container，文字本身的溢出和自动换行没用
-                            Text(
-                              widget.mealsListData.listFoodsName(),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Futura",
-                                fontSize: 12,
-                                letterSpacing: 0.2,
-                                color: MyTheme.convert(ThemeColorName.NormalText),
-                              ),
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          width: 100,
+                          child: Text(
+                            "zhangshuaikangf\nhhheesjuaikangses\nsdjioauaikanguaikanghsdisd",
+                            // widget.mealsListData.listFoodsName(),
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            maxLines: 6,
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Futura",
+                              fontSize: 12,
+                              letterSpacing: 0.2,
+                              color: MyTheme.convert(ThemeColorName.NormalText),
                             ),
-                          ],
+                          ),
                         ),
+                        // child: Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: <Widget>[
+                        //     ///现在名字太长的食物会溢出，比如荷包蛋，应该在外面包个container，文字本身的溢出和自动换行没用
+                        //
+                        //     Container(
+                        //       width: 100,
+                        //       child: Text(
+                        //         "zhangshuaikangfoood\nhhheesjuaikangses\nsdjioauaikanguaikanghsdisd",
+                        //         // widget.mealsListData.listFoodsName(),
+                        //         overflow: TextOverflow.ellipsis,
+                        //         softWrap: false,
+                        //         maxLines: 6,
+                        //         style: TextStyle(
+                        //           decoration: TextDecoration.none,
+                        //           fontWeight: FontWeight.w500,
+                        //           fontFamily: "Futura",
+                        //           fontSize: 12,
+                        //           letterSpacing: 0.2,
+                        //           color: MyTheme.convert(ThemeColorName.NormalText),
+                        //         ),
+                        //       ),
+                        //     )
+                        //
+                        //
+                        //   ],
+                        // ),
                       ),
                     ),
                     Row(
