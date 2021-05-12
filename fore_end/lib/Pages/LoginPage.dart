@@ -55,7 +55,9 @@ class Login extends StatelessWidget {
       placeholder:  CustomLocalizations.of(context).email,
       helpText:  CustomLocalizations.of(context).emailHint,
       inputType: InputFieldType.email,
+      errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
+      maxlength: 30,
       onCorrect: () {
         emailIsInput = true;
         if (passwordIsInput) this.nextButton.setDisabled(false);
