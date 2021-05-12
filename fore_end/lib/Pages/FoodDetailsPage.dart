@@ -153,7 +153,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                 title:CustomLocalizations.of(context).recommendBoxTitle,
                 foods: this.recommendFoods,
                 isSuitable: this.widget.isSuitable,
-                foodName: this.widget.currentFood.name,),
+                foodName: this.widget.currentFood.getName(context),),
               SizedBox(height:15),
               ///进度条
               PersentBar(key: persentBar,

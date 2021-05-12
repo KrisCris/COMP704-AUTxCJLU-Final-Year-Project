@@ -74,7 +74,7 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
                 scrollDirection: Axis.vertical,
                 padding: EdgeInsets.only(top: 0),
                 children: [
-                  Text(widget.food.name, style: widget.style),
+                  Text(widget.food.getName(context), style: widget.style),
                   Text("Calorie: " + widget.food.getCalories().toString() + "Kcal",
                       style: widget.figureStyle),
                   Text("Protein: " + widget.food.getProtein().toString() + "mg",

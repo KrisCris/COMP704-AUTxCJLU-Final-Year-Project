@@ -112,7 +112,7 @@ class MealViewState extends State<MealView>{
                           children: <Widget>[
                             ///现在名字太长的食物会溢出，比如荷包蛋，应该在外面包个container，文字本身的溢出和自动换行没用
                             Text(
-                              widget.mealsListData.listFoodsName(),
+                              widget.mealsListData.listFoodsName(context),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
