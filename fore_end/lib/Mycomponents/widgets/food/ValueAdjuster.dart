@@ -139,7 +139,8 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
         Text(this.valueNotifier.value.toString(),
             style: TextStyle(
                 fontSize: 20,
-                color: MyTheme.convert(ThemeColorName.NormalText),
+                // color: MyTheme.convert(ThemeColorName.NormalText),
+                color:MyTheme.convert(ThemeColorName.PickerToolText),
                 fontFamily: "Futura",
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.bold)

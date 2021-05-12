@@ -124,7 +124,7 @@ class FoodBoxState extends State<FoodBox>
 
 
   ///全局重量 点击按钮刷新组件
-  int foodWeight =0;
+  int foodWeight =50;
 
   ///增加和减少重量
   // void plusWeight(){
@@ -310,7 +310,7 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:90,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:this.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");
@@ -332,7 +332,9 @@ class FoodBoxState extends State<FoodBox>
           height: 10,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            
             CustomButton(
               firstColorName: ThemeColorName.Error,
               text: "Remove",
