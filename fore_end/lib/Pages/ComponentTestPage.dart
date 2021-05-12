@@ -9,6 +9,7 @@ import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
 import 'package:fore_end/Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/DetailedMealList.dart';
+import 'package:fore_end/Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'dart:math' as math;
@@ -46,7 +47,17 @@ class ComponentTestState extends State<ComponentTestPage>
   @override
   Widget build(BuildContext context) {
     return FoodDetails();
+    // return Container(
+    //   height: ScreenTool.partOfScreenHeight(0.4),
+    //   width: ScreenTool.partOfScreenWidth(0.7),
+    //   alignment: Alignment.center,
+    //   color: Colors.black,
+    //
+    //   child: PieChartSample2(),
+    // );
+
   }
+
 
 
 }
