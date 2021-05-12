@@ -147,26 +147,29 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     ///get calories value调接口一次
     this.getHistoryCalories();
+
+    // ///获取接口的数据 增加离线初始化  初始化  当用户离线才这样 否则去服务器获取数据
+    // if(u.isOffline){
+    //    SharedPreferences pre = LocalDataManager.pre;
+    //    String json = pre.getString("localCalories");
+    //    List LocalOneWeekCaloriesList=new List();
+    //    LocalOneWeekCaloriesList = jsonDecode(json);
+    //    this.assignValueBasedOnList(LocalOneWeekCaloriesList);
+    //    setState(() {});
+    //
+    //  }else{
+    //
+    //    this.getHistoryCalories();
+    //  }
+
+
   }
 
   @override
   @mustCallSuper
   void initState() {
     this.initialDate();
-    ///获取接口的数据 增加离线初始化  初始化
-   // if(u.isOffline){
-   //   print("卡路里柱状图离线成功--------1");
-   //    SharedPreferences pre = LocalDataManager.pre;
-   //    String json = pre.getString("localCalories");
-   //    List LocalOneWeekCaloriesList=new List();
-   //    LocalOneWeekCaloriesList = jsonDecode(json);
-   //    this.assignValueBasedOnList(LocalOneWeekCaloriesList);
-   //    setState(() {
-   //    });
-   //   print("卡路里柱状图离线成功--------2");
-   //  }else{
-   //    this.getHistoryCalories();
-   //  }
+
   }
 
   ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
@@ -549,13 +552,13 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     setState(() {
       ///把上限问题解决  超过上限就直接显示为上限
-      this.mondayValue>=this.widget.planLimitedCalories?this.mondayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.tuesdayValue>=this.widget.planLimitedCalories?this.tuesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.wednesdayValue>=this.widget.planLimitedCalories?this.wednesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.thursdayValue>=this.widget.planLimitedCalories?this.thursdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.fridayValue>=this.widget.planLimitedCalories?this.fridayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.saturdayValue>=this.widget.planLimitedCalories?this.saturdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      this.sundayValue>=this.widget.planLimitedCalories?this.sundayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.mondayValue>=this.widget.planLimitedCalories?this.mondayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.tuesdayValue>=this.widget.planLimitedCalories?this.tuesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.wednesdayValue>=this.widget.planLimitedCalories?this.wednesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.thursdayValue>=this.widget.planLimitedCalories?this.thursdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.fridayValue>=this.widget.planLimitedCalories?this.fridayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.saturdayValue>=this.widget.planLimitedCalories?this.saturdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      // this.sundayValue>=this.widget.planLimitedCalories?this.sundayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
 
     });
 
