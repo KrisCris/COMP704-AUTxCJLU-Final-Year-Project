@@ -26,11 +26,11 @@ class CaloriesBarChart extends StatefulWidget {
   String weekDayOfToday=DateFormat('EEEE').format(DateTime.now());
 
   bool isChangeColor=false;
-  Plan p=User.getInstance().plan;
   User u=User.getInstance();
 
   ///每条柱状图的上限，超出也会显示
-  int planLimitedCalories=2000;
+  // int planLimitedCalories=2000;
+  int planLimitedCalories=User.getInstance().plan.dailyCaloriesUpperLimit.floor()??2000;
 
   ///组件的宽高
   double width=ScreenTool.partOfScreenWidth(0.95);
@@ -52,9 +52,13 @@ class CaloriesBarChart extends StatefulWidget {
 
 
 class CaloriesBarChartState extends State<CaloriesBarChart> {
-  final Color barBackgroundColor = const Color(0xff72d8bf);
+  // final Color barBackgroundColor = const Color(0xff72d8bf);
+  final Color barBackgroundColor = MyTheme.convert(ThemeColorName.PageBackground);
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex;
+
+
+
 
   Map<DateTime,double> localDateValueMap = new Map<DateTime,double>();
   // Map<DateTime,double> offlineLocalDateValueMap = new Map<DateTime,double>();
@@ -90,16 +94,13 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 ///TODO:多注意刷新的问题 一般方法里在数据发生改变后都要去setstate一下
 
 
-  @override
-  @mustCallSuper
-  void initState() {
-    print("initState 初始化数据方法被调用了！-------------");
+  void initialDate(){
     int mondayIndex;
     User u=User.getInstance();
     switch(widget.weekDayOfToday){
       case 'Monday':
         this.isMondayDate=true;
-        mondayIndex=1;
+        mondayIndex=0;
         break;
 
       case 'Tuesday':
@@ -144,112 +145,109 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     this.saturdayDate=widget.today.add(Duration(days: mondayIndex+5));
     this.sundayDate=widget.today.add(Duration(days: mondayIndex+6));
 
+    ///get calories value调接口一次
+    this.getHistoryCalories();
+  }
 
+  @override
+  @mustCallSuper
+  void initState() {
+    this.initialDate();
     ///获取接口的数据 增加离线初始化  初始化
-
-   if(u.isOffline){
-     print("卡路里柱状图离线成功--------1");
-      SharedPreferences pre = LocalDataManager.pre;
-      String json = pre.getString("localCalories");
-      List LocalOneWeekCaloriesList=new List();
-      LocalOneWeekCaloriesList = jsonDecode(json);
-      this.assignValueBasedOnList(LocalOneWeekCaloriesList);
-      setState(() {
-      });
-     print("卡路里柱状图离线成功--------2");
-    }else{
-      this.getHistoryCalories();
-    }
-
-
+   // if(u.isOffline){
+   //   print("卡路里柱状图离线成功--------1");
+   //    SharedPreferences pre = LocalDataManager.pre;
+   //    String json = pre.getString("localCalories");
+   //    List LocalOneWeekCaloriesList=new List();
+   //    LocalOneWeekCaloriesList = jsonDecode(json);
+   //    this.assignValueBasedOnList(LocalOneWeekCaloriesList);
+   //    setState(() {
+   //    });
+   //   print("卡路里柱状图离线成功--------2");
+   //  }else{
+   //    this.getHistoryCalories();
+   //  }
   }
 
   ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
-  void setTodayValueFromLocal(){
-
-    switch(widget.weekDayOfToday){
-      case 'Monday':
-        if(this.mondayDate.compareTo(widget.today)==0){
-          this.mondayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Tuesday':
-        if(this.tuesdayDate.compareTo(widget.today)==0){
-          this.tuesdayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Wednesday':
-        if(this.wednesdayDate.compareTo(widget.today)==0){
-          this.wednesdayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Thursday':
-        if(this.thursdayDate.compareTo(widget.today)==0){
-          this.thursdayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Friday':
-        if(this.fridayDate.compareTo(widget.today)==0){
-          this.fridayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Saturday':
-
-        print("从本地更新了今天的数值");
-        if(this.saturdayDate.compareTo(widget.today)==0){
-          this.saturdayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      case 'Sunday':
-        if(this.sundayDate.compareTo(widget.today)==0){
-          this.sundayValue=widget.u.getTodayCaloriesIntake();
-        }
-        break;
-
-      default:
-        print('今天不在设置的一周里面，就没本地化');
-    }
-  }
-
-  ///时间选择按钮的配置函数，来设置新的日期并且刷新组件
+  // void setTodayValueFromLocal(){
+  //
+  //   switch(widget.weekDayOfToday){
+  //     case 'Monday':
+  //       if(this.mondayDate.compareTo(widget.today)==0){
+  //         this.mondayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Tuesday':
+  //       if(this.tuesdayDate.compareTo(widget.today)==0){
+  //         this.tuesdayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Wednesday':
+  //       if(this.wednesdayDate.compareTo(widget.today)==0){
+  //         this.wednesdayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Thursday':
+  //       if(this.thursdayDate.compareTo(widget.today)==0){
+  //         this.thursdayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Friday':
+  //       if(this.fridayDate.compareTo(widget.today)==0){
+  //         this.fridayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Saturday':
+  //
+  //       print("从本地更新了今天的数值");
+  //       if(this.saturdayDate.compareTo(widget.today)==0){
+  //         this.saturdayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     case 'Sunday':
+  //       if(this.sundayDate.compareTo(widget.today)==0){
+  //         this.sundayValue=widget.u.getTodayCaloriesIntake();
+  //       }
+  //       break;
+  //
+  //     default:
+  //       print('今天不在设置的一周里面，就没本地化');
+  //   }
+  // }
   void judgeDate({DateTime time}){
 
     DateTime settingDay = DateTime(time.year,time.month,time.day);
     String weekDayOfsettingDay=DateFormat('EEEE').format(settingDay);
 
-    ///在本周这样是可以的，周日是21号，我选择星期五20号 就不需要做什么 除了更新颜色  但如果选择了上一周的某一天比如周六13号，那么周日也变了14号，但是这时选择到本周的21号，这并不在这之前啊，需要calcu
-      if(settingDay.isBefore(this.sundayDate) || settingDay.compareTo(this.sundayDate) ==0 ){
-
-        //如果是1.14?在本周日之前 但不在周一15号之后
+    if(settingDay.isBefore(this.sundayDate) || settingDay.compareTo(this.sundayDate) ==0 ){
         if(settingDay.isAfter(this.mondayDate)|| settingDay.compareTo(this.mondayDate) ==0){
-          ///如果是选择了今天(甚至是本周) 那么什么也不用做  但是要刷新今天的数据颜色
-          this.judgeWeekDay(weekDayOfsettingDay);
+          ///如果是选择了在目前的一周内 那么什么也不用做  只需要刷新今天的数据颜色
+          this.changeWeekDayInOneWeek(weekDayOfsettingDay);
         }else{
+          ///否者跳到另外一周 那么需要去服务器获取新的数据
           this.calculateDate(settingDay);
         }
     }else{
         this.calculateDate(settingDay);
       }
-
-
   }
 
-    ///另外如果设定的日期就是这一周，那么数据就根本不需要重新获取，只需要更新颜色就好了
-    ///如果设定的日期在本地中，那么它所这在一周的数据肯定也被存在了本地了，就直接获取就好了
-  ///这个函数主要是 根据目前一周的日期去读取本地的Value数据
+
   void readLocalValue(){
     ///先清空之前的数据
+    ///另外如果设定的日期就是这一周，那么数据就根本不需要重新获取，只需要更新颜色就好了
+    ///如果设定的日期在本地中，那么它所这在一周的数据肯定也被存在了本地了，就直接获取就好了
+    ///这个函数主要是 根据目前一周的日期去读取本地的Value数据
+
     this.clearValue();
-
-
     this.localDateValueMap.forEach((date,value) {
-
       DateTime formatedDate=date;
       double caloriesOfElement=value;
 
@@ -283,8 +281,10 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
   }
 
-  ///这个问题应该在judge之后进行一次刷新  这些代码复用都要再精简 拿出去
-  void judgeWeekDay(String weekDayOfSetting){
+  ///给定设定日期如星期一Monday 来突出今天的数据this.isMondayDate=true;  并且来计算其他六天的具体日期
+  void changeWeekDayInOneWeek(String weekDayOfSetting ){
+    // int mondayIndex=0;
+
     switch(weekDayOfSetting){
       case 'Monday':
         this.isMondayDate=true;
@@ -294,7 +294,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         this.isFridayDate=false;
         this.isSaturdayDate=false;
         this.isSundayDate=false;
-        // mondayIndex=1;
+        // mondayIndex=0;
         break;
 
       case 'Tuesday':
@@ -365,6 +365,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
       default:
         print('calculateDate  none');
+
     }
 
     setState(() {
@@ -374,13 +375,18 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   }
 
 
-  ///从服务器获取一周的卡路里记录，然后保存给widget的变量里
+  ///根据设定日期所在一周的卡路里量  去服务器获取
   void calculateDate(DateTime settingDay){
     String weekDayOfSetting=DateFormat('EEEE').format(settingDay);
+    this.judgeWeekDay(weekDayOfSetting,settingDay); ///先设定日期处理
+    this.getHistoryCalories(); ///从接口获取每一天的数据,只有本地没有时 最后才去获取
 
-    int mondayIndex;
+  }
 
-    ///第一个switch 用来突出显示今天的柱状图 变红
+  ///给定设定日期如星期一Monday 来突出今天的数据this.isMondayDate=true;  并且来计算其他六天的具体日期
+  void judgeWeekDay(String weekDayOfSetting ,DateTime settingDay){
+    int mondayIndex=0;
+
     switch(weekDayOfSetting){
       case 'Monday':
         this.isMondayDate=true;
@@ -390,7 +396,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         this.isFridayDate=false;
         this.isSaturdayDate=false;
         this.isSundayDate=false;
-        mondayIndex=1;
+        mondayIndex=0;
         break;
 
       case 'Tuesday':
@@ -461,33 +467,33 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
       default:
         print('calculateDate  none');
+
     }
-    ///计算其他六天的具体日期，比如2/13，这里用 setting的日期来算每个星期几的日期
-    this.mondayDate=settingDay.add(Duration(days: mondayIndex));
-    this.tuesdayDate=settingDay.add(Duration(days: mondayIndex+1));
-    this.wednesdayDate=settingDay.add(Duration(days: mondayIndex+2));
-    this.thursdayDate=settingDay.add(Duration(days: mondayIndex+3));
-    this.fridayDate=settingDay.add(Duration(days: mondayIndex+4));
-    this.saturdayDate=settingDay.add(Duration(days: mondayIndex+5));
-    this.sundayDate=settingDay.add(Duration(days: mondayIndex+6));
+    this.mondayDate = settingDay.add(Duration(days: mondayIndex));
+    this.tuesdayDate = settingDay.add(Duration(days: mondayIndex + 1));
+    this.wednesdayDate = settingDay.add(Duration(days: mondayIndex + 2));
+    this.thursdayDate = settingDay.add(Duration(days: mondayIndex + 3));
+    this.fridayDate = settingDay.add(Duration(days: mondayIndex + 4));
+    this.saturdayDate = settingDay.add(Duration(days: mondayIndex + 5));
+    this.sundayDate = settingDay.add(Duration(days: mondayIndex + 6));
 
 
+    setState(() {
 
-    ///从接口获取每一天的数据,只有本地没有时 最后才去获取
-      this.getHistoryCalories();
+    });
 
   }
 
-  ///根据指定的一天来获取一周卡路里的方法
-  Future getHistoryCalories() async{
 
-    print("调用了一次查询卡路里接口！---------------");
+
+
+  ///服务器调接口的代码 并且把数据分配
+  Future getHistoryCalories() async{
     DateTime beginDate=this.mondayDate;
     DateTime endDate=this.sundayDate;
     int beginTime;
     int endTime;
     List oneWeekCaloriesList=new List();
-
     beginTime = (DateTime(beginDate.year,beginDate.month,beginDate.day,0,0,0).millisecondsSinceEpoch/1000).floor();
     endTime = (DateTime(endDate.year,endDate.month,endDate.day,23,59,59).millisecondsSinceEpoch/1000).floor();
 
@@ -505,15 +511,9 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         print("getCaloriesIntake 的接口有bug");
       }
 
-    ///执行完calculateDate  再刷新界面，处理完数据就可以刷新了。
-    setState(() {
-
-    });
-
-
   }
 
-  ///处理接口返回的卡路里list
+  ///处理接口返回的卡路里数据 赋值
   void assignValueBasedOnList(List caloriesList ){
 
     ///一周的时间，挨个去添加数据
@@ -542,26 +542,37 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
       }else if(formatedDate.compareTo(this.sundayDate)==0){
         this.sundayValue+=caloriesOfElement.toInt();
-
       }
-
 
     }
     );
-    print("caloriesList 本地化今天的数据完成--------");
-    this.setTodayValueFromLocal();
 
-    print("caloriesList 遍历完成--------");
-    ///遍历完一周的数据并且累加后，再保存到本地
-    this.localDateValueMap.addAll({this.mondayDate:this.mondayValue.toDouble()});
-    this.localDateValueMap.addAll({this.tuesdayDate:this.tuesdayValue.toDouble()});
-    this.localDateValueMap.addAll({this.wednesdayDate:this.wednesdayValue.toDouble()});
-    this.localDateValueMap.addAll({this.thursdayDate:this.thursdayValue.toDouble()});
-    this.localDateValueMap.addAll({this.fridayDate:this.fridayValue.toDouble()});
-    this.localDateValueMap.addAll({this.saturdayDate:this.saturdayValue.toDouble()});
-    this.localDateValueMap.addAll({this.sundayDate:this.sundayValue.toDouble()});
+    setState(() {
+      ///把上限问题解决  超过上限就直接显示为上限
+      this.mondayValue>=this.widget.planLimitedCalories?this.mondayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.tuesdayValue>=this.widget.planLimitedCalories?this.tuesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.wednesdayValue>=this.widget.planLimitedCalories?this.wednesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.thursdayValue>=this.widget.planLimitedCalories?this.thursdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.fridayValue>=this.widget.planLimitedCalories?this.fridayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.saturdayValue>=this.widget.planLimitedCalories?this.saturdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
+      this.sundayValue>=this.widget.planLimitedCalories?this.sundayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
 
-    print("caloriesList 数据添加到本地完成--------");
+    });
+
+    // print("caloriesList 本地化今天的数据完成--------");
+    // this.setTodayValueFromLocal();
+    //
+    // print("caloriesList 遍历完成--------");
+    // ///遍历完一周的数据并且累加后，再保存到本地
+    // this.localDateValueMap.addAll({this.mondayDate:this.mondayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.tuesdayDate:this.tuesdayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.wednesdayDate:this.wednesdayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.thursdayDate:this.thursdayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.fridayDate:this.fridayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.saturdayDate:this.saturdayValue.toDouble()});
+    // this.localDateValueMap.addAll({this.sundayDate:this.sundayValue.toDouble()});
+
+    // print("caloriesList 数据添加到本地完成--------");
   }
 
   ///每次获取数据之前都清空之前的数据
@@ -631,24 +642,22 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       );
 
   }
-
-  ///这里是每条数据的数值  等接口有了 可以从服务器获取每日卡路里  现在是假的 、 在最后一行代码被调用
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
     switch (i) {
       case 0:
-        return makeGroupData(0, this.mondayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isMondayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(0, this.mondayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isMondayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 1:
-        return makeGroupData(1, this.tuesdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isTuesdayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(1, this.tuesdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isTuesdayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 2:
-        return makeGroupData(2, this.wednesdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isWednesdayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(2, this.wednesdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isWednesdayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 3:
-        return makeGroupData(3, this.thursdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isThursdayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(3, this.thursdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isThursdayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 4:
-        return makeGroupData(4, this.fridayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isFridayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(4, this.fridayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isFridayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 5:
-        return makeGroupData(5, this.saturdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isSaturdayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(5, this.saturdayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isSaturdayDate?Color(0xff72d8bf):Color(0xffED9055));
       case 6:
-        return makeGroupData(6, this.sundayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isSundayDate?Color(0xffE05067):Color(0xffED9055));
+        return makeGroupData(6, this.sundayValue.toDouble(), isTouched: i == touchedIndex,barColor: this.isSundayDate?Color(0xff72d8bf):Color(0xffED9055));
       default:
         return null;
     }
@@ -749,7 +758,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       int x,
       double y, {
         bool isTouched = false,
-        Color barColor = const Color(0xffED9055),
+        Color barColor = const Color(0xff72d8bf),
         double width = 22,
         List<int> showTooltips = const [],
       }) {
