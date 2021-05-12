@@ -105,7 +105,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
                   child: ListTile(
                     leading: Image.memory( base64.decode(f.picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
                     ///Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
-                    title: Text(f.name,style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
+                    title: Text(f.getName(context),style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
                     subtitle: Text(f.calorie.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
                     trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),

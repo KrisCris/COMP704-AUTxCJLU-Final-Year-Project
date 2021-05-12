@@ -187,36 +187,18 @@ class User {
           ];
           for (Map m in res.data['data']['b']) {
             this.meals.value[0].time = m['time'] * 1000;
-            this.meals.value[0].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[0].addFood(new Food.fromJson(m));
           }
 
           for (Map m in res.data['data']['l']) {
             this.meals.value[1].foods = [];
             this.meals.value[1].time = m['time'] * 1000;
-            this.meals.value[1].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[1].addFood(new Food.fromJson(m));
           }
           for (Map m in res.data['data']['d']) {
             this.meals.value[2].foods = [];
             this.meals.value[2].time = m['time'] * 1000;
-            this.meals.value[2].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[2].addFood(new Food.fromJson(m));
           }
         }
       }

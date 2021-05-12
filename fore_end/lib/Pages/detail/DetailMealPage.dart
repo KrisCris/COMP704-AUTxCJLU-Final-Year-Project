@@ -67,14 +67,7 @@ class DetailMealPageState extends State<DetailMealPage> {
       if(this.localMealMap.containsKey(stringTime)){
         for(Map m in this.localMealMap[stringTime]){
           if(m['type'] >= 1 && m['type'] <= 3){
-            this.meal[m['type']-1].addFood(new Food(
-              calorie: m['calories'],
-              id: m['fid'],
-              picture: m['img'],
-              name: m['name'],
-              protein: m['protein'],
-              weight: (m['weight'] as double).floor()
-            ));
+            this.meal[m['type']-1].addFood(new Food.fromJson(m));
           }
         }
       }
@@ -118,38 +111,17 @@ class DetailMealPageState extends State<DetailMealPage> {
         for(Map m in res.data['data']['b']){
           this.meal[0].foods = [];
           this.meal[0].time = m['time']*1000;
-          this.meal[0].addFood(new Food(
-              name: m['name'],
-              id: m['fid'],
-              calorie: m['calories'],
-              picture: m['img'],
-              protein: m['protein'],
-              weight: (m['weight'] as double).floor()
-          ));
+          this.meal[0].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['l']){
           this.meal[1].foods = [];
           this.meal[1].time = m['time']*1000;
-          this.meal[1].addFood(new Food(
-              name: m['name'],
-              id: m['fid'],
-              calorie: m['calories'],
-              picture: m['img'],
-              protein: m['protein'],
-              weight: (m['weight'] as double).floor()
-          ));
+          this.meal[1].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['d']){
           this.meal[2].foods = [];
           this.meal[2].time = m['time']*1000;
-          this.meal[2].addFood(new Food(
-              name: m['name'],
-              id: m['fid'],
-              calorie: m['calories'],
-              picture: m['img'],
-              protein: m['protein'],
-              weight: (m['weight'] as double).floor()
-          ));
+          this.meal[2].addFood(new Food.fromJson(m));
         }
       }else{
         this.meal = [];

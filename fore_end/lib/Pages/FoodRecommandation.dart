@@ -93,9 +93,6 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         for(List m  in res.data['data']['randFoods'].values){
           for(Map fd in m){
             Food f = new Food.fromJson(fd);
-            if(CustomLocalizations.of(context).nowLanguage() == 'zh'){
-              f.name = fd['cnName'];
-            }
             this.recommendedFood.add(f);
           }
         }

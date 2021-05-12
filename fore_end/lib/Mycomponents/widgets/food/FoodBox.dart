@@ -282,7 +282,7 @@ class FoodBoxState extends State<FoodBox>
 
   Widget getFoodName() {
     return Text(
-      widget.food.name,
+      widget.food.getName(context),
       style: TextStyle(
           decoration: TextDecoration.none,
           fontSize: 18,

@@ -68,7 +68,7 @@ class Meal {
     return Meal.defaultIcon;
   }
 
-  String listFoodsName() {
+  String listFoodsName(BuildContext context) {
     String res = "";
     int idx = 0;
     for (Food fd in this.foods) {
@@ -76,7 +76,7 @@ class Meal {
         res += "...";
         break;
       }
-      res += fd.name + "\n";
+      res += fd.getName(context) + "\n";
       idx++;
     }
     return res;
