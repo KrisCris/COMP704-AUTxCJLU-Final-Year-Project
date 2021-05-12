@@ -87,6 +87,8 @@ class ResultPageState extends State<ResultPage> {
         ///转为Int显示
         String totalCalories=cal.toString();
 
+        ///TODO:这里在一开始计算totalcalories的时候 重量为0
+
         JhPickerTool.showStringPicker(context,
             title: CustomLocalizations.of(context).total +totalCalories+ ' Kcal',
             normalIndex: 0,

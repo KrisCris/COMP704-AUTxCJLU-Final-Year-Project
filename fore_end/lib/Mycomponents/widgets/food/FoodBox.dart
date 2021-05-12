@@ -310,7 +310,7 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:this.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:20,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");
