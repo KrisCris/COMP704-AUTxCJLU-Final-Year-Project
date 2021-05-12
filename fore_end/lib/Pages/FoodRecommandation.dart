@@ -70,7 +70,16 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         widget.mealType = "";
     }
     User u = User.getInstance();
-    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit .floorToDouble();
+    ///计算建议摄入量上限
+    ///先计算当前最大可摄入量
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()-u.getTodayCaloriesIntake().floorToDouble();
+    ///再计算按照比例得到的建议摄入量
+    double recommendLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()*this.widget.persent*0.01;
+    ///比较两个量，如果当前最大可摄入量>比例建议量，则按照比例建议量作为摄入量上限
+    ///如果当前最大可摄入量<比例建议量，则按照最大可摄入量
+    if(this.caloriesLimit > recommendLimit){
+      this.caloriesLimit = recommendLimit;
+    }
     Requests.recommandFood({
       "uid":u.uid,
       "token":u.token,
