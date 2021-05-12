@@ -262,6 +262,7 @@ class DietPageState extends State<DietPage> {
       },
     );
   }
+
   OpenContainer buildOpenContainer(){
     return OpenContainer(
       closedColor: Colors.transparent,
@@ -275,7 +276,7 @@ class DietPageState extends State<DietPage> {
       transitionType: ContainerTransitionType.fade,
       transitionDuration: const Duration(milliseconds: 350),
       openBuilder: (context, action) {
-        return FoodRecommandation(mealType:CustomLocalizations.of(context).lunch);
+        return FoodRecommandation(mealType:"breakfast");
       },
     );
   }

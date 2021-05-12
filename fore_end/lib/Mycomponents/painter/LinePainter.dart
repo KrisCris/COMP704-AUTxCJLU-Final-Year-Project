@@ -11,13 +11,14 @@ class LinePainter extends ContextPainter {
   double lineWidth;
   double moveVal;
   double xBias;
-
+  bool clip;
   LinePainter(
       {Color color,
         double k = 1,
         double lineWidth = 8,
         double lineGap = 15,
         BuildContext context,
+        bool clip=false,
         double moveVal=0}) {
     if(color == null){
       color =Colors.black12;
@@ -27,6 +28,7 @@ class LinePainter extends ContextPainter {
     this.context = context;
     this.k = k;
     this.moveVal = moveVal;
+    this.clip = clip;
     this.pen = Paint()
       ..color = color
       ..isAntiAlias = true
@@ -62,7 +64,9 @@ class LinePainter extends ContextPainter {
         canvas.drawLine(startPoint, endPoint, this.pen);
       }
     }
-
+    if(this.clip){
+      canvas.clipRect(Rect.fromLTRB(0, 0, size.width, size.height));
+    }
   }
 
   @override

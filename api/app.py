@@ -3,9 +3,9 @@ from flasgger import Swagger
 import pymysql
 pymysql.install_as_MySQLdb()
 from db.db import db
-from util.constants import HOST, PORT, DEBUG, ENV
-from util.constants import DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE
-from util.constants import SECRET_KEY
+from util.Common.constants import HOST, PORT, DEBUG, ENV
+from util.Common.constants import DB_USERNAME, DB_PASSWORD, DB_ADDRESS, DB_PORT, DATABASE
+from util.Common.constants import SECRET_KEY
 
 from api.user import user
 from api.food import food

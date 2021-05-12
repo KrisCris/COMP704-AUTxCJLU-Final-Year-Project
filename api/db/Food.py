@@ -1,3 +1,6 @@
+from operator import itemgetter
+from sqlalchemy.sql.expression import func
+
 from db.db import db
 
 
@@ -94,8 +97,83 @@ class Food(db.Model):
         return Food.query.filter(Food.name.like('%' + name + '%')).all()
 
     def toDict(self):
-        return {'id': self.id, 'name': self.name, 'cnName': self.cnName, 'category': self.category, 'img': self.image,
-                'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate, 'protein': self.protein,
-                'cellulose': self.cellulose,
-                'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
-                }
+        food_dict = {'id': self.id, 'name': self.name, 'cnName': self.cnName, 'category': self.category,
+                     'img': self.image,
+                     'calories': self.calories, 'fat': self.fat, 'carbohydrate': self.carbohydrate,
+                     'protein': self.protein,
+                     'cellulose': self.cellulose,
+                     'ratioP': self.ratioP, 'ratioCH': self.ratioCH, 'ratioF': self.ratioF
+                     }
+        from db.Category import Category
+        food_dict["cate_info"] = Category.getCateByID(self.category).toDict()
+        return food_dict
+
+    @staticmethod
+    def getFoodsRestricted(category, protein, ch, fat):
+        return Food.query.filter(Food.category == category).filter(Food.ratioF <= fat).filter(
+            Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
+
+    def getKNN(self, k, matchCate=False):
+        tupleList = []
+        import math
+        foods = Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName).filter(
+            Food.category == self.category) if matchCate else Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName)
+        for f in foods.all():
+            tupleList.append((f.id, math.sqrt(
+                math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(
+                    self.ratioCH - f.ratioCH, 2))))
+        tupleList = sorted(tupleList, key=itemgetter(1), reverse=False)
+        tupleList = tupleList[0:k]
+        foodList = []
+        for l in tupleList:
+            foodList.append(Food.getById(l[0]))
+        return foodList
+
+    def isSuitable(self, planType):
+        if planType == 1:
+            if self.ratioP < 0.2 or self.ratioCH > 0.5 or self.ratioF > 0.25:
+                return False
+            else:
+                return True
+        if planType == 2:
+            return True
+        if planType == 3:
+            if self.ratioP < 0.3 and self.ratioF > 0.2:
+                return False
+            else:
+                return True
+
+    @staticmethod
+    def randSuitableFood(planType):
+        # init dicts
+        dict1 = {}
+        dict2 = {}
+        from db.Category import Category
+        idList = Category.getIdList()
+        for i in idList:
+            dict1[i] = None
+            dict2[i] = None
+
+        def isFull(dic: dict):
+            for i in dic.values():
+                if i is None:
+                    return False
+            else:
+                return True
+
+        for food in Food.query.order_by(func.rand()).all():
+            if food.isSuitable(planType):
+                dict1[food.category] = food
+                if isFull(dict1):
+                    break
+
+        for food in Food.query.order_by(func.rand()).all():
+            if food.isSuitable(planType):
+                dict2[food.category] = food
+                if isFull(dict2):
+                    break
+
+        set1 = set(dict1.values())
+        set2 = set(dict2.values())
+        finalSet = set1 | set2
+        return finalSet
