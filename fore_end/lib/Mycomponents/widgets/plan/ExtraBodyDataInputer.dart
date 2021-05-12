@@ -112,6 +112,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
       this.age = age.getValue();
     });
     this.age = age.getValue();
+    this.exerciseRatio = exerciseChoise.getValue();
     return Stack(
       children: [
         this.getBackground(),

@@ -255,4 +255,11 @@ class Requests {
     return res;
   }
 
+  static Future<Response> getRecommandFood(data) async {
+    Dio dio = Req.instance;
+    FormData dt = FormData.fromMap(data);
+    Response res = await dio.post("/food/recmd_food_in_search", data: dt);
+    return res;
+  }
+
 }

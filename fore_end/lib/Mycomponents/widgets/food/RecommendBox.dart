@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
+import 'package:fore_end/Pages/FoodDetailsPage.dart';
 
 ///用于显示检测到食物后，展示食物数据的组件
 class RecommendBox extends StatefulWidget {
@@ -54,6 +55,11 @@ class RecommendBox extends StatefulWidget {
   GlobalKey<RotateIconState> iconKey;
   GlobalKey fadeKey;
 
+  List<Food> foods;
+  bool isSuitable;
+  String foodName;
+
+
   RecommendBox({
     // @required Food food,
     String title = "推荐的相关食物",
@@ -66,14 +72,17 @@ class RecommendBox extends StatefulWidget {
     int expandDuration = 150,
     double borderRadius = 10,
     bool shouldShowPic = false,
+    @required this.foods,
+    bool isSuitable=false,
+    String foodName="hamburger",
 
     this.key,
     double width = 1,
   })  :
-        // assert(food != null),
-        super(key: key) {
-
+        super(key:key) {
     // this.food = food;
+    this.foodName=foodName;
+    this.isSuitable=isSuitable;
     this.height = ScreenTool.partOfScreenHeight(height);
     this.width = ScreenTool.partOfScreenWidth(width);
     this.detailedPaddingLeft = detailedPaddingLeft;
@@ -108,11 +117,8 @@ class RecommendBoxState extends State<RecommendBox>
   ///picType = 0 -> defaultPicture
   ///picType = 1 -> photo
   int picType = 0;
-
   ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
-
-
   @override
   void dispose() {
     super.dispose();
@@ -122,17 +128,6 @@ class RecommendBoxState extends State<RecommendBox>
   @override
   void didUpdateWidget(covariant RecommendBox oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // widget.shouldShowPic.addListener(() {
-    //   if (widget.shouldShowPic.value && mounted) {
-    //     setState(() {});
-    //   }
-    // });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    //给监听器添加回调
     // widget.shouldShowPic.addListener(() {
     //   if (widget.shouldShowPic.value && mounted) {
     //     setState(() {});
@@ -207,15 +202,6 @@ class RecommendBoxState extends State<RecommendBox>
   }
 
   Widget getFoodPic() {
-    // if (this.pic != null) {
-    //   if (widget.shouldShowPic.value && this.picType == 0) {
-    //     this.pic = null;
-    //   } else {
-    //     return this.pic;
-    //   }
-    // } else {
-    //   this.picType = 0;
-    // }
     Image img = null;
     if (widget.shouldShowPic.value == false || widget.food.picture == null) {
       img = Image.asset(
@@ -278,29 +264,47 @@ class RecommendBoxState extends State<RecommendBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    List<Widget> col = [
-      Container(
-        margin: EdgeInsets.only(left: 30,right: 30),
-        child: Text("评价：这个食物[Name]不适合您的计划[减肥].",
-            // overflow: ,
-            softWrap: true,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Futura",
-                color: MyTheme.convert(ThemeColorName.NormalText))),
+    // List<Widget> col = [
+      return Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 30,right: 30),
+            child: Text("评价：这个食物"+this.widget.foodName+"不适合您的计划[减肥],建议选择下面的推荐食物.",
+                // overflow: ,
+                softWrap: true,
+                style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Futura",
+                    color: MyTheme.convert(ThemeColorName.NormalText))),
 
-      ),
+          ),
+          Container(
+            height: 70,
+            margin: EdgeInsets.only(left: 30,right: 30),
+            // padding: EdgeInsets.only(left: 1,),
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: this.widget.foods.length,
+                itemBuilder: (BuildContext ctx, int idx) {
+                  GestureDetector foodImage = GestureDetector(
+                    child: Image.memory( base64.decode(this.widget.foods[idx].picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                    onTap:(){
+                      ///点击食物图片会自动跳转
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => FoodDetails(currentFood: this.widget.foods[idx],)));
+                      print("click the food"+ idx.toString());
+                    },
+                  );
+                  return Container(
+                      margin: EdgeInsets.only(right: 10,),
+                      child: foodImage);
+                }),
+          ),
 
-    ];
-
-    col.add(SizedBox(
-      height: widget.paddingBottom,
-    ));
-    return Column(
-        children: col
-    );
+        ],
+      );
   }
 
   Widget propertyLine(String name, String value) {
@@ -345,6 +349,7 @@ class RecommendBoxState extends State<RecommendBox>
     }
     (widget.iconKey.currentWidget as RotateIcon).rotate();
     this.setState(() {});
+
   }
 
   @override
