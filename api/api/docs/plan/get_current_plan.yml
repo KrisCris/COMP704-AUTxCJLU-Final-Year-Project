@@ -2,3 +2,52 @@ get_current_plan
 ---
 tags:
   - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+responses:
+  1:
+    description: successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: object
+          example: {
+            'pid': 1,
+            'cl': 2000, 'ch': 2300,
+            'pl': 325, 'ph': 400,
+            'ext': 12,
+            'begin': 1788007833, 'end': 1900827386,
+            'type': 1, 'goal': 65,
+          }
+  -6:
+    description: plan not exist
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: number
+          example: null

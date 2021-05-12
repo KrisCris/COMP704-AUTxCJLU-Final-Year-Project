@@ -31,7 +31,7 @@ responses:
         code:
           type: number
           description: return code
-          example: -4
+          example: -3
         msg:
           type: string
           description: return info

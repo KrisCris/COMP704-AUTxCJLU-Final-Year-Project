@@ -1,5 +1,6 @@
 from operator import itemgetter
 from sqlalchemy.sql.expression import func
+from sqlalchemy import or_
 
 from db.db import db
 
@@ -94,7 +95,7 @@ class Food(db.Model):
 
     @staticmethod
     def search(name: str):
-        return Food.query.filter(Food.name.like('%' + name + '%')).all()
+        return Food.query.filter(or_(Food.name.like('%' + name + '%'), Food.cnName.like('%' + name + '%'))).all()
 
     def toDict(self):
         food_dict = {'id': self.id, 'name': self.name, 'cnName': self.cnName, 'category': self.category,

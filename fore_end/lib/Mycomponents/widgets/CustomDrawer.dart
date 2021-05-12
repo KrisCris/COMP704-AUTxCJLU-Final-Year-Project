@@ -1,16 +1,15 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Hint.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
+import 'package:fore_end/Mycomponents/widgets/HintManager.dart';
 
 ///自定义的侧边栏，基本与官方侧边栏一样
 class CustomDrawer extends StatefulWidget {
@@ -31,10 +30,10 @@ class CustomDrawer extends StatefulWidget {
   })  : assert(widthPercent <= 1.0 && widthPercent > 0.0),
         super(key: key);
   @override
-  _CustomDrawerState createState() => _CustomDrawerState();
+  CustomDrawerState createState() => CustomDrawerState();
 }
 
-class _CustomDrawerState extends State<CustomDrawer> {
+class CustomDrawerState extends State<CustomDrawer> {
 
   @override
   void initState() {
@@ -79,7 +78,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
       )
     ];
     items.addAll(widget.children);
-
+    items.add(Expanded(
+      child: HintManager()
+    ));
+    items.add(SizedBox(height: 15));
     return Semantics(
       scopesRoute: true,
       namesRoute: true,

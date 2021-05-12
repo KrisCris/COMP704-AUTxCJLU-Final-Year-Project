@@ -45,6 +45,10 @@ class User {
   bool _isOffline;
   bool stillHaveDialog;
 
+  int _breakfastRatio;
+  int _lunchRatio;
+  int _dinnerRatio;
+
   ///下面是Simon新加的mealData属性，用来存放用户的一日三餐信息。
   ///计划是：每次启动程序时，先去服务器/数据库获取最新的用户添加的食物数据，然后更新本地的数据。
   ///通过今天的日期时间获取服务器的数据，这需要用户在每次添加一个食物时，上传数据库并且记录上传的日期。
@@ -64,6 +68,9 @@ class User {
     String avatar = User.defaultAvatar,
     String token,
     String email,
+    int breakfastRatio,
+    int lunchRatio,
+    int dinnerRatio
   }) {
     this._userName = username;
     this._token = token;
@@ -79,6 +86,9 @@ class User {
     this._isOffline = offline;
     this.stillHaveDialog = false;
     this._shouldUpdateWeight = false;
+    this._breakfastRatio = breakfastRatio;
+    this._lunchRatio = lunchRatio;
+    this._dinnerRatio = dinnerRatio;
 
     ///下面是Simon新加的mealData属性
     this.meals = new ValueNotifier<List<Meal>>([]);
@@ -125,6 +135,9 @@ class User {
         plan: Plan.readLocal(),
         avatar: pre.getString("avatar"),
         needGuide: pre.getBool("needSetPlan"),
+        breakfastRatio: pre.getInt("breakfastRatio"),
+        lunchRatio: pre.getInt('lunchRatio'),
+        dinnerRatio: pre.getInt("dinnerRatio")
       );
     }
     return User._instance;
@@ -153,6 +166,10 @@ class User {
       this._needGuide = res.data['data']['needGuide'];
       this._registerDate = res.data['data']['register_date'];
 
+      this._breakfastRatio = res.data['data']['breakfast_percent'];
+      this._lunchRatio = res.data['data']['lunch_percent'];
+      this._dinnerRatio = res.data['data']['dinner_percent'];
+
       DateTime nowDay = DateTime.now();
       nowDay = DateTime(nowDay.year, nowDay.month, nowDay.day);
       res = await Requests.dailyMeal({
@@ -170,36 +187,18 @@ class User {
           ];
           for (Map m in res.data['data']['b']) {
             this.meals.value[0].time = m['time'] * 1000;
-            this.meals.value[0].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[0].addFood(new Food.fromJson(m));
           }
 
           for (Map m in res.data['data']['l']) {
             this.meals.value[1].foods = [];
             this.meals.value[1].time = m['time'] * 1000;
-            this.meals.value[1].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[1].addFood(new Food.fromJson(m));
           }
           for (Map m in res.data['data']['d']) {
             this.meals.value[2].foods = [];
             this.meals.value[2].time = m['time'] * 1000;
-            this.meals.value[2].addFood(new Food(
-                name: m['name'],
-                id: m['fid'],
-                calorie: m['calories'],
-                picture: m['img'],
-                protein: m['protein'],
-                weight: (m['weight'] as double).floor()));
+            this.meals.value[2].addFood(new Food.fromJson(m));
           }
         }
       }
@@ -357,7 +356,7 @@ class User {
   int getTodayProteinIntake() {
     int pro = 0;
     for (Meal m in meals.value) {
-      pro += m.calculateTotalCalories();
+      pro += m.calculateTotalProtein();
     }
     return pro;
   }
@@ -381,6 +380,9 @@ class User {
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
     pre.setInt("registerDate", _registerDate);
+    pre.setInt("breakfastRatio",_breakfastRatio);
+    pre.setInt("lunchRatio",_lunchRatio);
+    pre.setInt("dinnerRatio",_dinnerRatio);
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();
@@ -403,6 +405,9 @@ class User {
     pre.remove("localHistoryMeals");
     pre.remove("localBodyChanges");
     pre.remove("localHistoryPlan");
+    pre.remove("breakfastRatio");
+    pre.remove("lunchRatio");
+    pre.remove("dinnerRatio");
     this.meals.value.forEach((element) {
       element.delete();
     });
@@ -423,6 +428,12 @@ class User {
   double get bodyHeight => _bodyHeight;
   bool get shouldUpdateWeight {
     return this._shouldUpdateWeight;
+  }
+
+  int get breakfastRatio => _breakfastRatio;
+
+  set breakfastRatio(int value) {
+    _breakfastRatio = value;
   }
 
   set shouldUpdateWeight(bool value) {
@@ -488,6 +499,18 @@ class User {
     DateTime nowDay = DateTime.now();
     Duration duration = nowDay.difference(registerDay);
     return duration.inDays;
+  }
+
+  int get lunchRatio => _lunchRatio;
+
+  int get dinnerRatio => _dinnerRatio;
+
+  set lunchRatio(int value) {
+    _lunchRatio = value;
+  }
+
+  set dinnerRatio(int value) {
+    _dinnerRatio = value;
   }
 }
 

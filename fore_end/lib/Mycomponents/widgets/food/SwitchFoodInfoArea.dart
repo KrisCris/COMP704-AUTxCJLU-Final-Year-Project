@@ -110,7 +110,7 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
             children: [
               SizedBox(height: 0.05*widget.height),
               Text(
-                f.name,
+                f.getName(context),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: "Futura",

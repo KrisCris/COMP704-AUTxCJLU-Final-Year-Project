@@ -208,13 +208,16 @@ class Requests {
   static Future<Response>getHistoryPlan(data) async {
     return _postRequest("getHistoryPlan", data, "/plan/get_past_plans","get_past_plans接口", null);
   }
+  static Future<Response> setMealIntakeRatio(data) async {
+    return _postRequest("setMealIntakeRatio", data, "/user/set_meals_intake_ratio","set_meals_intake接口", null);
+  }
+
   static Future<Response> modifyPassword(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/modify_password", data: dt);
     return res;
   }
-
   static Future<Response> sendSecurityCode(data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
