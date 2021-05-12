@@ -46,6 +46,7 @@ class User(db.Model):
         self.l_percent = 40
         self.d_percent = 30
 
+
     def add(self):
         db.session.add(self)
         db.session.commit()
@@ -66,4 +67,5 @@ class User(db.Model):
         return {'id': self.id, 'email': self.email, 'nickname': self.nickname, 'token': self.token,
                 'avatar': self.avatar, 'gender': self.gender, 'age': self.age, 'weight': self.weight,
                 'height': self.height, 'register_date': self.register_date, 'needGuide': self.guide,
-                'breakfast_percent': self.b_percent, 'launch_percent': self.l_percent, 'dinner_percent': self.d_percent}
+                'breakfast_percent': self.b_percent, 'lunch_percent': self.l_percent, 'dinner_percent': self.d_percent,
+                }
