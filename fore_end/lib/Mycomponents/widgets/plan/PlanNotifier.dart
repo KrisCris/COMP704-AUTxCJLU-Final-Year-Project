@@ -51,7 +51,6 @@ class PlanNotifier extends StatelessWidget {
       showValue: true,
       unit: "/ " + p.dailyCaloriesUpperLimit.floor().toString(),
       barColor: Color(0xFFAFEC71),
-      fontColor: Color(0xFF5079AF),
       barThickness: barThickness,
     );
     List<Widget> content = [

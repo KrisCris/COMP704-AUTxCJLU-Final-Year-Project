@@ -356,7 +356,7 @@ class User {
   int getTodayProteinIntake() {
     int pro = 0;
     for (Meal m in meals.value) {
-      pro += m.calculateTotalCalories();
+      pro += m.calculateTotalProtein();
     }
     return pro;
   }
