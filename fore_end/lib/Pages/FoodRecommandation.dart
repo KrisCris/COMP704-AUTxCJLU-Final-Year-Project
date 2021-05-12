@@ -24,16 +24,21 @@ import 'package:fore_end/Mycomponents/widgets/food/SwitchFoodInfoArea.dart';
 
 class FoodRecommandation extends StatefulWidget {
   String mealType;
+  int persent;
 
   FoodRecommandation({this.mealType}){
+    User u = User.getInstance();
     if(this.mealType == null){
       int hour = DateTime.now().hour;
       if(hour >4 && hour <=11){
         this.mealType = "breakfast";
+        this.persent = u.breakfastRatio;
       }else if(hour >11 && hour <=16){
         this.mealType = "lunch";
+        this.persent = u.lunchRatio;
       }else if(hour>16 && hour <=4){
         this.mealType = "dinner";
+        this.persent = u.dinnerRatio;
       }
     }
   }
@@ -65,7 +70,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         widget.mealType = "";
     }
     User u = User.getInstance();
-    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit;
+    this.caloriesLimit = (u.plan.dailyCaloriesUpperLimit * this.widget.persent * 0.01).floorToDouble();
     Requests.recommandFood({
       "uid":u.uid,
       "token":u.token,
