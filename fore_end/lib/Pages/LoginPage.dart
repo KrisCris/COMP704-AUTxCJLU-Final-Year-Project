@@ -69,6 +69,7 @@ class Login extends StatelessWidget {
       placeholder:  CustomLocalizations.of(context).password,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
+      next: emailField.getFocusNode(),
       onCorrect: () {
         passwordIsInput = true;
         if (emailIsInput) this.nextButton.setDisabled(false);

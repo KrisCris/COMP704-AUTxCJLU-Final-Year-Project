@@ -120,6 +120,7 @@ def consume_foods(*args, **kwargs):
             calories=food_info['calories'],
             protein=food_info['protein'],
             weight=food_info['weight'],
+            cnName=food_info['cnName'],
             time=time
         )
         f.add()

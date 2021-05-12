@@ -45,11 +45,6 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       new GlobalKey<CustomIconButtonState>()
     ];
     this.ctl = TabController(length: 3, vsync: this, initialIndex: 1);
-
-    // WidgetsBinding.instance.addPostFrameCallback((msg) {
-    //   widget.user.solvePastDeadline(context);
-    //   // widget.user.remindUpdateWeight(context);
-    // });
     super.initState();
   }
 
