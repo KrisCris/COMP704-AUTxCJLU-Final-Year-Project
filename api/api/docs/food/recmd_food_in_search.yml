@@ -39,6 +39,51 @@ responses:
         data:
           type: object
           example: {
-            "suitable": True,
-            "recmdFoods": [{'id':1, 'name': 'ham', 'category':1,'img':kldsfja;jd}]
-          }
+    "recmdFoods": [
+      {
+        "calories": 183.8,
+        "carbohydrate": 0,
+        "cate_info": {
+          "cnDesc": null,
+          "cnName": "肉蛋奶",
+          "desc": null,
+          "id": 3,
+          "name": "Proteins"
+        },
+        "category": 3,
+        "cellulose": 0,
+        "cnName": "大午烤鸡",
+        "fat": 6,
+        "id": 278,
+        "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RD",
+        "name": "ayam bakar",
+        "protein": 32.2,
+        "ratioCH": 0,
+        "ratioF": 0.157,
+        "ratioP": 0.843
+      },
+      {
+        "calories": 132.89,
+        "carbohydrate": 3.4,
+        "cate_info": {
+          "cnDesc": null,
+          "cnName": "肉蛋奶",
+          "desc": null,
+          "id": 3,
+          "name": "Proteins"
+        },
+        "category": 3,
+        "cellulose": 0,
+        "cnName": "清炒河虾仁",
+        "fat": 2.1,
+        "id": 298,
+        "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE",
+        "name": "salt & pepper fried shrimp with shell",
+        "protein": 12.4,
+        "ratioCH": 0.19,
+        "ratioF": 0.117,
+        "ratioP": 0.693
+      }
+    ],
+    "suitable": false
+  }
