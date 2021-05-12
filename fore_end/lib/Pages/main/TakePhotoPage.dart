@@ -292,13 +292,11 @@ class TakePhotoState extends State<TakePhotoPage>
             SizedBox(height: ScreenTool.topPadding),
             Expanded(child: SizedBox()),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(width: 50),
                 this.getAlbumButton(),
                 this.getPhotoButton(),
                 this.getResultButton(),
-                SizedBox(width: 50),
               ],
             ),
             SizedBox(height: ScreenTool.partOfScreenHeight(0.05))
@@ -313,13 +311,13 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getPhotoButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.circle,
-      iconSize: 38,
+      icon: FontAwesomeIcons.solidCircle,
+      iconSize: ScreenTool.partOfScreenWidth(0.16),
       adjustHeight: 2.5,
       sizeChangeWhenClick: true,
       backgroundSizeChange: false,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
+      buttonSize: ScreenTool.partOfScreenWidth(0.18),
+      backgroundOpacity: 0,
       borderRadius: 45,
       shadows: [
         BoxShadow(
@@ -353,10 +351,10 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getAlbumButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.image,
-      iconSize: 34,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
+      icon: FontAwesomeIcons.solidImages,
+      iconSize: ScreenTool.partOfScreenWidth(0.11),
+      buttonSize: ScreenTool.partOfScreenWidth(0.13),
+      backgroundOpacity: 0,
       borderRadius: 10,
       shadows: [
         BoxShadow(
@@ -390,10 +388,10 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getResultButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.appleAlt,
-      iconSize: 34,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
+      icon: FontAwesomeIcons.chevronCircleRight,
+      iconSize: ScreenTool.partOfScreenWidth(0.12),
+      buttonSize: ScreenTool.partOfScreenWidth(0.14),
+      backgroundOpacity: 0,
       borderRadius: 10,
       shadows: [
         BoxShadow(

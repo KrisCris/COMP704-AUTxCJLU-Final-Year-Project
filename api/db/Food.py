@@ -132,7 +132,7 @@ class Food(db.Model):
 
     def isSuitable(self, planType):
         if planType == 1:
-            if self.ratioP < 0.2 or self.ratioCH > 0.5 or self.ratioF > 0.25:
+            if self.ratioCH > 0.5 or self.ratioF > 0.25:
                 return False
             else:
                 return True
