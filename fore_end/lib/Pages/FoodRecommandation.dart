@@ -70,7 +70,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         widget.mealType = "";
     }
     User u = User.getInstance();
-    this.caloriesLimit = (u.plan.dailyCaloriesUpperLimit * this.widget.persent * 0.01).floorToDouble();
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit .floorToDouble();
     Requests.recommandFood({
       "uid":u.uid,
       "token":u.token,
@@ -243,8 +243,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
-                persent: totalCal / 2000,
-                maxPersent: 0.7,
+                persent: totalCal / (this.caloriesLimit * 0.01*this.widget.persent),
+                maxPersent: 1,
                 name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
               )
             ]),
@@ -318,7 +318,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
 
   void redrawProgressBar(){
     this.persentBar.currentState.changePersentByIndex(
-        0, this.calculateTotalCalorie() / this.caloriesLimit);
+        0, this.calculateTotalCalorie() / (this.caloriesLimit*0.01*this.widget.persent));
   }
   void updateCalories(){
     this.totalCal.currentState.changeTo(

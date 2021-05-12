@@ -166,9 +166,9 @@ class User {
       this._needGuide = res.data['data']['needGuide'];
       this._registerDate = res.data['data']['register_date'];
 
-      this._breakfastRatio = res.data['data']['breakfast_persent'];
-      this._lunchRatio = res.data['data']['lunch_persent'];
-      this._dinnerRatio = res.data['data']['dinner_persent'];
+      this._breakfastRatio = res.data['data']['breakfast_percent'];
+      this._lunchRatio = res.data['data']['lunch_percent'];
+      this._dinnerRatio = res.data['data']['dinner_percent'];
 
       DateTime nowDay = DateTime.now();
       nowDay = DateTime(nowDay.year, nowDay.month, nowDay.day);
