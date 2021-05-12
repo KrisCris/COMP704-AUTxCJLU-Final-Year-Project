@@ -24,8 +24,24 @@ import 'package:fore_end/Mycomponents/widgets/food/SwitchFoodInfoArea.dart';
 
 class FoodRecommandation extends StatefulWidget {
   String mealType;
+  int persent;
 
-  FoodRecommandation({this.mealType});
+  FoodRecommandation({this.mealType}){
+    User u = User.getInstance();
+    if(this.mealType == null){
+      int hour = DateTime.now().hour;
+      if(hour >4 && hour <=11){
+        this.mealType = "breakfast";
+        this.persent = u.breakfastRatio;
+      }else if(hour >11 && hour <=16){
+        this.mealType = "lunch";
+        this.persent = u.lunchRatio;
+      }else if(hour>16 && hour <=4){
+        this.mealType = "dinner";
+        this.persent = u.dinnerRatio;
+      }
+    }
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -39,7 +55,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
   Food nowFood;
   double caloriesLimit;
   GlobalKey<SwitchFoodInfoAreaState> foodinfo;
-  GlobalKey<CrossFadeTextState> totalCal;
+  GlobalKey<CrossFadeTextState> calSuggest;
   GlobalKey<PersentBarState> persentBar;
 
 
@@ -48,13 +64,13 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     this.selectedFood = new List<Food>();
     this.recommendedFood = [];
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
-    this.totalCal = new GlobalKey<CrossFadeTextState>();
+    this.calSuggest = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
     if(widget.mealType == null){
         widget.mealType = "";
     }
     User u = User.getInstance();
-    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit;
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit .floorToDouble();
     Requests.recommandFood({
       "uid":u.uid,
       "token":u.token,
@@ -75,11 +91,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
           }
         }
         setState(() {});
-      }else{
-
       }
     });
-
     super.initState();
   }
 
@@ -159,7 +172,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: CustomLocalizations.of(context).recommand + this.widget.mealType,
+          text: CustomLocalizations.of(context).recommand + CustomLocalizations.of(context).getContent(widget.mealType),
           underLineLength: 200,
           maxHeight: 20,
           maxWidth: 0.95,
@@ -230,8 +243,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
-                persent: totalCal / 2000,
-                maxPersent: 0.7,
+                persent: totalCal / (this.caloriesLimit * 0.01*this.widget.persent),
+                maxPersent: 1,
                 name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
               )
             ]),
@@ -248,8 +261,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 children: [
                   SizedBox(width: 100),
                   CrossFadeText(
-                    key: this.totalCal,
-                    text: totalCal.toString() + " Kcal",
+                    key: this.calSuggest,
+                    text: totalCal.floor().toString() +" / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+ " Kcal",
                     fontSize: 13,
                   ),
                   Expanded(child: SizedBox()),
@@ -276,14 +289,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         "foods_info":jsonEncode(this.selectedFood),
                       });
                       if(res == null){
-
                         return;
                       }
                       if(res.data['code'] != 1){
-
                         return;
                       }
-
                       for(Food f in this.selectedFood){
                         m.addFood(f);
                       }
@@ -308,11 +318,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
 
   void redrawProgressBar(){
     this.persentBar.currentState.changePersentByIndex(
-        0, this.calculateTotalCalorie() / this.caloriesLimit);
+        0, this.calculateTotalCalorie() / (this.caloriesLimit*0.01*this.widget.persent));
   }
   void updateCalories(){
-    this.totalCal.currentState.changeTo(
-        this.calculateTotalCalorie().toString() + " Kcal");
+    this.calSuggest.currentState.changeTo(
+        this.calculateTotalCalorie().floor().toString() + " / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+" Kcal");
     this.redrawProgressBar();
   }
 }
