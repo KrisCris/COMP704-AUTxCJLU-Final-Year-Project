@@ -1,4 +1,3 @@
-from db.Plan import Plan
 from db.User import User
 
 
@@ -8,7 +7,7 @@ def estimateExt(u: User, pal, remain, goalWeight):
     accumDay = 7
     lastAvaDay = -1
     for i in range(0, 24):
-        from util.Planer.CalsPlaner import calc_calories
+        from util.Planner.CalsPlanner import calc_calories
         result = calc_calories(
             age=u.age,
             height=u.height,

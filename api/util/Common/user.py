@@ -10,10 +10,10 @@ from email.mime.multipart import MIMEMultipart
 
 from werkzeug.security import check_password_hash
 
-from util.constants import DEBUG
-from util.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_PORT, SMTP_URL
+from util.Common.constants import DEBUG
+from util.Common.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_URL
 
-from util.func import reply_json, get_time_gap, get_current_time
+from util.Common.func import reply_json, get_time_gap, get_current_time
 
 '''
   -1:
@@ -37,18 +37,22 @@ from util.func import reply_json, get_time_gap, get_current_time
 def require_login(func):
     @functools.wraps(func)  # 修饰内层函数，防止当前装饰器去修改被装饰函数__name__的属性
     def inner(*args, **kwargs):
-        if request.method == 'POST':
-            if 'token' not in request.form.keys():
-                return reply_json(-1)
-            else:
-                token = request.form['token']
-                uid = request.form['uid']
-        else:
-            if not request.values.has_key('token'):
-                return reply_json(-1)
-            else:
-                token = request.values.get('token')
-                uid = request.values.get('uid')
+        # if request.method == 'POST':
+        #     if 'token' not in request.form.keys():
+        #         return reply_json(-1)
+        #     else:
+        #         token = request.form['token']
+        #         uid = request.form['uid']
+        # else:
+        #     if not request.values.has_key('token'):
+        #         return reply_json(-1)
+        #     else:
+        #         token = request.values.get('token')
+        #         uid = request.values.get('uid')
+
+        uid = args[0].get('uid')
+        token = args[0].get('token')
+
         from db.User import User
         user = User.query.filter(User.token == token).filter(User.id == uid).first()
         if user is None:
@@ -112,18 +116,18 @@ def require_login(func):
 def require_code_check(func):
     @functools.wraps(func)
     def inner(*args, **kwargs):
-        email = None
-        uid = None
-        if request.method == 'POST':
-            if 'email' in request.form.keys():
-                email = request.form['email']
-            else:
-                uid = request.form['uid']
-        else:
-            if 'email' in request.values.keys():
-                email = request.values.get('email')
-            else:
-                uid = request.values.get('uid')
+        email = args[0].get("email")
+        uid = args[0].get("uid")
+        # if request.method == 'POST':
+        #     if 'email' in request.form.keys():
+        #         email = request.form['email']
+        #     else:
+        #         uid = request.form['uid']
+        # else:
+        #     if 'email' in request.values.keys():
+        #         email = request.values.get('email')
+        #     else:
+        #         uid = request.values.get('uid')
 
         from db.User import User
         if email is None and uid is None:
