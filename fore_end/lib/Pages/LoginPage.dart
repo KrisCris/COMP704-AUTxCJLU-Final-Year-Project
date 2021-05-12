@@ -51,8 +51,23 @@ class Login extends StatelessWidget {
         this.login(emailVal, passwordVal, context);
       },
     );
+    this.passwordField = CustomTextField(
+      placeholder:  CustomLocalizations.of(context).password,
+      inputType: InputFieldType.password,
+      width: ScreenTool.partOfScreenWidth(0.7),
+      onCorrect: () {
+        passwordIsInput = true;
+        if (emailIsInput) this.nextButton.setDisabled(false);
+      },
+      onError: () {
+
+        passwordIsInput = false;
+        this.nextButton.setDisabled(true);
+      },
+    );
     this.emailField = CustomTextField(
       placeholder:  CustomLocalizations.of(context).email,
+      next: this.passwordField.getFocusNode(),
       helpText:  CustomLocalizations.of(context).emailHint,
       inputType: InputFieldType.email,
       errorText: "Wrong email address!",
@@ -66,20 +81,6 @@ class Login extends StatelessWidget {
         this.emailField.setErrorText("please input correct email format");
         this.emailField.setError();
         emailIsInput = false;
-        this.nextButton.setDisabled(true);
-      },
-    );
-    this.passwordField = CustomTextField(
-      placeholder:  CustomLocalizations.of(context).password,
-      inputType: InputFieldType.password,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      onCorrect: () {
-        passwordIsInput = true;
-        if (emailIsInput) this.nextButton.setDisabled(false);
-      },
-      onError: () {
-
-        passwordIsInput = false;
         this.nextButton.setDisabled(true);
       },
     );
