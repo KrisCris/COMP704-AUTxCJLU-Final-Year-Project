@@ -2,3 +2,114 @@ Search Food in DB
 ---
 tags:
   - FOOD
+parameters:
+  - in: query
+    name: name
+    description: food name
+    type: string
+    required: true
+responses:
+  1:
+    description: Successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          example: {
+            "champon": {
+              "calories": 430.56,
+              "carbohydrate": 64.17,
+              "cate_info": {
+                "cnDesc": null,
+                "cnName": "主食",
+                "desc": null,
+                "id": 7,
+                "name": "Staple Food"
+              },
+              "category": 7,
+              "cellulose": null,
+              "cnName": "日式什锦面",
+              "fat": 16.39,
+              "id": 164,
+              "img": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAICAgICAgICAgIDAwMDAwQEBAQEBAcFBQUFBQcKBgcGBgcGCgkLCQgJCwk",
+              "name": "champon",
+              "protein": 7.22,
+              "ratioCH": 0.731,
+              "ratioF": 0.187,
+              "ratioP": 0.082
+            },
+            "ham cutlet": {
+              "calories": 318,
+              "carbohydrate": 0.1,
+              "cate_info": {
+                "cnDesc": null,
+                "cnName": "肉蛋奶",
+                "desc": null,
+                "id": 3,
+                "name": "Proteins"
+              },
+              "category": 3,
+              "cellulose": null,
+              "cnName": "火腿肉饼",
+              "fat": 28,
+              "id": 191,
+              "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsI",
+              "name": "ham cutlet",
+              "protein": 16.4,
+              "ratioCH": 0.002,
+              "ratioF": 0.629,
+              "ratioP": 0.369
+            },
+            "hambarg steak": {
+              "calories": 198.4,
+              "carbohydrate": 5.54,
+              "cate_info": {
+                "cnDesc": null,
+                "cnName": "菜",
+                "desc": null,
+                "id": 1,
+                "name": "Dishes"
+              },
+              "category": 1,
+              "cellulose": 0.31,
+              "cnName": "汉堡肉饼",
+              "fat": 12.47,
+              "id": 60,
+              "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ",
+              "name": "hambarg steak",
+              "protein": 16.32,
+              "ratioCH": 0.161,
+              "ratioF": 0.364,
+              "ratioP": 0.475
+            },
+            "hamburger": {
+              "calories": 256,
+              "carbohydrate": 24.8,
+              "cate_info": {
+                "cnDesc": null,
+                "cnName": "主食",
+                "desc": null,
+                "id": 7,
+                "name": "Staple Food"
+              },
+              "category": 7,
+              "cellulose": null,
+              "cnName": "汉堡包",
+              "fat": 12.3,
+              "id": 17,
+              "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsI",
+              "name": "hamburger",
+              "protein": 11.7,
+              "ratioCH": 0.508,
+              "ratioF": 0.252,
+              "ratioP": 0.24
+            }
+          }

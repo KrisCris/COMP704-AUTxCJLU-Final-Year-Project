@@ -63,7 +63,7 @@ class _FoodDetailsState extends State<FoodDetails> {
   }
 
   double calculatePercent(String label){
-    return widget.currentFood.calculatePersent(label);
+    return widget.currentFood.calculatePercent(label);
   }
 
 
@@ -162,17 +162,17 @@ class _FoodDetailsState extends State<FoodDetails> {
                   sections: [
                     PersentSection(
                       normalColor:const Color(0xff09edfe),///碳水
-                      persent: 1000/2000,  ///这里的数字先暂时写死 来测试
-                      name: "Calorie Persent",
+                      persent: this.widget.currentFood.calculateThreeNutritionPercent("carbohydrate"),  ///这里的数字先暂时写死 来测试
+                      name: "carbohydrate Persent",
                     ),
                     PersentSection(
                       normalColor: const Color(0xfff8b250),
-                      persent: 500/2000,  ///这里的数字先暂时写死 来测试
+                      persent: this.widget.currentFood.calculateThreeNutritionPercent("fat"),  ///这里的数字先暂时写死 来测试
                       name: "Fat Persent",
                     ),
                     PersentSection(
                       normalColor: const Color(0xffff5983),
-                      persent: 500/2000,  ///这里的数字先暂时写死 来测试
+                      persent: this.widget.currentFood.calculateThreeNutritionPercent("protein"),  ///这里的数字先暂时写死 来测试
                       name: "Protein Persent",
                     ),
                   ]),
@@ -184,7 +184,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.57),
+                  height: ScreenTool.partOfScreenHeight(0.52 ),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
@@ -239,7 +239,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                       ),
                       // a,  ///这里是重量调整器
                       AspectRatio(  ///AspectRatio 是固定宽高比的组件
-                        aspectRatio: 1/0.8,
+                        aspectRatio: 1/0.7,
                         child: PieChart(
                           PieChartData(
                               pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
@@ -256,7 +256,6 @@ class _FoodDetailsState extends State<FoodDetails> {
                                 });
                               }),
 
-
                               borderData: FlBorderData(
                                 show: false,
                               ),
@@ -266,34 +265,9 @@ class _FoodDetailsState extends State<FoodDetails> {
                         ),
                       ),
 
-                      // PieChartSample2(),
-
-
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //   children: [
-                      //     Text("选择食物重量(g):", style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 18,fontFamily: 'Futura'),),
-                      //     valueAdjuster,
-                      //   ],
-                      // )
-
                     ],
                   )
-                // Column(
-                //   // mainAxisAlignment: MainAxisAlignment.center,
-                //   // crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     SizedBox(height: 5,),
-                //     PlanTextItem(leftText: CustomLocalizations.of(context).calories, rightText: "Kcal/100g", rightValue: widget.calories.toInt(),),
-                //     PlanTextItem(leftText: CustomLocalizations.of(context).protein, rightText: "g/100g", rightValue: widget.protein.toInt(),),
-                //     PlanTextItem(leftText: CustomLocalizations.of(context).fat, rightText: "g/100g", rightValue: widget.fat.toInt(),),
-                //     // PlanTextItem(leftText: CustomLocalizations.of(context).cellulose, rightText: "g/100g", rightValue: widget.cellulose.toInt(),),
-                //     // PlanTextItem(leftText: CustomLocalizations.of(context).carbohydrate, rightText: "g/100g", rightValue: widget.carbohydrate.toInt(),),
-                //     // PlanTextItem(leftText: CustomLocalizations.of(context).cholesterol, rightText: "g/100g", rightValue: widget.cholesterol.toInt(),),
-                //     SizedBox(height: 25,),
-                //
-                //   ],
-                // )
+
               ),
               SizedBox(height:15),
               CustomButton(
@@ -332,8 +306,6 @@ class _FoodDetailsState extends State<FoodDetails> {
               // a,
 
 
-
-
             ],
           ),
         ),
@@ -347,7 +319,7 @@ class _FoodDetailsState extends State<FoodDetails> {
     return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
       final double fontSize = isTouched ? 25 : 16;
-      final double radius = isTouched ? 120 : 115;
+      final double radius = isTouched ? 100 : 90;
       switch (i) {
         case 0:
           return PieChartSectionData(

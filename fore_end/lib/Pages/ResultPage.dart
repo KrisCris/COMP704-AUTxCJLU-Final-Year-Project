@@ -85,7 +85,7 @@ class ResultPageState extends State<ResultPage> {
         ///这里还可以计算总的其他营养数据 比如protein
         int cal = 0;
         widget.recognizer.foods.forEach((fd) {
-          cal += (fd.food.calorie*fd.food.weight).toInt();
+          cal += (fd.food.calorie*fd.food.weight/100).toInt();
         });
         ///转为Int显示
         String totalCalories=cal.toString();

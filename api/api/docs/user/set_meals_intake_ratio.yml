@@ -1,25 +1,36 @@
-get_plan
+Edit intake ratio of each meal
 ---
 tags:
-  - PLAN
+  - USER
 parameters:
   - in: formData
     name: uid
     type: string
     required: true
-    description: user id
+    description: User ID
   - in: formData
     name: token
     type: string
     required: true
-    description: token
+    description: Token
   - in: formData
-    name: pid
+    name: breakfast
     type: string
-    description: plan id
+    required: true
+    description: breakfast
+  - in: formData
+    name: lunch
+    type: string
+    required: true
+    description: lunch
+  - in: formData
+    name: dinner
+    type: string
+    required: true
+    description: dinner
 responses:
   1:
-    description: successful
+    description: Success
     schema:
       properties:
         code:
@@ -32,27 +43,19 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {
-            'pid': 1,
-            'cl': 2000, 'ch': 2300,
-            'pl': 325, 'ph': 400,
-            'ext': 12,
-            'begin': 1788007833, 'end': 1900827386,
-            'type': 1, 'goal': 65,
-            'hasFinished': False
-        }
-  -6:
-    description: plan not exist
+          example: null
+  -2:
+    description: sum of 3 values are not 100
     schema:
       properties:
         code:
           type: number
           description: return code
-          example: -6
+          example: -2
         msg:
           type: string
           description: return info
-          example: 'not exist'
+          example: 'should added up to 100'
         data:
           type: number
           example: null

@@ -47,6 +47,7 @@ class PlanDetail(db.Model):
         }
 
     def extend(self, ext) -> 'PlanDetail':
+        ext = int(ext)
         self.ext = ext if self.ext is None else self.ext + ext
         self.add()
         return self

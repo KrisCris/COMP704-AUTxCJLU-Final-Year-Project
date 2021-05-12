@@ -2,3 +2,85 @@ Get Daily Consumption Records
 ---
 tags:
   - FOOD
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: begin
+    type: string
+    required: true
+    description: begin
+  - in: formData
+    name: end
+    type: string
+    required: true
+    description: end
+responses:
+  1:
+    description: Successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: object
+          example: {
+    "b": [
+      {
+        "calories": 99.95,
+        "fid": 185,
+        "id": 33,
+        "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCY",
+        "name": "yudofu",
+        "pid": 4,
+        "protein": 17.46,
+        "time": 1620817490,
+        "type": 1,
+        "uid": 5,
+        "weight": 110
+      },
+      {
+        "calories": 124.47,
+        "fid": 141,
+        "id": 34,
+        "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCw",
+        "name": "beef bowl",
+        "pid": 4,
+        "protein": 16.62,
+        "time": 1620817490,
+        "type": 1,
+        "uid": 5,
+        "weight": 40
+      },
+      {
+        "calories": 131.64,
+        "fid": 124,
+        "id": 35,
+        "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETF",
+        "name": "boiled chicken and vegetables",
+        "pid": 4,
+        "protein": 16.42,
+        "time": 1620820642,
+        "type": 1,
+        "uid": 5,
+        "weight": 50
+      }
+    ],
+    "d": [],
+    "e": [],
+    "l": []
+  }

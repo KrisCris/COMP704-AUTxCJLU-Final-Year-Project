@@ -30,4 +30,18 @@ responses:
           type: array
           items:
             type: object
-            example: {"basic":{"img": "anB64Image", "name": "rawName"}, "info":"json obj of food info"}
+            example: {"basic":{"img": "/i9v/1dsafadsfdasfdasaadfs", "name": "apple"}, "info":{'id': 1, 'name': "apple", 'cnName': "苹果", 'category': 7,
+                     'img': /i9v/12o312908fdklsjfa;dnm23904nml,
+                     'calories': 70, 'fat': 0, 'carbohydrate': 88,
+                     'protein': 24,
+                     'cellulose': 9,
+                     'ratioP': 0.2, 'ratioCH': 0.5, 'ratioF': 0.3,
+                     "cate_info":{
+                          'id': 7,
+                          'name': "frutes",
+                          'cnName': "果蔬",
+                          'desc': "description",
+                          'cnDesc': "描述"
+                      }
+                     }
+                }
