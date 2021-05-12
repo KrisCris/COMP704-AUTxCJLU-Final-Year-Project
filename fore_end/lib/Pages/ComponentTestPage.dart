@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,6 +14,7 @@ import 'package:fore_end/Mycomponents/widgets/food/DetailedMealList.dart';
 import 'package:fore_end/Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
+import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 import 'dart:math' as math;
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
@@ -34,6 +37,7 @@ class ComponentTestPage extends StatefulWidget {
 class ComponentTestState extends State<ComponentTestPage>
     with TickerProviderStateMixin {
 
+
   @override
   void dispose() {
     super.dispose();
@@ -46,16 +50,7 @@ class ComponentTestState extends State<ComponentTestPage>
 
   @override
   Widget build(BuildContext context) {
-    return FoodDetails();
-    // return Container(
-    //   height: ScreenTool.partOfScreenHeight(0.4),
-    //   width: ScreenTool.partOfScreenWidth(0.7),
-    //   alignment: Alignment.center,
-    //   color: Colors.black,
-    //
-    //   child: PieChartSample2(),
-    // );
-
+    return Container();
   }
 
 

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/util/MyCounter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 
@@ -53,6 +56,9 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   ///valueNotifier 是一个会改变的值，所以放到state里面声明，主要是被加减的valueNotifier.value的值
   ///ValueNotifier这个类型的变量，当发生改变，可以通过valueNotifier.addListener来监听改变 然后进行操作方法
   ValueNotifier<T> valueNotifier;
+  MyCounter counter;
+  MyCounter minusCounter;
+
 
   T getVal(){
     return valueNotifier.value;
@@ -66,6 +72,20 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   @override
   void initState() {
     // TODO: implement initState
+    this.counter = MyCounter(
+        duration: 300,
+        calling: (){
+          print("hello!");
+          plusWeight();
+        }
+    );
+    this.minusCounter= MyCounter(
+        duration: 300,
+        calling: (){
+          print("Nothello!");
+          minusWeight();
+        }
+    );
     super.initState();
     ///初始化valueNotifier为上面的类型，并且初始化它的值
     ///并且监听变化
@@ -104,6 +124,12 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
           onClick: () {
             minusWeight();
           },
+          onLongPress: (){
+            this.minusCounter.start();
+          },
+          onLongPressUp: (){
+            this.minusCounter.stop();
+          },
         ),
         SizedBox(
           width: 20,
@@ -128,6 +154,12 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
           buttonSize: 40,
           onClick: () {
             plusWeight();
+          },
+          onLongPress: (){
+            this.counter.start();
+          },
+          onLongPressUp: (){
+            this.counter.stop();
           },
         ),
       ],

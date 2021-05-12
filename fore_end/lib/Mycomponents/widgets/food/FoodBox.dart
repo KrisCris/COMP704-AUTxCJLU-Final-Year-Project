@@ -124,7 +124,7 @@ class FoodBoxState extends State<FoodBox>
 
 
   ///全局重量 点击按钮刷新组件
-  int foodWeight =1;
+  int foodWeight =0;
 
   ///增加和减少重量
   // void plusWeight(){
@@ -319,7 +319,7 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:100,valueWeight: 10,key: this.widget.valueAdjusterKey);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:90,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");
