@@ -55,7 +55,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
   Food nowFood;
   double caloriesLimit;
   GlobalKey<SwitchFoodInfoAreaState> foodinfo;
-  GlobalKey<CrossFadeTextState> totalCal;
+  GlobalKey<CrossFadeTextState> calSuggest;
   GlobalKey<PersentBarState> persentBar;
 
 
@@ -64,7 +64,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     this.selectedFood = new List<Food>();
     this.recommendedFood = [];
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
-    this.totalCal = new GlobalKey<CrossFadeTextState>();
+    this.calSuggest = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
     if(widget.mealType == null){
         widget.mealType = "";
@@ -261,8 +261,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 children: [
                   SizedBox(width: 100),
                   CrossFadeText(
-                    key: this.totalCal,
-                    text: totalCal.toString() + " Kcal",
+                    key: this.calSuggest,
+                    text: totalCal.floor().toString() +" / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+ " Kcal",
                     fontSize: 13,
                   ),
                   Expanded(child: SizedBox()),
@@ -321,8 +321,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         0, this.calculateTotalCalorie() / (this.caloriesLimit*0.01*this.widget.persent));
   }
   void updateCalories(){
-    this.totalCal.currentState.changeTo(
-        this.calculateTotalCalorie().toString() + " Kcal");
+    this.calSuggest.currentState.changeTo(
+        this.calculateTotalCalorie().floor().toString() + " / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+" Kcal");
     this.redrawProgressBar();
   }
 }
