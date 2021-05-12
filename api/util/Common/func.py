@@ -70,8 +70,8 @@ def echoErr(func):
             print(f"{bcolors.OKGREEN}[Debug]{bcolors.ENDC} {bcolors.WARNING}[{bcolors.ENDC}{getInfo(func)}{bcolors.ENDC}{bcolors.WARNING}]{bcolors.ENDC}: {bcolors.OKBLUE}{e}{bcolors.ENDC}")
             return reply_json(500, data=str(e))
         else:
-            r.json.get("code") != 1
-            print(f"{bcolors.OKGREEN}[Debug]{bcolors.ENDC} {bcolors.WARNING}[{bcolors.ENDC}{getInfo(func)}{bcolors.ENDC}{bcolors.WARNING}]{bcolors.ENDC}: {bcolors.OKBLUE}{str(r.json)}{bcolors.ENDC}")
+            if r.json.get("code") != 1:
+                print(f"{bcolors.OKGREEN}[Debug]{bcolors.ENDC} {bcolors.WARNING}[{bcolors.ENDC}{getInfo(func)}{bcolors.ENDC}{bcolors.WARNING}]{bcolors.ENDC}: {bcolors.OKBLUE}{str(r.json)}{bcolors.ENDC}")
             return r
 
     return inner

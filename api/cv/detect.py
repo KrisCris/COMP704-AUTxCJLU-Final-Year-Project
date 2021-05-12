@@ -120,10 +120,10 @@ def _detect(b64, output):
                     result.append(inner)
             else:
                 # result.append('None')
-                print('None')
+                # print('None')
                 return None
 
-        print('\n'.join(str(i) for i in result))
+        # print('\n'.join(str(i) for i in result))
         return result
 
 
