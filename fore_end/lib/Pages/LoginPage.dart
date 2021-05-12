@@ -63,6 +63,8 @@ class Login extends StatelessWidget {
         if (passwordIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
+        this.emailField.setErrorText("please input correct email format");
+        this.emailField.setError();
         emailIsInput = false;
         this.nextButton.setDisabled(true);
       },
@@ -76,6 +78,7 @@ class Login extends StatelessWidget {
         if (emailIsInput) this.nextButton.setDisabled(false);
       },
       onError: () {
+
         passwordIsInput = false;
         this.nextButton.setDisabled(true);
       },
