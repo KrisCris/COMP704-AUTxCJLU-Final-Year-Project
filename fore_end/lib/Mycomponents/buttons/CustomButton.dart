@@ -93,7 +93,7 @@ class CustomButton extends StatefulWidget with DisableWidgetMixIn {
       this.radius = 30.0,
       this.hasShadow = false,
       this.width,
-      this.height,
+      this.height=45,
       this.leftMargin = 0.0,
       this.rightMargin = 0.0,
       this.topMargin = 0.0,

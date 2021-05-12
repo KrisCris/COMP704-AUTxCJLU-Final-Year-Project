@@ -69,13 +69,8 @@ class AccountPage extends StatefulWidget {
 class PageState extends State<AccountPage> {
   EditableArea basicInfoEditableArea;
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
     this.basicInfoEditableArea = EditableArea(
         width: 0.7,
         height: 320,
@@ -154,8 +149,6 @@ class PageState extends State<AccountPage> {
 
                     ],
                   ),
-
-
                   SizedBox(
                     height: 10,
                   ),
@@ -174,7 +167,11 @@ class PageState extends State<AccountPage> {
                   SizedBox(
                     height: 10,
                   ),
-
+                  Row(
+                    children: [
+                      
+                    ],
+                  )
                 ],
               )
             ],

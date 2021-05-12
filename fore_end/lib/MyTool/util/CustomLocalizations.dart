@@ -641,6 +641,14 @@ class CustomLocalizations {
       "en":"Protein",
       "zh":"蛋白质"
     },
+    "recommendBoxTitle":{
+      "en":"Food recommended list:",
+      "zh":"更适合食物推荐列表："
+    },
+
+
+
+
     "recommand meal":{
       "en":"recommand meal",
       "zh":"推荐餐食"
@@ -679,6 +687,10 @@ class CustomLocalizations {
       languageCode = locale.languageCode;
     }
     return languageCode;
+  }
+
+  String nowLanguage(){
+    return this._getLanguageCode();
   }
   String getContent(String key){
     if(!_localizedValues.containsKey(key)){
@@ -987,6 +999,8 @@ class CustomLocalizations {
   get  cellulose=> getContent("cellulose");
   get  cholesterol=> getContent("cholesterol");
   get  fat=> getContent("fat");
+  get  recommendBoxTitle => getContent("recommendBoxTitle");
+
   get  protein=> getContent("protein");
   get recommandMeal => getContent("recommand meal");
   get recommand => getContent("recommand");

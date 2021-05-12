@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 
 class Food {
   static const String defaultPicturePath = "image/defaultFood.png";
   String picture;
-  String name;
+  String _name;
+  String _cnName;
   ///Food ID 在数据库里的ID
   int id;
   ///服务器里面的category好像是String类型  所以我不太确定
@@ -26,7 +28,8 @@ class Food {
   int weight;
 
   Food({
-    this.name,
+    String name,
+    String cnName,
     this.id,
     this.picture,
     this.category,
@@ -38,29 +41,47 @@ class Food {
     this.cellulose=0,
     ///weight只是为了计算营养价值和显示使用 用户可以增加
     this.weight=1,
-  });
+  }){
+    this._name = name;
+    this._cnName = cnName;
+  }
   Food.fromJson(Map<String,dynamic> json){
     this.id = json['id'];
-    this.name = json['name'];
-    this.picture = json['picture'];
-    this.weight = json['weight'];
-    this.calorie =json['calories'];
-    this.protein = json['protein'];
-    this.fat = 0;
-    this.cholesterol = 0;
-    this.cellulose = 0;
-    this.category = 0;
+    this._name = json['name'];
+    this._cnName = json['cnName'];
+    this.picture = json['picture']??json['img'];
+    this.weight = json['weight']??0;
+    this.calorie =json['calories']??0;
+    this.protein = json['protein']??0;
+    this.carbohydrate = json['carbohydrate']??0;
+    this.fat = json['fat']??0;
+    this.cholesterol = json['cholesterol']??0;
+    this.cellulose = json['cellulose']??0;
+    this.category = json['category']??0;
   }
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
+    data['name'] = this._name;
+    data['cnName'] == this._cnName;
     data['id'] = this.id;
     data['calories'] = this.calorie;
+    data['carbohydrate']= this.carbohydrate;
     data['picture'] = this.picture;
     data['protein'] = this.protein;
     data['weight'] = this.weight;
     return data;
+  }
+  String getRawName(){
+    return _name;
+  }
+  String getName(BuildContext context){
+    String language = CustomLocalizations.of(context).nowLanguage();
+    if(language == 'zh'){
+      return _cnName;
+    }else{
+      return _name;
+    }
   }
   String getCaloriePerUnit(){
     return calorie.toString() + "Kcal/100g";
@@ -103,5 +124,19 @@ class Food {
   }
   void setWeight(int newWeight){
     this.weight=newWeight;
+  }
+  double calculatePersent(String label){
+    Map mapper = {
+      'protein':this.protein,
+      'fat':this.fat,
+      'cellulose':this.cellulose,
+      'carbohydrate':this.carbohydrate,
+      'cholesterol':this.cholesterol,
+    };
+    if(!mapper.containsKey(label))return 0;
+
+    double total = fat+protein+cholesterol+carbohydrate+cellulose;
+    double target = mapper[label];
+    return target/total;
   }
 }

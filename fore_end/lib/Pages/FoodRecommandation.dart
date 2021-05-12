@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:common_utils/common_utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +12,7 @@ import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -21,8 +24,24 @@ import 'package:fore_end/Mycomponents/widgets/food/SwitchFoodInfoArea.dart';
 
 class FoodRecommandation extends StatefulWidget {
   String mealType;
+  int persent;
 
-  FoodRecommandation({this.mealType});
+  FoodRecommandation({this.mealType}){
+    User u = User.getInstance();
+    if(this.mealType == null){
+      int hour = DateTime.now().hour;
+      if(hour >4 && hour <=11){
+        this.mealType = "breakfast";
+        this.persent = u.breakfastRatio;
+      }else if(hour >11 && hour <=16){
+        this.mealType = "lunch";
+        this.persent = u.lunchRatio;
+      }else if(hour>16 && hour <=4){
+        this.mealType = "dinner";
+        this.persent = u.dinnerRatio;
+      }
+    }
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -32,24 +51,70 @@ class FoodRecommandation extends StatefulWidget {
 
 class FoodRecommandationState extends State<FoodRecommandation> {
   List<Food> selectedFood;
+  List<Food> recommendedFood;
   Food nowFood;
   double caloriesLimit;
   GlobalKey<SwitchFoodInfoAreaState> foodinfo;
-  GlobalKey<CrossFadeTextState> totalCal;
+  GlobalKey<CrossFadeTextState> calSuggest;
   GlobalKey<PersentBarState> persentBar;
+
 
   @override
   void initState() {
     this.selectedFood = new List<Food>();
+    this.recommendedFood = [];
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
-    this.totalCal = new GlobalKey<CrossFadeTextState>();
+    this.calSuggest = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
     if(widget.mealType == null){
         widget.mealType = "";
     }
     User u = User.getInstance();
-    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit;
+    ///计算建议摄入量上限
+    ///先计算当前最大可摄入量
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()-u.getTodayCaloriesIntake().floorToDouble();
+    ///再计算按照比例得到的建议摄入量
+    double recommendLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()*this.widget.persent*0.01;
+    ///比较两个量，如果当前最大可摄入量>比例建议量，则按照比例建议量作为摄入量上限
+    ///如果当前最大可摄入量<比例建议量，则按照最大可摄入量
+    if(this.caloriesLimit > recommendLimit){
+      this.caloriesLimit = recommendLimit;
+    }
+    Requests.recommandFood({
+      "uid":u.uid,
+      "token":u.token,
+      "pid":u.plan.id,
+      "mealType":mealTypeConvert()
+    }).then((res){
+      if(res == null){
+        return;
+      }
+      if(res.data['code'] == 1){
+        for(List m  in res.data['data']['randFoods'].values){
+          for(Map fd in m){
+            Food f = new Food.fromJson(fd);
+            this.recommendedFood.add(f);
+          }
+        }
+        setState(() {});
+      }
+    });
     super.initState();
+  }
+
+  int mealTypeConvert(){
+    String s = widget.mealType.toLowerCase();
+    switch(s){
+      case "breakfast":{
+        return 1;
+      }
+      case "lunch":{
+        return 2;
+      }
+      case "dinner":{
+        return 3;
+      }
+    }
   }
 
   @override
@@ -113,7 +178,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: CustomLocalizations.of(context).recommand + this.widget.mealType,
+          text: CustomLocalizations.of(context).recommand + CustomLocalizations.of(context).getContent(widget.mealType),
           underLineLength: 200,
           maxHeight: 20,
           maxWidth: 0.95,
@@ -140,18 +205,10 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               borderRadius: BorderRadius.circular(5)),
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: this.recommendedFood.length,
               itemBuilder: (BuildContext ctx, int idx) {
                 RecommandFoodCircle w = RecommandFoodCircle(
-                  food: Food(
-                      name: "test food - " + idx.toString(),
-                      calorie: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      fat: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      protein: NumUtil.getNumByValueDouble(
-                          rnd.nextDouble() * rnd.nextInt(300), 1),
-                      weight: 10),
+                  food: this.recommendedFood[idx],
                   pictureSize: ScreenTool.partOfScreenHeight(0.075),
                 );
                 w.onClick = () {
@@ -192,8 +249,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
-                persent: totalCal / 2000,
-                maxPersent: 0.7,
+                persent: totalCal / (this.caloriesLimit * 0.01*this.widget.persent),
+                maxPersent: 1,
                 name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
               )
             ]),
@@ -210,8 +267,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 children: [
                   SizedBox(width: 100),
                   CrossFadeText(
-                    key: this.totalCal,
-                    text: totalCal.toString() + " Kcal",
+                    key: this.calSuggest,
+                    text: totalCal.floor().toString() +" / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+ " Kcal",
                     fontSize: 13,
                   ),
                   Expanded(child: SizedBox()),
@@ -220,6 +277,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
+                    width: 60,
                     radius: 5,
                     tapFunc: ()async{
                       User u = User.getInstance();
@@ -229,13 +287,28 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         m = new Meal(mealName: widget.mealType);
                         newMeal = true;
                       }
+                      Response res = await Requests.consumeFoods({
+                        "uid": u.uid,
+                        "token":u.token,
+                        "pid": u.plan.id,
+                        "type": mealTypeConvert(),
+                        "foods_info":jsonEncode(this.selectedFood),
+                      });
+                      if(res == null){
+                        return;
+                      }
+                      if(res.data['code'] != 1){
+                        return;
+                      }
                       for(Food f in this.selectedFood){
                         m.addFood(f);
                       }
                       if(newMeal){
                         u.meals.value.add(m);
                       }
+                      m.time = (res.data['data']['stmp']*1000);
                       m.save();
+                      Navigator.of(context).pop(true);
                     },
                   ),
                   SizedBox(width: 20)
@@ -251,11 +324,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
 
   void redrawProgressBar(){
     this.persentBar.currentState.changePersentByIndex(
-        0, this.calculateTotalCalorie() / this.caloriesLimit);
+        0, this.calculateTotalCalorie() / (this.caloriesLimit*0.01*this.widget.persent));
   }
   void updateCalories(){
-    this.totalCal.currentState.changeTo(
-        this.calculateTotalCalorie().toString() + " Kcal");
+    this.calSuggest.currentState.changeTo(
+        this.calculateTotalCalorie().floor().toString() + " / "+(this.caloriesLimit*this.widget.persent*0.01).floor().toString()+" Kcal");
     this.redrawProgressBar();
   }
 }

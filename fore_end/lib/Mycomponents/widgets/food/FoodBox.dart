@@ -248,15 +248,6 @@ class FoodBoxState extends State<FoodBox>
   }
 
   Widget getFoodPic() {
-    // if (this.pic != null) {
-    //   if (widget.shouldShowPic.value && this.picType == 0) {
-    //     this.pic = null;
-    //   } else {
-    //     return this.pic;
-    //   }
-    // } else {
-    //   this.picType = 0;
-    // }
     Image img = null;
     if (widget.shouldShowPic.value == false || widget.food.picture == null) {
       img = Image.asset(
@@ -291,7 +282,7 @@ class FoodBoxState extends State<FoodBox>
 
   Widget getFoodName() {
     return Text(
-      widget.food.name,
+      widget.food.getName(context),
       style: TextStyle(
           decoration: TextDecoration.none,
           fontSize: 18,
@@ -319,7 +310,7 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(valueWeight: 10,key: this.widget.valueAdjusterKey);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(initValue:100,valueWeight: 10,key: this.widget.valueAdjusterKey);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");
@@ -328,8 +319,6 @@ class FoodBoxState extends State<FoodBox>
       });
 
     };
-
-
     List<Widget> col = [
       this.propertyLine("Calorie", widget.food.getCaloriePerUnit()),
       this.propertyLine("Fat", widget.food.getFatPerUnit()),
@@ -342,8 +331,19 @@ class FoodBoxState extends State<FoodBox>
         SizedBox(
           height: 10,
         ),
-        valueAdjuster,
-
+        Row(
+          children: [
+            CustomButton(
+              firstColorName: ThemeColorName.Error,
+              text: "Remove",
+              width: 0.35,
+              tapFunc: () {
+                widget.removeFunc();
+              },
+            ),
+            valueAdjuster,
+          ],
+        )
       ]);
     }
     col.add(SizedBox(

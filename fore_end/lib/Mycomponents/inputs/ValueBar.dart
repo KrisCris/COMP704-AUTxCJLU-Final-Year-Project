@@ -52,7 +52,7 @@ class ValueBar<T extends num> extends StatefulWidget
       this.barThickness = 10,
       this.borderThickness = 2,
       this.onChange,
-      this.mapper,
+      Map<T,String> mapper,
       List<double> borderRadius_RT_RB_RT_RB,
       this.showBorder = true,
       this.roundNum = 1,
@@ -73,7 +73,7 @@ class ValueBar<T extends num> extends StatefulWidget
       Color effectColor = Colors.black12,
         Color warningColor,
       Color fontColor,
-      this.blockWidth = 10,
+      this.blockWidth = 20,
       @required T minVal,
       @required T maxVal,
       @required T initVal})
@@ -87,6 +87,10 @@ class ValueBar<T extends num> extends StatefulWidget
     this.maxVal = maxVal;
     this.valuePosition = valuePosition;
     this.showAdjustButton = showAdjustButton;
+    this.mapper = mapper;
+    if (this.mapper != null) {
+     this.widgetValue.value = this.mapper.keys.first;
+    }
     if (this.showAdjustButton) {
       this.width -= (ValueBar.buttonSize + ValueBar.buttonGap) * 2;
     }
@@ -151,15 +155,17 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
   @override
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.widgetValue = oldWidget.widgetValue;
-    widget.minVal = oldWidget.minVal;
-    widget.onChange = oldWidget.onChange;
+    if(oldWidget.widgetValue.value != this.widget.widgetValue.value){
+      this.onChangeValue();
+    }
+    // widget.widgetValue = oldWidget.widgetValue;
+    // widget.minVal = oldWidget.minVal;
+    // widget.onChange = oldWidget.onChange;
   }
 
   @override
   void initState() {
-    if (widget.mapper != null) {
-      widget.widgetValue.value = widget.mapper.keys.first;
+    if(widget.mapper != null){
       this.nowIndex = 0;
     }
     this.initValueListener(widget.widgetValue);

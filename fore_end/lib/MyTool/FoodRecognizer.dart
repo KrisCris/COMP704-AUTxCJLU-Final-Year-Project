@@ -143,10 +143,11 @@ class FoodRecognizer{
           cellulose = info['cellulose'];
         }
 
-        String name = position['name'];
+        String name = info['name'];
         FoodBox fd = FoodBox(
           food: Food(
             name: name,
+            cnName: info['cnName'],
             id: foodID,
             category: foodCategory,
             picture: position['img'],
