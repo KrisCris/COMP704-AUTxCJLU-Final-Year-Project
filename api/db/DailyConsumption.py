@@ -15,7 +15,7 @@ class DailyConsumption(db.Model):
     name = db.Column(db.VARCHAR(256), comment='easier way to query food name...')
     calories = db.Column(db.FLOAT, comment='easier way to query calories')
     protein = db.Column(db.FLOAT, comment='easier way to query protein')
-    weight = db.Column(db.FLOAT, comment='100g per')
+    weight = db.Column(db.FLOAT, comment='gram')
     img = db.Column(db.Text(16777216))
 
     def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, weight=None,
