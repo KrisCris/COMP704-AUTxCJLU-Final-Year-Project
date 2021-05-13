@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,77 +10,26 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/inputs/FoodSearchBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
+import 'package:fore_end/Pages/main/DietPage.dart';
+import 'basic/CustomBadge.dart';
 
-class HintManager extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    return new HintManagerState();
+class HintManager{
+  static final HintManager _instance = HintManager._privateConstructor();
+  static HintManager get instance => _instance;
+  HintManager._privateConstructor(){
+    hints = {};
   }
 
-}
-
-class HintManagerState extends State<HintManager>{
   Map<String, Hint> hints;
+  GlobalKey<HintBoxState> boxKey;
+  GlobalKey<FoodSearchBarState> foodSearchKey;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    this.hints = {};
-    this.receiveHint();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: AnimatedCrossFade(
-        firstChild: Center(
-          child: TitleText(
-            text: "No Messages",
-          ),
-        ),
-        secondChild: Row(
-          children: [
-            SizedBox(width: 15),
-            Expanded(
-                child: Container(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: this.hints.length,
-                      itemBuilder: (BuildContext ctx, int idx) {
-                        return CustomButton(
-                          topMargin: 15,
-                          bottomMargin: 15,
-                          width: ScreenTool.partOfScreenWidth(1) - 60,
-                          height: 80,
-                          radius: 5,
-                          text: this.getHintByIndex(idx).hintContent,
-                          firstColorName: ThemeColorName.TransparentShadow,
-                          tapFunc: () {
-                            this.getHintByIndex(idx).onClick();
-                          },
-                        );
-                      }),
-                )),
-            SizedBox(width: 15)
-          ],
-        ),
-        crossFadeState: this.hints.length <= 0
-            ? CrossFadeState.showFirst
-            : CrossFadeState.showSecond,
-        duration: Duration(milliseconds: 500),
-      ),
-      decoration: BoxDecoration(
-          color: MyTheme.convert(ThemeColorName.TransparentShadow),
-          borderRadius: BorderRadius.circular(5)),
-    );
-  }
   Hint getHintByIndex(int i) {
     int index = 0;
     for (Hint ht in this.hints.values) {
@@ -90,13 +40,12 @@ class HintManagerState extends State<HintManager>{
     }
     return null;
   }
-
   void removeHint(String name) {
     this.hints.remove(name);
-    setState(() {});
+    this.boxKey?.currentState?.setState(() {});
   }
 
-  void receiveHint() {
+  void receiveHint(BuildContext context) {
     this.hints.clear();
     User u = User.getInstance();
     if(u.isOffline){
@@ -156,70 +105,140 @@ class HintManagerState extends State<HintManager>{
           instanceClose: false,
           hintContent:
           "Your Plan exceeded the deadline, click here for further operation",
-        onClick: ()async{
-          bool b = await showDialog<bool>(
-            context: context,
-            builder: (BuildContext context) {
-              return ExtendTimeHint(
-                title: CustomLocalizations.of(context).planDelayFor +
-                    u.plan.calculatedDelayDays.toString() +
-                    CustomLocalizations.of(context).days +
-                    "," +
-                    CustomLocalizations.of(context).planDelayChoose,
-                onClickAccept: () async {
-                  Response res = await Requests.delayPlan(
-                      {"uid": u.uid, "token": u.token, "pid": u.plan.id});
-                  if (res != null && res.data['code'] == 1) {
-                    u.plan.extendDays = res.data['data']['ext'];
-                    u.save();
-                  }
-                },
-              );
-            },
-          );
-          //accept delay
-          if (b == true) {
-            this.removeHint("passDeadLineHint");
-            setState(() {});
-          }
-          //finish plan
-          else {
-            bool success = await showDialog<bool>(
+          onClick: ()async{
+            bool b = await showDialog<bool>(
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
-                UpdateBody updt = UpdateBody(
-                  text: CustomLocalizations.of(context).beforeChangePlan,
-                  needHeight: false,
-                  needCancel: false,
+                return ExtendTimeHint(
+                  title: CustomLocalizations.of(context).planDelayFor +
+                      u.plan.calculatedDelayDays.toString() +
+                      CustomLocalizations.of(context).days +
+                      "," +
+                      CustomLocalizations.of(context).planDelayChoose,
+                  onClickAccept: () async {
+                    Response res = await Requests.delayPlan(
+                        {"uid": u.uid, "token": u.token, "pid": u.plan.id});
+                    if (res != null && res.data['code'] == 1) {
+                      u.plan.extendDays = res.data['data']['ext'];
+                      u.save();
+                    }
+                  },
                 );
-                updt.onUpdate = () async {
-                  Response res = await Requests.finishPlan({
-                    "uid": u.uid,
-                    "token": u.token,
-                    "pid": u.plan.id,
-                    "weight": updt.getWeight()
-                  });
-                  if (res != null && res.data['code'] == 1) {
-                    u.bodyWeight = updt.weight.widgetValue.value;
-                    Navigator.of(context).pop(true);
-                  }
-                };
-                return updt;
               },
             );
-            //create new plan after finish plan
-            if (success) {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) {
-                    return GuidePage(firstTime: false);
-                  }), (route) {
-                return route == null;
-              });
+            //accept delay
+            if (b == true) {
+              this.removeHint("passDeadLineHint");
+              this?.boxKey?.currentState?.setState(() {});;
+            }
+            //finish plan
+            else {
+              bool success = await showDialog<bool>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  UpdateBody updt = UpdateBody(
+                    text: CustomLocalizations.of(context).beforeChangePlan,
+                    needHeight: false,
+                    needCancel: false,
+                  );
+                  updt.onUpdate = () async {
+                    Response res = await Requests.finishPlan({
+                      "uid": u.uid,
+                      "token": u.token,
+                      "pid": u.plan.id,
+                      "weight": updt.getWeight()
+                    });
+                    if (res != null && res.data['code'] == 1) {
+                      u.bodyWeight = updt.weight.widgetValue.value;
+                      Navigator.of(context).pop(true);
+                    }
+                  };
+                  return updt;
+                },
+              );
+              //create new plan after finish plan
+              if (success) {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) {
+                      return GuidePage(firstTime: false);
+                    }), (route) {
+                  return route == null;
+                });
+              }
             }
           }
-        }
       );
     }
+    if(this.hints.length > 0){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        this.foodSearchKey?.currentState?.badgeKey?.currentState?.setHintNumber(this.hints.length);
+      });
+    }
+  }
+
+}
+class HintBox extends StatefulWidget{
+  HintBox(Key key):super(key:key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return new HintBoxState();
+  }
+}
+
+class HintBoxState extends State<HintBox>{
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: AnimatedCrossFade(
+        firstChild: Center(
+          child: TitleText(
+            text: "No Messages",
+          ),
+        ),
+        secondChild: Row(
+          children: [
+            SizedBox(width: 15),
+            Expanded(
+                child: Container(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: HintManager.instance.hints.length,
+                      itemBuilder: (BuildContext ctx, int idx) {
+                        return CustomButton(
+                          topMargin: 15,
+                          bottomMargin: 15,
+                          width: ScreenTool.partOfScreenWidth(1) - 60,
+                          height: 80,
+                          radius: 5,
+                          text: HintManager.instance.getHintByIndex(idx).hintContent,
+                          firstColorName: ThemeColorName.TransparentShadow,
+                          tapFunc: () {
+                            HintManager.instance.getHintByIndex(idx).onClick();
+                          },
+                        );
+                      }),
+                )),
+            SizedBox(width: 15)
+          ],
+        ),
+        crossFadeState: HintManager.instance.hints.length <= 0
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+        duration: Duration(milliseconds: 500),
+      ),
+      decoration: BoxDecoration(
+          color: MyTheme.convert(ThemeColorName.TransparentShadow),
+          borderRadius: BorderRadius.circular(5)),
+    );
   }
 }

@@ -10,6 +10,9 @@ import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/widgets/HintManager.dart';
+import 'package:fore_end/Pages/main/DietPage.dart';
+
+import 'basic/CustomBadge.dart';
 
 ///自定义的侧边栏，基本与官方侧边栏一样
 class CustomDrawer extends StatefulWidget {
@@ -19,6 +22,7 @@ class CustomDrawer extends StatefulWidget {
   final double widthPercent;
   final Function onOpen;
   final Function onClose;
+  final GlobalKey<DietPageState> dietKey;
   const CustomDrawer({
     Key key,
     this.elevation = 16.0,
@@ -26,7 +30,8 @@ class CustomDrawer extends StatefulWidget {
     this.semanticLabel,
     this.widthPercent,
     this.onOpen,
-    this.onClose
+    this.onClose,
+    this.dietKey
   })  : assert(widthPercent <= 1.0 && widthPercent > 0.0),
         super(key: key);
   @override
@@ -34,6 +39,7 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class CustomDrawerState extends State<CustomDrawer> {
+
 
   @override
   void initState() {
@@ -78,8 +84,10 @@ class CustomDrawerState extends State<CustomDrawer> {
       )
     ];
     items.addAll(widget.children);
+    GlobalKey<HintBoxState> hintBoxKey = new GlobalKey<HintBoxState>();
+    HintManager.instance.boxKey = hintBoxKey;
     items.add(Expanded(
-      child: HintManager()
+      child: HintBox(hintBoxKey)
     ));
     items.add(SizedBox(height: 15));
     return Semantics(

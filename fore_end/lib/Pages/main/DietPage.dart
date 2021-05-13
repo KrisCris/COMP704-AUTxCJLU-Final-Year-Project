@@ -7,6 +7,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/inputs/FoodSearchBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Mycomponents/widgets/HintManager.dart';
 import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
@@ -14,9 +15,7 @@ import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 import '../FoodRecommandation.dart';
 
 class DietPage extends StatefulWidget {
-
-
-
+  DietPage({Key key}):super(key:key);
   @override
   State<StatefulWidget> createState() {
     return new DietPageState();
@@ -24,6 +23,8 @@ class DietPage extends StatefulWidget {
 }
 
 class DietPageState extends State<DietPage> {
+  GlobalKey<FoodSearchBarState> foodsearchKey;
+
   OpenContainer buildOpenContainer(){
     return OpenContainer(
       closedColor: Colors.transparent,
@@ -42,7 +43,14 @@ class DietPageState extends State<DietPage> {
     );
   }
   @override
+  void initState() {
+    this.foodsearchKey = GlobalKey<FoodSearchBarState>();
+    HintManager.instance.foodSearchKey = this.foodsearchKey;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+   HintManager.instance.receiveHint(context);
     return Container(
         width: ScreenTool.partOfScreenWidth(1),
         child: Stack(
@@ -114,7 +122,7 @@ class DietPageState extends State<DietPage> {
                 ],
               ),
             ),
-            FoodSearchBar(),
+            FoodSearchBar(key: this.foodsearchKey,),
           ],
         ));
   }

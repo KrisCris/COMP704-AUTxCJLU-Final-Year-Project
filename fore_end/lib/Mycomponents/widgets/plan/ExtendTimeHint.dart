@@ -28,7 +28,7 @@ class ExtendTimeHint extends StatelessWidget {
       child: Align(
         alignment: Alignment.center,
         child: Container(
-          height: ScreenTool.partOfScreenHeight(0.3),
+          height: ScreenTool.partOfScreenHeight(0.45),
           width: ScreenTool.partOfScreenWidth(0.8),
           decoration: BoxDecoration(
               color: MyTheme.convert(ThemeColorName.ComponentBackground),
