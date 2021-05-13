@@ -14,6 +14,7 @@ import 'package:fore_end/Mycomponents/widgets/CustomDrawer.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/SettingPage.dart';
+import 'package:fore_end/Pages/main/AboutUs.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
 import 'package:fore_end/Pages/main/TakePhotoPage.dart';
 import 'package:fore_end/Pages/main/PlanDetailPage.dart';
@@ -155,6 +156,11 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget getAboutUs(BuildContext context) {
     return CustomButton(
+      tapFunc: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return AboutUsPage();
+        }));
+      },
       text: CustomLocalizations.of(context).drawerAbout,
       width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
       firstColorName: ThemeColorName.Success,
