@@ -172,6 +172,12 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
   }
 
+  ///父组件更新时，重新为监听器添加回调
+  @override
+  void didUpdateWidget(covariant CaloriesBarChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
   ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
   // void setTodayValueFromLocal(){
   //
