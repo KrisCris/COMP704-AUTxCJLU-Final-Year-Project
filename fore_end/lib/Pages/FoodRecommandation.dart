@@ -106,6 +106,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         for (List m in res.data['data']['randFoods'].values) {
           for (Map fd in m) {
             Food f = new Food.fromJson(fd);
+            f.weight = 10;
             this.recommendedFood.add(f);
           }
         }

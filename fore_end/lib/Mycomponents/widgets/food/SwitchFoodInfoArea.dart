@@ -91,7 +91,7 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
 
   Widget detailedInfo(Food f) {
     GlobalKey<ValueAdjusterState> valueAdjusterKey = new GlobalKey<ValueAdjusterState>();
-    ValueAdjuster vaj = ValueAdjuster<int>(valueWeight: 10,initValue: f.weight.floor(),key: valueAdjusterKey);
+    ValueAdjuster vaj = ValueAdjuster<int>(valueWeight: 10,initValue: f.weight.floor(),key: valueAdjusterKey,lower:10);
     vaj.onValueChange = (){
       f.weight = valueAdjusterKey.currentState.valueNotifier.value;
       if(this.widget.onWeightChange!=null){
