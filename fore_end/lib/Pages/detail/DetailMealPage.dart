@@ -108,18 +108,16 @@ class DetailMealPageState extends State<DetailMealPage> {
           Meal(mealName: "lunch"),
           Meal(mealName: "dinner")
         ];
+
         for(Map m in res.data['data']['b']){
-          this.meal[0].foods = [];
           this.meal[0].time = m['time']*1000;
           this.meal[0].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['l']){
-          this.meal[1].foods = [];
           this.meal[1].time = m['time']*1000;
           this.meal[1].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['d']){
-          this.meal[2].foods = [];
           this.meal[2].time = m['time']*1000;
           this.meal[2].addFood(new Food.fromJson(m));
         }
