@@ -142,7 +142,7 @@ class PageState extends State<AccountPage> {
                     children: [
                       SizedBox(width: 10,),
                       GestureDetector(
-                        child: Icon(FontAwesomeIcons.arrowAltCircleLeft,size: 35,color: MyTheme.convert(ThemeColorName.NormalIcon),),
+                        child: Icon(FontAwesomeIcons.arrowLeft,size: 30,color: MyTheme.convert(ThemeColorName.NormalIcon),),
                         onTap: (){
                           Navigator.pop(context);
                         },
