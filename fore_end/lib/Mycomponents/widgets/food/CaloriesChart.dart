@@ -626,6 +626,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [DateSelect(
+                      gap: 7,
                       width: 0.5,
                       height: 40,
                       beginTime: DateTime(2021,1,1),
