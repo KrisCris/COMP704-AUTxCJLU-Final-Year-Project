@@ -613,6 +613,22 @@ class CustomLocalizations {
       "en":"Plan worked well,no postponement record!",
       "zh":"减肥计划还不错，完成情况良好，未有延期记录!"
     },
+    "no message":{
+      "en":"No Messages",
+      "zh":"无消息"
+    },
+    "offlineHint":{
+      "en": "You are now in offline mode, most function is unavailable. Click to login.",
+      'zh':"您正处于离线登录模式，部分功能无法使用。点击此处进行登录"
+    },
+    "weightUpdateHint":{
+      "en":  "1 week had passed since your last body weight updating. It's time to update!",
+      "zh":"距离您上次记录体重已经有一周的时间，点击此处进行记录操作"
+    },
+    "passDeadlineHint":{
+      "en":    "Your Plan exceeded the deadline, click here for further operation",
+      "zh": "您的计划已经到期，点击此处进行操作"
+    },
     "foodDetailPageTitle":{
       "en":"Food's Detail Page",
       "zh":"食物营养信息页"
@@ -1036,7 +1052,10 @@ class CustomLocalizations {
   get commentOfAdviceOne => getContent("commentOfAdviceOne");
   get commentOfAdviceTwo => getContent("commentOfAdviceTwo");
 
-
+  get noMessage => getContent("no message");
+  get offlineHint => getContent("offlineHint");
+  get weightUpdateHint => getContent("weightUpdateHint");
+  get passDeadlineHint => getContent("passDeadlineHint");
   get recommendBoxHeader => getContent("recommendBoxHeader");
 
 }
