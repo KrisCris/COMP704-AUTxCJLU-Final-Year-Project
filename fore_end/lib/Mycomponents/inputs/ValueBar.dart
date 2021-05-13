@@ -72,7 +72,6 @@ class ValueBar<T extends num> extends StatefulWidget
       Color barColor,
       Color effectColor = Colors.black12,
         Color warningColor,
-      Color fontColor,
       this.blockWidth = 20,
       @required T minVal,
       @required T maxVal,
@@ -103,16 +102,13 @@ class ValueBar<T extends num> extends StatefulWidget
     if(warningColor == null){
       warningColor = Color(0xFFFF0055);
     }
-    if (fontColor == null) {
-      fontColor = Colors.white;
-    }
     if (borderRadius_RT_RB_RT_RB == null) {
       borderRadius_RT_RB_RT_RB = [0, 0, 0, 0];
     }
     this.borderRadius_LT_LB_RT_RB = borderRadius_RT_RB_RT_RB;
     this.barColor = CalculatableColor.transform(barColor);
     this.effectColor = CalculatableColor.transform(effectColor);
-    this.fontColor = CalculatableColor.transform(fontColor);
+    this.fontColor = MyTheme.convert(ThemeColorName.NormalText);
     this.warningColor = CalculatableColor.transform(warningColor);
   }
   void setOnChange(Function f) {
@@ -158,6 +154,10 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     if(oldWidget.widgetValue.value != this.widget.widgetValue.value){
       this.onChangeValue();
     }
+    if(this.textColorAnimation.value != widget.warningColor){
+      this.textColorAnimation.initAnimation(MyTheme.convert(ThemeColorName.NormalText), widget.warningColor, 200, this, () {setState(() {});});
+    }
+    setState(() {});
     // widget.widgetValue = oldWidget.widgetValue;
     // widget.minVal = oldWidget.minVal;
     // widget.onChange = oldWidget.onChange;
@@ -196,7 +196,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
         this.moveAnimation.forward();
       }
     });
-    this.textColorAnimation.initAnimation(widget.fontColor, widget.warningColor, 200, this, () {setState(() {});});
+    this.textColorAnimation.initAnimation(MyTheme.convert(ThemeColorName.NormalText), widget.warningColor, 200, this, () {setState(() {});});
     this.barColorAnimation.initAnimation(widget.barColor, widget.warningColor, 200, this, () {setState(() {
     });});
     this.drawProgress();

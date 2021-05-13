@@ -44,7 +44,7 @@ class PlanNotifier extends StatelessWidget {
       valuePosition: ValuePosition.right,
       borderRadius_RT_RB_RT_RB: [5, 5, 5, 5],
       roundNum: 1,
-      initVal: u.getTodayCaloriesIntake(),  ///获取今天的calories 目前是本地的，应该获取数据库里的
+      initVal: u.getTodayCaloriesIntake(),
       showBorder: false,
       couldExpand: true,
       showAdjustButton: false,

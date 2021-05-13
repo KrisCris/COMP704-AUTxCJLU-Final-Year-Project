@@ -246,10 +246,9 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         Column(
           children: [
-            PersentBar(key: persentBar, width: 0.9, height: 5, sections: [
+            PersentBar(key: persentBar, width: 1, height: 5, sections: [
               PersentSection(
                 normalColor: Colors.green,
                 highColor: MyTheme.convert(ThemeColorName.Error),
@@ -259,7 +258,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
               )
             ]),
             Container(
-              width: ScreenTool.partOfScreenWidth(0.9),
+              width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(0.07),
               decoration: BoxDecoration(
                   color: MyTheme.convert(ThemeColorName.ComponentBackground),
@@ -321,7 +320,6 @@ class FoodRecommandationState extends State<FoodRecommandation> {
             )
           ],
         ),
-        SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
   }
