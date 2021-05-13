@@ -121,7 +121,21 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
                   lastDate: widget.lastTime,
                   builder: (context, child){
                       return Theme(
-                        data: ThemeData.dark(),
+                        data: ThemeData.from(colorScheme: ColorScheme(
+                          primary: MyTheme.convert(ThemeColorName.HightLightIcon),
+                          primaryVariant:MyTheme.convert(ThemeColorName.DarkIcon),
+                          secondary:MyTheme.convert(ThemeColorName.HighLightText),
+                          secondaryVariant:MyTheme.convert(ThemeColorName.HighLightButton),
+                          surface:MyTheme.convert(ThemeColorName.ComponentBackground),
+                          background:MyTheme.convert(ThemeColorName.PageBackground),
+                          error:ThemeData.dark().colorScheme.error,
+                          onPrimary:MyTheme.convert(ThemeColorName.NormalText),
+                          onSecondary:MyTheme.convert(ThemeColorName.DarkIcon),
+                          onSurface:MyTheme.convert(ThemeColorName.NormalText),
+                          onBackground:MyTheme.convert(ThemeColorName.NormalText),
+                          onError:ThemeData.dark().colorScheme.onError,
+                          brightness:ThemeData.dark().brightness,
+                        )),
                         child: child
                       );
                   }
