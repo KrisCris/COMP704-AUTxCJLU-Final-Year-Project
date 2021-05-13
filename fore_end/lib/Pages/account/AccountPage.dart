@@ -261,7 +261,9 @@ class PageState extends State<AccountPage> {
     SettingItem item = SettingItem(
       leftIcon: Icon(FontAwesomeIcons.userCircle,color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: CustomLocalizations.of(context).profilePhoto,
-      rightComponent: ValueableImage(
+      rightComponent:
+
+      ValueableImage(
         base64: u.avatar,
         disabled: true,
         behavior: HitTestBehavior.translucent,
@@ -307,6 +309,7 @@ class PageState extends State<AccountPage> {
       JhPickerTool.setInitialState();
 
       JhPickerTool.showStringPicker(context,
+          isChangeColor: true,
           title: CustomLocalizations.of(context).gender,
           normalIndex: newGender,
           data: widget.genderData, clickCallBack: (int index, var item) {
