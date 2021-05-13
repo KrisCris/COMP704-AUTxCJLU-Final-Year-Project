@@ -18,17 +18,17 @@ class CustomLocalizations {
 
     //主题色的多语言翻译-------起始
     "dark blue":{
-      "en":"dark",
+      "en":"Dark",
       "zh":"深蓝"
     },
     "light blue":{
-      "en":"light",
+      "en":"Light",
       "zh":"浅蓝"
     },
     //主题色的多语言翻译-------结束
 
     "default":{
-      "en":"default",
+      "en":"Default",
       "zh":"默认"
     },
     "languageName":{
@@ -60,11 +60,11 @@ class CustomLocalizations {
       "zh":"女性"
     },
     "age":{
-      "en":"age",
+      "en":"Age",
       "zh":"年龄"
     },
     "yearOld":{
-      "en":"years old",
+      "en":"Years Old",
       "zh":"岁"
     },
     "veryLight":{
@@ -145,35 +145,35 @@ class CustomLocalizations {
       "zh":"为你的食物拍张照吧!"
     },
     "logout":{
-      "en":"logout",
+      "en":"Logout",
       "zh":"登出"
     },
     "loginState":{
-      "en":"checking login state...",
+      "en":"Checking login state",
       "zh":"正在检测登录状态..."
     },
     "foodRecognizer":{
-      "en":"init food recognizer...",
+      "en":"Initializing food recognizer",
       "zh":"正在初始化食物识别器...",
     },
     "preference":{
-      "en":"init preferences...",
-      "zh":"正在初始化偏好设置...",
+      "en":"Initializing preferences",
+      "zh":"正在初始化偏好设置",
     },
     "syncLocalData":{
-      "en":"sync local data...",
+      "en":"Synchronizing local data",
       "zh":"正在更新本地数据..."
     },
     "welcome":{
-      "en":"welcome to here!",
+      "en":"Welcome to here!",
       "zh":"欢迎使用DietLens"
     },
     "autoLogin":{
-      "en":"auto login...",
+      "en":"Auto login...",
       "zh":"正在自动登录..."
     },
     "offlineLogin":{
-      "en":"offline login...",
+      "en":"Offline login...",
       "zh":"正在以离线模式登录..."
     },
     "welcomeTitle":{
@@ -197,15 +197,15 @@ class CustomLocalizations {
       "zh":"获取验证码"
     },
     "acquireAgain":{
-      "en":"Acquire again",
+      "en":"Re-Send",
       "zh":"再次获取"
     },
     "verifyCode":{
-      "en":"input verify code",
+      "en":"Input verification code",
       "zh":"输入验证码"
     },
     "nickName":{
-      "en":"nick name",
+      "en":"Nick name",
       "zh":"昵称"
     },
     "nickNameHint":{
@@ -221,11 +221,11 @@ class CustomLocalizations {
       "zh":"密码至少需要8位长度，并且包含数字和英文字母"
     },
     "confirmPassword":{
-      "en":"confirm password",
+      "en":"Confirm password",
       "zh":"确认密码"
     },
     "confirmPasswordHint":{
-      "en":"re-enter the password",
+      "en":"Re-enter the password",
       "zh":"再次输入密码"
     },
     "differentPasswordHint":{
@@ -233,7 +233,7 @@ class CustomLocalizations {
       "zh":"两次密码不一致！"
     },
     "persent":{
-      "en":"persent",
+      "en":"Persent",
       "zh":"百分比"
     },
     "email":{
@@ -265,7 +265,7 @@ class CustomLocalizations {
       "zh":"将食物添加到一日三餐"
     },
     "add":{
-      "en":"add",
+      "en":"Add",
       "zh":"添加"
     },
     "breakfast":{
@@ -285,7 +285,7 @@ class CustomLocalizations {
       "zh":"合计"
     },
     "detail":{
-      "en":"detail",
+      "en":"Detail",
       "zh":"详情"
     },
     "searchFood":{
@@ -317,7 +317,7 @@ class CustomLocalizations {
       "zh":"您的计划可能会延期"
     },
     "planDelayChoose":{
-      "en":"do you accept it or finish the plan?",
+      "en":"Do you accept it or finish the plan?",
       "zh":"您选择接受延期或是终止计划?"
     },
     "planSuccessCreateNew":{
@@ -353,7 +353,7 @@ class CustomLocalizations {
       "zh":"创建计划"
     },
     "changePlan":{
-      "en":"change Plan",
+      "en":"Change Plan",
       "zh":"修改计划"
     },
     "planKeep":{

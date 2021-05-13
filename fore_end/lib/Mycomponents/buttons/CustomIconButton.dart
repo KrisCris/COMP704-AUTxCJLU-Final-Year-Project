@@ -81,6 +81,7 @@ class CustomIconButton extends StatefulWidget
 
   bool backgroundColorChange;
 
+  CalculatableColor customColor;
 
   MyCounter counter;
 
@@ -110,6 +111,7 @@ class CustomIconButton extends StatefulWidget
         bool disabled = false,
         bool focus = false,
         Key key,
+        this.customColor,
       this.navigatorCallback})
       : super(key:key) {
     this.disabled = new ValueNotifier<bool>(disabled);
@@ -366,6 +368,9 @@ class CustomIconButtonState extends State<CustomIconButton>
     if (isFocus) {
       return MyTheme.convert(ThemeColorName.HightLightIcon);
     }else{
+      if (this.widget.customColor != null){
+        return this.widget.customColor;
+      }
       return MyTheme.convert(ThemeColorName.NormalIcon);
     }
   }
