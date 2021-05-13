@@ -646,24 +646,24 @@ class CustomLocalizations {
       "zh":"更适合食物推荐列表："
     },
     "commentOfFoodOne":{
-      "en":"Tip: This food[ ",
-      "zh":"提醒: 这个食物[ "
+      "en":"Tips: ",
+      "zh":"提醒: "
     },
     "commentOfFoodTwo":{
-      "en":" ]is not suitable for your diet plan,",
-      "zh":" ]不适合您的饮食计划,"
+      "en":" may not suitable for your plan.",
+      "zh":" 不适合您的饮食计划。"
     },
     "commentOfFoodThree":{
-      "en":" ]is suitable for your diet plan,",
-      "zh":" ]适合您的饮食计划,"
+      "en":" seems suitable for your plan.",
+      "zh":" 适合您的饮食计划。"
     },
     "commentOfAdviceOne":{
-      "en":"recommended you choose the alternative foods list below:",
-      "zh":"建议选择下面的替代食物："
+      "en":"\nRecommended foods are listed below:",
+      "zh":"\n建议选择下面的替代食物："
     },
     "commentOfAdviceTwo":{
-      "en":"you can also choose the similar foods list below:",
-      "zh":"也可以选择下面的相似食物："
+      "en":"\nSimilar foods are listed below:",
+      "zh":"\n下面列出了相似的食物："
     },
 
     "recommendBoxHeader":{
