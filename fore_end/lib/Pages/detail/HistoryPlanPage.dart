@@ -412,27 +412,27 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         SizedBox(
           height: 15,
         ),
-        TitleText(
-          text: CustomLocalizations.of(context).comment,
-          underLineLength: 0.5,
-          fontSize: 18,
-          maxWidth: 0.8,
-          maxHeight: 30,
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          CustomLocalizations.of(context).commentFirst,
-          style: TextStyle(
-              fontSize: 15,
-              color: MyTheme.convert(ThemeColorName.NormalText),
-              fontFamily:
-              'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
-          softWrap: true, //自动换行
-          // textAlign: TextAlign.start,
-          // overflow: TextOverflow.visible,
-        ),
+        // TitleText(
+        //   text: CustomLocalizations.of(context).comment,
+        //   underLineLength: 0.5,
+        //   fontSize: 18,
+        //   maxWidth: 0.8,
+        //   maxHeight: 30,
+        // ),
+        // SizedBox(
+        //   height: 5,
+        // ),
+        // Text(
+        //   CustomLocalizations.of(context).commentFirst,
+        //   style: TextStyle(
+        //       fontSize: 15,
+        //       color: MyTheme.convert(ThemeColorName.NormalText),
+        //       fontFamily:
+        //       'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
+        //   softWrap: true, //自动换行
+        //   // textAlign: TextAlign.start,
+        //   // overflow: TextOverflow.visible,
+        // ),
       ],
     );
   }

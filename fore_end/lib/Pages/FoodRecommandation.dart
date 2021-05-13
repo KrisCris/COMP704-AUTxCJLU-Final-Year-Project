@@ -189,7 +189,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         TitleText(
           text: CustomLocalizations.of(context).recommandMeal,
           underLineLength: 0,
-          maxHeight: 20,
+          maxHeight: 28,
           fontSize: 15,
         ),
       ],
@@ -326,7 +326,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         " " +
                         CustomLocalizations.of(context).to +
                         " " +
-                        this.widget.mealType,
+                        CustomLocalizations.of(context).getContent(widget.mealType),
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
