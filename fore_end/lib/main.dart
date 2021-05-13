@@ -6,7 +6,6 @@ import 'package:fore_end/Pages/FoodRecommandation.dart';
 import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
 import 'MyTool/SoftwarePreference.dart';
 import 'MyTool/util/LocalDataManager.dart';
-import 'Mycomponents/widgets/buildFloatingSearchBar.dart';
 import 'Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'Pages/ComponentTestPage.dart';
 import 'Pages/FoodDetailsPage.dart';
