@@ -16,6 +16,7 @@ import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
+import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 import 'package:fore_end/Mycomponents/text/CrossFadeText.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PersentBar.dart';
@@ -26,17 +27,17 @@ class FoodRecommandation extends StatefulWidget {
   String mealType;
   int persent;
 
-  FoodRecommandation({this.mealType}){
+  FoodRecommandation({this.mealType}) {
     User u = User.getInstance();
-    if(this.mealType == null){
+    if (this.mealType == null) {
       int hour = DateTime.now().hour;
-      if(hour >4 && hour <=11){
+      if (hour > 4 && hour <= 11) {
         this.mealType = "breakfast";
         this.persent = u.breakfastRatio;
-      }else if(hour >11 && hour <=16){
+      } else if (hour > 11 && hour <= 16) {
         this.mealType = "lunch";
         this.persent = u.lunchRatio;
-      }else if((hour>16 && hour <=24) || (hour >=0 && hour < 4) ){
+      } else if ((hour > 16 && hour <= 24) || (hour >= 0 && hour < 4)) {
         this.mealType = "dinner";
         this.persent = u.dinnerRatio;
       }
@@ -58,7 +59,6 @@ class FoodRecommandationState extends State<FoodRecommandation> {
   GlobalKey<CrossFadeTextState> calSuggest;
   GlobalKey<PersentBarState> persentBar;
 
-
   @override
   void initState() {
     this.selectedFood = new List<Food>();
@@ -66,33 +66,41 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     this.foodinfo = new GlobalKey<SwitchFoodInfoAreaState>();
     this.calSuggest = new GlobalKey<CrossFadeTextState>();
     this.persentBar = new GlobalKey<PersentBarState>();
-    if(widget.mealType == null){
-        widget.mealType = "";
+    if (widget.mealType == null) {
+      widget.mealType = "";
     }
     User u = User.getInstance();
+
     ///计算建议摄入量上限
     ///先计算当前最大可摄入量
-    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()-u.getTodayCaloriesIntake().floorToDouble();
+    this.caloriesLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble() -
+        u.getTodayCaloriesIntake().floorToDouble();
+
     ///再计算按照比例得到的建议摄入量
-    double recommendLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble()*this.widget.persent*0.01;
+    double recommendLimit = u.plan.dailyCaloriesUpperLimit.floorToDouble() *
+        this.widget.persent *
+        0.01;
+
     ///比较两个量，如果当前最大可摄入量>比例建议量，则按照比例建议量作为摄入量上限
-    if(this.caloriesLimit > recommendLimit){
-      int mealidx = this.mealTypeConvert()-1;
+    if (this.caloriesLimit > recommendLimit) {
+      int mealidx = this.mealTypeConvert() - 1;
+
       ///如果当前这餐已经有了，则减去
-      this.caloriesLimit = recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
+      this.caloriesLimit =
+          recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
     }
     Requests.recommandFood({
-      "uid":u.uid,
-      "token":u.token,
-      "pid":u.plan.id,
-      "mealType":mealTypeConvert()
-    }).then((res){
-      if(res == null){
+      "uid": u.uid,
+      "token": u.token,
+      "pid": u.plan.id,
+      "mealType": mealTypeConvert()
+    }).then((res) {
+      if (res == null) {
         return;
       }
-      if(res.data['code'] == 1){
-        for(List m  in res.data['data']['randFoods'].values){
-          for(Map fd in m){
+      if (res.data['code'] == 1) {
+        for (List m in res.data['data']['randFoods'].values) {
+          for (Map fd in m) {
             Food f = new Food.fromJson(fd);
             this.recommendedFood.add(f);
           }
@@ -103,21 +111,25 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     super.initState();
   }
 
-  int mealTypeConvert(){
+  int mealTypeConvert() {
     String s = widget.mealType.toLowerCase();
-    switch(s){
-      case "breakfast":{
-        return 1;
-      }
-      case "lunch":{
-        return 2;
-      }
-      case "dinner":{
-        return 3;
-      }
-      default:{
-        return 3;
-      }
+    switch (s) {
+      case "breakfast":
+        {
+          return 1;
+        }
+      case "lunch":
+        {
+          return 2;
+        }
+      case "dinner":
+        {
+          return 3;
+        }
+      default:
+        {
+          return 3;
+        }
     }
   }
 
@@ -164,9 +176,12 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CustomIconButton(
-            icon: FontAwesomeIcons.arrowLeft, backgroundOpacity: 0,onClick: (){
-              Navigator.of(context).pop();
-        },),
+          icon: FontAwesomeIcons.arrowLeft,
+          backgroundOpacity: 0,
+          onClick: () {
+            Navigator.of(context).pop();
+          },
+        ),
         TitleText(
           text: CustomLocalizations.of(context).recommandMeal,
           underLineLength: 0,
@@ -182,7 +197,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: CustomLocalizations.of(context).recommand + CustomLocalizations.of(context).getContent(widget.mealType),
+          text: CustomLocalizations.of(context).recommand +
+              CustomLocalizations.of(context).getContent(widget.mealType),
           underLineLength: 200,
           maxHeight: 20,
           maxWidth: 0.95,
@@ -195,50 +211,72 @@ class FoodRecommandationState extends State<FoodRecommandation> {
   Widget foodSelectArea() {
     double picRadius = ScreenTool.partOfScreenHeight(0.075);
     double containerHeight = 2 * picRadius;
-    double verticalGap = (containerHeight - picRadius) / 2;
-    Random rnd = Random();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
-        Container(
-          height: containerHeight,
-          width: ScreenTool.partOfScreenWidth(0.9),
-          decoration: BoxDecoration(
-              color: MyTheme.convert(ThemeColorName.ComponentBackground),
-              borderRadius: BorderRadius.circular(5)),
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: this.recommendedFood.length,
-              itemBuilder: (BuildContext ctx, int idx) {
-                RecommandFoodCircle w = RecommandFoodCircle(
-                  food: this.recommendedFood[idx],
-                  pictureSize: ScreenTool.partOfScreenHeight(0.075),
-                );
-                w.onClick = () {
-                  this.nowFood = w.food;
-                  this.foodinfo.currentState.changeTo(this.nowFood);
-                };
-                w.onCheck = () {
-                  this.selectedFood.add(w.food);
-                  this.updateCalories();
-                };
-                w.onUnCheck = () {
-                  this.selectedFood.remove(w.food);
-                  this.updateCalories();
-                };
-                return Container(
-                    margin: EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: verticalGap,
-                        bottom: verticalGap),
-                    child: w);
-              }),
+        Expanded(
+          child: Container(
+              height: containerHeight,
+              decoration: BoxDecoration(
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
+                  borderRadius: BorderRadius.circular(5)),
+              child: AnimatedCrossFade(
+                firstChild: Container(
+                  alignment: Alignment.center,
+                  child: RotateIcon(
+                    icon: FontAwesomeIcons.spinner,
+                    angle: 2 * pi,
+                    autoPlay: true,
+                    recycle: true,
+                    rotateTime: 1000,
+                  ),
+                ),
+                secondChild:
+                    this.buildRecommendList(picRadius, containerHeight),
+                duration: Duration(milliseconds: 300),
+                crossFadeState: this.recommendedFood.length == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              )),
         ),
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
       ],
     );
+  }
+
+  Widget buildRecommendList(double picRadius, double containerHeight) {
+    double verticalGap = (containerHeight - picRadius) / 2;
+    return Container(
+      height: containerHeight,
+      child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: this.recommendedFood.length,
+          itemBuilder: (BuildContext ctx, int idx) {
+            RecommandFoodCircle w = RecommandFoodCircle(
+              food: this.recommendedFood[idx],
+              pictureSize: ScreenTool.partOfScreenHeight(0.075),
+            );
+            w.onClick = () {
+              this.nowFood = w.food;
+              this.foodinfo.currentState.changeTo(this.nowFood);
+            };
+            w.onCheck = () {
+              this.selectedFood.add(w.food);
+              this.updateCalories();
+            };
+            w.onUnCheck = () {
+              this.selectedFood.remove(w.food);
+              this.updateCalories();
+            };
+            return Container(
+                margin: EdgeInsets.only(
+                    left: 10, right: 10, top: verticalGap, bottom: verticalGap),
+                child: w);
+          }),
+    )
+      ;
   }
 
   Widget CalorieHint() {
@@ -254,7 +292,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                 highColor: MyTheme.convert(ThemeColorName.Error),
                 persent: totalCal / this.caloriesLimit,
                 maxPersent: 1,
-                name: CustomLocalizations.of(context).calories+CustomLocalizations.of(context).persent,
+                name: CustomLocalizations.of(context).calories +
+                    CustomLocalizations.of(context).persent,
               )
             ]),
             Container(
@@ -271,45 +310,52 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                   SizedBox(width: 100),
                   CrossFadeText(
                     key: this.calSuggest,
-                    text: totalCal.floor().toString() +" / "+this.caloriesLimit.floor().toString()+ " Kcal",
+                    text: totalCal.floor().toString() +
+                        " / " +
+                        this.caloriesLimit.floor().toString() +
+                        " Kcal",
                     fontSize: 13,
                   ),
                   Expanded(child: SizedBox()),
                   CustomButton(
-                    text: CustomLocalizations.of(context).add+" "+CustomLocalizations.of(context).to+" "+this.widget.mealType,
+                    text: CustomLocalizations.of(context).add +
+                        " " +
+                        CustomLocalizations.of(context).to +
+                        " " +
+                        this.widget.mealType,
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
                     width: 60,
                     radius: 5,
-                    tapFunc: ()async{
+                    tapFunc: () async {
                       User u = User.getInstance();
                       bool newMeal = false;
                       Meal m = u.getMealByName(widget.mealType);
-                      if(m == null){
+                      if (m == null) {
                         m = new Meal(mealName: widget.mealType);
                         newMeal = true;
                       }
                       Response res = await Requests.consumeFoods({
                         "uid": u.uid,
-                        "token":u.token,
+                        "token": u.token,
                         "pid": u.plan.id,
                         "type": mealTypeConvert(),
-                        "foods_info":jsonEncode(this.selectedFood),
+                        "foods_info": jsonEncode(this.selectedFood),
                       });
-                      if(res == null){
+                      if (res == null) {
                         return;
                       }
-                      if(res.data['code'] != 1){
+                      if (res.data['code'] != 1) {
                         return;
                       }
-                      for(Food f in this.selectedFood){
+                      for (Food f in this.selectedFood) {
                         m.addFood(f);
                       }
-                      if(newMeal){
+                      if (newMeal) {
                         u.meals.value.add(m);
                       }
-                      m.time = (res.data['data']['stmp']*1000);
+                      m.time = (res.data['data']['stmp'] * 1000);
                       m.save();
                       Navigator.of(context).pop(true);
                     },
@@ -324,13 +370,17 @@ class FoodRecommandationState extends State<FoodRecommandation> {
     );
   }
 
-  void redrawProgressBar(){
+  void redrawProgressBar() {
     this.persentBar.currentState.changePersentByIndex(
         0, this.calculateTotalCalorie() / (this.caloriesLimit));
   }
-  void updateCalories(){
+
+  void updateCalories() {
     this.calSuggest.currentState.changeTo(
-        this.calculateTotalCalorie().floor().toString() + " / "+this.caloriesLimit.floor().toString()+" Kcal");
+        this.calculateTotalCalorie().floor().toString() +
+            " / " +
+            this.caloriesLimit.floor().toString() +
+            " Kcal");
     this.redrawProgressBar();
   }
 }
