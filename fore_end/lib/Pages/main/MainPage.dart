@@ -35,11 +35,16 @@ class MainPage extends StatefulWidget {
 class MainState extends State<MainPage> with TickerProviderStateMixin {
   GlobalKey<TakePhotoState> photoKey;
   List<GlobalKey<CustomIconButtonState>> buttonKey;
+  GlobalKey<CustomDrawerState> drawerKey;
+  GlobalKey<DietPageState> dietPageKey;
   TabController ctl;
 
   @override
   void initState() {
     photoKey = new GlobalKey<TakePhotoState>();
+    this.drawerKey = GlobalKey<CustomDrawerState>();
+    this.dietPageKey = GlobalKey<DietPageState>();
+
     buttonKey = [
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>(),
@@ -74,7 +79,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         controller: ctl,
                         children: [
                           new TakePhotoPage(key: this.photoKey),
-                          new DietPage(),
+                          new DietPage(key: this.dietPageKey,),
                           new PlanDetailPage(),
                         ]),
                   ],
@@ -114,6 +119,8 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomDrawer(
       widthPercent: 1,
       children: drawerItems,
+      dietKey: this.dietPageKey,
+      key: this.drawerKey,
     );
   }
 
@@ -127,6 +134,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
           return AccountPage();
         })).then((value){
           if(value){
+            drawerKey.currentState.setState(() {});
             setState(() {});
           }
         });
@@ -144,7 +152,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       tapFunc: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
-        }));
+        })).then((value){
+
+        });
       },
       text: CustomLocalizations.of(context).drawerSetting,
       width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,

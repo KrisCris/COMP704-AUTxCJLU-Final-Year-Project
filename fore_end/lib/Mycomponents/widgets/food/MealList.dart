@@ -151,7 +151,7 @@ class MealViewState extends State<MealView>{
                             padding:
                             const EdgeInsets.only(left: 4, bottom: 7),
                             child: Text(
-                              'kcal',
+                              'KCal',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 decoration: TextDecoration.none,

@@ -4,13 +4,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
+import 'package:fore_end/Mycomponents/widgets/basic/CustomBadge.dart';
 import 'package:fore_end/Pages/FoodDetailsPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class FoodSearchBar extends StatefulWidget{
   FloatingSearchBar bar;
+
+  FoodSearchBar({Key key}):super(key:key);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,14 +25,28 @@ class FoodSearchBar extends StatefulWidget{
 
 class FoodSearchBarState extends State<FoodSearchBar>{
   List<Food> foods;
+  GlobalKey<CustomBadgeState> badgeKey;
+
   @override
   void initState() {
     this.foods = [];
+    this.badgeKey = GlobalKey<CustomBadgeState>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+      return Stack(
+        children: [
+          this.getSearchBar(),
+          Transform.translate(
+              offset: Offset(40,25),
+              child:  CustomBadge(key: this.badgeKey),
+          ),
+        ],
+      );
+  }
+  Widget getSearchBar(){
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
@@ -37,7 +56,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
       border: BorderSide(color: MyTheme.convert(ThemeColorName.NormalText)),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
       backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
-      hint: ' Search Foods...',
+      hint: CustomLocalizations.of(context).searchFood,
       hintStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),
@@ -130,7 +149,6 @@ class FoodSearchBarState extends State<FoodSearchBar>{
       },
     );
   }
-
   void queryFoods(String foodName) async {
     Response res = await Requests.searchFood({
       "name":foodName,
