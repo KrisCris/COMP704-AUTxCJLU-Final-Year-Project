@@ -57,6 +57,7 @@ class Login extends StatelessWidget {
       onCorrect: () {
         passwordIsInput = true;
         if (emailIsInput) this.nextButton.setDisabled(false);
+        nextButton.tapFunc();
       },
       onError: () {
         passwordIsInput = false;
