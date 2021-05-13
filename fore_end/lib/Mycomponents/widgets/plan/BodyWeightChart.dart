@@ -99,7 +99,7 @@ class BodyWeightChartState extends State<BodyWeightChart>{
       return;
     }
     DateTime now = DateTime.now();
-    Requests.getWeightTrend({
+    Requests.getWeightTrend(context,{
       "uid":u.uid,
       "token":u.token,
       "begin": (now.add(Duration(days: -60)).millisecondsSinceEpoch/1000).floor(),

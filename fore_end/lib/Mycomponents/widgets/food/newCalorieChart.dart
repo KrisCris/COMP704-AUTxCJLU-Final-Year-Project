@@ -489,7 +489,7 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     endTime = (DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59)
         .millisecondsSinceEpoch / 1000).floor();
 
-    Response res = await Requests.getCaloriesIntake({
+    Response res = await Requests.getCaloriesIntake(context,{
       "begin": beginTime,
       "end": endTime,
       "uid": User

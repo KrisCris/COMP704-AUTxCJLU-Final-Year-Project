@@ -124,7 +124,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     int endTime =
         (this.weekDateInfos[6].date.millisecondsSinceEpoch / 1000).floor();
     List oneWeekCaloriesList = new List();
-    Response res = await Requests.getCaloriesIntake({
+    Response res = await Requests.getCaloriesIntake(context,{
       "begin": beginTime,
       "end": endTime,
       "uid": User.getInstance().uid,

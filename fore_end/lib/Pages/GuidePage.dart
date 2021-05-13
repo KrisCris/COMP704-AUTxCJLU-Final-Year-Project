@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,22 +17,22 @@ class GuidePage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-   return GuidePageState();
+    return GuidePageState();
   }
 }
 
-
-class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
+class GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
   TabController ctl;
 
   @override
   void initState() {
     super.initState();
-    this.ctl =  TabController(
+    this.ctl = TabController(
       length: 5,
       vsync: this,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     PlanChooser plan = PlanChooser();
@@ -55,15 +54,17 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
       goal.setData(body.genderRatio, body.bodyHeight, body.bodyWeight,
           body2.age, body2.exerciseRatio);
       //maintain情况下
-      if(plan.planType == 2){
+      if (plan.planType == 2) {
         this.askForPreview(context, plan, body, body2, null, planPreview);
         return;
-      }else{
+      } else {
         ctl.animateTo(3,
             duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
       }
     });
-    goal.setNextDo(() async { await this.askForPreview(context, plan, body, body2, goal, planPreview);});
+    goal.setNextDo(() async {
+      await this.askForPreview(context, plan, body, body2, goal, planPreview);
+    });
 
     return TabBarView(
       controller: ctl,
@@ -72,8 +73,13 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
     );
   }
 
-
-  void askForPreview(BuildContext context, PlanChooser plan, BodyDataInputer body, ExtraBodyDataInputer body2, GoalInputer goal, ConfirmPlan planPreview) async {
+  void askForPreview(
+      BuildContext context,
+      PlanChooser plan,
+      BodyDataInputer body,
+      ExtraBodyDataInputer body2,
+      GoalInputer goal,
+      ConfirmPlan planPreview) async {
     int planType = plan.planType;
     double bodyHeight = body.bodyHeight;
     int bodyWeight = body.bodyWeight;
@@ -82,15 +88,15 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
     int age = body2.age;
     double exerciseRatio = body2.exerciseRatio;
     int days = 0;
-    if(goal != null){
+    if (goal != null) {
       days = goal.days;
     }
 
     if (planType == 1 && goal != null) {
       goalWeight -= goal.weightLose;
     }
-    Response res = await Requests.previewPlan({
-      "height": bodyHeight*100,
+    Response res = await Requests.previewPlan(context, {
+      "height": bodyHeight * 100,
       "weight": bodyWeight.round(),
       "age": age,
       "gender": gender,
@@ -103,13 +109,13 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
       //TODO:计划不合理的情况
     } else if (res.data["code"] == 1) {
       dynamic data = res.data['data'];
-      planPreview.setNextDo(()async{
+      planPreview.setNextDo(() async {
         User u = User.getInstance();
         Response res = await this.finishOldPlan();
-        res = await Requests.setPlan({
-          "uid":u.uid,
-          "token":u.token,
-          "height": bodyHeight*100,
+        res = await Requests.setPlan(context, {
+          "uid": u.uid,
+          "token": u.token,
+          "height": bodyHeight * 100,
           "weight": bodyWeight.round(),
           "age": age,
           "gender": gender,
@@ -117,33 +123,31 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
           "duration": days,
           "goalWeight": goalWeight,
           "calories": (data["goalCal"] as int),
-          "pal":exerciseRatio,
+          "pal": exerciseRatio,
           "maintCalories": (data["completedCal"] as int)
         });
-        if(res.data['code'] == 1){
+        if (res.data['code'] == 1) {
           u.setPlan(res);
-          if(widget.firstTime){
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-              return new MainPage(user:u);
-            }),(ct)=>false);
-          }else{
-            Navigator.pop(context);
-          }
-        }else{
+
+          Navigator.pushAndRemoveUntil(context,
+              new MaterialPageRoute(builder: (context) {
+            return new MainPage(user: u);
+          }), (ct) => false);
+        } else {
           //TODO:创建计划失败的情况
         }
       });
       planPreview.setBackDo(() {
         ctl.animateTo(0,
-            duration: Duration(milliseconds: 400),
-            curve: Curves.fastOutSlowIn);
+            duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
       });
       planPreview.setPlanType(planType);
       planPreview.setNutrition(
           (data["goalCal"] as int).floorToDouble(),
           (data["completedCal"] as int).floorToDouble(),
           (data["maintainCal"] as int).floorToDouble(),
-          data["protein_l"], data["protein_h"],
+          data["protein_l"],
+          data["protein_h"],
           data["low"]);
       ctl.animateTo(4,
           duration: Duration(milliseconds: 400), curve: Curves.fastOutSlowIn);
@@ -152,11 +156,11 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
 
   Future<Response> finishOldPlan() async {
     User u = User.getInstance();
-    Response res = await Requests.finishPlan({
-      "uid":u.uid,
-      "token":u.token,
-      "pid":u.plan?.id ?? -1,
-      "weight":u.bodyWeight.floor()
+    Response res = await Requests.finishPlan(context, {
+      "uid": u.uid,
+      "token": u.token,
+      "pid": u.plan?.id ?? -1,
+      "weight": u.bodyWeight.floor()
     });
     return res;
   }

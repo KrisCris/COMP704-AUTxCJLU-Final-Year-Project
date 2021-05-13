@@ -101,7 +101,8 @@ class PageState extends State<AccountPage> {
       List<String> basicInfo = new List<String>();
       basicInfo = this.basicInfoEditableArea.getAllValue();
       try {
-        Response res = await Requests.modifyBasicInfo({
+        Response res = await Requests.modifyBasicInfo(
+            context,{
           "uid": widget.user.uid,
           "token": widget.user.token,
           "age": int.parse(basicInfo[2]),
