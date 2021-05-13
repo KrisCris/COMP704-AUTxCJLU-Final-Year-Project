@@ -170,6 +170,13 @@ class CustomIconButtonState extends State<CustomIconButton>
         this.setUnFocus();
       }
     });
+    this.iconAndTextColorAnimation.initAnimation(
+        this.getIconAndTextColor(widget.focus.value,null),
+        this.getIconAndTextColor(widget.focus.value,null),
+        150,
+        this, () {
+      setState(() {});
+    });
     super.didUpdateWidget(oldWidget);
   }
   ///历史遗留问题, 不推荐在buiild函数中绑定state
