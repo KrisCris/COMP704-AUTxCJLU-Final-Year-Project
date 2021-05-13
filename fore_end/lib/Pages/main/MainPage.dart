@@ -35,12 +35,15 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
   GlobalKey<TakePhotoState> photoKey;
   List<GlobalKey<CustomIconButtonState>> buttonKey;
   GlobalKey<CustomDrawerState> drawerKey;
+  GlobalKey<DietPageState> dietPageKey;
   TabController ctl;
 
   @override
   void initState() {
     photoKey = new GlobalKey<TakePhotoState>();
     this.drawerKey = GlobalKey<CustomDrawerState>();
+    this.dietPageKey = GlobalKey<DietPageState>();
+
     buttonKey = [
       new GlobalKey<CustomIconButtonState>(),
       new GlobalKey<CustomIconButtonState>(),
@@ -75,7 +78,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         controller: ctl,
                         children: [
                           new TakePhotoPage(key: this.photoKey),
-                          new DietPage(),
+                          new DietPage(key: this.dietPageKey,),
                           new PlanDetailPage(),
                         ]),
                   ],
@@ -115,6 +118,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     return CustomDrawer(
       widthPercent: 1,
       children: drawerItems,
+      dietKey: this.dietPageKey,
       key: this.drawerKey,
     );
   }
