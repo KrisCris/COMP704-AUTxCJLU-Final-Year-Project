@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'dart:math' as math;
@@ -236,7 +237,7 @@ class RecommendBoxState extends State<RecommendBox>
 
   Widget getFoodName() {
     return Text(
-      widget.title,
+      CustomLocalizations.of(context).recommendBoxTitle,
       style: TextStyle(
           decoration: TextDecoration.none,
           fontSize: 18,
@@ -269,7 +270,10 @@ class RecommendBoxState extends State<RecommendBox>
         children: [
           Container(
             margin: EdgeInsets.only(left: 30,right: 30),
-            child: Text("评价：这个食物"+this.widget.foodName+"不适合您的计划[减肥],建议选择下面的推荐食物.",
+            child: Text(
+                this.widget.isSuitable?CustomLocalizations.of(context).commentOfFoodOne+this.widget.foodName+
+                CustomLocalizations.of(context).commentOfFoodThree+CustomLocalizations.of(context).commentOfAdviceTwo
+                :CustomLocalizations.of(context).commentOfFoodOne+this.widget.foodName+CustomLocalizations.of(context).commentOfFoodTwo+CustomLocalizations.of(context).commentOfAdviceOne,
                 // overflow: ,
                 softWrap: true,
                 style: TextStyle(
@@ -281,15 +285,21 @@ class RecommendBoxState extends State<RecommendBox>
 
           ),
           Container(
-            height: 70,
-            margin: EdgeInsets.only(left: 30,right: 30),
+            height: 60,
+            margin: EdgeInsets.only(left: 30,right: 30,top: 10,bottom: 20),
             // padding: EdgeInsets.only(left: 1,),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: this.widget.foods.length,
                 itemBuilder: (BuildContext ctx, int idx) {
                   GestureDetector foodImage = GestureDetector(
-                    child: Image.memory( base64.decode(this.widget.foods[idx].picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                    // child: Image.memory( base64.decode(this.widget.foods[idx].picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                    child:ClipOval(
+                      child: Image.memory( base64.decode(this.widget.foods[idx].picture),
+                                            height:60, width:60,
+                                            fit: BoxFit.cover,
+                                            gaplessPlayback:true, ),
+                    ),
                     onTap:(){
                       ///点击食物图片会自动跳转
                       Navigator.push(context,

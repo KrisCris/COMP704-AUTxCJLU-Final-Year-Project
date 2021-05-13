@@ -8,6 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
@@ -28,8 +29,10 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 class FoodDetails extends StatefulWidget {
   Food currentFood;
   bool isSuitable;
+  // GlobalKey<ValueAdjusterState> valueAdjusterKey;
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
   bool testExclamition;
+  int foodWeight;
 
 
   ///构建函数
@@ -111,6 +114,10 @@ class _FoodDetailsState extends State<FoodDetails> {
         ),
         child: SingleChildScrollView(
           child: Column(
+
+            mainAxisSize: MainAxisSize.min,
+
+            // mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -140,7 +147,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                   borderRadius: BorderRadius.circular(10),
                   // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.2),
+                height: ScreenTool.partOfScreenHeight(0.25),
                 width: ScreenTool.partOfScreenWidth(0.95),
                 // child: Image.asset('image/fruit-main.jpg',fit: BoxFit.cover,),
                 child: Image.memory(base64.decode(widget.currentFood.picture), height:50, width:50, fit: BoxFit.fitWidth, gaplessPlayback:true,),
@@ -150,7 +157,7 @@ class _FoodDetailsState extends State<FoodDetails> {
               ///推荐食物可展开区域
               ///当拥有数据的时候再去生成
               RecommendBox(
-                title:CustomLocalizations.of(context).recommendBoxTitle,
+                // title:CustomLocalizations.of(context).recommendBoxTitle,
                 foods: this.recommendFoods,
                 isSuitable: this.widget.isSuitable,
                 foodName: this.widget.currentFood.getName(context),),
@@ -184,26 +191,31 @@ class _FoodDetailsState extends State<FoodDetails> {
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.6 ),
+                  height: ScreenTool.partOfScreenHeight(0.6),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
+
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.08),),
                           NutritionBox(
                             title: CustomLocalizations.of(context).carbohydrate,
                             value: widget.currentFood.carbohydrate,
                             color: const Color(0xff09edfe),///碳水
                           ),
-
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.1),),
                           NutritionBox(
                             title: CustomLocalizations.of(context).fat,
                             value: widget.currentFood.fat,
                             color: const Color(0xfff8b250),
                           ),
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.1),),
                           NutritionBox(
                             title: CustomLocalizations.of(context).protein,
                             value: widget.currentFood.protein,
@@ -214,32 +226,29 @@ class _FoodDetailsState extends State<FoodDetails> {
 
                       SizedBox(height: 15,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.08),),
 
                           NutritionBox(
                             title: CustomLocalizations.of(context).cellulose,
                             value:widget.currentFood.cellulose,
                             color: const Color(0xff13d38e),///纤维素
                           ),
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.1),),
                           NutritionBox(
                             title: CustomLocalizations.of(context).cholesterol,
                             value: widget.currentFood.cholesterol,
                             color: const Color(0xff845bef),  ///胆固醇
                           ),
-                          NutritionBox(
-                            title: CustomLocalizations.of(context).calories,
-                            // value: 100.0,
-                            value: widget.currentFood.calorie,
-                            color: const Color(0xffa5ef00), ///卡路里
-                            units: "ka",
-                            // isUnSuitable: this.widget.testExclamition,
-                          ),
+                          // SizedBox(width: ScreenTool.partOfScreenWidth(0.08),),
+
                         ],
                       ),
                       // a,  ///这里是重量调整器
                       AspectRatio(  ///AspectRatio 是固定宽高比的组件
-                        aspectRatio: 1/0.7,
+                        aspectRatio: 1/0.6,
                         child: PieChart(
                           PieChartData(
                               pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
@@ -265,6 +274,39 @@ class _FoodDetailsState extends State<FoodDetails> {
                         ),
                       ),
 
+                      // SizedBox(height: 20,),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     NutritionBox(
+                      //       title: CustomLocalizations.of(context).calories,
+                      //       // value: 100.0,
+                      //       value: widget.currentFood.calorie,
+                      //       color: const Color(0xffa5ef00), ///卡路里
+                      //       units: "ka",
+                      //       // isUnSuitable: this.widget.testExclamition,
+                      //     ),
+                      //   ],
+                      // ),
+
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          NutritionBox(
+                            title: CustomLocalizations.of(context).calories,
+                            // value: 100.0,
+                            value: widget.currentFood.calorie,
+                            color: const Color(0xffa5ef00), ///卡路里
+                            units: "kcal/100g",
+                            titleSize: 17,
+                            valueSize: 15,
+                            // isUnSuitable: this.widget.testExclamition,
+                          ),
+                          this.getValueAdjuster()
+                        ],
+                      ),
+
                     ],
                   )
 
@@ -272,6 +314,7 @@ class _FoodDetailsState extends State<FoodDetails> {
               SizedBox(height:15),
               CustomButton(
                 disabled: false,
+                bgColor: MyTheme.convert(ThemeColorName.ComponentBackground),
                 text: CustomLocalizations.of(context).resultPageQuestion,
                 isBold: true,
                 width: ScreenTool.partOfScreenWidth(0.95),
@@ -284,19 +327,19 @@ class _FoodDetailsState extends State<FoodDetails> {
 
                   ///点击展开添加食物计划
                   JhPickerTool.showStringPicker(context,
-                      title: CustomLocalizations.of(context).total + '1200 Kcal',
+                      title: CustomLocalizations.of(context).total +(this.widget.currentFood.calorie.toInt()*this.widget.foodWeight/100).toString() + "Kcal",
                       normalIndex: 0,
                       isChangeColor: true,
                       data: mealsName, clickCallBack: (int index, var item) {
                         if(index == 0){
-                          print("点击了早餐");
-                          // FoodRecognizer.addFoodToMealName("breakfast");
+                          // print("点击了早餐");
+                          FoodRecognizer.addFoodToMealName("breakfast");
                         }else if(index == 1){
-                          print("点击了午餐");
-                          // FoodRecognizer.addFoodToMealName("lunch");
+                          // print("点击了午餐");
+                          FoodRecognizer.addFoodToMealName("lunch");
                         }else if(index == 2){
-                          print("点击了晚餐");
-                          // FoodRecognizer.addFoodToMealName("dinner");
+                          // print("点击了晚餐");
+                          FoodRecognizer.addFoodToMealName("dinner");
                         }
                       });
                 },
@@ -314,6 +357,19 @@ class _FoodDetailsState extends State<FoodDetails> {
 
 
   }
+  Widget getValueAdjuster() {
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:20,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    valueAdjuster.onValueChange = (){
+      setState(() {
+        print("ValueAdjuster onValueChange");
+        this.widget.foodWeight=this.widget.valueAdjusterKey.currentState.getVal();
+        // widget.food.setWeight(foodWeight);
+      });
+
+    };
+
+    return valueAdjuster;
+  }
 
   List<PieChartSectionData> showingSections() {
     return List.generate(5, (i) {
@@ -330,6 +386,19 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
+          // {
+          //   if(this.widget.currentFood.carbohydrate>0){
+          //     return PieChartSectionData(
+          //       color: const Color(0xff09edfe),///碳水
+          //       value: this.widget.currentFood.carbohydrate,
+          //       title: (calculatePercent('carbohydrate')*100).floor().toString()+'%',
+          //       radius: radius,
+          //       titleStyle: TextStyle(
+          //           fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          //     );
+          //   }
+          //   break;
+          // }
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff8b250),  ///脂肪
@@ -340,6 +409,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 2:
+
           return PieChartSectionData(
             color: const Color(0xff845bef),  ///胆固醇
             value: this.widget.currentFood.cholesterol,
@@ -349,6 +419,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 3:
+          // this.widget.currentFood.cellulose>0?
           return PieChartSectionData(
             color: const Color(0xff13d38e),///纤维素
             value: this.widget.currentFood.cellulose,
@@ -357,6 +428,7 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
+
         case 4:
 
           return PieChartSectionData(
