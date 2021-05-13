@@ -57,6 +57,7 @@ class Login extends StatelessWidget {
       onCorrect: () {
         passwordIsInput = true;
         if (emailIsInput) this.nextButton.setDisabled(false);
+        nextButton.tapFunc();
       },
       onError: () {
         passwordIsInput = false;
@@ -88,6 +89,7 @@ class Login extends StatelessWidget {
             behavior: HitTestBehavior.translucent,
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
+              nextButton.tapFunc();
             },
             child: Container(
                 color: MyTheme.convert(ThemeColorName.PageBackground),
