@@ -167,6 +167,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   @override
   void didUpdateWidget(covariant CaloriesBarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
+    this.todayInfo.value = User.getInstance().getTodayCaloriesIntake();
     setState(() {});
   }
 
