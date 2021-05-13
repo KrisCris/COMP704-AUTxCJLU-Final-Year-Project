@@ -88,6 +88,9 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       ///如果当前这餐已经有了，则减去
       this.caloriesLimit =
           recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
+      if(this.caloriesLimit <=0){
+        this.caloriesLimit = 1;
+      }
     }
     Requests.recommandFood(
         context,{
