@@ -288,9 +288,21 @@ class CustomLocalizations {
       "en":"Detail",
       "zh":"详情"
     },
+    "searchHistoryMeal":{
+      "en":"Searching history meals...",
+      "zh":"正在搜索历史三餐..."
+    },
+    "noFoodSearch":{
+      'en':"No Food Intake",
+      "zh":"没有进食记录"
+    },
     "searchFood":{
       "en":"Search foods",
       "zh":"搜索食物"
+    },
+    "clickForDetail":{
+      "en":"click Picture For Details",
+      "zh":"点击图片查看详情"
     },
     "todayCalories":{
       "en":"Today's Calories",
@@ -786,6 +798,15 @@ class CustomLocalizations {
   }
   get searchFood{
     return getContent("searchFood");
+  }
+  get searchHistoryMeal{
+    return getContent("searchHistoryMeal");
+  }
+  get noFoodSearch{
+    return getContent("noFoodSearch");
+  }
+  get clickForDetail{
+    return getContent("clickForDetail");
   }
   get planProcess{
     return getContent("planProgress");

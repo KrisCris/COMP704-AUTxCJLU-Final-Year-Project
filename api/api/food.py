@@ -136,9 +136,10 @@ def getConsumeHistory(*args, **kwargs):
     begin = args[0].get('begin')
     end = args[0].get('end')
     uid = args[0].get('uid')
+    result = DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid)
     return reply_json(
         code=1,
-        data=DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid)
+        data= result
     )
 
 
@@ -151,9 +152,10 @@ def getDailyConsumption(*args, **kwargs):
     begin = args[0].get('begin')
     end = args[0].get('end')
     uid = args[0].get('uid')
+    result = DailyConsumption.getConsumptionGroupByType(begin=begin, end=end, uid=uid)
     return reply_json(
         code=1,
-        data=DailyConsumption.getConsumptionGroupByType(begin=begin, end=end, uid=uid)
+        data=result
     )
 
 

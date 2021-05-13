@@ -484,8 +484,8 @@ def getPastPlans(*args, **kwargs):
                 # for avg
                 counter += 1
                 # accumulated
-                consumptionRecords['accumCalories'] += dc.calories * dc.weight if dc.calories is not None else 0
-                consumptionRecords['accumProtein'] += dc.protein * dc.weight if dc.protein is not None else 0
+                consumptionRecords['accumCalories'] += dc.calories * dc.weight / 100 if dc.calories is not None else 0
+                consumptionRecords['accumProtein'] += dc.protein * dc.weight / 100 if dc.protein is not None else 0
                 # calculate low and high
 
                 # detailed
