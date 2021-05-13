@@ -16,8 +16,6 @@ import 'package:fore_end/Mycomponents/widgets/plan/ExtendTimeHint.dart';
 import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
-import 'package:fore_end/Pages/main/DietPage.dart';
-import 'basic/CustomBadge.dart';
 
 class HintManager{
   static final HintManager _instance = HintManager._privateConstructor();
@@ -50,8 +48,7 @@ class HintManager{
     User u = User.getInstance();
     if(u.isOffline){
       hints["offlineHint"] = new Hint(
-          hintContent:
-          "You are now in offline mode, most function is unavailable. Click to login.",
+          hintContent: CustomLocalizations.of(context).offlineHint,
           instanceClose: false,
           onClick: () {
             Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
@@ -62,15 +59,13 @@ class HintManager{
     if (u.shouldUpdateWeight) {
       hints['weightUpdateHint'] = new Hint(
           instanceClose: false,
-          hintContent:
-          "1 week had passed since your last body weight updating. It's time to update!",
+          hintContent:CustomLocalizations.of(context).weightUpdateHint,
           onClick: () {
             showDialog<bool>(
               context: context,
               builder: (BuildContext context) {
                 UpdateBody updateBody = new UpdateBody(
-                    text:
-                    "Before change your plan, please record your current weight",
+                    text: CustomLocalizations.of(context).beforeChangePlan,
                     needHeight: false);
                 updateBody.onUpdate = () async {
                   User u = User.getInstance();
@@ -103,8 +98,7 @@ class HintManager{
     if(u.plan.pastDeadline){
       this.hints['passDeadlineHint'] = Hint(
           instanceClose: false,
-          hintContent:
-          "Your Plan exceeded the deadline, click here for further operation",
+          hintContent:CustomLocalizations.of(context).passDeadlineHint,
           onClick: ()async{
             bool b = await showDialog<bool>(
               context: context,
@@ -201,7 +195,7 @@ class HintBoxState extends State<HintBox>{
       child: AnimatedCrossFade(
         firstChild: Center(
           child: TitleText(
-            text: "No Messages",
+            text: CustomLocalizations.of(context).noMessage
           ),
         ),
         secondChild: Row(
