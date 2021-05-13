@@ -9,8 +9,9 @@ class SmallFoodBox extends StatefulWidget {
   TextStyle style;
   TextStyle figureStyle;
   Food food;
+  Function(Food f) onclick;
   SmallFoodBox(
-      {@required this.food, this.pictureSize = 40, TextStyle style, Key key})
+      {@required this.food,this.onclick, this.pictureSize = 40, TextStyle style, Key key})
       : assert(food != null),
         super(key: key) {
     this.style = style ??
@@ -50,9 +51,13 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
     );
     return GestureDetector(
       onTap: () {
-        setState(() {
-          showDetail = !showDetail;
-        });
+        if(this.widget.onclick!=null){
+          this.widget.onclick(this.widget.food);
+        }else{
+          setState(() {
+            showDetail = !showDetail;
+          });
+        }
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,
