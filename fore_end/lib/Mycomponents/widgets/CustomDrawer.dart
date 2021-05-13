@@ -174,13 +174,16 @@ class CustomDrawerState extends State<CustomDrawer> {
 
   Widget getCircleAvatar({double size = 60}) {
     return Container(
+      margin: EdgeInsets.only(top: 8,bottom: 0),
         width: size,
-        height: size,
+        height: size+20,
         decoration: new BoxDecoration(
-            shape: BoxShape.circle,
+            shape: BoxShape.rectangle, ///circle是圆的 这里改为圆角
+            borderRadius: BorderRadius.circular(25.0),
             image: DecorationImage(
                 image: MemoryImage(User.getInstance().getAvatarBin()),
-                fit: BoxFit.cover),
+                fit: BoxFit.cover
+            ),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10, //阴影范围
