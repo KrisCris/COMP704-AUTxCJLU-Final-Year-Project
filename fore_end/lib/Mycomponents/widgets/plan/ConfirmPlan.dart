@@ -4,6 +4,7 @@ import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
+import 'package:fore_end/Mycomponents/painter/LinePainter.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/text/ValueText.dart';
 
@@ -25,22 +26,26 @@ class ConfirmPlan extends StatelessWidget {
   void setNextDo(Function f) {
     this.nextDo = f;
   }
-  void setBackDo(Function f){
+
+  void setBackDo(Function f) {
     this.backDo = f;
   }
-  void setPlanType(int type){
+
+  void setPlanType(int type) {
     this.planTypeNum = type;
-    if(type == 1){
+    if (type == 1) {
       this.planType = "shedWeight";
-    }else if(type == 2){
+    } else if (type == 2) {
       this.planType = "maintain";
-    }else if(type == 3){
+    } else if (type == 3) {
       this.planType = "buildMuscle";
-    }else{
+    } else {
       this.planType = "none";
     }
   }
-  void setNutrition(double goalCal, double goalMaintainCal, double maintainCal, double proteinL, double proteinH,bool low){
+
+  void setNutrition(double goalCal, double goalMaintainCal, double maintainCal,
+      double proteinL, double proteinH, bool low) {
     this.dailyCalories = goalCal;
     this.dailyCaloriesAfterDone = goalMaintainCal;
     this.dailyProteinL = proteinL;
@@ -48,6 +53,7 @@ class ConfirmPlan extends StatelessWidget {
     this.keepCalories = maintainCal;
     this.isTooLow = low;
   }
+
   @override
   Widget build(BuildContext context) {
     CustomButton nextButton = CustomButton(
@@ -70,12 +76,15 @@ class ConfirmPlan extends StatelessWidget {
       disabled: false,
       tapFunc: this.backDo,
     );
-    Widget isTooLow =Row(
+    Widget isTooLow = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text: "Your plan is " + (this.isTooLow?"unbalanced, you will eat not enough":"balanced"),
+          text: "Your plan is " +
+              (this.isTooLow
+                  ? "unbalanced, you will eat not enough"
+                  : "balanced"),
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -89,10 +98,10 @@ class ConfirmPlan extends StatelessWidget {
       children: [
         ClipRect(
           child: Container(
-              width: ScreenTool.partOfScreenWidth(1),
-              height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF172632),
-            ),
+            width: ScreenTool.partOfScreenWidth(1),
+            height: ScreenTool.partOfScreenHeight(1),
+            color: Color(0xFF172632),
+          ),
         ),
         Container(
           width: ScreenTool.partOfScreenWidth(1),
@@ -120,7 +129,10 @@ class ConfirmPlan extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   TitleText(
-                    text: CustomLocalizations.of(context).yourPlan +" - "+ CustomLocalizations.of(context).getContent(this.planType),
+                    text: CustomLocalizations.of(context).yourPlan +
+                        " - " +
+                        CustomLocalizations.of(context)
+                            .getContent(this.planType),
                     maxHeight: 25,
                     maxWidth: 300,
                     underLineLength: 0.795,
@@ -131,7 +143,7 @@ class ConfirmPlan extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 30),
-              this.isTooLow?isTooLow:SizedBox(height: 0),
+              this.isTooLow ? isTooLow : SizedBox(height: 0),
               this.getContent(context),
               Expanded(child: (SizedBox())),
               Row(
@@ -139,7 +151,7 @@ class ConfirmPlan extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                   backButton,
-                  Expanded(child:SizedBox()),
+                  Expanded(child: SizedBox()),
                   nextButton,
                   SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
                 ],
@@ -151,24 +163,24 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
   }
-  Widget getContent(BuildContext context){
-    if(this.planTypeNum == 1){
-      return this.getLoseWeight(context);
-    }else if(this.planTypeNum == 2){
-      return this.getMaintain(context);
-    }else if(this.planTypeNum == 3){
-      return this.getBuildMuscle(context);
-    }else{
 
-    }
+  Widget getContent(BuildContext context) {
+    if (this.planTypeNum == 1) {
+      return this.getLoseWeight(context);
+    } else if (this.planTypeNum == 2) {
+      return this.getMaintain(context);
+    } else if (this.planTypeNum == 3) {
+      return this.getBuildMuscle(context);
+    } else {}
   }
-  Widget getMaintain(BuildContext context){
-    Widget dailyCal =Row(
+
+  Widget getMaintain(BuildContext context) {
+    Widget dailyCal = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text:CustomLocalizations.of(context).achieveMaintainInfo,
+          text: CustomLocalizations.of(context).achieveMaintainInfo,
           maxHeight: 60,
           maxWidth: 300,
           underLineLength: 0,
@@ -179,36 +191,44 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
     Widget dailyCalVal = ValueText<int>(
-      numUpper: this.dailyCalories.floor(),
+      numLower: this.dailyCalories.floor(),
       unit: "KCal",
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
       unitFontSize: 14,
-      fontColor: Color(0xFFE28800),
+      fontColor: Color(0xFFFF7526),
     );
     List<Widget> content = [];
     content.addAll([
       dailyCal,
       SizedBox(height: 20),
-      Container(
-        width: ScreenTool.partOfScreenWidth(0.8),
-        height: 70,
-        margin: EdgeInsets.only(top: 10,bottom: 10),
-        decoration: BoxDecoration(
-          color: Color(0xCCFFFFFF),
-          borderRadius: BorderRadius.circular(5),
+      CustomPaint(
+        foregroundPainter: LinePainter(
+          k: 1,
+          lineGap: 5,
+          lineWidth: 2.5,
+          context: context,
         ),
-        child: dailyCalVal,
+        child: Container(
+          width: ScreenTool.partOfScreenWidth(0.8),
+          height: 70,
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: Color(0xCCFFFFFF),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: dailyCalVal,
+        ),
       ),
       SizedBox(height: 20),
     ]);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-        children: content
-    );
+        mainAxisAlignment: MainAxisAlignment.center, children: content);
   }
-  Widget getBuildMuscle(BuildContext context){
-    Widget dailyCal =Row(
+
+  Widget getBuildMuscle(BuildContext context) {
+    Widget dailyCal = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
@@ -223,12 +243,12 @@ class ConfirmPlan extends StatelessWidget {
         )
       ],
     );
-    Widget dailyPro =Row(
+    Widget dailyPro = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
         TitleText(
-          text:CustomLocalizations.of(context).activeProteinInfo,
+          text: CustomLocalizations.of(context).activeProteinInfo,
           maxHeight: 50,
           maxWidth: 300,
           underLineLength: 0,
@@ -239,12 +259,12 @@ class ConfirmPlan extends StatelessWidget {
       ],
     );
     Widget dailyCalVal = ValueText<int>(
-      numUpper: this.dailyCalories.floor(),
+      numLower: this.dailyCalories.floor(),
       unit: "KCal",
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
       unitFontSize: 14,
-      fontColor: Color(0xFFE28800),
+      fontColor: Color(0xFFFF7526),
     );
     Widget dailyProVal = ValueText<int>(
       numLower: this.dailyProteinL.floor(),
@@ -253,7 +273,7 @@ class ConfirmPlan extends StatelessWidget {
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
       unitFontSize: 14,
-      fontColor: Color(0xFFE28800),
+      fontColor: Color(0xFFFF7526),
     );
     List<Widget> content = [];
     content.addAll([
@@ -262,7 +282,8 @@ class ConfirmPlan extends StatelessWidget {
       Container(
         width: ScreenTool.partOfScreenWidth(0.8),
         height: 70,
-        margin: EdgeInsets.only(top: 10,bottom: 10),
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
           color: Color(0xCCFFFFFF),
           borderRadius: BorderRadius.circular(5),
@@ -275,7 +296,8 @@ class ConfirmPlan extends StatelessWidget {
       Container(
         width: ScreenTool.partOfScreenWidth(0.8),
         height: 70,
-        margin: EdgeInsets.only(top: 10,bottom: 10),
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
           color: Color(0xCCFFFFFF),
           borderRadius: BorderRadius.circular(5),
@@ -283,12 +305,11 @@ class ConfirmPlan extends StatelessWidget {
         child: dailyProVal,
       ),
     ]);
-    return Column(
-        children: content
-    );
+    return Column(children: content);
   }
-  Widget getLoseWeight(BuildContext context){
-    Widget daily =Row(
+
+  Widget getLoseWeight(BuildContext context) {
+    Widget daily = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
@@ -309,9 +330,9 @@ class ConfirmPlan extends StatelessWidget {
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
       unitFontSize: 14,
-      fontColor: Color(0xFFE28800),
+      fontColor: Color(0xFFFF7526),
     );
-    Widget done =Row(
+    Widget done = Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.1)),
@@ -333,7 +354,7 @@ class ConfirmPlan extends StatelessWidget {
       rowMainAxisAlignment: MainAxisAlignment.center,
       valueFontSize: 23,
       unitFontSize: 14,
-      fontColor: Color(0xFFE28800),
+      fontColor: Color(0xFFFF7526),
     );
     List<Widget> content = [];
     content.addAll([
@@ -342,7 +363,8 @@ class ConfirmPlan extends StatelessWidget {
       Container(
         width: ScreenTool.partOfScreenWidth(0.8),
         height: 70,
-        margin: EdgeInsets.only(top: 10,bottom: 10),
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
           color: Color(0xCCFFFFFF),
           borderRadius: BorderRadius.circular(5),
@@ -355,7 +377,7 @@ class ConfirmPlan extends StatelessWidget {
       Container(
         width: ScreenTool.partOfScreenWidth(0.8),
         height: 70,
-        margin: EdgeInsets.only(top: 10,bottom: 10),
+        margin: EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
           color: Color(0xCCFFFFFF),
           borderRadius: BorderRadius.circular(5),
@@ -364,8 +386,6 @@ class ConfirmPlan extends StatelessWidget {
       ),
     ]);
 
-    return Column(
-      children: content
-    );
+    return Column(children: content);
   }
 }

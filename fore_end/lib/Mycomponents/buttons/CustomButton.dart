@@ -379,6 +379,7 @@ class CustomButtonState extends State<CustomButton>
             child: Text(
               widget.text,
               textDirection: TextDirection.ltr,
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: widget.fontsize,
                   color: widget.textColor,

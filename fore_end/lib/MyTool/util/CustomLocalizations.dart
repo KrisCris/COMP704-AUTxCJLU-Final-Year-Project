@@ -645,6 +645,31 @@ class CustomLocalizations {
       "en":"Food recommended list:",
       "zh":"更适合食物推荐列表："
     },
+    "commentOfFoodOne":{
+      "en":"Tip: This food[ ",
+      "zh":"提醒: 这个食物[ "
+    },
+    "commentOfFoodTwo":{
+      "en":" ]is not suitable for your diet plan,",
+      "zh":" ]不适合您的饮食计划,"
+    },
+    "commentOfFoodThree":{
+      "en":" ]is suitable for your diet plan,",
+      "zh":" ]适合您的饮食计划,"
+    },
+    "commentOfAdviceOne":{
+      "en":"recommended you choose the alternative foods list below:",
+      "zh":"建议选择下面的替代食物："
+    },
+    "commentOfAdviceTwo":{
+      "en":"you can also choose the similar foods list below:",
+      "zh":"也可以选择下面的相似食物："
+    },
+
+    "recommendBoxHeader":{
+      "en":"Food Nutrition Page",
+      "zh":"食物营养信息页"
+    },
 
 
 
@@ -653,6 +678,7 @@ class CustomLocalizations {
       "en":"recommand meal",
       "zh":"推荐餐食"
     },
+
     "recommand":{
       "en":"recommand",
       "zh":"推荐"
@@ -1004,6 +1030,15 @@ class CustomLocalizations {
   get  protein=> getContent("protein");
   get recommandMeal => getContent("recommand meal");
   get recommand => getContent("recommand");
+  get commentOfFoodOne => getContent("commentOfFoodOne");
+  get commentOfFoodTwo => getContent("commentOfFoodTwo");
+  get commentOfFoodThree => getContent("commentOfFoodThree");
+  get commentOfAdviceOne => getContent("commentOfAdviceOne");
+  get commentOfAdviceTwo => getContent("commentOfAdviceTwo");
+
+
+  get recommendBoxHeader => getContent("recommendBoxHeader");
+
 }
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<CustomLocalizations>{
