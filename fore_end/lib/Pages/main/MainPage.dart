@@ -124,7 +124,11 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return AccountPage();
-        }));
+        })).then((value){
+          if(value){
+            setState(() {});
+          }
+        });
       },
       text: CustomLocalizations.of(context).drawerAccount,
       width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
