@@ -88,6 +88,7 @@ class Login extends StatelessWidget {
             behavior: HitTestBehavior.translucent,
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
+              nextButton.tapFunc();
             },
             child: Container(
                 color: MyTheme.convert(ThemeColorName.PageBackground),
