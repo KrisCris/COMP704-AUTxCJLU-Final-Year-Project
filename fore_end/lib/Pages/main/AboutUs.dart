@@ -12,20 +12,26 @@ class AboutUsPage extends StatefulWidget {
 
 class _AboutUsPageState extends State<AboutUsPage> {
 
-  Widget getItem(String name,String job){
+  Widget getItem(String name,String job,bool isPeople,double width){
 
     return Row(
 
-      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(width: 15,),
+        isPeople?
         Icon(
-          FontAwesomeIcons.male,
+          FontAwesomeIcons.userAlt,
+          size: 20,
+          color: Colors.white,
+        ):Icon(
+          FontAwesomeIcons.solidStar,
           size: 20,
           color: Colors.white,
         ),
+
         SizedBox(width: 10,),
-        Text(name,
+        Text(name+" ",
           style: TextStyle(
               color: MyTheme.convert(ThemeColorName.NormalText),
               fontSize: 14,
@@ -33,7 +39,8 @@ class _AboutUsPageState extends State<AboutUsPage> {
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.none),
         ),
-        SizedBox(width: 40,),
+        SizedBox(width: width,),
+        // Expanded(),
         Text(job,
           style: TextStyle(
               color: MyTheme.convert(ThemeColorName.NormalText),
@@ -116,10 +123,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
           ),
 
           SizedBox(height: ScreenTool.partOfScreenHeight(0.02),),
-          this.getItem("YYZ", "Fore_end developer"),
-          this.getItem("ZSK", "Fore_end developer"),
-          this.getItem("YHT", "Fore_end developer"),
-          this.getItem("HPC", "Fore_end developer"),
+          this.getItem("Yuan Yizhao", "Fore_end ",true,83),
+          this.getItem("Zhnag ShuaiKang", "Fore_end ",true,41),
+          this.getItem("Huang Pingchuan", "Back_end ",true,40),
+          this.getItem("Ying Heting", "Algorithm ",true,88),
 
           SizedBox(height: ScreenTool.partOfScreenHeight(0.05),),
           Row(
@@ -135,10 +142,16 @@ class _AboutUsPageState extends State<AboutUsPage> {
             ],
           ),
           SizedBox(height: ScreenTool.partOfScreenHeight(0.02),),
-          this.getItem("1：", "Food recognize"),
-          this.getItem("2：", "Diet plan"),
-          this.getItem("3：", "Foods of Meal record"),
-          this.getItem("4：", "Food recommend"),
+          this.getItem("1：", "Food recognize",false,40),
+          this.getItem("2：", "Create Dietary plan",false,40),
+          this.getItem("3：", "Foods of Meal record",false,40),
+          this.getItem("4：", "Food recommend",false,40),
+          this.getItem("5：", "Food search",false,40),
+          this.getItem("6：", "Account register",false,40),
+          this.getItem("7：", "Language/Theme change",false,40),
+          // this.getItem("8：", "Account register",false,40),
+          // this.getItem("9：", "Account register",false,40),
+          // this.getItem("1：", "Account register",false,40),
         ],
       ),
     );
