@@ -113,11 +113,18 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
           ):Container(),
           GestureDetector(
               onTap: () async {
+
                 final DateTime date = await showDatePicker(
                   context: context,
                   initialDate: DateTime.fromMillisecondsSinceEpoch(widget.widgetValue.value),
                   firstDate: widget.beginTime,
                   lastDate: widget.lastTime,
+                  builder: (context, child){
+                      return Theme(
+                        data: ThemeData.dark(),
+                        child: child
+                      );
+                  }
                 );
                 if (date == null) return;
                 widget.widgetValue.value = date.millisecondsSinceEpoch;
