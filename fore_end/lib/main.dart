@@ -4,6 +4,7 @@ import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 import 'package:fore_end/Pages/FoodRecommandation.dart';
 import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
+import 'package:fore_end/Pages/main/AboutUs.dart';
 import 'MyTool/SoftwarePreference.dart';
 import 'MyTool/util/LocalDataManager.dart';
 import 'Mycomponents/widgets/food/NutritionPieChart.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
        home: CoverPage(),
         // home: FoodRecommandation(),
         // home: ComponentTestPage(),
-      // home: FoodDetails(),
+      // home: AboutUsPage(),
       routes: <String, WidgetBuilder>{
         "login": (context) => Login(),
         "register": (context) => Register(),

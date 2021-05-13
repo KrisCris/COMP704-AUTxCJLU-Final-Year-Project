@@ -174,7 +174,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   @override
   void didUpdateWidget(covariant CaloriesBarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    setState(() {});
+    // setState(() {});
   }
 
   ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
@@ -556,10 +556,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     }
     );
 
-    setState(() {
-      ///把上限问题解决  超过上限就直接显示为上限
-
-    });
 
     // print("caloriesList 本地化今天的数据完成--------");
     this.setTodayValueFromLocal();
@@ -575,6 +571,13 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     this.localDateValueMap.addAll({this.sundayDate:this.sundayValue.toDouble()});
 
     print("caloriesList 数据添加到本地完成--------");
+
+    setState(() {
+      ///把上限问题解决  超过上限就直接显示为上限
+
+    });
+
+
   }
 
   ///每次获取数据之前都清空之前的数据
