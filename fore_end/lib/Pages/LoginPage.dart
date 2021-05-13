@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     this.backButton = CustomButton(
-      text:  CustomLocalizations.of(context).back,
+      text: CustomLocalizations.of(context).back,
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
@@ -37,7 +36,7 @@ class Login extends StatelessWidget {
     );
 
     this.nextButton = CustomButton(
-      text:  CustomLocalizations.of(context).next,
+      text: CustomLocalizations.of(context).next,
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
@@ -51,40 +50,50 @@ class Login extends StatelessWidget {
         this.login(emailVal, passwordVal, context);
       },
     );
-    this.emailField = CustomTextField(
-      placeholder:  CustomLocalizations.of(context).email,
-      helpText:  CustomLocalizations.of(context).emailHint,
-      inputType: InputFieldType.email,
-      width: ScreenTool.partOfScreenWidth(0.7),
-      onCorrect: () {
-        emailIsInput = true;
-        if (passwordIsInput) this.nextButton.setDisabled(false);
-      },
-      onError: () {
-        emailIsInput = false;
-        this.nextButton.setDisabled(true);
-      },
-    );
     this.passwordField = CustomTextField(
-      placeholder:  CustomLocalizations.of(context).password,
+      placeholder: CustomLocalizations.of(context).password,
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      next: emailField.getFocusNode(),
       onCorrect: () {
         passwordIsInput = true;
         if (emailIsInput) this.nextButton.setDisabled(false);
+        nextButton.tapFunc();
       },
       onError: () {
         passwordIsInput = false;
         this.nextButton.setDisabled(true);
       },
     );
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-          color: MyTheme.convert(ThemeColorName.PageBackground),
-          child: this.loginUI(context))
+    this.emailField = CustomTextField(
+      placeholder: CustomLocalizations.of(context).email,
+      next: this.passwordField.getFocusNode(),
+      helpText: CustomLocalizations.of(context).emailHint,
+      inputType: InputFieldType.email,
+      errorText: "Wrong email address!",
+      width: ScreenTool.partOfScreenWidth(0.7),
+      maxlength: 30,
+      onCorrect: () {
+        emailIsInput = true;
+        if (passwordIsInput) this.nextButton.setDisabled(false);
+      },
+      onError: () {
+        this.emailField.setErrorText("please input correct email format");
+        this.emailField.setError();
+        emailIsInput = false;
+        this.nextButton.setDisabled(true);
+      },
     );
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              nextButton.tapFunc();
+            },
+            child: Container(
+                color: MyTheme.convert(ThemeColorName.PageBackground),
+                child: this.loginUI(context))));
   }
 
   Widget loginUI(BuildContext context) {
@@ -95,7 +104,7 @@ class Login extends StatelessWidget {
           SizedBox(height: ScreenTool.partOfScreenHeight(0.1)),
           Container(
             width: ScreenTool.partOfScreenWidth(0.7),
-            child: Text( CustomLocalizations.of(context).loginAccount,
+            child: Text(CustomLocalizations.of(context).loginAccount,
                 textDirection: TextDirection.ltr,
                 style: TextStyle(
                     decoration: TextDecoration.none,
@@ -117,23 +126,17 @@ class Login extends StatelessWidget {
 
   Widget get bottomUI {
     return Container(
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              this.backButton,
-              Expanded(child: Text("")),
-              this.nextButton,
-            ]
-        )
-    );
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      this.backButton,
+      Expanded(child: Text("")),
+      this.nextButton,
+    ]));
   }
 
-  void login(String email, String pass, BuildContext context) async{
-    try{
-      Response res = await Requests.login({
-        "email": email,
-        "password": pass
-      });
+  void login(String email, String pass, BuildContext context) async {
+    try {
+      Response res = await Requests.login({"email": email, "password": pass});
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));
@@ -144,30 +147,32 @@ class Login extends StatelessWidget {
         u.uid = res.data['data']['uid'];
         u.email = email;
         int code = await u.synchronize();
-        if(code == 4){
+        if (code == 4) {
           EasyLoading.dismiss();
-          if(u.needGuide){
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+          if (u.needGuide) {
+            Navigator.pushAndRemoveUntil(context,
+                new MaterialPageRoute(builder: (context) {
               return new GuidePage();
-            }),(ct)=>false);
-          }else{
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
-              return new MainPage(user:u);
-            }),(ct)=>false);
+            }), (ct) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(context,
+                new MaterialPageRoute(builder: (context) {
+              return new MainPage(user: u);
+            }), (ct) => false);
           }
-        }else if(code == 3){
+        } else if (code == 3) {
           EasyLoading.showError("Login token invalid",
               duration: Duration(milliseconds: 2000));
-        }else if(code == 5){
+        } else if (code == 5) {
           EasyLoading.showError("Please check network connection",
               duration: Duration(milliseconds: 2000));
         }
-      }else if(res.data['code'] == -6){
+      } else if (res.data['code'] == -6) {
         EasyLoading.showError("User does not exist",
             duration: Duration(milliseconds: 2000));
         this.passwordField.clearInput();
       }
-    }on DioError catch(e){
+    } on DioError catch (e) {
       print("Exception when login\n");
       print(e.toString());
     }
