@@ -150,7 +150,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
     );
   }
   void queryFoods(String foodName) async {
-    Response res = await Requests.searchFood({
+    Response res = await Requests.searchFood(context,{
       "name":foodName,
     });
     if(res.data['code'] == 1){

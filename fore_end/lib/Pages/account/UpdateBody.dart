@@ -120,7 +120,18 @@ class UpdateBody extends StatelessWidget {
                   text: CustomLocalizations.of(context).confirm,
                   width: 80,
                   radius: 5,
-                  tapFunc: this.onUpdate
+                  tapFunc:(){
+                    User u = User.getInstance();
+                    if(this.weight != null){
+                      u.bodyWeight = this.weight.getValue().toDouble();
+                    }
+                    if(this.height != null){
+                      u.bodyHeight = this.height.getValue().toDouble();
+                    }
+                    u.save();
+                    this.onUpdate();
+                  }
+
                 ),
                 SizedBox(width: 20),
               ],

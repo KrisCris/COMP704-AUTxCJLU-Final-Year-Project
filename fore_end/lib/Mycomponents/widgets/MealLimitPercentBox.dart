@@ -225,7 +225,9 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
       dinner = this.currentPersent.value;
     }
     EasyLoading.show(status: "saving...");
-    Response res = await Requests.setMealIntakeRatio({
+    Response res = await Requests.setMealIntakeRatio(
+        context,
+        {
       "uid":u.uid,
       "token":u.token,
       "breakfast":breakfast,

@@ -200,7 +200,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       String oldPassword = oldPasswordTextField.getValue();
       String newPassword = pwdTwoTextField.getValue();
       try {
-        Response res = await Requests.modifyPassword({
+        Response res = await Requests.modifyPassword(
+            context,{
           "uid": user.uid,
           "token": user.token,
           "password": oldPassword,

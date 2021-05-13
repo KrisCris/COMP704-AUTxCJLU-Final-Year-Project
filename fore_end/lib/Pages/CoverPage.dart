@@ -160,7 +160,8 @@ class CoverState extends State<CoverPage> {
     int beginTime = (begin.millisecondsSinceEpoch/1000).floor();
     pre.setInt("localBeginTime", beginTime*1000);
     pre.setInt("localEndTime", endTime*1000);
-    Response res = await Requests.getCaloriesIntake({
+    Response res = await Requests.getCaloriesIntake(
+        context,{
       "begin": beginTime,
       "end": endTime,
       "uid": u.uid,
@@ -170,7 +171,7 @@ class CoverState extends State<CoverPage> {
       String json = jsonEncode(res.data['data']);
       pre.setString("localCalories", json);
     }
-    Requests.historyMeal({
+    Requests.historyMeal(context,{
       'begin':beginTime,
       'end':endTime,
       "uid": u.uid,
@@ -192,7 +193,7 @@ class CoverState extends State<CoverPage> {
         pre.setString("localHistoryMeals", json);
       }
     });
-    res = await Requests.getWeightTrend({
+    res = await Requests.getWeightTrend(context,{
       "uid":u.uid,
       "token":u.token,
       "begin": beginTime,
@@ -239,7 +240,7 @@ class CoverState extends State<CoverPage> {
       String json = jsonEncode(bodyChanges);
       pre.setString("localBodyChanges", json);
     }
-    res = await Requests.getHistoryPlan({
+    res = await Requests.getHistoryPlan(context,{
       "uid": u.uid,
       "token": u.token,
       "begin": beginTime,

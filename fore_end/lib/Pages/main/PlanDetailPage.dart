@@ -68,11 +68,11 @@ class PlanDetailPage extends StatelessWidget {
                     builder: (BuildContext context) {
                       UpdateBody updateBody = new UpdateBody(
                         text: "Before change your plan, please record your current weight",
-                          needHeight: false)
-                      ;
+                          needHeight: false);
                       updateBody.onUpdate = () async{
                         User u = User.getInstance();
-                        Response res = await Requests.finishPlan({
+                        Response res = await Requests.finishPlan(
+                            context,{
                           "uid": u.uid,
                           "token":u.token,
                           "pid":u.plan?.id ?? -1,
@@ -88,11 +88,11 @@ class PlanDetailPage extends StatelessWidget {
                     },
                   ).then((val) {
                     if(val == true){
-                      Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                      Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (ctx) {
                         return GuidePage(
                           firstTime: false,
                         );
-                      }));
+                      }),(route)=>route==null);
                     }
                   });
                 },

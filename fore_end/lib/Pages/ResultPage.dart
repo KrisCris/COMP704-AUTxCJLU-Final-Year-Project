@@ -95,11 +95,11 @@ class ResultPageState extends State<ResultPage> {
             isChangeColor: true,
             data: this.mealsName, clickCallBack: (int index, var item) {
               if(index == 0){
-                FoodRecognizer.addFoodToMealName("breakfast");
+                FoodRecognizer.addFoodToMealName(context,"breakfast");
               }else if(index == 1){
-                FoodRecognizer.addFoodToMealName("lunch");
+                FoodRecognizer.addFoodToMealName(context,"lunch");
               }else if(index == 2){
-                FoodRecognizer.addFoodToMealName("dinner");
+                FoodRecognizer.addFoodToMealName(context,"dinner");
               }
             });
 
