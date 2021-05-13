@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -121,9 +122,9 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  NutritionText(name: "Calories", value: f.calorie, unit: "Kcal/100g", width: 0.3*widget.width),
-                  NutritionText(name: "Protein", value: f.protein, unit: "g/100g", width: 0.3*widget.width),
-                  NutritionText(name: "Fat", value: f.fat, unit: "g/100g", width: 0.3*widget.width),
+                  NutritionText(name: CustomLocalizations.of(context).calories, value: f.calorie, unit: "Kcal/100g", width: 0.3*widget.width),
+                  NutritionText(name: CustomLocalizations.of(context).protein, value: f.protein, unit: "g/100g", width: 0.3*widget.width),
+                  NutritionText(name: CustomLocalizations.of(context).fat, value: f.fat, unit: "g/100g", width: 0.3*widget.width),
                 ],
               ),
               SizedBox(height: 0.3*widget.height),
