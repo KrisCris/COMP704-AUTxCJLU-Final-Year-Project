@@ -191,12 +191,10 @@ class User {
           }
 
           for (Map m in res.data['data']['l']) {
-            this.meals.value[1].foods = [];
             this.meals.value[1].time = m['time'] * 1000;
             this.meals.value[1].addFood(new Food.fromJson(m));
           }
           for (Map m in res.data['data']['d']) {
-            this.meals.value[2].foods = [];
             this.meals.value[2].time = m['time'] * 1000;
             this.meals.value[2].addFood(new Food.fromJson(m));
           }
