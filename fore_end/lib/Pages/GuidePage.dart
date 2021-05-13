@@ -89,7 +89,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
     if (planType == 1 && goal != null) {
       goalWeight -= goal.weightLose;
     }
-    Response res = await Requests.previewPlan({
+    Response res = await Requests.previewPlan(
+        context,{
       "height": bodyHeight*100,
       "weight": bodyWeight.round(),
       "age": age,
@@ -106,7 +107,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
       planPreview.setNextDo(()async{
         User u = User.getInstance();
         Response res = await this.finishOldPlan();
-        res = await Requests.setPlan({
+        res = await Requests.setPlan(
+            context,{
           "uid":u.uid,
           "token":u.token,
           "height": bodyHeight*100,
@@ -152,7 +154,8 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin{
 
   Future<Response> finishOldPlan() async {
     User u = User.getInstance();
-    Response res = await Requests.finishPlan({
+    Response res = await Requests.finishPlan(
+        context,{
       "uid":u.uid,
       "token":u.token,
       "pid":u.plan?.id ?? -1,

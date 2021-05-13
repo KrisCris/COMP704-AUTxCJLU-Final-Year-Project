@@ -100,7 +100,7 @@ class Requests {
       res = await dio.post(url, data: dt);
       Req.resetRepeat(interfaceKey);
       print(info+" done");
-      return res;
+      return _solveCommonCode(res,context);
     }on DioError catch(e){
       print(info+"solving error...");
       res =  await _errorSolve(e,context, interfaceKey,info: info,data:data,f:f);
@@ -108,7 +108,7 @@ class Requests {
       return res;
     }
   }
-  Future<Response> _solveCommonCode(Response res,BuildContext context)async{
+  static Future<Response> _solveCommonCode(Response res,BuildContext context)async{
     if(res == null){
       Fluttertoast.showToast(
         msg: "No Response got, Please Check Internet Connection",
@@ -128,11 +128,14 @@ class Requests {
         fontSize: 13,
       );
       User.getInstance().logOut();
-      Navigator.of(context).pushAndRemoveUntil(
-          new MaterialPageRoute(builder: (context){
-            return Welcome();
-          }), (route) => false
-      );
+      if(context != null){
+        Navigator.of(context).pushAndRemoveUntil(
+            new MaterialPageRoute(builder: (context){
+              return Welcome();
+            }), (route) => false
+        );
+      }
+
     }
     return res;
   }

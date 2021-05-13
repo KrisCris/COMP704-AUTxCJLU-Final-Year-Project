@@ -234,7 +234,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void searchData() async {
     User u = User.getInstance();
     this.searching = true;
-    Response res = await Requests.getHistoryPlan({
+    Response res = await Requests.getHistoryPlan(
+        context,{
       "uid": u.uid,
       "token": u.token,
       "begin": (this.startedPlanTime.millisecondsSinceEpoch / 1000).floor(),

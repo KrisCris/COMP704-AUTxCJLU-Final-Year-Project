@@ -72,7 +72,8 @@ class PlanDetailPage extends StatelessWidget {
                       ;
                       updateBody.onUpdate = () async{
                         User u = User.getInstance();
-                        Response res = await Requests.finishPlan({
+                        Response res = await Requests.finishPlan(
+                            context,{
                           "uid": u.uid,
                           "token":u.token,
                           "pid":u.plan?.id ?? -1,

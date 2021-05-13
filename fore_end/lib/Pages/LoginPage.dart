@@ -136,7 +136,7 @@ class Login extends StatelessWidget {
 
   void login(String email, String pass, BuildContext context) async {
     try {
-      Response res = await Requests.login({"email": email, "password": pass});
+      Response res = await Requests.login(context,{"email": email, "password": pass});
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));

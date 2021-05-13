@@ -96,7 +96,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
   void getRecomFoods(int foodId) async {
     User u= User.getInstance();
-    Response res = await Requests.getRecommandFood({
+    Response res = await Requests.getRecommandFood(context,{
       'uid':u.uid,
       'pid': u.plan.id,
       'fid': foodId,
@@ -388,7 +388,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                   List<Food> selectedFood=new List<Food>();
                   selectedFood.add(this.widget.currentFood);
 
-                  Response res = await Requests.consumeFoods({
+                  Response res = await Requests.consumeFoods(context,{
                     "uid": u.uid,
                     "token": u.token,
                     "pid": u.plan.id,

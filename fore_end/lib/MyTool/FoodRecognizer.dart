@@ -51,7 +51,7 @@ class FoodRecognizer{
   }
 
   ///这里是按照三餐的名字保存记录，上传服务器和本地保存
-  static void addFoodToMealName(String mealName) async{
+  static void addFoodToMealName(BuildContext ctx, String mealName) async{
     User u = User.getInstance();
     Meal m = u.getMealByName(mealName);
     int mealsType=mealName=="breakfast"? 1 : (mealName=="lunch"?2:3);
@@ -59,7 +59,7 @@ class FoodRecognizer{
       FoodRecognizer.addFoodToMeal(m);
       // List<List> totalFoodInfo=new List<List>();
       String temp = jsonEncode(m.foods);
-      Response res = await Requests.consumeFoods({
+      Response res = await Requests.consumeFoods(ctx,{
         "uid": u.uid,
         "token":u.token,
         "pid": u.plan.id,
@@ -83,7 +83,7 @@ class FoodRecognizer{
       print("Try recognize Food when Recognizer is not init yet");
       return;
     }
-    Response res = await Requests.foodDetect({
+    Response res = await Requests.foodDetect(null,{
       "food_b64":bs64,
       "rotation":rotate
     });

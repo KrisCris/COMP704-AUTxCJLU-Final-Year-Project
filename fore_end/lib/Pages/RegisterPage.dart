@@ -55,7 +55,7 @@ class Register extends StatelessWidget {
         // if (!this.counter.isStop()) return;
         this.emailTextField.setHelpText(
             "checking whether email has been registered...");
-        Response res = await Requests.checkEmailRepeat({
+        Response res = await Requests.checkEmailRepeat(context,{
           "email": this.emailTextField.getValue()
         });
         if (res.data['code'] == 1) {
@@ -238,7 +238,7 @@ class Register extends StatelessWidget {
         this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
         try {
-          Response res = await Requests.signUp({
+          Response res = await Requests.signUp(context,{
             "email": this.verifyTextField.getContentWhenClickButton(),
             "password": this.passwordTextField.getValue(),
             "nickname": this.nicknameTextField.getValue()
@@ -246,7 +246,7 @@ class Register extends StatelessWidget {
           if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Register success, login in...",
                 duration: Duration(milliseconds: 1000));
-            res = await Requests.login({
+            res = await Requests.login(context,{
               "email": this.verifyTextField.getContentWhenClickButton(),
               "password": this.passwordTextField.getValue()
             });

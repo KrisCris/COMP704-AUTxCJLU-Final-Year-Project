@@ -150,7 +150,7 @@ class User {
   ///与服务器上的用户数据同步
   Future<int> synchronize() async {
     Response res =
-        await Requests.getBasicInfo({'uid': this._uid, 'token': this._token});
+        await Requests.getBasicInfo(null,{'uid': this._uid, 'token': this._token});
     if (res == null) {
       return 5;
     }
@@ -172,7 +172,7 @@ class User {
 
       DateTime nowDay = DateTime.now();
       nowDay = DateTime(nowDay.year, nowDay.month, nowDay.day);
-      res = await Requests.dailyMeal({
+      res = await Requests.dailyMeal(null,{
         "uid": this._uid,
         "token": this._token,
         "begin": nowDay.millisecondsSinceEpoch / 1000,
@@ -200,7 +200,7 @@ class User {
           }
         }
       }
-      res = await Requests.getPlan({"uid": this._uid, "token": this._token});
+      res = await Requests.getPlan(null,{"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         this._needGuide = true;
         print(res.data);
@@ -222,6 +222,7 @@ class User {
           await this._plan.calculateDelayDays();
         }
         res = await Requests.shouldUpdateWeight(
+          null,
             {"uid": this._uid, "token": this._token, "pid": this._plan.id});
         if (res != null && res.data['code'] == 1) {
           this._shouldUpdateWeight = res.data['data']['shouldUpdate'];
