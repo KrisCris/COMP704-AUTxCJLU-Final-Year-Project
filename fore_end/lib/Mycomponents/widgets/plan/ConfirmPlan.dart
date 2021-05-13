@@ -202,25 +202,26 @@ class ConfirmPlan extends StatelessWidget {
     content.addAll([
       dailyCal,
       SizedBox(height: 20),
-      CustomPaint(
-        foregroundPainter: LinePainter(
-          k: 1,
-          lineGap: 5,
-          lineWidth: 2.5,
-          context: context,
-        ),
-        child: Container(
-          width: ScreenTool.partOfScreenWidth(0.8),
-          height: 70,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: dailyCalVal,
-        ),
-      ),
+      ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: CustomPaint(
+            foregroundPainter: LinePainter(
+              k: 1,
+              lineGap: 5,
+              lineWidth: 2.5,
+              context: context,
+            ),
+            child: Container(
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: 70,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Color(0xCCFFFFFF),
+              ),
+              child: dailyCalVal,
+            ),
+          )),
       SizedBox(height: 20),
     ]);
     return Column(
@@ -279,47 +280,49 @@ class ConfirmPlan extends StatelessWidget {
     content.addAll([
       dailyCal,
       SizedBox(height: 20),
-      CustomPaint(
-        foregroundPainter: LinePainter(
-          k: 1,
-          lineGap: 5,
-          lineWidth: 2.5,
-          context: context,
-        ),
-        child:Container(
-          width: ScreenTool.partOfScreenWidth(0.8),
-          height: 70,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: dailyCalVal,
-        ),
-      ),
+      ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: CustomPaint(
+            foregroundPainter: LinePainter(
+              k: 1,
+              lineGap: 5,
+              lineWidth: 2.5,
+              context: context,
+            ),
+            child: Container(
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: 70,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Color(0xCCFFFFFF),
+              ),
+              child: dailyCalVal,
+            ),
+          )),
       SizedBox(height: 20),
       dailyPro,
       SizedBox(height: 20),
-      CustomPaint(
-        foregroundPainter: LinePainter(
-          k: 1,
-          lineGap: 5,
-          lineWidth: 2.5,
-          context: context,
-        ),
-        child:Container(
-          width: ScreenTool.partOfScreenWidth(0.8),
-          height: 70,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: dailyProVal,
-        ),
-      )
+      ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: CustomPaint(
+            foregroundPainter: LinePainter(
+              k: 1,
+              lineGap: 5,
+              lineWidth: 2.5,
+              context: context,
+            ),
+            child: Container(
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: 70,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Color(0xCCFFFFFF),
+              ),
+              child: dailyProVal,
+            ),
+          ))
     ]);
     return Column(children: content);
   }
@@ -376,47 +379,50 @@ class ConfirmPlan extends StatelessWidget {
     content.addAll([
       daily,
       SizedBox(height: 20),
-      CustomPaint(
-        foregroundPainter: LinePainter(
-          k: 1,
-          lineGap: 5,
-          lineWidth: 2.5,
-          context: context,
-        ),
-        child: Container(
-          width: ScreenTool.partOfScreenWidth(0.8),
-          height: 70,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            borderRadius: BorderRadius.circular(5),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: CustomPaint(
+          foregroundPainter: LinePainter(
+            k: 1,
+            lineGap: 5,
+            lineWidth: 2.5,
+            context: context,
           ),
-          child: dailyVal,
+          child: Container(
+            width: ScreenTool.partOfScreenWidth(0.8),
+            height: 70,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            decoration: BoxDecoration(
+              color: Color(0xCCFFFFFF),
+            ),
+            child: dailyVal,
+          ),
         ),
       ),
       SizedBox(height: 20),
       done,
       SizedBox(height: 20),
-      CustomPaint(
-        foregroundPainter: LinePainter(
-          k: 1,
-          lineGap: 5,
-          lineWidth: 2.5,
-          context: context,
-        ),
-        child:Container(
-          width: ScreenTool.partOfScreenWidth(0.8),
-          height: 70,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            color: Color(0xCCFFFFFF),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: doneVal,
-        ),
-      )
+      ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: CustomPaint(
+            foregroundPainter: LinePainter(
+              k: 1,
+              lineGap: 5,
+              lineWidth: 2.5,
+              context: context,
+            ),
+            child: Container(
+              width: ScreenTool.partOfScreenWidth(0.8),
+              height: 70,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Color(0xCCFFFFFF),
+              ),
+              child: doneVal,
+            ),
+          ))
     ]);
     return Column(children: content);
   }

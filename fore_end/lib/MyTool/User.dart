@@ -112,6 +112,10 @@ class User {
     }
   }
 
+  set bodyHeight(double value) {
+    _bodyHeight = value;
+  }
+
   ///从本地文件读取用户信息
   static User getInstance() {
     if (User._instance == null) {

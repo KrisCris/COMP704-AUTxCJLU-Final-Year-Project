@@ -193,11 +193,11 @@ class Requests {
   }
 
   static Future<Response> setPlan(BuildContext context, data) async {
-    return _postRequest("setPlan", context, data, "/plan/setPlan", "setPlan接口", null);
+    return _postRequest("setPlan", context, data, "/plan/set_plan", "setPlan接口", null);
   }
 
   static Future<Response> finishPlan(BuildContext context, data) async {
-    return _postRequest("finishPlan", context, data, "/plan/finishPlan", "finishPlan接口", null);
+    return _postRequest("finishPlan", context, data, "/plan/finish_plan", "finishPlan接口", null);
   }
 
   static Future<Response> getPlan(BuildContext context, data) async {

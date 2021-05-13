@@ -68,8 +68,7 @@ class PlanDetailPage extends StatelessWidget {
                     builder: (BuildContext context) {
                       UpdateBody updateBody = new UpdateBody(
                         text: "Before change your plan, please record your current weight",
-                          needHeight: false)
-                      ;
+                          needHeight: false);
                       updateBody.onUpdate = () async{
                         User u = User.getInstance();
                         Response res = await Requests.finishPlan(
@@ -93,7 +92,7 @@ class PlanDetailPage extends StatelessWidget {
                         return GuidePage(
                           firstTime: false,
                         );
-                      }),null);
+                      }),(route)=>route==null);
                     }
                   });
                 },
