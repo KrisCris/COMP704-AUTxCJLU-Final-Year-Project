@@ -47,8 +47,7 @@ class FoodDetails extends StatefulWidget {
         this.isSuitable=false,
       }):super(key:key){
 
-    this.recognizer = FoodRecognizer.instance;
-    this.recognizer.setKey(key);
+
     this.isSuitable=isSuitable;
     this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
     this.testExclamition=testExclamition;
