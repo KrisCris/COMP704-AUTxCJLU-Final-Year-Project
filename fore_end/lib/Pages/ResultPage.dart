@@ -62,7 +62,6 @@ class ResultPageState extends State<ResultPage> {
         CustomLocalizations.of(context).dinner
       ];
     }
-
     ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字 ====参考中间的提示文字
     Widget addMealTextButton =GestureDetector(
       child: Container(
@@ -75,8 +74,6 @@ class ResultPageState extends State<ResultPage> {
             color: MyTheme.convert(ThemeColorName.NormalText),
             decoration: TextDecoration.none,
           ),
-
-
         ),
       ),
       onTap: (){
@@ -89,6 +86,8 @@ class ResultPageState extends State<ResultPage> {
         });
         ///转为Int显示
         String totalCalories=cal.toString();
+
+        ///TODO:这里在一开始计算totalcalories的时候 重量为0
 
         JhPickerTool.showStringPicker(context,
             title: CustomLocalizations.of(context).total +totalCalories+ ' Kcal',
@@ -157,9 +156,6 @@ class ResultPageState extends State<ResultPage> {
           content,
           ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
           widget.recognizer.isEmpty()? Container():addMealTextButton,
-
-
-
         ],
       ),
     );

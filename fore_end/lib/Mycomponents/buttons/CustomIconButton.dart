@@ -1,9 +1,11 @@
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
+import 'package:fore_end/MyTool/util/MyCounter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/widgets/navigator/PaintedNavigator.dart';
 import 'package:fore_end/interface/Disable.dart';
@@ -56,6 +58,14 @@ class CustomIconButton extends StatefulWidget
   ///点击事件
   Function onClick;
 
+  ///长按点击事件
+  Function onLongPress;
+  Function onLongPressUp;
+  Function onTapDown;
+  Function onTapUp;
+  Function onTapCancel;
+
+
   ///作为navigator的一部分时, 当navigator切换页面完毕后，执行的回调函数
   Function navigatorCallback;
 
@@ -70,6 +80,9 @@ class CustomIconButton extends StatefulWidget
   bool backgroundSizeChange;
 
   bool backgroundColorChange;
+
+
+  MyCounter counter;
 
   CustomIconButton(
       {
@@ -88,6 +101,12 @@ class CustomIconButton extends StatefulWidget
         this.adjustHeight = 0,
       this.shadows,
       this.onClick,
+        this.onLongPress,
+        this.onLongPressUp,
+        this.counter,
+        this.onTapCancel,
+        this.onTapDown,
+        this.onTapUp,
         bool disabled = false,
         bool focus = false,
         Key key,
@@ -252,6 +271,39 @@ class CustomIconButtonState extends State<CustomIconButton>
 
   Widget get buttonUI {
     return GestureDetector(
+        // onLongPress: (){
+        //   print("长按按钮的操作");
+        //   if (widget.onLongClick != null) {
+        //     if (widget.navi == null) {
+        //       if(!this.disabled){
+        //         widget.onLongClick();
+        //       }
+        //     } else {
+        //       if (!widget.navi.isActivate(widget)) {
+        //         widget.onLongClick();
+        //       }
+        //     }
+        //   }
+        //   if (widget.navi != null && !this.disabled) {
+        //     widget.navi.activateButtonByObject(widget);
+        //     widget.navi.switchPageByObject(widget);
+        //   }
+        //
+        // },
+        // onLongPressEnd: (  v  ){
+        //   print("长按结束");
+        // },
+        onLongPressStart: (state){
+          if(this.widget.onLongPress != null){
+            this.widget.onLongPress();
+          }
+        },
+        onLongPressUp: () {
+          if(this.widget.onLongPressUp != null){
+            this.widget.onLongPressUp();
+          }
+
+        },
         onTap: () {
           if (widget.onClick != null) {
             if (widget.navi == null) {

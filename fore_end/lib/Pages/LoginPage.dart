@@ -70,7 +70,11 @@ class Login extends StatelessWidget {
       inputType: InputFieldType.email,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
+<<<<<<< HEAD
       maxlength: 30,
+=======
+      next: emailField.getFocusNode(),
+>>>>>>> develop
       onCorrect: () {
         emailIsInput = true;
         if (passwordIsInput) this.nextButton.setDisabled(false);

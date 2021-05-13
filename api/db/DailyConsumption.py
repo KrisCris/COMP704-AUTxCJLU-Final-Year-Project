@@ -17,9 +17,10 @@ class DailyConsumption(db.Model):
     protein = db.Column(db.FLOAT, comment='easier way to query protein')
     weight = db.Column(db.INTEGER, comment='gram')
     img = db.Column(db.Text(16777216))
+    cnName = db.Column(db.VARCHAR(256))
 
     def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, weight=None,
-                 time=get_current_time(), img=None):
+                 time=get_current_time(), img=None, cnName=None):
         self.uid = uid
         self.pid = pid
         self.fid = fid
@@ -31,6 +32,7 @@ class DailyConsumption(db.Model):
         self.time = time
         self.weight = weight
         self.img = img
+        self.cnName = cnName
 
     def add(self):
         db.session.add(self)
@@ -80,7 +82,7 @@ class DailyConsumption(db.Model):
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         cal = 0
         for record in records:
-            cal += record.calories * record.weight
+            cal += record.calories * record.weight / 100
         return cal
 
     @staticmethod
@@ -92,7 +94,7 @@ class DailyConsumption(db.Model):
             arr.append({
                 'id': record.id,
                 'time': record.time,
-                'calories': record.calories * record.weight
+                'calories': record.calories * record.weight / 100
             })
         return arr
 
@@ -114,6 +116,7 @@ class DailyConsumption(db.Model):
             'name': self.name,
             'img': self.img,
             'weight': self.weight,
+            'cnName': self.cnName
         }
 
     @staticmethod
