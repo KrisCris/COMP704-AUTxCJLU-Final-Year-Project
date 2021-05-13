@@ -52,8 +52,6 @@ class CaloriesBarChart extends StatefulWidget {
 
 
 class CaloriesBarChartState extends State<CaloriesBarChart> {
-  // final Color barBackgroundColor = const Color(0xff72d8bf);
-  final Color barBackgroundColor = MyTheme.convert(ThemeColorName.PageBackground);
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex;
 
@@ -176,6 +174,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   @override
   void didUpdateWidget(covariant CaloriesBarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
+    setState(() {});
   }
 
   ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
@@ -380,11 +379,8 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         print('calculateDate  none');
 
     }
-
     setState(() {
-
     });
-
   }
 
 
@@ -562,13 +558,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
     setState(() {
       ///把上限问题解决  超过上限就直接显示为上限
-      // this.mondayValue>=this.widget.planLimitedCalories?this.mondayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.tuesdayValue>=this.widget.planLimitedCalories?this.tuesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.wednesdayValue>=this.widget.planLimitedCalories?this.wednesdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.thursdayValue>=this.widget.planLimitedCalories?this.thursdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.fridayValue>=this.widget.planLimitedCalories?this.fridayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.saturdayValue>=this.widget.planLimitedCalories?this.saturdayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
-      // this.sundayValue>=this.widget.planLimitedCalories?this.sundayValue=this.widget.planLimitedCalories*1.2.toInt(): print("") ;
 
     });
 
@@ -787,7 +776,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
             ///y是每条数据的上限  比如2000 Kcal
             // y: widget.p.dailyCaloriesUpperLimit.floor().toDouble(),
             y:widget.planLimitedCalories.toDouble(),
-            colors: [barBackgroundColor],
+            colors: [MyTheme.convert(ThemeColorName.PageBackground)],
           ),
         ),
       ],

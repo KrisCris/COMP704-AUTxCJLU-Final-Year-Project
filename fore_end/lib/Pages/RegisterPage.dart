@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,25 +40,31 @@ class Register extends StatelessWidget {
     this.scrollCtl = new ScrollController();
 
     this.emailTextField = CustomTextField(
-      placeholder: CustomLocalizations.of(context).email,
+      placeholder: CustomLocalizations
+          .of(context)
+          .email,
       inputType: InputFieldType.email,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText:CustomLocalizations.of(context).emailHint,
+      helpText: CustomLocalizations
+          .of(context)
+          .emailHint,
       maxlength: 30,
       onCorrect: () async {
         // if (!this.counter.isStop()) return;
-        this.emailTextField.setHelpText("checking whether email has been registered...");
+        this.emailTextField.setHelpText(
+            "checking whether email has been registered...");
         Response res = await Requests.checkEmailRepeat({
-          "email":this.emailTextField.getValue()
+          "email": this.emailTextField.getValue()
         });
-        if(res.data['code'] == 1){
+        if (res.data['code'] == 1) {
           this.verifyTextField.setButtonDisabled(false);
           this.emailTextField.setCorrect();
-        }else{
+        } else {
           this.verifyTextField.setButtonDisabled(true);
-          this.emailTextField.setErrorText("This Email has already been registered");
+          this.emailTextField.setErrorText(
+              "This Email has already been registered");
           this.emailTextField.setError();
         }
       },
@@ -72,20 +77,34 @@ class Register extends StatelessWidget {
     );
 
     this.verifyTextField = VerifyCodeInputer(
-      firstShowText: CustomLocalizations.of(context).acquireVerify,
-      repeatShowText: CustomLocalizations.of(context).acquireAgain,
-      placeHolder: CustomLocalizations.of(context).verifyCode,
-      onCheckSuccess: (){ this.nextButton.setDisabled(false);},
-      onCheckFailed: (){this.nextButton.setDisabled(true);},
+      firstShowText: CustomLocalizations
+          .of(context)
+          .acquireVerify,
+      repeatShowText: CustomLocalizations
+          .of(context)
+          .acquireAgain,
+      placeHolder: CustomLocalizations
+          .of(context)
+          .verifyCode,
+      onCheckSuccess: () {
+        this.nextButton.setDisabled(false);
+      },
+      onCheckFailed: () {
+        this.nextButton.setDisabled(true);
+      },
       emailField: this.emailTextField,
     );
 
     this.confirmPasswordTextField = CustomTextField(
-      placeholder: CustomLocalizations.of(context).confirmPassword,
+      placeholder: CustomLocalizations
+          .of(context)
+          .confirmPassword,
       inputType: InputFieldType.password,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations.of(context).confirmPasswordHint,
+      helpText: CustomLocalizations
+          .of(context)
+          .confirmPasswordHint,
       maxlength: 30,
       onCorrect: () {
         if (this.confirmPasswordTextField.getValue() ==
@@ -112,16 +131,20 @@ class Register extends StatelessWidget {
     );
 
     this.passwordTextField = CustomTextField(
-      placeholder: CustomLocalizations.of(context).password,
+      placeholder: CustomLocalizations
+          .of(context)
+          .password,
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations.of(context).passwordHint,
+      helpText: CustomLocalizations
+          .of(context)
+          .passwordHint,
       maxlength: 30,
       onCorrect: () {
         this.passwordDone = true;
         if (this.confirmPasswordTextField.getValue() !=
-                this.passwordTextField.getValue() &&
+            this.passwordTextField.getValue() &&
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
@@ -138,11 +161,15 @@ class Register extends StatelessWidget {
     );
 
     this.nicknameTextField = CustomTextField(
-      placeholder: CustomLocalizations.of(context).nickName,
+      placeholder: CustomLocalizations
+          .of(context)
+          .nickName,
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations.of(context).nickNameHint,
+      helpText: CustomLocalizations
+          .of(context)
+          .nickNameHint,
       maxlength: 30,
       onCorrect: () {
         this.nickNameDone = true;
@@ -161,8 +188,10 @@ class Register extends StatelessWidget {
     );
 
     this.emailTextField.addListener(() {
-      String contentWhenClickButton = this.verifyTextField.getContentWhenClickButton();
-      if (contentWhenClickButton == null||contentWhenClickButton.isEmpty) return;
+      String contentWhenClickButton = this.verifyTextField
+          .getContentWhenClickButton();
+      if (contentWhenClickButton == null || contentWhenClickButton.isEmpty)
+        return;
 
       if (this.emailTextField.getValue() != emailWhenClickButton) {
         if (this.nextButton.isEnable()) {
@@ -175,7 +204,9 @@ class Register extends StatelessWidget {
       }
     });
     this.backButton = CustomButton(
-      text: CustomLocalizations.of(context).back,
+      text: CustomLocalizations
+          .of(context)
+          .back,
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
@@ -188,7 +219,9 @@ class Register extends StatelessWidget {
 
     this.nextButton = CustomButton(
       disabled: true,
-      text: CustomLocalizations.of(context).next,
+      text: CustomLocalizations
+          .of(context)
+          .next,
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
@@ -204,7 +237,7 @@ class Register extends StatelessWidget {
       } else if (this.step == 1) {
         this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
-        try{
+        try {
           Response res = await Requests.signUp({
             "email": this.verifyTextField.getContentWhenClickButton(),
             "password": this.passwordTextField.getValue(),
@@ -214,30 +247,32 @@ class Register extends StatelessWidget {
             EasyLoading.showSuccess("Register success, login in...",
                 duration: Duration(milliseconds: 1000));
             res = await Requests.login({
-              "email":  this.verifyTextField.getContentWhenClickButton(),
+              "email": this.verifyTextField.getContentWhenClickButton(),
               "password": this.passwordTextField.getValue()
             });
-            if(res.data['code'] == 1){
+            if (res.data['code'] == 1) {
               User u = User.getInstance();
               u.token = res.data['data']['token'];
               u.uid = res.data['data']['uid'];
               u.email = this.verifyTextField.getContentWhenClickButton();
               int code = await u.synchronize();
-              if(code == 4){
+              if (code == 4) {
                 EasyLoading.dismiss();
-                Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+                Navigator.pushAndRemoveUntil(
+                    context, new MaterialPageRoute(builder: (context) {
                   return new GuidePage();
-                }),(ct)=>false);
-              }else{
+                }), (ct) => false);
+              } else {
                 EasyLoading.showError("Login token invalid",
                     duration: Duration(milliseconds: 2000));
-                Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+                Navigator.pushAndRemoveUntil(
+                    context, new MaterialPageRoute(builder: (context) {
                   return new Welcome();
-                }),(ct)=>false);
+                }), (ct) => false);
               }
             }
           }
-        } on DioError catch(e){
+        } on DioError catch (e) {
           this.nextButton.setDisabled(false);
           print("Exception when sign up\n");
           print(e.toString());
@@ -268,9 +303,9 @@ class Register extends StatelessWidget {
                   ],
                 ),
                 Container(
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  height: ScreenTool.partOfScreenHeight(0.1),
-                  child: this.verifyTextField
+                    width: ScreenTool.partOfScreenWidth(0.7),
+                    height: ScreenTool.partOfScreenHeight(0.1),
+                    child: this.verifyTextField
                 ),
                 SizedBox(height: 20),
                 SizedBox(height: 1),
@@ -297,43 +332,52 @@ class Register extends StatelessWidget {
             )));
     Widget listScrool = Flexible(
         child: ListView(
-      physics: const NeverScrollableScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      controller: this.scrollCtl,
-      children: [emailPart, passwordPart],
-    ));
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          controller: this.scrollCtl,
+          children: [emailPart, passwordPart],
+        ));
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-          color: MyTheme.convert(ThemeColorName.PageBackground),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(height: 40),
-                Container(
-                  width: ScreenTool.partOfScreenWidth(0.7),
-                  child: Text(
-                    CustomLocalizations.of(context).createAccount,
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none,
-                        fontFamily: "Futura",
-                        color: MyTheme.convert(ThemeColorName.HeaderText)),
-                  ),
-                ),
-                listScrool,
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      this.backButton,
-                      Expanded(child: Text("")),
-                      this.nextButton
-                    ]),
-              ])),
+        resizeToAvoidBottomInset: false,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: (){
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child:Container(
+              color: MyTheme.convert(ThemeColorName.PageBackground),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(height: 40),
+                    Container(
+                      width: ScreenTool.partOfScreenWidth(0.7),
+                      child: Text(
+                        CustomLocalizations
+                            .of(context)
+                            .createAccount,
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                            fontFamily: "Futura",
+                            color: MyTheme.convert(ThemeColorName.HeaderText)),
+                      ),
+                    ),
+                    listScrool,
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          this.backButton,
+                          Expanded(child: Text("")),
+                          this.nextButton
+                        ]),
+                  ])),
+
+        )
     );
   }
 }

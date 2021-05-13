@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -292,13 +293,11 @@ class TakePhotoState extends State<TakePhotoPage>
             SizedBox(height: ScreenTool.topPadding),
             Expanded(child: SizedBox()),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(width: 50),
                 this.getAlbumButton(),
                 this.getPhotoButton(),
                 this.getResultButton(),
-                SizedBox(width: 50),
               ],
             ),
             SizedBox(height: ScreenTool.partOfScreenHeight(0.05))
@@ -313,13 +312,14 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getPhotoButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.circle,
-      iconSize: 38,
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor.transform(Colors.redAccent)),
+      icon: FontAwesomeIcons.solidCircle,
+      iconSize: ScreenTool.partOfScreenWidth(0.16),
       adjustHeight: 2.5,
       sizeChangeWhenClick: true,
       backgroundSizeChange: false,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
+      buttonSize: ScreenTool.partOfScreenWidth(0.18),
+      backgroundOpacity: 0,
       borderRadius: 45,
       shadows: [
         BoxShadow(
@@ -353,11 +353,12 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getAlbumButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.image,
-      iconSize: 34,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
-      borderRadius: 10,
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor(0xFFF1F1F1)),
+      icon: FontAwesomeIcons.solidImages,
+      iconSize: ScreenTool.partOfScreenWidth(0.11),
+      buttonSize: ScreenTool.partOfScreenWidth(0.13),
+      backgroundOpacity: 0,
+      borderRadius: 45,
       shadows: [
         BoxShadow(
           blurRadius: 10,
@@ -390,11 +391,12 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getResultButton() {
     return new CustomIconButton(
-      icon: FontAwesomeIcons.appleAlt,
-      iconSize: 34,
-      buttonSize: 45,
-      backgroundOpacity: 0.5,
-      borderRadius: 10,
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor(0xFFF1F1F1)),
+      icon: FontAwesomeIcons.chevronCircleRight,
+      iconSize: ScreenTool.partOfScreenWidth(0.12),
+      buttonSize: ScreenTool.partOfScreenWidth(0.14),
+      backgroundOpacity: 0,
+      borderRadius: 45,
       shadows: [
         BoxShadow(
           blurRadius: 10,

@@ -43,6 +43,7 @@ class ValueText<T extends num> extends StatelessWidget {
             text: this._numUpper.toString(),
             style: TextStyle(
               color: this.fontColor,
+              fontWeight: FontWeight.bold,
               fontSize: this.valueFontSize,
               fontFamily: "Futura",
               decoration: TextDecoration.none,
@@ -63,6 +64,7 @@ class ValueText<T extends num> extends StatelessWidget {
           style: TextStyle(
             color: this.fontColor,
             fontSize: this.valueFontSize,
+            fontWeight: FontWeight.bold,
             fontFamily: "Futura",
             decoration: TextDecoration.none,
           ),

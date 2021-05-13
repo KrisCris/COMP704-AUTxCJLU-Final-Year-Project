@@ -32,7 +32,7 @@ class MealLimitPercentBox extends StatefulWidget {
         this.relatedBox,
       double height,
       double width,
-      this.borderRadius = 5,
+      this.borderRadius = 0,
       Key k})
       : super(key: k) {
     this.height = ScreenTool.partOfScreenHeight(height);
@@ -62,7 +62,7 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
       child: Container(
         width: this.widget.width,
         height: this.widget.height,
-        margin: EdgeInsets.only(left: 5, right: 0),
+        margin: EdgeInsets.only(left: 0, right: 0),
         decoration: BoxDecoration(
           color: MyTheme.convert(ThemeColorName.ComponentBackground),
           borderRadius: BorderRadius.circular(this.widget.borderRadius),

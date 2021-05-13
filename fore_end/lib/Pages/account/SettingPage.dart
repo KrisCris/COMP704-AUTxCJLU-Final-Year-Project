@@ -39,6 +39,8 @@ class SettingPageState extends State<SettingPage> {
           paddingLeft: 5,
           paddingRight: 5,
           value: index,
+          borderRadius: 25,
+          textSize: 15,
         );
       }),
     );
@@ -62,6 +64,8 @@ class SettingPageState extends State<SettingPage> {
           paddingLeft: 5,
           paddingRight: 5,
           value: code,
+          borderRadius: 35,
+          textSize: 15,
         );
       }),
     );
@@ -95,10 +99,10 @@ class SettingPageState extends State<SettingPage> {
                     children: [
                       GestureDetector(
                         child: Icon(
-                          FontAwesomeIcons.arrowAltCircleLeft, size: 35,
+                          FontAwesomeIcons.arrowLeft, size: 30,
                           color: MyTheme.convert(ThemeColorName.NormalIcon),),
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context,true);
                         },
                       ),
                       Container(

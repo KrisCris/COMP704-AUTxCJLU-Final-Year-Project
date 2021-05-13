@@ -44,7 +44,7 @@ class EditableArea extends StatelessWidget {
       this.width = 300,
       this.height = 500,
         this.editing = false,
-        this.borderRadius = 12,
+        this.borderRadius =0,
         @required this.onEditComplete,
       this.title = ""})
       : super(key: key) {
@@ -65,13 +65,14 @@ class EditableArea extends StatelessWidget {
         decoration: BoxDecoration(
             color: MyTheme.convert(ThemeColorName.ComponentBackground),
             borderRadius: BorderRadius.all(Radius.circular(this.borderRadius)),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 12, //阴影范围
-                spreadRadius: 3, //阴影浓度
-                color: Color(0x33000000), //阴影颜色
-              ),
-            ]),
+            // boxShadow: [
+            //   BoxShadow(
+            //     blurRadius: 12, //阴影范围
+            //     spreadRadius: 3, //阴影浓度
+            //     color: Color(0x33000000), //阴影颜色
+            //   ),
+            // ]
+        ),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: this.getColumn(context)));
@@ -109,9 +110,9 @@ class EditableArea extends StatelessWidget {
   CustomIconButton getEditButton(BuildContext context) {
     this.editButton = CustomIconButton(
       disabled: false,
-      icon: FontAwesomeIcons.edit,
+      icon: FontAwesomeIcons.solidEdit,
       backgroundOpacity: 0,
-      iconSize: 25,
+      iconSize: 20,
     );
     this.editButton.onClick = (){
       if(!this.editing){
