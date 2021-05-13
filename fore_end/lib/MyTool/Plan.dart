@@ -84,7 +84,7 @@ abstract class Plan {
           dailyCaloriesLowerLimit,
           dailyProteinUpperLimit,
           dailyProteinLowerLimit);
-    } else if (planType == 2) {
+    } else if (planType == 3) {
       return BuildMusclePlan(
           id,
           startTime,
@@ -95,7 +95,7 @@ abstract class Plan {
           dailyCaloriesLowerLimit,
           dailyProteinUpperLimit,
           dailyProteinLowerLimit);
-    } else if (planType == 3) {
+    } else if (planType == 2) {
       return MaintainPlan(
           id,
           startTime,
