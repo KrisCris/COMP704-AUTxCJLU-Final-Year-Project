@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
@@ -33,6 +34,8 @@ class FoodDetails extends StatefulWidget {
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
   bool testExclamition;
   int foodWeight;
+  FoodRecognizer recognizer;
+
 
 
   ///构建函数
@@ -43,6 +46,8 @@ class FoodDetails extends StatefulWidget {
         this.isSuitable=false,
       }):super(key:key){
 
+    this.recognizer = FoodRecognizer.instance;
+    this.recognizer.setKey(key);
     this.isSuitable=isSuitable;
     this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
     this.testExclamition=testExclamition;
@@ -332,14 +337,15 @@ class _FoodDetailsState extends State<FoodDetails> {
                       isChangeColor: true,
                       data: mealsName, clickCallBack: (int index, var item) {
                         if(index == 0){
+                          EasyLoading.showSuccess('Great Success!', maskType: EasyLoadingMaskType.clear,  );
                           // print("点击了早餐");
-                          FoodRecognizer.addFoodToMealName("breakfast");
+                          // FoodRecognizer.addFoodToMealName("breakfast");
                         }else if(index == 1){
                           // print("点击了午餐");
-                          FoodRecognizer.addFoodToMealName("lunch");
+                          // FoodRecognizer.addFoodToMealName("lunch");
                         }else if(index == 2){
                           // print("点击了晚餐");
-                          FoodRecognizer.addFoodToMealName("dinner");
+                          // FoodRecognizer.addFoodToMealName("dinner");
                         }
                       });
                 },
@@ -377,7 +383,7 @@ class _FoodDetailsState extends State<FoodDetails> {
       final double fontSize = isTouched ? 25 : 16;
       final double radius = isTouched ? 100 : 90;
       switch (i) {
-        case 0:
+        case 0:{
           return PieChartSectionData(
             color: const Color(0xff09edfe),///碳水
             value: this.widget.currentFood.carbohydrate,
@@ -386,19 +392,7 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
-          // {
-          //   if(this.widget.currentFood.carbohydrate>0){
-          //     return PieChartSectionData(
-          //       color: const Color(0xff09edfe),///碳水
-          //       value: this.widget.currentFood.carbohydrate,
-          //       title: (calculatePercent('carbohydrate')*100).floor().toString()+'%',
-          //       radius: radius,
-          //       titleStyle: TextStyle(
-          //           fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          //     );
-          //   }
-          //   break;
-          // }
+        }
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff8b250),  ///脂肪
@@ -409,28 +403,6 @@ class _FoodDetailsState extends State<FoodDetails> {
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 2:
-
-          return PieChartSectionData(
-            color: const Color(0xff845bef),  ///胆固醇
-            value: this.widget.currentFood.cholesterol,
-            title: (calculatePercent('cholesterol')*100).floor().toString().toString()+'%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          );
-        case 3:
-          // this.widget.currentFood.cellulose>0?
-          return PieChartSectionData(
-            color: const Color(0xff13d38e),///纤维素
-            value: this.widget.currentFood.cellulose,
-            title: (calculatePercent('cellulose')*100).floor().toString().toString()+'%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          );
-
-        case 4:
-
           return PieChartSectionData(
             color: const Color(0xffff5983),///蛋白质
             value: this.widget.currentFood.protein,
@@ -439,6 +411,39 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
+
+        case 3:
+          // this.widget.currentFood.cellulose>0?
+          return PieChartSectionData(
+            color: const Color(0xff13d38e),///纤维素
+            value: this.widget.currentFood.cellulose,
+            title:
+            this.widget.currentFood.cellulose>0?
+            (calculatePercent('cellulose')*100).floor().toString().toString()+'%'
+            :" "
+            ,
+
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+
+        case 4:
+          return PieChartSectionData(
+            color: const Color(0xff845bef),  ///胆固醇
+            value: this.widget.currentFood.cholesterol,
+            title:
+            // (calculatePercent('cholesterol')*100).floor().toString().toString()+'%',
+            this.widget.currentFood.cholesterol>0?
+            (calculatePercent('cholesterol')*100).floor().toString().toString()+'%'
+                :" "
+            ,
+
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+
 
         default:
           return null;
