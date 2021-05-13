@@ -442,7 +442,7 @@ class BuildMusclePlan extends Plan {
     double dailyProteinUpperLimit,
     double dailyProteinLowerLimit,
   ) : super._internal(
-            2,
+            3,
             id,
             startTime,
             endTime,
@@ -466,7 +466,7 @@ class BuildMusclePlan extends Plan {
 
   @override
   String getPlanType() {
-    return Plan.planTypes[2];
+    return Plan.planTypes[3];
   }
 
   @override
@@ -583,7 +583,7 @@ class MaintainPlan extends Plan {
     double dailyProteinUpperLimit,
     double dailyProteinLowerLimit,
   ) : super._internal(
-            3,
+            2,
             id,
             startTime,
             endTime,
@@ -603,7 +603,7 @@ class MaintainPlan extends Plan {
 
   @override
   String getPlanType() {
-    return Plan.planTypes[3];
+    return Plan.planTypes[2];
   }
 
   @override
