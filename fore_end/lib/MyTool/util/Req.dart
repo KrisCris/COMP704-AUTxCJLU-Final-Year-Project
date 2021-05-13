@@ -201,7 +201,7 @@ class Requests {
   }
 
   static Future<Response> getPlan(BuildContext context, data) async {
-    return _postRequest("getPlan", context, data, "/plan/get_current_Plan", "get_current_Plan接口", null);
+    return _postRequest("getPlan", context, data, "/plan/get_current_plan", "get_current_Plan接口", null);
   }
 
   static Future<Response> consumeFoods(BuildContext context, data) async {

@@ -89,11 +89,11 @@ class PlanDetailPage extends StatelessWidget {
                     },
                   ).then((val) {
                     if(val == true){
-                      Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+                      Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (ctx) {
                         return GuidePage(
                           firstTime: false,
                         );
-                      }));
+                      }),null);
                     }
                   });
                 },
