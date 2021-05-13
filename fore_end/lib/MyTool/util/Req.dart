@@ -1,9 +1,11 @@
-import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/Pages/WelcomePage.dart';
 
 class Req {
   static Dio get instance => _getInstance();
@@ -46,7 +48,7 @@ class Req {
 }
 
 class Requests {
-  static Future<Response> _errorSolve(DioError e,String repeatKey,{Map data,String info="",Function(Map) f}) async {
+  static Future<Response> _errorSolve(DioError e,BuildContext context,String repeatKey,{Map data,String info="",Function(BuildContext, Map) f}) async {
     String nline = "";
     for(int i=0;i<2;i++){
       nline +="\n";
@@ -64,19 +66,19 @@ class Requests {
       print("连接超时 [ "+ info + "]");
       if(f != null){
         print("连接超时,第$times次重新请求 [ "+ info + "]");
-        return f(data);
+        return f(context,data);
       }
     } else if (e.type == DioErrorType.SEND_TIMEOUT) {
       print("请求超时 [ "+ info + "]");
       if(f != null){
         print("请求超时,第$times次重新请求 [ "+ info + "]");
-        return f(data);
+        return f(context,data);
       }
     } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
       print("响应超时 [ "+ info + "]");
       if(f != null){
         print("响应超时,第$times次重新请求 [ "+ info + "]");
-        return f(data);
+        return f(context,data);
       }
     } else if (e.type == DioErrorType.RESPONSE) {
       print("接口请求出现异常 [ "+ info +" ]\n"+e.message);
@@ -89,7 +91,7 @@ class Requests {
     print("**********************************************************");
     return null;
   }
-  static Future<Response> _postRequest(String interfaceKey,data,String url,String info,Function(Map) f)async{
+  static Future<Response> _postRequest(String interfaceKey,BuildContext context, data,String url,String info,Function(BuildContext,Map) f)async{
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res;
@@ -101,22 +103,50 @@ class Requests {
       return res;
     }on DioError catch(e){
       print(info+"solving error...");
-      res =  await _errorSolve(e,interfaceKey,info: info,data:data,f:f);
+      res =  await _errorSolve(e,context, interfaceKey,info: info,data:data,f:f);
       print(info+"error done");
       return res;
     }
   }
+  Future<Response> _solveCommonCode(Response res,BuildContext context)async{
+    if(res == null){
+      Fluttertoast.showToast(
+        msg: "No Response got, Please Check Internet Connection",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.redAccent,
+        fontSize: 13,
+      );
+    }else if(res.data['code'] == -1){
+      Fluttertoast.showToast(
+        msg: "Operation Requires Login",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.redAccent,
+        fontSize: 13,
+      );
+      User.getInstance().logOut();
+      Navigator.of(context).pushAndRemoveUntil(
+          new MaterialPageRoute(builder: (context){
+            return Welcome();
+          }), (route) => false
+      );
+    }
+    return res;
+  }
   ///POST
   ///param: food_b64 - String
-  static Future<Response> foodDetect(data) async {
-    return _postRequest("detect", data, "/food/detect", "food detect接口", foodDetect);
+  static Future<Response> foodDetect(BuildContext context,data) async {
+    return _postRequest("detect",context, data, "/food/detect", "food detect接口", foodDetect);
   }
 
-  static Future<Response> sendRegisterEmail(data) async {
-    return _postRequest("registerEmail", data, "/user/send_register_code", "send register email接口", sendRegisterEmail);
+  static Future<Response> sendRegisterEmail(BuildContext context, data) async {
+    return _postRequest("registerEmail", context, data, "/user/send_register_code", "send register email接口", sendRegisterEmail);
   }
 
-  static Future<Response> checkVerifyCode(data) async {
+  static Future<Response> checkVerifyCode(BuildContext context, data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/check_code", data: dt);
@@ -125,114 +155,102 @@ class Requests {
 
   }
 
-  static Future<Response> signUp(data) async {
-    return _postRequest("signUp", data, "/user/signup", "signup接口", null);
+  static Future<Response> signUp(BuildContext context, data) async {
+    return _postRequest("signUp", context, data, "/user/signup", "signup接口", null);
     // Dio dio = Req.instance;
     // FormData dt = FormData.fromMap(data);
     // Response res = await dio.post("/user/signup", data: dt);
     // return res;
   }
 
-  static Future<Response> login(data) async {
-    return _postRequest("login", data, "/user/login", "login接口", login);
+  static Future<Response> login(BuildContext context, data) async {
+    return _postRequest("login", context, data, "/user/login", "login接口", login);
   }
 
-  static Future<Response> getBasicInfo(data) async {
-    return _postRequest("getBasicInfo", data, "/user/get_basic_info", "getBasicInfo接口", getBasicInfo);
+  static Future<Response> getBasicInfo(BuildContext context, data) async {
+    return _postRequest("getBasicInfo", context, data, "/user/get_basic_info", "getBasicInfo接口", getBasicInfo);
   }
-  static Future<Response> updateBody(data) async {
-    return _postRequest("updateBody", data, "/plan/update_body_info", "updateBodyInfo接口", null);
+  static Future<Response> updateBody(BuildContext context, data) async {
+    return _postRequest("updateBody", context, data, "/plan/update_body_info", "updateBodyInfo接口", null);
   }
-  static Future<Response> dailyMeal(data) async {
-    return _postRequest("dailyMeal", data, "/food/get_daily_consumption", "get_daily_consumption接口", null);
+  static Future<Response> dailyMeal(BuildContext context, data) async {
+    return _postRequest("dailyMeal", context, data, "/food/get_daily_consumption", "get_daily_consumption接口", null);
   }
-  static Future<Response> historyMeal(data) async {
-    return _postRequest("historyMeal", data, "/food/get_consume_history", "get_consume_history接口", null);
+  static Future<Response> historyMeal(BuildContext context, data) async {
+    return _postRequest("historyMeal", context, data, "/food/get_consume_history", "get_consume_history接口", null);
   }
-  static Future<Response> recommandFood(data) async {
-    return _postRequest("recommandFood", data, "/food/recmd_food", "recmd_food接口", recommandFood);
+  static Future<Response> recommandFood(BuildContext context, data) async {
+    return _postRequest("recommandFood", context, data, "/food/recmd_food", "recmd_food接口", recommandFood);
   }
-  static Future<Response> previewPlan(Map data) async {
+  static Future<Response> previewPlan(BuildContext context, Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
     Response res = await dio.get("/plan/query_plan" + urlPara);
     return res;
   }
 
-  static Future<Response> setPlan(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/set_plan", data: dt);
-    return res;
+  static Future<Response> setPlan(BuildContext context, data) async {
+    return _postRequest("setPlan", context, data, "/plan/setPlan", "setPlan接口", null);
   }
 
-  static Future<Response> finishPlan(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/finish_plan", data: dt);
-    return res;
+  static Future<Response> finishPlan(BuildContext context, data) async {
+    return _postRequest("finishPlan", context, data, "/plan/finishPlan", "finishPlan接口", null);
   }
 
-  static Future<Response> getPlan(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/plan/get_current_plan", data: dt);
-    return res;
+  static Future<Response> getPlan(BuildContext context, data) async {
+    return _postRequest("getPlan", context, data, "/plan/get_current_Plan", "get_current_Plan接口", null);
   }
 
-  static Future<Response> consumeFoods(data) async {
-    return _postRequest("consumeFoods", data, "/food/consume_foods", "consume_foods接口", null);
+  static Future<Response> consumeFoods(BuildContext context, data) async {
+    return _postRequest("consumeFoods", context, data, "/food/consume_foods", "consume_foods接口", null);
   }
 
-  static Future<Response> modifyBasicInfo(data) async {
-    Dio dio = Req.instance;
-    FormData dt = FormData.fromMap(data);
-    Response res = await dio.post("/user/modify_basic_info", data: dt);
-    return res;
+  static Future<Response> modifyBasicInfo(BuildContext context, data) async {
+    return _postRequest("modifyBasicInfo", context, data, "/user/modify_basic_info", "modify_basic_info接口", null);
   }
-  static Future<Response> shouldUpdateWeight(data) async {
-    return _postRequest("shouldUpdateWeight", data, "/plan/should_update_weight", "should_update_weight接口", null);
+  static Future<Response> shouldUpdateWeight(BuildContext context, data) async {
+    return _postRequest("shouldUpdateWeight", context, data, "/plan/should_update_weight", "should_update_weight接口", null);
   }
-  static Future<Response> delayPlan(data) async {
-    return _postRequest("delayPlan", data, "/plan/extend_plan", "extend_plan接口", null);
+  static Future<Response> delayPlan(BuildContext context, data) async {
+    return _postRequest("delayPlan", context, data, "/plan/extend_plan", "extend_plan接口", null);
   }
-  static Future<Response> delayAndUpdatePlan(data) async {
-    return _postRequest("delayAndUpdatePlan", data, "/plan/extend_update_plan", "extend_update_plan接口", null);
+  static Future<Response> delayAndUpdatePlan(BuildContext context, data) async {
+    return _postRequest("delayAndUpdatePlan", context, data, "/plan/extend_update_plan", "extend_update_plan接口", null);
   }
-  static Future<Response> calculateDelayTime(data) async {
-    return _postRequest("calculateDelayTime", data, "/plan/estimate_extension", "estimate_extension接口", null);
+  static Future<Response> calculateDelayTime(BuildContext context, data) async {
+    return _postRequest("calculateDelayTime", context, data, "/plan/estimate_extension", "estimate_extension接口", null);
   }
-  static Future<Response> getWeightTrend(data) async {
-    return _postRequest("get_weight_trend", data, "/plan/get_weight_trend", "get_weight_trend接口", null);
+  static Future<Response> getWeightTrend(BuildContext context, data) async {
+    return _postRequest("get_weight_trend", context, data, "/plan/get_weight_trend", "get_weight_trend接口", null);
   }
-  static Future<Response>getHistoryPlan(data) async {
-    return _postRequest("getHistoryPlan", data, "/plan/get_past_plans","get_past_plans接口", null);
+  static Future<Response>getHistoryPlan(BuildContext context, data) async {
+    return _postRequest("getHistoryPlan", context, data, "/plan/get_past_plans","get_past_plans接口", null);
   }
-  static Future<Response> setMealIntakeRatio(data) async {
-    return _postRequest("setMealIntakeRatio", data, "/user/set_meals_intake_ratio","set_meals_intake接口", null);
+  static Future<Response> setMealIntakeRatio(BuildContext context, data) async {
+    return _postRequest("setMealIntakeRatio", context, data, "/user/set_meals_intake_ratio","set_meals_intake接口", null);
   }
 
-  static Future<Response> modifyPassword(data) async {
+  static Future<Response> modifyPassword(BuildContext context, data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/modify_password", data: dt);
     return res;
   }
-  static Future<Response> sendSecurityCode(data) async {
+  static Future<Response> sendSecurityCode(BuildContext context, data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/send_security_code", data: dt);
     return res;
   }
 
-  static Future<Response> checkEmailRepeat(Map data) async {
+  static Future<Response> checkEmailRepeat(BuildContext context, Map data) async {
     Dio dio = Req.instance;
     String urlPara = _readUrlPara(data);
     Response res = await dio.get("/user/is_new_email" + urlPara);
     return res;
   }
 
-  static Future<Response> logout(data) async {
+  static Future<Response> logout(BuildContext context, data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/user/logout", data: dt);
@@ -247,18 +265,18 @@ class Requests {
     return urlPara;
   }
 
-  static Future<Response> getCaloriesIntake(data) async {
-    return _postRequest("getCaloriesIntake", data, "/food/listed_calories_intake", "getCaloriesIntake接口", null);
+  static Future<Response> getCaloriesIntake(BuildContext context, data) async {
+    return _postRequest("getCaloriesIntake", context, data, "/food/listed_calories_intake", "getCaloriesIntake接口", null);
   }
 
-  static Future<Response> searchFood(Map data) async {
+  static Future<Response> searchFood(BuildContext context, Map data) async {
     Dio dio = Req.instance;
     String name =  _readUrlPara(data);
     Response res = await dio.get("/food/search" + name);
     return res;
   }
 
-  static Future<Response> getRecommandFood(data) async {
+  static Future<Response> getRecommandFood(BuildContext context, data) async {
     Dio dio = Req.instance;
     FormData dt = FormData.fromMap(data);
     Response res = await dio.post("/food/recmd_food_in_search", data: dt);
