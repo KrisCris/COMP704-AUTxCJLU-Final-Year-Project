@@ -28,26 +28,36 @@ class BodyWeightChartState extends State<BodyWeightChart>{
   @override
   Widget build(BuildContext context) {
     SfCartesianChart chart = SfCartesianChart(
+      plotAreaBorderWidth: 0,
       primaryXAxis: CategoryAxis(
+          majorGridLines: MajorGridLines(
+            width: 0,
+          ),
           axisLine: AxisLine(
             width: 1,
             color: MyTheme.convert(ThemeColorName.NormalText),
           )
       ),
       primaryYAxis: NumericAxis(
+          majorGridLines: MajorGridLines(
+            width: 1,
+            color: Colors.blueGrey
+          ),
           labelFormat: '{value}KG',
           axisLine: AxisLine(width: 0),
-          majorTickLines: MajorTickLines(color: Colors.transparent)),
-      trackballBehavior: TrackballBehavior(
-        lineType: TrackballLineType.vertical, //纵向选择指示器
-        activationMode: ActivationMode.singleTap,
-        enable: true,
-        tooltipAlignment: ChartAlignment.near, //工具提示位置(顶部)
-        shouldAlwaysShow: true, //跟踪球始终显示(纵向选择指示器)
-        tooltipDisplayMode:
-        TrackballDisplayMode.groupAllPoints, //工具提示模式(全部分组)
-        lineColor: MyTheme.convert(ThemeColorName.NormalText),
+          majorTickLines: MajorTickLines(color: Colors.transparent)
+
       ),
+      // trackballBehavior: TrackballBehavior(
+      //   lineType: TrackballLineType.vertical, //纵向选择指示器
+      //   activationMode: ActivationMode.singleTap,
+      //   enable: true,
+      //   tooltipAlignment: ChartAlignment.near, //工具提示位置(顶部)
+      //   shouldAlwaysShow: true, //跟踪球始终显示(纵向选择指示器)
+      //   tooltipDisplayMode:
+      //   TrackballDisplayMode.groupAllPoints, //工具提示模式(全部分组)
+      //   lineColor: Colors.redAccent,
+      // ),
       //打开工具提示
       series: <LineSeries<BodyChangeLog,String>>[
         LineSeries<BodyChangeLog,String>(
