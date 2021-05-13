@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -27,14 +28,14 @@ import 'package:fore_end/Mycomponents/widgets/food/RecommendBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 
+
 class FoodDetails extends StatefulWidget {
   Food currentFood;
   bool isSuitable;
   // GlobalKey<ValueAdjusterState> valueAdjusterKey;
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
   bool testExclamition;
-  int foodWeight;
-  FoodRecognizer recognizer;
+  int foodWeight = 100;
 
 
 
@@ -140,23 +141,22 @@ class _FoodDetailsState extends State<FoodDetails> {
                     ),
                     SizedBox(width: 10,),
 
-                    Text(CustomLocalizations.of(context).foodDetailPageTitle,style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 25,fontFamily: 'Futura'),)
+                    Text(this.widget.currentFood.getName(context),style: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText),fontSize: 25,fontFamily: 'Futura'),)
                   ],
                 ),
 
               ),
               SizedBox(height:15),
               ///展示食物图片
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  height: ScreenTool.partOfScreenHeight(0.25),
+                  width: ScreenTool.partOfScreenWidth(0.95),
+                  child: Image.memory(base64.decode(widget.currentFood.picture), height:50, width:50, fit: BoxFit.fitWidth, gaplessPlayback:true,),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.25),
-                width: ScreenTool.partOfScreenWidth(0.95),
-                // child: Image.asset('image/fruit-main.jpg',fit: BoxFit.cover,),
-                child: Image.memory(base64.decode(widget.currentFood.picture), height:50, width:50, fit: BoxFit.fitWidth, gaplessPlayback:true,),
               ),
+              
 
               SizedBox(height:15),
               ///推荐食物可展开区域
@@ -168,42 +168,45 @@ class _FoodDetailsState extends State<FoodDetails> {
                 foodName: this.widget.currentFood.getName(context),),
               SizedBox(height:15),
               ///进度条
-              PersentBar(key: persentBar,
-                  width: 0.95,
-                  height: 5,
-                  sections: [
-                    PersentSection(
-                      normalColor:const Color(0xff09edfe),///碳水
-                      persent: this.widget.currentFood.calculateThreeNutritionPercent("carbohydrate"),  ///这里的数字先暂时写死 来测试
-                      name: "carbohydrate Persent",
-                    ),
-                    PersentSection(
-                      normalColor: const Color(0xfff8b250),
-                      persent: this.widget.currentFood.calculateThreeNutritionPercent("fat"),  ///这里的数字先暂时写死 来测试
-                      name: "Fat Persent",
-                    ),
-                    PersentSection(
-                      normalColor: const Color(0xffff5983),
-                      persent: this.widget.currentFood.calculateThreeNutritionPercent("protein"),  ///这里的数字先暂时写死 来测试
-                      name: "Protein Persent",
-                    ),
-                  ]),
+
               ///这个食物的营养信息详情
-              Container(
-                  padding: EdgeInsets.only(top: 10,),
+              ClipRRect(
+                borderRadius:BorderRadius.circular(10),
+                child: Container(
+                  // padding: EdgeInsets.only(top: 10,),
                   decoration: BoxDecoration(
                     color:MyTheme.convert(ThemeColorName.ComponentBackground),
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
+                    // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10), topLeft: Radius.circular(10)),
                     // border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
-                  height: ScreenTool.partOfScreenHeight(0.6),
+                  // height: ScreenTool.partOfScreenHeight(0.6),
                   width: ScreenTool.partOfScreenWidth(0.95),
                   child:
                   Column(
-
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      PersentBar(key: persentBar,
+                          width: 0.95,
+                          height: 5,
+                          sections: [
+                            PersentSection(
+                              normalColor:const Color(0xff09edfe),///碳水
+                              persent: this.widget.currentFood.calculateThreeNutritionPercent("carbohydrate"),  ///这里的数字先暂时写死 来测试
+                              name: "carbohydrate Persent",
+                            ),
+                            PersentSection(
+                              normalColor: const Color(0xfff8b250),
+                              persent: this.widget.currentFood.calculateThreeNutritionPercent("fat"),  ///这里的数字先暂时写死 来测试
+                              name: "Fat Persent",
+                            ),
+                            PersentSection(
+                              normalColor: const Color(0xffff5983),
+                              persent: this.widget.currentFood.calculateThreeNutritionPercent("protein"),  ///这里的数字先暂时写死 来测试
+                              name: "Protein Persent",
+                            ),
+                          ]),
+                      SizedBox(height: 10,),
                       Row(
                         // mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -229,7 +232,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                         ],
                       ),
 
-                      SizedBox(height: 15,),
+                      SizedBox(height: 10,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         // mainAxisAlignment: MainAxisAlignment.start,
@@ -293,29 +296,35 @@ class _FoodDetailsState extends State<FoodDetails> {
                       //     ),
                       //   ],
                       // ),
-
-
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children:[
+                            NutritionBox(
+                              title: CustomLocalizations.of(context).calories,
+                              // value: 100.0,
+                              value: NumUtil.getNumByValueDouble(widget.currentFood.calorie * this.widget.foodWeight / 100, 2),
+                              color: const Color(0xffa5ef00), ///卡路里
+                              units: "KCal",
+                              titleSize: 17,
+                              valueSize: 15,
+                              // isUnSuitable: this.widget.testExclamition,
+                            )
+                          ]
+                      ),
+                      SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          NutritionBox(
-                            title: CustomLocalizations.of(context).calories,
-                            // value: 100.0,
-                            value: widget.currentFood.calorie,
-                            color: const Color(0xffa5ef00), ///卡路里
-                            units: "kcal/100g",
-                            titleSize: 17,
-                            valueSize: 15,
-                            // isUnSuitable: this.widget.testExclamition,
-                          ),
+
                           this.getValueAdjuster()
                         ],
                       ),
-
+                      SizedBox(height: 15,)
                     ],
-                  )
-
+                  ),
+                ),
               ),
+
               SizedBox(height:15),
               CustomButton(
                 disabled: false,
@@ -332,7 +341,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
                   ///点击展开添加食物计划
                   JhPickerTool.showStringPicker(context,
-                      title: CustomLocalizations.of(context).total +(this.widget.currentFood.calorie.toInt()*this.widget.foodWeight/100).toString() + "Kcal",
+                      // title: CustomLocalizations.of(context).total + " "+(NumUtil.getNumByValueDouble(widget.currentFood.calorie * this.widget.foodWeight / 100, 2)).toString() + "Kcal",
                       normalIndex: 0,
                       isChangeColor: true,
                       data: mealsName, clickCallBack: (int index, var item) {
@@ -364,7 +373,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
   }
   Widget getValueAdjuster() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:20,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:this.widget.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");

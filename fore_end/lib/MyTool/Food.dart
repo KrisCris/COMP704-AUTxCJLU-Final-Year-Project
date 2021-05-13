@@ -81,10 +81,10 @@ class Food {
       if(_cnName != null){
         return _cnName;
       }else{
-        return _name;
+        return "${_name[0].toUpperCase()}${_name.substring(1)}";
       }
     }else{
-      return _name;
+      return "${_name[0].toUpperCase()}${_name.substring(1)}";
     }
   }
   String getCaloriePerUnit(){
