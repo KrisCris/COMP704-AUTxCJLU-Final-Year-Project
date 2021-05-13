@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 import 'package:date_format/date_format.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "package:intl/intl.dart";
 
 class HistoryPlanPage extends StatefulWidget {
   ///不会变的全局数据
@@ -31,37 +33,30 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   List<Map> pagesData = new List<Map>(); //里面放Map
   List localPagesData = new List();  //里面放离线数据 Map
 
-  bool searching;
+  bool searching =false;
+  String commentOfPlan = "减肥卓有成效，完成情况良好，未有延期记录";
 
-  String planType; //减肥 增肌  维持
-
-  String planStart;
-  String planFinish;
+  List data;
+  // int proteinHighDays = consumption["proteinHigh"]["days"];
+  // int proteinLowDays = consumption["proteinLow"]["days"];
+  //
+  // double accumCalories = consumption["accumCalories"].toDouble();
+  // double accumProtein = consumption["accumProtein"].toDouble();
+  // double avgCalories = consumption["avgCalories"].toDouble();
+  // double avgProtein = consumption["avgProtein"].toDouble();
+  //
+  // int planBeignTime = planBrief["begin"];
+  // int goalWeight = planBrief["goalWeight"].toInt();
+  // bool hasFinished = planBrief["hasCompleted"];
+  // int achievedWeight = 0;
+  // int planEndTime = 0;
 
   DateTime startedPlanTime;
   DateTime finishedPlanTime;
   DateTime nowTimeWhenInit;
   DateTime registerTime;
-
-  int caloriesTotalInput;
-  int caloriesDailyInput;
-  int proteinTotalInput;
-  int proteinDailyInput;
-  int startedWeight;
-  int finishedWeight;
-
-  List bodyWeightUpdateList = [];
-
-  int standardCaloriesDays;
-  int overCaloriesDays;
-  int lessCaloriesDays;
-  int overProteinDays;
-  int lessProteinDays;
-  int delayDays;
-
-  String commentOfPlan = "减肥卓有成效，完成情况良好，未有延期记录";
-
   int index = 0;
+
 
 
   ///默认的初始页号
@@ -98,8 +93,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       width: 0.3,
       height: 40,
       buttonMargin: 18,
-      beginTime: this.registerTime,
-      initTime: this.registerTime,
+      beginTime: this.registerTime.add(Duration(days: -1)),
+      initTime: this.registerTime.add(Duration(days: -1)),
       lastTime: this.finishedPlanTime,
       isShowTwoButton: false,
       onChangeDate: (int newDate) {
@@ -111,8 +106,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     );
     return SingleChildScrollView(
         child: Column(
-      children: [
-        Container(
+          children: [
+            Container(
           height: ScreenTool.partOfScreenHeight(0.1),
           // margin: EdgeInsets.only(top:20),
           padding: EdgeInsets.only(
@@ -174,7 +169,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12),
                     ))
-                : this.pagesData.length <= 0  && this.localPagesData.length <=0
+                : this.index <= 0
                     ? Align(
                         alignment: Alignment.center,
                         child: Text(
@@ -186,7 +181,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                               fontSize: 12),
                         ))
                     :
-            this.getSwiper()),
+            this.getSwiper()
+        ),
       ],
     ));
   }
@@ -241,76 +237,207 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       "end": (this.finishedPlanTime.millisecondsSinceEpoch / 1000).floor()
     });
     if (res == null) return;
-    for (Map m in res.data['data']) {
-      //TODO:将获取到的数据填充到 [pagesData]
-      this.pagesData.add(m);
-    }
-    setValue(this.pagesData);
+
+    this.data = res.data['data'];
+    this.index = this.data.length;
+
+    // for (Map m in res.) {
+    //   //TODO:将获取到的数据填充到 [pagesData]
+    //   this.pagesData.add(m);
+    // }
+    // setValue(this.pagesData);
+    DateTime today = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
     this.searching = false;
-    setState(() {
-    });
+    if(mounted){
+      setState(() {
+      });
+    }
   }
 
   void setValue(List pagesData){
+
+
     String foodNames;
     double foodCalorie;
-    // this.index=pagesData.length;
-    pagesData.forEach((element) {
-      element.forEach((key, value) { 
-        if(key=="consumption"){
-          Map info=value;
-          this.caloriesTotalInput=info["accumCalories"].toInt();
-          this.caloriesDailyInput=info["avgCalories"].toInt();
-          this.proteinTotalInput=info["accumProtein"].toInt();
-          this.proteinDailyInput=info["avgProtein"].toInt();
-          Map calsHigh=info["calsHigh"];
-          this.overCaloriesDays=calsHigh["days"];
-          Map calsLow=info["calsLow"];
-          this.lessCaloriesDays=calsLow["days"];
-
-          Map proteinHigh=info["proteinHigh"];
-          this.overProteinDays=proteinHigh["days"];
-          Map proteinLow=info["proteinLow"];
-          this.lessProteinDays=proteinLow["days"];
-
-        }
-        if(key=="planBrief"){
+    this.index=pagesData.length;
+    pagesData.forEach((eachPlan) {
+      this.index++;
+      Map consumption = eachPlan["consumption"];
+      Map planBrief = eachPlan["planBrief"];
+      List weeklyDetails = eachPlan["weeklyDetails"];
 
 
-          ///计算时间用 begin和finish 的时间应该也可以?
-          // this.standardCaloriesDays=this.startedPlanTime.difference(this.finishedPlanTime).inDays - (this.overCaloriesDays+this.lessCaloriesDays);
-          Map info=value;
-          if(info["hasCompleted"]){
-            this.index++;
-          }else{
-            return;
-          }
-          this.finishedWeight=info["achievedWeight"].toInt();
-          DateTime begin=DateTime.fromMillisecondsSinceEpoch(info["begin"]*1000);
-          DateTime end=DateTime.fromMillisecondsSinceEpoch(info["realEnd"]*1000);
-          this.standardCaloriesDays=end.difference(begin).inDays-this.overCaloriesDays-this.lessCaloriesDays;
-          this.startedPlanTime=begin;
-          this.finishedPlanTime=end;
+      int proteinHighDays = consumption["proteinHigh"]["days"];
+      int proteinLowDays = consumption["proteinLow"]["days"];
 
-          DateTime formatedBeginDate=DateTime.parse(formatDate(begin, [yyyy, '-', mm, '-', dd]));
-          DateTime formatedEndDate=DateTime.parse(formatDate(end, [yyyy, '-', mm, '-', dd]));
-          this.planStart=formatedBeginDate.year.toString()+"-"+formatedBeginDate.month.toString()+"-"+formatedBeginDate.day.toString();
-          this.planFinish=formatedEndDate.year.toString()+"-"+formatedEndDate.month.toString()+"-"+formatedEndDate.day.toString();
-        }
-        if(key=="weeklyDetails"){
-        }
-        
-      });
+      double accumCalories = consumption["accumCalories"].toDouble();
+      double accumProtein = consumption["accumProtein"].toDouble();
+      double avgCalories = consumption["avgCalories"].toDouble();
+      double avgProtein = consumption["avgProtein"].toDouble();
+
+      int planBeignTime = planBrief["begin"];
+      int goalWeight = planBrief["goalWeight"].toInt();
+      bool hasFinished = planBrief["hasCompleted"];
+      int achievedWeight = 0;
+      int planEndTime = 0;
+      if(hasFinished){
+        achievedWeight = planBrief["achievedWeight"].toInt();
+        planEndTime = planBrief["realEnd"];
+      }
+      int delayPlanTimes = eachPlan["exts"];
+
+      ///如果为0就显示 计划还在进行
 
     });
 
-    print("返回结果赋值成功！");
     setState(() {});
   }
 
-
-  Swiper getSwiper() {
+  Widget getColumnContent(int idx){
+    // return SizedBox();
+    return Column(
+      children: [
+        TitleText(
+          text: CustomLocalizations.of(context).shedWeight,
+          underLineLength: 0.5,
+          fontSize: 25,
+          maxWidth: 0.8,
+          maxHeight: 40,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).startPlan,
+          rightText: "",
+          rightValue: this.tsToStr(this.data[idx]["planBrief"]["begin"]),
+          isShowRightValue: true,
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).finishPlan,
+          rightText: "",
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.tsToStr(this.data[idx]["planBrief"]["realEnd"]):"未完成",
+          isShowRightValue: true,
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        TitleText(
+          text: CustomLocalizations.of(context).totalNutrition,
+          underLineLength: 0.5,
+          fontSize: 18,
+          maxWidth: 0.8,
+          maxHeight: 30,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).caloriesTotal,
+          rightText: "Kcal",
+          rightValue: this.numToString(this.data[idx]["consumption"]["accumCalories"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).caloriesDaily,
+          rightText: "Kcal",
+          rightValue: this.numToString(this.data[idx]["consumption"]["avgCalories"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).proteinTotal,
+          rightText: "g",
+          rightValue: this.numToString(this.data[idx]["consumption"]["accumProtein"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).proteinDaily,
+          rightText: "g",
+          rightValue: this.numToString(this.data[idx]["consumption"]["avgProtein"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).weightStart,
+          rightText: "Kg",
+          rightValue: this.numToString(this.data[idx]["weeklyDetails"][0]["weight"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).weightFinish,
+          rightText: "Kg",
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.numToString(this.data[idx]["planBrief"]["achievedWeight"]):"未完成",
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        TitleText(
+          text: CustomLocalizations.of(context).planExecution,
+          underLineLength: 0.5,
+          fontSize: 18,
+          maxWidth: 0.8,
+          maxHeight: 30,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        // PlanTextItem(
+        //   leftText:
+        //   CustomLocalizations.of(context).caloriesStandard,
+        //   rightText: " Days",
+        //   rightValue: this.data,
+        // ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).caloriesOver,
+          rightText: " Days",
+          rightValue: this.numToString(this.data[idx]["consumption"]["calsHigh"]["days"]),
+        ),
+        PlanTextItem(
+          leftText:
+          CustomLocalizations.of(context).caloriesInsufficient,
+          rightText: " Days",
+          rightValue: this.numToString(this.data[idx]["consumption"]["calsLow"]["days"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).caloriesOver,
+          rightText: " Days",
+          rightValue: this.numToString(this.data[idx]["consumption"]["proteinHigh"]["days"]),
+        ),
+        PlanTextItem(
+          leftText:
+          CustomLocalizations.of(context).caloriesInsufficient,
+          rightText: " Days",
+          rightValue: this.numToString(this.data[idx]["consumption"]["proteinLow"]["days"]),
+        ),
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).planDelayTimes,
+          rightText: " Times",
+          rightValue: this.numToString(this.data[idx]["exts"]),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        TitleText(
+          text: CustomLocalizations.of(context).comment,
+          underLineLength: 0.5,
+          fontSize: 18,
+          maxWidth: 0.8,
+          maxHeight: 30,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          CustomLocalizations.of(context).commentFirst,
+          style: TextStyle(
+              fontSize: 15,
+              color: MyTheme.convert(ThemeColorName.NormalText),
+              fontFamily:
+              'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
+          softWrap: true, //自动换行
+          // textAlign: TextAlign.start,
+          // overflow: TextOverflow.visible,
+        ),
+      ],
+    );
+  }
+  Widget getSwiper() {
     return Swiper(
+      containerWidth: 0.8,
       onIndexChanged: (int index) {},
       outer: false,
       itemBuilder: (context, index) {
@@ -326,146 +453,20 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.82),
-                child: Column(
-                  children: [
-                    TitleText(
-                      text: CustomLocalizations.of(context).shedWeight,
-                      underLineLength: 0.5,
-                      fontSize: 25,
-                      maxWidth: 0.8,
-                      maxHeight: 40,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).startPlan,
-                      rightText: this.planStart,
-                      rightValue: 0,
-                      isShowRightValue: false,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).finishPlan,
-                      rightText: this.planFinish,
-                      rightValue: 0,
-                      isShowRightValue: false,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TitleText(
-                      text: CustomLocalizations.of(context).totalNutrition,
-                      underLineLength: 0.5,
-                      fontSize: 18,
-                      maxWidth: 0.8,
-                      maxHeight: 30,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).caloriesTotal,
-                      rightText: "Kcal",
-                      rightValue: 215130,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).caloriesDaily,
-                      rightText: "Kcal",
-                      rightValue: 1955,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).proteinTotal,
-                      rightText: "g",
-                      rightValue: 6820,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).proteinDaily,
-                      rightText: "g",
-                      rightValue: 62,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).weightStart,
-                      rightText: "Kg",
-                      rightValue: 71,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).weightFinish,
-                      rightText: "Kg",
-                      rightValue: 65,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TitleText(
-                      text: CustomLocalizations.of(context).planExecution,
-                      underLineLength: 0.5,
-                      fontSize: 18,
-                      maxWidth: 0.8,
-                      maxHeight: 30,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    PlanTextItem(
-                      leftText:
-                          CustomLocalizations.of(context).caloriesStandard,
-                      rightText: " Days",
-                      rightValue: this.standardCaloriesDays,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).caloriesOver,
-                      rightText: " Days",
-                      rightValue: this.overCaloriesDays,
-                    ),
-                    PlanTextItem(
-                      leftText:
-                          CustomLocalizations.of(context).caloriesInsufficient,
-                      rightText: " Days",
-                      rightValue: this.lessCaloriesDays,
-                    ),
-                    PlanTextItem(
-                      leftText: CustomLocalizations.of(context).planDelayTimes,
-                      rightText: " Times",
-                      rightValue: 0,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TitleText(
-                      text: CustomLocalizations.of(context).comment,
-                      underLineLength: 0.5,
-                      fontSize: 18,
-                      maxWidth: 0.8,
-                      maxHeight: 30,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      CustomLocalizations.of(context).commentFirst,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: MyTheme.convert(ThemeColorName.NormalText),
-                          fontFamily:
-                              'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
-                      softWrap: true, //自动换行
-                      // textAlign: TextAlign.start,
-                      // overflow: TextOverflow.visible,
-                    ),
-                  ],
-                )),
+                height: ScreenTool.partOfScreenHeight(0.8),
+                width: ScreenTool.partOfScreenWidth(0.9),
+                child: this.getColumnContent(index)
+            ),
           ],
         );
       },
-
-      ///pagination展示默认分页指示器,这里选择另外一个 ///如果需要定制自己的分页指示器，那么可以这样写：
+      ///pagination展示默认左右分页指示器
       pagination: new SwiperPagination(
-        margin: new EdgeInsets.all(10.0), //分页指示器与容器边框的距离
+        margin: new EdgeInsets.all(9), //分页指示器与容器边框的距离
         alignment: Alignment.bottomCenter,
       ),
 
-      ///设置 new SwiperControl() 展示默认分页按钮 左右两边的按钮
+      ///设置示默认分页按钮 左右两边的按钮
       control: new SwiperControl(
         size: 40,
         padding: EdgeInsets.only(
@@ -480,14 +481,30 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       loop: false, //无限轮播模式开关
       index: 0, //初始的时候下标位置
       autoplay: false, //自动播放开关.
-      // itemWidth: ,
-      // itemHeight: ,
       onTap: (int index) {
       }, //当用户手动拖拽或者自动播放引起下标改变的时候调用
       duration: 300, //动画时间，单位是毫秒
-
-      // controller: new SwiperController(
-      // ),
     );
   }
+
+  String  toThousands(int value){
+    String stringValue=value.toString();
+    if(value>=1000){
+      var format = NumberFormat('0,000');
+      return format.format(value);
+    }
+    return stringValue;
+  }
+
+  String tsToStr(int t){
+    DateTime date=DateTime.fromMillisecondsSinceEpoch(t*1000);
+    return DateTime.parse(formatDate(date, [yyyy, '-', mm, '-', dd])).toString().split(" ")[0];
+  }
+
+  String numToString(num n){
+    String tmp = n.toString();
+    tmp = tmp.split(".")[0];
+    return tmp;
+  }
+
 }
