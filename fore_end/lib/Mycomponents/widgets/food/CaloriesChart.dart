@@ -59,7 +59,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
 
   Map<DateTime,double> localDateValueMap = new Map<DateTime,double>();
-  // Map<DateTime,double> offlineLocalDateValueMap = new Map<DateTime,double>();
+  Map<DateTime,double> offlineLocalDateValueMap = new Map<DateTime,double>();
 
   ///下面的三种会变化的属性都要放到State里面
   ///保存周几对应的现实日期，根据今天的时间来计算
@@ -143,22 +143,22 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     this.saturdayDate=widget.today.add(Duration(days: mondayIndex+5));
     this.sundayDate=widget.today.add(Duration(days: mondayIndex+6));
 
-    ///get calories value调接口一次
-    this.getHistoryCalories();
+    // ///get calories value调接口一次
+    // this.getHistoryCalories();
 
-    // ///获取接口的数据 增加离线初始化  初始化  当用户离线才这样 否则去服务器获取数据
-    // if(u.isOffline){
-    //    SharedPreferences pre = LocalDataManager.pre;
-    //    String json = pre.getString("localCalories");
-    //    List LocalOneWeekCaloriesList=new List();
-    //    LocalOneWeekCaloriesList = jsonDecode(json);
-    //    this.assignValueBasedOnList(LocalOneWeekCaloriesList);
-    //    setState(() {});
-    //
-    //  }else{
-    //
-    //    this.getHistoryCalories();
-    //  }
+    ///获取接口的数据 增加离线初始化  初始化  当用户离线才这样 否则去服务器获取数据
+    if(u.isOffline){
+       SharedPreferences pre = LocalDataManager.pre;
+       String json = pre.getString("localCalories");
+       List LocalOneWeekCaloriesList=new List();
+       LocalOneWeekCaloriesList = jsonDecode(json);
+       this.assignValueBasedOnList(LocalOneWeekCaloriesList);
+       setState(() {});
+
+     }else{
+
+       this.getHistoryCalories();
+     }
 
 
   }
@@ -176,6 +176,61 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     super.didUpdateWidget(oldWidget);
     setState(() {});
   }
+
+  ///这个方法是去根据日期匹配把今天的值本地化获取  如果设置的一周刚好在这一周的话
+  void setTodayValueFromLocal(){
+
+    switch(widget.weekDayOfToday){
+      case 'Monday':
+        if(this.mondayDate.compareTo(widget.today)==0){
+          this.mondayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Tuesday':
+        if(this.tuesdayDate.compareTo(widget.today)==0){
+          this.tuesdayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Wednesday':
+        if(this.wednesdayDate.compareTo(widget.today)==0){
+          this.wednesdayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Thursday':
+        if(this.thursdayDate.compareTo(widget.today)==0){
+          this.thursdayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Friday':
+        if(this.fridayDate.compareTo(widget.today)==0){
+          this.fridayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Saturday':
+
+        print("从本地更新了今天的数值");
+        if(this.saturdayDate.compareTo(widget.today)==0){
+          this.saturdayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      case 'Sunday':
+        if(this.sundayDate.compareTo(widget.today)==0){
+          this.sundayValue=widget.u.getTodayCaloriesIntake();
+        }
+        break;
+
+      default:
+        print('今天不在设置的一周里面，就没本地化');
+    }
+  }
+
+
 
 
   void judgeDate({DateTime time}){
@@ -505,6 +560,21 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       ///把上限问题解决  超过上限就直接显示为上限
 
     });
+
+    // print("caloriesList 本地化今天的数据完成--------");
+    this.setTodayValueFromLocal();
+
+    print("caloriesList 遍历完成--------");
+    ///遍历完一周的数据并且累加后，再保存到本地
+    this.localDateValueMap.addAll({this.mondayDate:this.mondayValue.toDouble()});
+    this.localDateValueMap.addAll({this.tuesdayDate:this.tuesdayValue.toDouble()});
+    this.localDateValueMap.addAll({this.wednesdayDate:this.wednesdayValue.toDouble()});
+    this.localDateValueMap.addAll({this.thursdayDate:this.thursdayValue.toDouble()});
+    this.localDateValueMap.addAll({this.fridayDate:this.fridayValue.toDouble()});
+    this.localDateValueMap.addAll({this.saturdayDate:this.saturdayValue.toDouble()});
+    this.localDateValueMap.addAll({this.sundayDate:this.sundayValue.toDouble()});
+
+    print("caloriesList 数据添加到本地完成--------");
   }
 
   ///每次获取数据之前都清空之前的数据
