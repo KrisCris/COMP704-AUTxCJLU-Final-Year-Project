@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Food.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
@@ -55,7 +56,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
       border: BorderSide(color: MyTheme.convert(ThemeColorName.NormalText)),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
       backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
-      hint: ' Search Foods...',
+      hint: CustomLocalizations.of(context).searchFood,
       hintStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),

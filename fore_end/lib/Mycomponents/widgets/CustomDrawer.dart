@@ -184,10 +184,10 @@ class CustomDrawerState extends State<CustomDrawer> {
     return Container(
       margin: EdgeInsets.only(top: 8,bottom: 0),
         width: size,
-        height: size+20,
+        height: size,
         decoration: new BoxDecoration(
             shape: BoxShape.rectangle, ///circle是圆的 这里改为圆角
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(6.0),
             image: DecorationImage(
                 image: MemoryImage(User.getInstance().getAvatarBin()),
                 fit: BoxFit.cover

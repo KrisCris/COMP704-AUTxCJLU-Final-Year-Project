@@ -33,10 +33,13 @@ class DateSelect extends StatefulWidget with ValueableWidgetMixIn<int> {
   ///是否显示两侧按钮
   bool isShowTwoButton;
 
+  int gap;
+
 
   DateSelect(
       {double width,
       double height,
+        this.gap=1,
         this.paddingHorizontal=0,
         this.onChangeDate,
         this.buttonMargin = 55,
@@ -172,10 +175,10 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
     }
   }
   void addDay(){
-    this._modifyDat(day: 1);
+    this._modifyDat(day: this.widget.gap);
   }
   void minusDay(){
-    this._modifyDat(day: -1);
+    this._modifyDat(day: -this.widget.gap);
   }
   @override
   void onChangeValue() {

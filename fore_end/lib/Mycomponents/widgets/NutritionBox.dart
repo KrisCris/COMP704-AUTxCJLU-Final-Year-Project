@@ -20,7 +20,7 @@ class NutritionBox extends StatelessWidget {
     double titleSize=18,
     double value=10.0,
     double valueSize=20,
-    String units=" g",
+    String units="g",
     bool isUnSuitable=false,
     Key key,
   }): super(key: key){
@@ -29,7 +29,7 @@ class NutritionBox extends StatelessWidget {
     this.title=title;
     this.titleSize=titleSize;
     this.valueSize=valueSize;
-    this.units=" "+units;
+    this.units=units;
     this.isUnSuitable=isUnSuitable;
   }
 
@@ -41,9 +41,11 @@ class NutritionBox extends StatelessWidget {
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
             TitleText(
+              alignment: Alignment.center,
               text: this.title,
               underLineLength: 0.2,
               dividerColor: this.color,
@@ -61,7 +63,8 @@ class NutritionBox extends StatelessWidget {
                     color: MyTheme.convert(ThemeColorName.NormalText),
                     fontSize: this.valueSize,
                     fontFamily: 'Futura'
-                )
+                ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
