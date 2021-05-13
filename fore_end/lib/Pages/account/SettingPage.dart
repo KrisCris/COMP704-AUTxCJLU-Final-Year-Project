@@ -98,7 +98,7 @@ class SettingPageState extends State<SettingPage> {
                           FontAwesomeIcons.arrowAltCircleLeft, size: 35,
                           color: MyTheme.convert(ThemeColorName.NormalIcon),),
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pop(context,true);
                         },
                       ),
                       Container(
