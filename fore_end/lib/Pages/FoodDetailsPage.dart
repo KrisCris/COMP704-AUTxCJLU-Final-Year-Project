@@ -7,9 +7,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
+import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
@@ -34,7 +36,9 @@ class FoodDetails extends StatefulWidget {
   // GlobalKey<ValueAdjusterState> valueAdjusterKey;
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
   bool testExclamition;
+  String mealType;
   int foodWeight = 100;
+
 
 
   ///构建函数
@@ -43,7 +47,23 @@ class FoodDetails extends StatefulWidget {
         this.currentFood,
         this.testExclamition=true,
         this.isSuitable=false,
+        this.mealType,
       }):super(key:key){
+    if (this.mealType == null) {
+      User u = User.getInstance();
+      int hour = DateTime.now().hour;
+      if (hour > 4 && hour <= 11) {
+        this.mealType = "breakfast";
+        // this.persent = u.breakfastRatio;
+      } else if (hour > 11 && hour <= 16) {
+        this.mealType = "lunch";
+        // this.persent = u.lunchRatio;
+      } else if ((hour > 16 && hour <= 24) || (hour >= 0 && hour < 4)) {
+        this.mealType = "dinner";
+        // this.persent = u.dinnerRatio;
+      }
+    }
+
 
     this.isSuitable=isSuitable;
     this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
@@ -64,7 +84,9 @@ class _FoodDetailsState extends State<FoodDetails> {
   void initState()  {
     this.recommendFoods = [];
     this.getRecomFoods(widget.currentFood.id);
-
+    if (widget.mealType == null) {
+      widget.mealType = "";
+    }
   }
 
   double calculatePercent(String label){
@@ -88,6 +110,28 @@ class _FoodDetailsState extends State<FoodDetails> {
       widget.isSuitable = true;
     }
     setState(() {});
+  }
+
+  int mealTypeConvert() {
+    String s = widget.mealType.toLowerCase();
+    switch (s) {
+      case "breakfast":
+        {
+          return 1;
+        }
+      case "lunch":
+        {
+          return 2;
+        }
+      case "dinner":
+        {
+          return 3;
+        }
+      default:
+        {
+          return 3;
+        }
+    }
   }
 
 
@@ -328,31 +372,73 @@ class _FoodDetailsState extends State<FoodDetails> {
                 text: CustomLocalizations.of(context).resultPageQuestion,
                 isBold: true,
                 width: ScreenTool.partOfScreenWidth(0.95),
-                tapFunc: () {
 
-                  ///测试警示标志
-                  // setState(() {
-                  //   this.widget.testExclamition=!this.widget.testExclamition;
-                  // });
+                tapFunc: () async {
+                  User u = User.getInstance();
+                  bool newMeal = false;
+                  Meal m = u.getMealByName(widget.mealType);
+                  if (m == null) {
+                    m = new Meal(mealName: widget.mealType);
+                    newMeal = true;
+                  }
+                  int sss=this.mealTypeConvert();
+                  print("mealType调用方法返回"+mealTypeConvert().toString());
 
-                  ///点击展开添加食物计划
-                  JhPickerTool.showStringPicker(context,
-                      // title: CustomLocalizations.of(context).total + " "+(NumUtil.getNumByValueDouble(widget.currentFood.calorie * this.widget.foodWeight / 100, 2)).toString() + "Kcal",
-                      normalIndex: 0,
-                      isChangeColor: true,
-                      data: mealsName, clickCallBack: (int index, var item) {
-                        if(index == 0){
-                          // print("点击了早餐");
-                          FoodRecognizer.addFoodToMealName("breakfast");
-                        }else if(index == 1){
-                          // print("点击了午餐");
-                          FoodRecognizer.addFoodToMealName("lunch");
-                        }else if(index == 2){
-                          // print("点击了晚餐");
-                          FoodRecognizer.addFoodToMealName("dinner");
-                        }
-                      });
+                  this.widget.currentFood.weight=this.widget.foodWeight;
+                  List<Food> selectedFood=new List<Food>();
+                  selectedFood.add(this.widget.currentFood);
+
+                  Response res = await Requests.consumeFoods({
+                    "uid": u.uid,
+                    "token": u.token,
+                    "pid": u.plan.id,
+                    "type": mealTypeConvert(),
+                    "foods_info": jsonEncode(selectedFood),
+                  });
+                  if (res == null) {
+                    return;
+                  }
+                  if (res.data['code'] != 1) {
+                    return;
+                  }
+                  m.addFood(this.widget.currentFood);
+                  // for (Food f in this.selectedFood) {
+                  //   m.addFood(f);
+                  // }
+                  if (newMeal) {
+                    u.meals.value.add(m);
+                  }
+                  m.time = (res.data['data']['stmp'] * 1000);
+                  m.save();
+                  EasyLoading.showSuccess('Add Success!', maskType: EasyLoadingMaskType.clear,  );
+                  // Navigator.of(context).pop(true);
                 },
+                // {
+                //
+                //   ///测试警示标志
+                //   // setState(() {
+                //   //   this.widget.testExclamition=!this.widget.testExclamition;
+                //   // });
+                //
+                //   ///点击展开添加食物计划
+                //   // JhPickerTool.showStringPicker(context,
+                //   //     title: CustomLocalizations.of(context).total +(this.widget.currentFood.calorie.toInt()*this.widget.foodWeight/100).toString() + "Kcal",
+                //   //     normalIndex: 0,
+                //   //     isChangeColor: true,
+                //   //     data: mealsName, clickCallBack: (int index, var item) {
+                //   //       if(index == 0){
+                //   //         EasyLoading.showSuccess('Great Success!', maskType: EasyLoadingMaskType.clear,  );
+                //   //         // print("点击了早餐");
+                //   //         // FoodRecognizer.addFoodToMealName("breakfast");
+                //   //       }else if(index == 1){
+                //   //         // print("点击了午餐");
+                //   //         // FoodRecognizer.addFoodToMealName("lunch");
+                //   //       }else if(index == 2){
+                //   //         // print("点击了晚餐");
+                //   //         // FoodRecognizer.addFoodToMealName("dinner");
+                //   //       }
+                //   //     });
+                // },
               ),
 
               SizedBox(height:15),
@@ -387,7 +473,7 @@ class _FoodDetailsState extends State<FoodDetails> {
       final double fontSize = isTouched ? 25 : 16;
       final double radius = isTouched ? 100 : 90;
       switch (i) {
-        case 0:
+        case 0:{
           return PieChartSectionData(
             color: const Color(0xff09edfe),///碳水
             value: this.widget.currentFood.carbohydrate,
@@ -396,19 +482,7 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
-          // {
-          //   if(this.widget.currentFood.carbohydrate>0){
-          //     return PieChartSectionData(
-          //       color: const Color(0xff09edfe),///碳水
-          //       value: this.widget.currentFood.carbohydrate,
-          //       title: (calculatePercent('carbohydrate')*100).floor().toString()+'%',
-          //       radius: radius,
-          //       titleStyle: TextStyle(
-          //           fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          //     );
-          //   }
-          //   break;
-          // }
+        }
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff8b250),  ///脂肪
@@ -419,28 +493,6 @@ class _FoodDetailsState extends State<FoodDetails> {
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 2:
-
-          return PieChartSectionData(
-            color: const Color(0xff845bef),  ///胆固醇
-            value: this.widget.currentFood.cholesterol,
-            title: (calculatePercent('cholesterol')*100).floor().toString().toString()+'%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          );
-        case 3:
-          // this.widget.currentFood.cellulose>0?
-          return PieChartSectionData(
-            color: const Color(0xff13d38e),///纤维素
-            value: this.widget.currentFood.cellulose,
-            title: (calculatePercent('cellulose')*100).floor().toString().toString()+'%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-          );
-
-        case 4:
-
           return PieChartSectionData(
             color: const Color(0xffff5983),///蛋白质
             value: this.widget.currentFood.protein,
@@ -449,6 +501,39 @@ class _FoodDetailsState extends State<FoodDetails> {
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
+
+        case 3:
+          // this.widget.currentFood.cellulose>0?
+          return PieChartSectionData(
+            color: const Color(0xff13d38e),///纤维素
+            value: this.widget.currentFood.cellulose,
+            title:
+            this.widget.currentFood.cellulose>0?
+            (calculatePercent('cellulose')*100).floor().toString().toString()+'%'
+            :" "
+            ,
+
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+
+        case 4:
+          return PieChartSectionData(
+            color: const Color(0xff845bef),  ///胆固醇
+            value: this.widget.currentFood.cholesterol,
+            title:
+            // (calculatePercent('cholesterol')*100).floor().toString().toString()+'%',
+            this.widget.currentFood.cholesterol>0?
+            (calculatePercent('cholesterol')*100).floor().toString().toString()+'%'
+                :" "
+            ,
+
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+
 
         default:
           return null;

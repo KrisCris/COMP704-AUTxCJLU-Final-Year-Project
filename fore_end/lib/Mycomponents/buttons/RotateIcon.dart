@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'dart:math' as math;
 
+import 'package:fore_end/MyTool/util/MyTheme.dart';
+
 ///简化版的IconButton,专门用于需要旋转的图标，没有很复杂的功能
 ///
 class RotateIcon extends StatefulWidget {
@@ -24,6 +26,9 @@ class RotateIcon extends StatefulWidget {
   ///点击事件
   Function onTap;
 
+  bool autoPlay;
+  bool recycle;
+
   ///是否旋转
   ValueNotifier<bool> isRotate;
 
@@ -31,12 +36,15 @@ class RotateIcon extends StatefulWidget {
       {Key key,
       this.onTap,
       this.angle = math.pi,
+        this.autoPlay = false,
+        this.recycle = false,
       @required this.icon,
       this.rotateTime = 150,
       this.iconSize = 12,
-      this.iconColor = Colors.blue})
+      Color iconColor})
       : super(key: key){
     this.isRotate = ValueNotifier(false);
+    this.iconColor = MyTheme.convert(ThemeColorName.NormalIcon,color: iconColor);
   }
 
   void rotate(){
@@ -57,6 +65,11 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
   bool fowardRotating = false;
 
   @override
+  void dispose() {
+    this.angleAnimation.dispose();
+    super.dispose();
+  }
+  @override
   void didUpdateWidget(covariant RotateIcon oldWidget) {
     widget.isRotate = oldWidget.isRotate;
   }
@@ -66,11 +79,28 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
     widget.isRotate.addListener(() {
       this.rotate();
     });
+
     //初始化动画
     this.angleAnimation.initAnimation(0, widget.angle, widget.rotateTime, this,
         () {
       setState(() {});
     });
+    if(this.widget.recycle){
+      this.angleAnimation.addStatusListener((status) {
+        if(status == AnimationStatus.completed){
+          this.angleAnimation.initAnimation(0, widget.angle, widget.rotateTime, this,
+                  () {
+                setState(() {});
+              });
+          this.angleAnimation.forward();
+        }
+      });
+    }
+    if(this.widget.autoPlay){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        this.rotate();
+      });
+    }
   }
 
   @override
@@ -81,13 +111,15 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
           angle: this.angleAnimation.value,
           child: Icon(
             widget.icon,
-            color: Colors.blue,
+            color: this.widget.iconColor,
           ),
         ));
   }
 
   ///当按钮被点击的时候执行动画效果，以及设定的 [onTap] 函数
   void _innerOnTap() {
+    if(this.widget.autoPlay)return;
+
     if (this.fowardRotating) {
       this.fowardRotating = false;
       this.angleAnimation.reverse();
