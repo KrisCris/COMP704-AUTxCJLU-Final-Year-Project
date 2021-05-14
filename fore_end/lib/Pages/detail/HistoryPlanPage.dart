@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
@@ -258,34 +259,34 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void setValue(List pagesData){
 
 
-    String foodNames;
-    double foodCalorie;
+    // String foodNames;
+    // double foodCalorie;
     this.index=pagesData.length;
     pagesData.forEach((eachPlan) {
       this.index++;
-      Map consumption = eachPlan["consumption"];
-      Map planBrief = eachPlan["planBrief"];
-      List weeklyDetails = eachPlan["weeklyDetails"];
-
-
-      int proteinHighDays = consumption["proteinHigh"]["days"];
-      int proteinLowDays = consumption["proteinLow"]["days"];
-
-      double accumCalories = consumption["accumCalories"].toDouble();
-      double accumProtein = consumption["accumProtein"].toDouble();
-      double avgCalories = consumption["avgCalories"].toDouble();
-      double avgProtein = consumption["avgProtein"].toDouble();
-
-      int planBeignTime = planBrief["begin"];
-      int goalWeight = planBrief["goalWeight"].toInt();
-      bool hasFinished = planBrief["hasCompleted"];
-      int achievedWeight = 0;
-      int planEndTime = 0;
-      if(hasFinished){
-        achievedWeight = planBrief["achievedWeight"].toInt();
-        planEndTime = planBrief["realEnd"];
-      }
-      int delayPlanTimes = eachPlan["exts"];
+      // Map consumption = eachPlan["consumption"];
+      // Map planBrief = eachPlan["planBrief"];
+      // List weeklyDetails = eachPlan["weeklyDetails"];
+      //
+      //
+      // int proteinHighDays = consumption["proteinHigh"]["days"];
+      // int proteinLowDays = consumption["proteinLow"]["days"];
+      //
+      // double accumCalories = consumption["accumCalories"].toDouble();
+      // double accumProtein = consumption["accumProtein"].toDouble();
+      // double avgCalories = consumption["avgCalories"].toDouble();
+      // double avgProtein = consumption["avgProtein"].toDouble();
+      //
+      // int planBeignTime = planBrief["begin"];
+      // int goalWeight = planBrief["goalWeight"].toInt();
+      // bool hasFinished = planBrief["hasCompleted"];
+      // int achievedWeight = 0;
+      // int planEndTime = 0;
+      // if(hasFinished){
+      //   achievedWeight = planBrief["achievedWeight"].toInt();
+      //   planEndTime = planBrief["realEnd"];
+      // }
+      // int delayPlanTimes = eachPlan["exts"];
 
       ///如果为0就显示 计划还在进行
 
@@ -299,7 +300,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     return Column(
       children: [
         TitleText(
-          text: CustomLocalizations.of(context).shedWeight,
+          text: Plan.planTypes[this.data[idx]["planBrief"]["type"]].toUpperCase(),
           underLineLength: 0.5,
           fontSize: 25,
           maxWidth: 0.8,
@@ -409,9 +410,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
           rightText: " Times",
           rightValue: this.numToString(this.data[idx]["exts"]),
         ),
-        SizedBox(
-          height: 15,
-        ),
+        // SizedBox(
+        //   height: 15,
+        // ),
         // TitleText(
         //   text: CustomLocalizations.of(context).comment,
         //   underLineLength: 0.5,
@@ -454,7 +455,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                 decoration: BoxDecoration(
                   border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
-                height: ScreenTool.partOfScreenHeight(0.8),
+                height: ScreenTool.partOfScreenHeight(0.82),
                 width: ScreenTool.partOfScreenWidth(0.9),
                 child: this.getColumnContent(index)
             ),
