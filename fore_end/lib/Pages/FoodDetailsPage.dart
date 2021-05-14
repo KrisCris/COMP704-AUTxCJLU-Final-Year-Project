@@ -33,11 +33,10 @@ import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 class FoodDetails extends StatefulWidget {
   Food currentFood;
   bool isSuitable;
-  // GlobalKey<ValueAdjusterState> valueAdjusterKey;
   GlobalKey<ValueAdjusterState> valueAdjusterKey;
   bool testExclamition;
   String mealType;
-  int foodWeight = 100;
+  int foodWeight = 10;
 
 
 
@@ -96,7 +95,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
   void getRecomFoods(int foodId) async {
     User u= User.getInstance();
-    Response res = await Requests.getRecommandFood({
+    Response res = await Requests.getRecommandFood(context,{
       'uid':u.uid,
       'pid': u.plan.id,
       'fid': foodId,
@@ -367,7 +366,6 @@ class _FoodDetailsState extends State<FoodDetails> {
 
               SizedBox(height:15),
               CustomButton(
-                disabled: false,
                 bgColor: MyTheme.convert(ThemeColorName.ComponentBackground),
                 text: CustomLocalizations.of(context).resultPageQuestion,
                 isBold: true,
@@ -388,7 +386,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                   List<Food> selectedFood=new List<Food>();
                   selectedFood.add(this.widget.currentFood);
 
-                  Response res = await Requests.consumeFoods({
+                  Response res = await Requests.consumeFoods(context,{
                     "uid": u.uid,
                     "token": u.token,
                     "pid": u.plan.id,
@@ -413,32 +411,7 @@ class _FoodDetailsState extends State<FoodDetails> {
                   EasyLoading.showSuccess('Add Success!', maskType: EasyLoadingMaskType.clear,  );
                   // Navigator.of(context).pop(true);
                 },
-                // {
-                //
-                //   ///测试警示标志
-                //   // setState(() {
-                //   //   this.widget.testExclamition=!this.widget.testExclamition;
-                //   // });
-                //
-                //   ///点击展开添加食物计划
-                //   // JhPickerTool.showStringPicker(context,
-                //   //     title: CustomLocalizations.of(context).total +(this.widget.currentFood.calorie.toInt()*this.widget.foodWeight/100).toString() + "Kcal",
-                //   //     normalIndex: 0,
-                //   //     isChangeColor: true,
-                //   //     data: mealsName, clickCallBack: (int index, var item) {
-                //   //       if(index == 0){
-                //   //         EasyLoading.showSuccess('Great Success!', maskType: EasyLoadingMaskType.clear,  );
-                //   //         // print("点击了早餐");
-                //   //         // FoodRecognizer.addFoodToMealName("breakfast");
-                //   //       }else if(index == 1){
-                //   //         // print("点击了午餐");
-                //   //         // FoodRecognizer.addFoodToMealName("lunch");
-                //   //       }else if(index == 2){
-                //   //         // print("点击了晚餐");
-                //   //         // FoodRecognizer.addFoodToMealName("dinner");
-                //   //       }
-                //   //     });
-                // },
+
               ),
 
               SizedBox(height:15),
@@ -454,7 +427,7 @@ class _FoodDetailsState extends State<FoodDetails> {
 
   }
   Widget getValueAdjuster() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:this.widget.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,);
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:this.widget.foodWeight,valueWeight: 10,key: this.widget.valueAdjusterKey,lower:10,upper: 300,);
     valueAdjuster.onValueChange = (){
       setState(() {
         print("ValueAdjuster onValueChange");

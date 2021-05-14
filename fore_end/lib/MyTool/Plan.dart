@@ -84,7 +84,7 @@ abstract class Plan {
           dailyCaloriesLowerLimit,
           dailyProteinUpperLimit,
           dailyProteinLowerLimit);
-    } else if (planType == 2) {
+    } else if (planType == 3) {
       return BuildMusclePlan(
           id,
           startTime,
@@ -95,7 +95,7 @@ abstract class Plan {
           dailyCaloriesLowerLimit,
           dailyProteinUpperLimit,
           dailyProteinLowerLimit);
-    } else if (planType == 3) {
+    } else if (planType == 2) {
       return MaintainPlan(
           id,
           startTime,
@@ -213,6 +213,7 @@ class ShedWeightPlan extends Plan {
   Future<int> calculateDelayDays() async {
     User u = User.getInstance();
     Response res = await Requests.calculateDelayTime(
+      null,
         {"uid": u.uid, "token": u.token, "pid": this.id});
     if (res != null && res.data['code'] == 1) {
       this.calculatedDelayDays = res.data['data']['ext'];
@@ -237,6 +238,7 @@ class ShedWeightPlan extends Plan {
               CustomLocalizations.of(context).planDelayChoose,
           onClickAccept: () async {
             Response res = await Requests.delayPlan(
+              context,
                 {"uid": u.uid, "token": u.token, "pid": this.id});
             if (res != null && res.data['code'] == 1) {
               this.extendDays = res.data['data']['ext'];
@@ -261,7 +263,7 @@ class ShedWeightPlan extends Plan {
             needCancel: false,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.finishPlan({
+            Response res = await Requests.finishPlan(context,{
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
@@ -299,7 +301,7 @@ class ShedWeightPlan extends Plan {
           needCancel: true,
         );
         updt.onUpdate = () async {
-          Response res = await Requests.updateBody({
+          Response res = await Requests.updateBody(context,{
             "uid": u.uid,
             "token": u.token,
             "weight": updt.getWeight(),
@@ -393,6 +395,7 @@ class ShedWeightPlan extends Plan {
                 CustomLocalizations.of(context4).planDelayChoose,
             onClickAccept: () async {
               Response res = await Requests.delayAndUpdatePlan(
+                  context,
                   {"uid": u.uid, "token": u.token, "pid": this.id});
               if (res != null && res.data['code'] == 1) {
                 this.extendDays = res.data['data']['ext'];
@@ -400,7 +403,8 @@ class ShedWeightPlan extends Plan {
               }
             },
             onClickFinish: () async {
-              Response res = await Requests.finishPlan({
+              Response res = await Requests.finishPlan(
+                  context, {
                 "uid": u.uid,
                 "token": u.token,
                 "pid": this.id,
@@ -438,7 +442,7 @@ class BuildMusclePlan extends Plan {
     double dailyProteinUpperLimit,
     double dailyProteinLowerLimit,
   ) : super._internal(
-            2,
+            3,
             id,
             startTime,
             endTime,
@@ -462,7 +466,7 @@ class BuildMusclePlan extends Plan {
 
   @override
   String getPlanType() {
-    return Plan.planTypes[2];
+    return Plan.planTypes[3];
   }
 
   @override
@@ -508,7 +512,8 @@ class BuildMusclePlan extends Plan {
             needCancel: false,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.finishPlan({
+            Response res = await Requests.finishPlan(context,
+                {
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
@@ -546,7 +551,8 @@ class BuildMusclePlan extends Plan {
             needCancel: true,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.updateBody({
+            Response res = await Requests.updateBody(
+                context,{
               "uid": u.uid,
               "token": u.token,
               "weight": updt.getWeight(),
@@ -577,7 +583,7 @@ class MaintainPlan extends Plan {
     double dailyProteinUpperLimit,
     double dailyProteinLowerLimit,
   ) : super._internal(
-            3,
+            2,
             id,
             startTime,
             endTime,
@@ -597,7 +603,7 @@ class MaintainPlan extends Plan {
 
   @override
   String getPlanType() {
-    return Plan.planTypes[3];
+    return Plan.planTypes[2];
   }
 
   @override
@@ -622,7 +628,8 @@ class MaintainPlan extends Plan {
             needCancel: true,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.updateBody({
+            Response res = await Requests.updateBody(
+                context,{
               "uid": u.uid,
               "token": u.token,
               "weight": updt.getWeight(),

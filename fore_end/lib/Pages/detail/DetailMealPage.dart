@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
@@ -81,6 +82,7 @@ class DetailMealPageState extends State<DetailMealPage> {
     DateTime nowCurrent = DateTime.now();
     DateTime today = DateTime(nowCurrent.year,nowCurrent.month,nowCurrent.day);
     if(settingDay.compareTo(today) == 0){
+      this.meal = [];
       this.meal = u.meals.value;
       if(mounted){
         setState(() {});
@@ -93,7 +95,8 @@ class DetailMealPageState extends State<DetailMealPage> {
     User u = User.getInstance();
     this.meal = null;
     setState(() {});
-    Response res = await Requests.dailyMeal({
+    Response res = await Requests.dailyMeal(
+        context,{
       "uid":u.uid,
       "token":u.token,
       "begin":time.millisecondsSinceEpoch/1000,
@@ -108,18 +111,16 @@ class DetailMealPageState extends State<DetailMealPage> {
           Meal(mealName: "lunch"),
           Meal(mealName: "dinner")
         ];
+
         for(Map m in res.data['data']['b']){
-          this.meal[0].foods = [];
           this.meal[0].time = m['time']*1000;
           this.meal[0].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['l']){
-          this.meal[1].foods = [];
           this.meal[1].time = m['time']*1000;
           this.meal[1].addFood(new Food.fromJson(m));
         }
         for(Map m in res.data['data']['d']){
-          this.meal[2].foods = [];
           this.meal[2].time = m['time']*1000;
           this.meal[2].addFood(new Food.fromJson(m));
         }
@@ -134,7 +135,6 @@ class DetailMealPageState extends State<DetailMealPage> {
   Widget build(BuildContext context) {
     List<Widget> col = [
       SizedBox(height: ScreenTool.partOfScreenHeight(0.06)),
-
       Stack(
         children: [
           Row(
@@ -169,21 +169,37 @@ class DetailMealPageState extends State<DetailMealPage> {
       ),
       SizedBox(height:20)
     ];
-    if(this.meal == null){
+    if(this.meal == null) {
       col.add(
-        Expanded(
-            child: Center(
-              child: TitleText(
-                alignment: Alignment.center,
-                text: "Searching history meals...",
-                maxWidth: 0.9,
-                maxHeight: 50,
-                underLineLength: 0,
-                fontSize: 16,
-              ),
-            )
+          Expanded(
+              child: Center(
+                child: TitleText(
+                  alignment: Alignment.center,
+                  text: CustomLocalizations.of(context).searchHistoryMeal,
+                  maxWidth: 0.9,
+                  maxHeight: 50,
+                  underLineLength: 0,
+                  fontSize: 16,
+                ),
+              )
 
-        )
+          )
+      );
+    }else if(this.meal.isEmpty || (this.meal[0].foods.isEmpty && this.meal[1].foods.isEmpty && this.meal[2].foods.isEmpty) ){
+      col.add(
+          Expanded(
+              child: Center(
+                child: TitleText(
+                  alignment: Alignment.center,
+                  text: CustomLocalizations.of(context).noFoodSearch,
+                  maxWidth: 0.9,
+                  maxHeight: 50,
+                  underLineLength: 0,
+                  fontSize: 16,
+                ),
+              )
+
+          )
       );
     }else{
       int totalCal = 0;

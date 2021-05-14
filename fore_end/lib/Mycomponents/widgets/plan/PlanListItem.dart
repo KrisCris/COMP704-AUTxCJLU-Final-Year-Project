@@ -7,7 +7,7 @@ class PlanTextItem extends StatefulWidget {
 
   String leftText; //左侧显示文字
   String rightText; //右侧显示文字
-  int rightValue; //右侧显示数值
+  String rightValue; //右侧显示数值
   double textSize;
   bool isShowRightValue;
   bool isShowRightText;
@@ -64,7 +64,7 @@ class _PlanTextItemState extends State<PlanTextItem> {
           // (widget.rightComponent as Widget),
           Container(
             child: Text(
-              widget.isShowRightValue?this.toThousands(widget.rightValue)+" "+widget.rightText: widget.rightText,
+              widget.isShowRightValue?widget.rightValue+" "+widget.rightText: widget.rightText,
               style: TextStyle(fontSize: widget.textSize, color: MyTheme.convert(ThemeColorName.NormalText),fontFamily: 'Futura'),
             ),
           ),

@@ -227,6 +227,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   Future<void> checkVerifyCode(String emailVal, String codeVal) async {
     try {
       Response res = await Requests.checkVerifyCode(
+        context,
           {"email": emailVal, "auth_code": codeVal});
       if (res.data['code'] == 1) {
         widget.onCheckSuccess();
@@ -246,7 +247,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   ///向邮箱中发送验证码
   Future<void> sendEmail(String emailVal) async {
     try {
-      Response res = await Requests.sendRegisterEmail({"email": emailVal});
+      Response res = await Requests.sendRegisterEmail(context,{"email": emailVal});
     } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());
@@ -256,7 +257,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   //TODO: zsk 补充注释
   Future<void> sendSecurityCode(String emailVal) async {
     try {
-      Response res = await Requests.sendSecurityCode({"email": emailVal});
+      Response res = await Requests.sendSecurityCode(context,{"email": emailVal});
     } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());

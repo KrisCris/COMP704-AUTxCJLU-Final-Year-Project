@@ -88,8 +88,12 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       ///如果当前这餐已经有了，则减去
       this.caloriesLimit =
           recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
+      if(this.caloriesLimit <=0){
+        this.caloriesLimit = 1;
+      }
     }
-    Requests.recommandFood({
+    Requests.recommandFood(
+        context,{
       "uid": u.uid,
       "token": u.token,
       "pid": u.plan.id,
@@ -102,6 +106,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         for (List m in res.data['data']['randFoods'].values) {
           for (Map fd in m) {
             Food f = new Food.fromJson(fd);
+            f.weight = 10;
             this.recommendedFood.add(f);
           }
         }
@@ -185,7 +190,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
         TitleText(
           text: CustomLocalizations.of(context).recommandMeal,
           underLineLength: 0,
-          maxHeight: 20,
+          maxHeight: 28,
           fontSize: 15,
         ),
       ],
@@ -322,7 +327,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         " " +
                         CustomLocalizations.of(context).to +
                         " " +
-                        this.widget.mealType,
+                        CustomLocalizations.of(context).getContent(widget.mealType),
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
@@ -336,7 +341,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         m = new Meal(mealName: widget.mealType);
                         newMeal = true;
                       }
-                      Response res = await Requests.consumeFoods({
+                      Response res = await Requests.consumeFoods(
+                          context,{
                         "uid": u.uid,
                         "token": u.token,
                         "pid": u.plan.id,

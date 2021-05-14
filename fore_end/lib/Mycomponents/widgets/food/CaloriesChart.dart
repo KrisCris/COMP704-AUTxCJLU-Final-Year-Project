@@ -50,14 +50,14 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   int touchedIndex;
 
   Map<DateTime, double> localDateValueMap = new Map<DateTime, double>();
-  Map<DateTime, double> offlineLocalDateValueMap = new Map<DateTime, double>();
 
-  ///下面的三种会变化的属性都要放到State里面
+
   ///保存周几对应的现实日期，根据今天的时间来计算
   List<DayInfo> weekDateInfos;
+  ///今天的数据（或者是选中的那天的数据）
   DayInfo todayInfo;
 
-  ///来判断今天是周几，来决定突出今天的条形柱的颜色
+  ///初始化或者切换星期的时候，重置每周的数据
   void resetWeekDateInfos(DateTime settingday){
     DateTime settingZero = DateTime(settingday.year, settingday.month, settingday.day, 0, 0, 0);
     DateTime monday = settingZero.add(Duration(days: (settingZero.weekday - 1) * -1));
@@ -124,7 +124,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     int endTime =
         (this.weekDateInfos[6].date.millisecondsSinceEpoch / 1000).floor();
     List oneWeekCaloriesList = new List();
-    Response res = await Requests.getCaloriesIntake({
+    Response res = await Requests.getCaloriesIntake(context,{
       "begin": beginTime,
       "end": endTime,
       "uid": User.getInstance().uid,

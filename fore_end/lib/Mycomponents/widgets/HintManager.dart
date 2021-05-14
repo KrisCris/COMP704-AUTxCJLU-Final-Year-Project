@@ -69,7 +69,7 @@ class HintManager{
                     needHeight: false);
                 updateBody.onUpdate = () async {
                   User u = User.getInstance();
-                  Response res = await Requests.finishPlan({
+                  Response res = await Requests.finishPlan(context,{
                     "uid": u.uid,
                     "token": u.token,
                     "pid": u.plan?.id ?? -1,
@@ -112,6 +112,7 @@ class HintManager{
                       CustomLocalizations.of(context).planDelayChoose,
                   onClickAccept: () async {
                     Response res = await Requests.delayPlan(
+                      context,
                         {"uid": u.uid, "token": u.token, "pid": u.plan.id});
                     if (res != null && res.data['code'] == 1) {
                       u.plan.extendDays = res.data['data']['ext'];
@@ -138,7 +139,9 @@ class HintManager{
                     needCancel: false,
                   );
                   updt.onUpdate = () async {
-                    Response res = await Requests.finishPlan({
+                    Response res = await Requests.finishPlan(
+                        context,
+                        {
                       "uid": u.uid,
                       "token": u.token,
                       "pid": u.plan.id,
