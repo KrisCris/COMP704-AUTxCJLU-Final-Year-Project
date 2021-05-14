@@ -110,6 +110,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       List LocalOneWeekCaloriesList = new List();
       LocalOneWeekCaloriesList = jsonDecode(json);
       this.assignValueBasedOnList(LocalOneWeekCaloriesList);
+      this.todayInfo.value = User.getInstance().getTodayCaloriesIntake();
       setState(() {});
     } else {
       this.getHistoryCalories();
@@ -154,7 +155,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
         }
       }
     });
-    this.todayInfo.value = User.getInstance().getTodayCaloriesIntake();
+
     setState(() {});
   }
 
