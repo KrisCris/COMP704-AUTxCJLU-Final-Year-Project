@@ -698,7 +698,10 @@ class CustomLocalizations {
       "en":"Food Nutrition Page",
       "zh":"食物营养信息页"
     },
-
+    "planIsGoing":{
+      "en":"Plan still going",
+      "zh":"项目正在进行中"
+    },
 
 
 
@@ -1078,6 +1081,7 @@ class CustomLocalizations {
   get weightUpdateHint => getContent("weightUpdateHint");
   get passDeadlineHint => getContent("passDeadlineHint");
   get recommendBoxHeader => getContent("recommendBoxHeader");
+  get planIsGoing => getContent("planIsGoing");
 
 }
 
