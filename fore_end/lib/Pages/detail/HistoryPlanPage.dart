@@ -318,7 +318,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).finishPlan,
           rightText: "",
-          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.tsToStr(this.data[idx]["planBrief"]["realEnd"]):"未完成",
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.tsToStr(this.data[idx]["planBrief"]["realEnd"]):CustomLocalizations.of(context).planIsGoing,
           isShowRightValue: true,
         ),
         SizedBox(
@@ -354,6 +354,12 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
           rightText: "g",
           rightValue: this.numToString(this.data[idx]["consumption"]["avgProtein"]),
         ),
+
+        PlanTextItem(
+          leftText: CustomLocalizations.of(context).goalWeight,
+          rightText: "Kg",
+          rightValue: this.numToString(this.data[idx]["planBrief"]["goalWeight"]),
+        ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightStart,
           rightText: "Kg",
@@ -362,8 +368,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightFinish,
           rightText: "Kg",
-          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.numToString(this.data[idx]["planBrief"]["achievedWeight"]):"未完成",
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.numToString(this.data[idx]["planBrief"]["achievedWeight"]):"--",
         ),
+
         SizedBox(
           height: 15,
         ),
@@ -393,11 +400,6 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
           CustomLocalizations.of(context).caloriesInsufficient,
           rightText: " Days",
           rightValue: this.numToString(this.data[idx]["consumption"]["calsLow"]["days"]),
-        ),
-        PlanTextItem(
-          leftText: CustomLocalizations.of(context).caloriesOver,
-          rightText: " Days",
-          rightValue: this.numToString(this.data[idx]["consumption"]["proteinHigh"]["days"]),
         ),
         PlanTextItem(
           leftText:
