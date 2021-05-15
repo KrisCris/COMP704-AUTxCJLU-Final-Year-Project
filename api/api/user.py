@@ -1,13 +1,14 @@
 import base64
-from flask import Blueprint, request
+
 from flasgger import swag_from
+from flask import Blueprint
 from werkzeug.security import generate_password_hash
 
-from db.PlanDetail import PlanDetail
 from db.Plan import Plan
+from db.PlanDetail import PlanDetail
 from db.User import User
-from util.Common.user import *
 from util.Common.func import *
+from util.Common.user import *
 
 user = Blueprint(name='user', import_name=__name__)
 

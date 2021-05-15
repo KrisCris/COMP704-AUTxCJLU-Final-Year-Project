@@ -48,7 +48,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: []
+          example: [ ]
   -1:
     description: Login Required
     schema:
@@ -63,4 +63,4 @@ responses:
           example: 'login required'
         data:
           type: array
-          example: []
+          example: [ ]

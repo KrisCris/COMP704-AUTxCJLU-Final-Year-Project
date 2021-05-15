@@ -16,14 +16,12 @@ class Plan(db.Model):
     realEnd = db.Column(db.INTEGER)
     completed = db.Column(db.BOOLEAN, nullable=False, default=False)
 
-
     def __init__(self, uid, begin, end, plan_type, goal_weight):
         self.uid = uid
         self.begin = begin
         self.end = end
         self.type = plan_type
         self.goalWeight = goal_weight
-
 
     @staticmethod
     def getUnfinishedPlanByUID(uid):

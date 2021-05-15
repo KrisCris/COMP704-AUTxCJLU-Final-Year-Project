@@ -64,7 +64,7 @@ class PlanDetail(db.Model):
     @staticmethod
     def getWeightTrendInPeriod(uid, begin, end):
         if end == begin:
-            end = end + 24*3600
+            end = end + 24 * 3600
         subPlans = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
             PlanDetail.time <= end).order_by(PlanDetail.time.asc())
         weight_arr = []
@@ -82,7 +82,7 @@ class PlanDetail(db.Model):
     @staticmethod
     def getPastRecords(begin, end, uid):
         if end == begin:
-            end = end + 24*3600
+            end = end + 24 * 3600
         res = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
             PlanDetail.time <= end).order_by(PlanDetail.id.asc()).all()
         return res

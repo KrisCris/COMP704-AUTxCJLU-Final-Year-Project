@@ -4,7 +4,8 @@ def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
     from util.Planner.Intervention import Intervention
     from util.Planner.Baseline import Baseline
 
-    baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal*1.05 if type == 3 else pal, bfp=True, rmr=False)
+    baseline = Baseline(isMale=gender, age=age, height=height, weight=weight, pal=pal * 1.05 if type == 3 else pal,
+                        bfp=True, rmr=False)
     maintainCal = round(baseline.getMaintCals())
 
     # calculate target weight bmi
@@ -49,6 +50,7 @@ def calc_calories(age, height, weight, pal, time, goalWeight, gender, type):
 
 if __name__ == '__main__':
     import time
+
     print(time.time())
     result = calc_calories(age=22, height=175, weight=100, pal=1.6, time=168, goalWeight=70, gender=True, type=1)
     print(time.time())

@@ -33,7 +33,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: []
+          example: [ ]
   -2:
     description: Wrong
     schema:
@@ -63,7 +63,7 @@ responses:
           example: 'Expired'
         data:
           type: array
-          example: []
+          example: [ ]
   -6:
     description: User Not Exist
     schema:
@@ -78,6 +78,6 @@ responses:
           example: 'Not Exist'
         data:
           type: array
-          example: []
+          example: [ ]
 
 

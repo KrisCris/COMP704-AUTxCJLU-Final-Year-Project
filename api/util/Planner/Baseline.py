@@ -22,7 +22,8 @@ INITIAL_DECW = 0
 
 class Baseline(object):
 
-    def __init__(self, isMale=True, age=INITIAL_AGE, height=INITIAL_HEIGHT, weight=INITIAL_WEIGHT, pal=INITIAL_PAL, bfp=INITIAL_BFP, rmr=INITIAL_RMR):
+    def __init__(self, isMale=True, age=INITIAL_AGE, height=INITIAL_HEIGHT, weight=INITIAL_WEIGHT, pal=INITIAL_PAL,
+                 bfp=INITIAL_BFP, rmr=INITIAL_RMR):
         # settled attributes
         self.isMale = isMale
         self.age = age
@@ -129,4 +130,4 @@ class Baseline(object):
 
     def deltaECWEquation(self, caloricIntake):
         return ((self.sodium / self.getMaintCals() + 4000.0 * self.carbIntakePct / (
-                    100.0 * self.getCarbsIn())) * caloricIntake - (self.sodium + 4000.0)) / 3000.0
+                100.0 * self.getCarbsIn())) * caloricIntake - (self.sodium + 4000.0)) / 3000.0

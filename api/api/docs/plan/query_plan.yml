@@ -59,11 +59,11 @@ responses:
         data:
           type: object
           example: {
-    "bmi": 0,
-    "completedCal": 2716,
-    "goalCal": 1390,
-    "low": false,
-    "maintainCal": 3044,
-    "protein_h": 112.87272727272726,
-    "protein_l": 77.6
-  }
+            "bmi": 0,
+            "completedCal": 2716,
+            "goalCal": 1390,
+            "low": false,
+            "maintainCal": 3044,
+            "protein_h": 112.87272727272726,
+            "protein_l": 77.6
+          }
