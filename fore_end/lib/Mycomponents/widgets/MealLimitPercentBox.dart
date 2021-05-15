@@ -10,7 +10,6 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
-import 'package:fore_end/interface/Valueable.dart';
 
 class MealLimitPercentBox extends StatefulWidget {
   final int lowerLimit;
@@ -29,7 +28,7 @@ class MealLimitPercentBox extends StatefulWidget {
       @required this.upperLimit,
       @required this.initVal,
       @required this.changeUnit,
-        this.relatedBox,
+      this.relatedBox,
       double height,
       double width,
       this.borderRadius = 0,
@@ -93,7 +92,7 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
                       iconSize: 23,
                       buttonSize: 23,
                       backgroundOpacity: 0,
-                      onClick: (){
+                      onClick: () {
                         this.minus();
                         this.updateMealPersent();
                       },
@@ -121,7 +120,7 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
                       iconSize: 23,
                       backgroundOpacity: 0,
                       buttonSize: 23,
-                      onClick: (){
+                      onClick: () {
                         this.add();
                         this.updateMealPersent();
                       },
@@ -134,13 +133,13 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
         ),
       ),
       onHorizontalDragUpdate: (details) {
-        if(details.delta.dx < 0){
+        if (details.delta.dx < 0) {
           this.minus();
-        }else{
+        } else {
           this.add();
         }
       },
-      onHorizontalDragEnd: (details){
+      onHorizontalDragEnd: (details) {
         this.updateMealPersent();
       },
     );
@@ -154,50 +153,60 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
   int getValue() {
     return this.currentPersent.value;
   }
-  void add(){
-    if(this.currentPersent.value == this.widget.upperLimit)return;
+
+  void add() {
+    if (this.currentPersent.value == this.widget.upperLimit) return;
 
     int val = this.currentPersent.value + this.widget.changeUnit;
-    if(val > this.widget.upperLimit){
+    if (val > this.widget.upperLimit) {
       this.currentPersent.value = this.widget.upperLimit;
-    }else{
+    } else {
       this.currentPersent.value = val;
-      solveRelatedBoxChange(-1*this.widget.changeUnit);
+      solveRelatedBoxChange(-1 * this.widget.changeUnit);
     }
   }
 
-  void minus(){
-    if(this.currentPersent.value == this.widget.lowerLimit)return;
+  void minus() {
+    if (this.currentPersent.value == this.widget.lowerLimit) return;
     int val = this.currentPersent.value - this.widget.changeUnit;
-    if(val < this.widget.lowerLimit){
+    if (val < this.widget.lowerLimit) {
       this.currentPersent.value = this.widget.lowerLimit;
-    }else{
+    } else {
       this.currentPersent.value = val;
       solveRelatedBoxChange(this.widget.changeUnit);
     }
   }
 
   ///val 是其他相关box需要变化的量
-  void solveRelatedBoxChange(int val){
-    for(GlobalKey<MealLimitPercentBoxState> stt in this.widget.relatedBox){
-      if(val == 0)return;
+  void solveRelatedBoxChange(int val) {
+    for (GlobalKey<MealLimitPercentBoxState> stt in this.widget.relatedBox) {
+      if (val == 0) return;
+
       ///假设val负数
-      if(val < 0){
-        if((stt.currentState.currentPersent.value + val < stt.currentState.widget.lowerLimit)){
-          stt.currentState.currentPersent.value =stt.currentState.widget.lowerLimit;
-          val+=(stt.currentState.currentPersent.value-stt.currentState.widget.lowerLimit).abs();
-        }else{
+      if (val < 0) {
+        if ((stt.currentState.currentPersent.value + val <
+            stt.currentState.widget.lowerLimit)) {
+          stt.currentState.currentPersent.value =
+              stt.currentState.widget.lowerLimit;
+          val += (stt.currentState.currentPersent.value -
+                  stt.currentState.widget.lowerLimit)
+              .abs();
+        } else {
           stt.currentState.currentPersent.value += val;
-          val=0;
+          val = 0;
         }
-      }else{
+      } else {
         ///假设val正数
-        if((stt.currentState.currentPersent.value + val > stt.currentState.widget.upperLimit)){
-          stt.currentState.currentPersent.value =stt.currentState.widget.upperLimit;
-          val-=(stt.currentState.currentPersent.value-stt.currentState.widget.upperLimit).abs();
-        }else{
+        if ((stt.currentState.currentPersent.value + val >
+            stt.currentState.widget.upperLimit)) {
+          stt.currentState.currentPersent.value =
+              stt.currentState.widget.upperLimit;
+          val -= (stt.currentState.currentPersent.value -
+                  stt.currentState.widget.upperLimit)
+              .abs();
+        } else {
           stt.currentState.currentPersent.value += val;
-          val=0;
+          val = 0;
         }
       }
     }
@@ -209,40 +218,36 @@ class MealLimitPercentBoxState extends State<MealLimitPercentBox> {
     int breakfast = 0;
     int lunch = 0;
     int dinner = 0;
-    if(this.widget.name == "breakfast"){
+    if (this.widget.name == "breakfast") {
       breakfast = this.currentPersent.value;
       lunch = this.widget.relatedBox[0].currentState.currentPersent.value;
       dinner = this.widget.relatedBox[1].currentState.currentPersent.value;
-
-    }else if(this.widget.name == "lunch"){
-      breakfast =  this.widget.relatedBox[1].currentState.currentPersent.value;
+    } else if (this.widget.name == "lunch") {
+      breakfast = this.widget.relatedBox[1].currentState.currentPersent.value;
       lunch = this.currentPersent.value;
-      dinner =this.widget.relatedBox[0].currentState.currentPersent.value;
-
-    }else if(this.widget.name == "dinner"){
+      dinner = this.widget.relatedBox[0].currentState.currentPersent.value;
+    } else if (this.widget.name == "dinner") {
       breakfast = this.widget.relatedBox[0].currentState.currentPersent.value;
       lunch = this.widget.relatedBox[1].currentState.currentPersent.value;
       dinner = this.currentPersent.value;
     }
     EasyLoading.show(status: "saving...");
-    Response res = await Requests.setMealIntakeRatio(
-        context,
-        {
-      "uid":u.uid,
-      "token":u.token,
-      "breakfast":breakfast,
-      "lunch":lunch,
-      "dinner":dinner
+    Response res = await Requests.setMealIntakeRatio(context, {
+      "uid": u.uid,
+      "token": u.token,
+      "breakfast": breakfast,
+      "lunch": lunch,
+      "dinner": dinner
     });
-    if(res != null){
-      if(res.data['code'] == 1){
+    if (res != null) {
+      if (res.data['code'] == 1) {
         u.breakfastRatio = breakfast;
         u.lunchRatio = lunch;
         u.dinnerRatio = dinner;
         u.save();
       }
       EasyLoading.dismiss();
-    }else{
+    } else {
       EasyLoading.dismiss();
       Fluttertoast.showToast(
         msg: "please check your internet connection",

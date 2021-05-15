@@ -1,6 +1,7 @@
 from operator import itemgetter
-from sqlalchemy.sql.expression import func
+
 from sqlalchemy import or_
+from sqlalchemy.sql.expression import func
 
 from db.db import db
 
@@ -110,15 +111,18 @@ class Food(db.Model):
         return food_dict
 
     @staticmethod
-    def getFoodsRestricted(category, protein, ch, fat):
-        return Food.query.filter(Food.category == category).filter(Food.ratioF <= fat).filter(
+    def getFoodsRestricted(category, protein, ch, fat, food):
+        f: Food = food
+        return Food.query.filter(Food.name != f.name).filter(Food.cnName != f.cnName).filter(
+            Food.category == category).filter(Food.ratioF <= fat).filter(
             Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
 
     def getKNN(self, k, matchCate=False):
         tupleList = []
         import math
         foods = Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName).filter(
-            Food.category == self.category) if matchCate else Food.query.filter(Food.name != self.name).filter(Food.cnName != self.cnName)
+            Food.category == self.category) if matchCate else Food.query.filter(Food.name != self.name).filter(
+            Food.cnName != self.cnName)
         for f in foods.all():
             tupleList.append((f.id, math.sqrt(
                 math.pow(self.ratioF - f.ratioF, 2) + math.pow(self.ratioP - f.ratioP, 2) + math.pow(

@@ -11,7 +11,11 @@ class SmallFoodBox extends StatefulWidget {
   Food food;
   Function(Food f) onclick;
   SmallFoodBox(
-      {@required this.food,this.onclick, this.pictureSize = 40, TextStyle style, Key key})
+      {@required this.food,
+      this.onclick,
+      this.pictureSize = 40,
+      TextStyle style,
+      Key key})
       : assert(food != null),
         super(key: key) {
     this.style = style ??
@@ -36,24 +40,26 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
   bool showDetail = false;
   @override
   Widget build(BuildContext context) {
-    Image img = widget.food.picture == null?Image.asset(
-      Food.defaultPicturePath,
-      fit: BoxFit.cover,
-      gaplessPlayback: true,
-      width: widget.pictureSize,
-      height: widget.pictureSize,
-    ):Image.memory(
-      base64Decode(widget.food.picture),
-      fit: BoxFit.cover,
-      gaplessPlayback: true,
-      width: widget.pictureSize,
-      height: widget.pictureSize,
-    );
+    Image img = widget.food.picture == null
+        ? Image.asset(
+            Food.defaultPicturePath,
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            width: widget.pictureSize,
+            height: widget.pictureSize,
+          )
+        : Image.memory(
+            base64Decode(widget.food.picture),
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            width: widget.pictureSize,
+            height: widget.pictureSize,
+          );
     return GestureDetector(
       onTap: () {
-        if(this.widget.onclick!=null){
+        if (this.widget.onclick != null) {
           this.widget.onclick(this.widget.food);
-        }else{
+        } else {
           setState(() {
             showDetail = !showDetail;
           });
@@ -66,27 +72,31 @@ class SmallFoodBoxState extends State<SmallFoodBox> {
         children: [
           SizedBox(width: 5),
           ClipRRect(
-            borderRadius: BorderRadius.circular(widget.pictureSize),
-            child: img
-          ),
+              borderRadius: BorderRadius.circular(widget.pictureSize),
+              child: img),
           SizedBox(width: 5),
           AnimatedCrossFade(
             firstChild: SizedBox(width: 0),
             secondChild: Container(
-              height: widget.pictureSize,
-              width: 80,
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                padding: EdgeInsets.only(top: 0),
-                children: [
-                  Text(widget.food.getName(context), style: widget.style),
-                  Text("Calorie: " + widget.food.getCalories().toString() + "Kcal",
-                      style: widget.figureStyle),
-                  Text("Protein: " + widget.food.getProtein().toString() + "mg",
-                      style: widget.figureStyle),
-                ],
-              )
-            ),
+                height: widget.pictureSize,
+                width: 80,
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  padding: EdgeInsets.only(top: 0),
+                  children: [
+                    Text(widget.food.getName(context), style: widget.style),
+                    Text(
+                        "Calorie: " +
+                            widget.food.getCalories().toString() +
+                            "Kcal",
+                        style: widget.figureStyle),
+                    Text(
+                        "Protein: " +
+                            widget.food.getProtein().toString() +
+                            "mg",
+                        style: widget.figureStyle),
+                  ],
+                )),
             crossFadeState: this.showDetail
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,

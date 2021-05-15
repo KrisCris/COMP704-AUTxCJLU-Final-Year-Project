@@ -33,7 +33,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: []
+          example: [ ]
   -3:
     description: User Already Exists
     schema:
@@ -48,7 +48,7 @@ responses:
           example: 'Already Exist'
         data:
           type: array
-          example: []
+          example: [ ]
   -4:
     description: Code Expired
     schema:
@@ -63,7 +63,7 @@ responses:
           example: 'Expired'
         data:
           type: array
-          example: []
+          example: [ ]
   -6:
     description: User Not Exist
     schema:
@@ -78,7 +78,7 @@ responses:
           example: 'Not Exist'
         data:
           type: array
-          example: []
+          example: [ ]
   -8:
     description: Code Check Required
     schema:
@@ -93,6 +93,6 @@ responses:
           example: 'Code Check Required'
         data:
           type: array
-          example: []
+          example: [ ]
 
 

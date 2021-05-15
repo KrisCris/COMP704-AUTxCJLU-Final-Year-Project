@@ -7,15 +7,14 @@ import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/CustomBadge.dart';
 import 'package:fore_end/Pages/FoodDetailsPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-class FoodSearchBar extends StatefulWidget{
+class FoodSearchBar extends StatefulWidget {
   FloatingSearchBar bar;
 
-  FoodSearchBar({Key key}):super(key:key);
+  FoodSearchBar({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +22,7 @@ class FoodSearchBar extends StatefulWidget{
   }
 }
 
-class FoodSearchBarState extends State<FoodSearchBar>{
+class FoodSearchBarState extends State<FoodSearchBar> {
   List<Food> foods;
   GlobalKey<CustomBadgeState> badgeKey;
 
@@ -36,28 +35,31 @@ class FoodSearchBarState extends State<FoodSearchBar>{
 
   @override
   Widget build(BuildContext context) {
-      return Stack(
-        children: [
-          this.getSearchBar(),
-          Transform.translate(
-              offset: Offset(40,25),
-              child:  CustomBadge(key: this.badgeKey),
-          ),
-        ],
-      );
+    return Stack(
+      children: [
+        this.getSearchBar(),
+        Transform.translate(
+          offset: Offset(40, 25),
+          child: CustomBadge(key: this.badgeKey),
+        ),
+      ],
+    );
   }
-  Widget getSearchBar(){
+
+  Widget getSearchBar() {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
       iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
-      queryStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
+      queryStyle: TextStyle(
+          color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       accentColor: MyTheme.convert(ThemeColorName.NormalText),
       border: BorderSide(color: MyTheme.convert(ThemeColorName.NormalText)),
       // backgroundColor: MyTheme.convert(ThemeColorName.PageBackground),
       backgroundColor: MyTheme.convert(ThemeColorName.ComponentBackground),
       hint: CustomLocalizations.of(context).searchFood,
-      hintStyle: TextStyle(color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
+      hintStyle: TextStyle(
+          color: MyTheme.convert(ThemeColorName.NormalText), fontSize: 15),
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 700),
       transitionCurve: Curves.easeInOut,
@@ -69,25 +71,25 @@ class FoodSearchBarState extends State<FoodSearchBar>{
       clearQueryOnClose: true,
       onQueryChanged: (query) {
         print("onQueryChanged is clicked");
+
         ///因为用户比如搜索了一次ham  然后又打了bur变成hambur 这样原本上一次的结果未被清空
         this.foods.clear();
         this.queryFoods(query);
-        query="";
+        query = "";
+
         ///TODO:可以展示一些历史记录
       },
       onSubmitted: (query) {
         this.foods.clear();
         print("onSubmitted is clicked");
         this.queryFoods(query);
-
       },
-      onFocusChanged: (bool isOpen){
-        if(isOpen){
+      onFocusChanged: (bool isOpen) {
+        if (isOpen) {
           //print("打开搜索框");
-        }else {
+        } else {
           this.foods.clear();
-          setState(() {
-          });
+          setState(() {});
         }
       },
       transition: CircularFloatingSearchBarTransition(),
@@ -95,7 +97,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon:  Icon(
+            icon: Icon(
               Icons.search,
               color: MyTheme.convert(ThemeColorName.NormalIcon),
             ),
@@ -115,7 +117,7 @@ class FoodSearchBarState extends State<FoodSearchBar>{
             borderRadius: BorderRadius.circular(8),
           ),
           child: ListView.builder(
-            padding:EdgeInsets.only(top: 1) ,
+            padding: EdgeInsets.only(top: 1),
             itemBuilder: (BuildContext context, int index) {
               Food f = this.foods[index];
               return GestureDetector(
@@ -124,44 +126,64 @@ class FoodSearchBarState extends State<FoodSearchBar>{
                   child: ListTile(
                     ///ClipOval圆形头像    ClipRRect是圆角头像
                     leading:
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(10.0),
-                    //   child: Image.memory( base64.decode(f.picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
-                    // ),
-                    ClipOval(
-                      child: Image.memory( base64.decode(f.picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                        // ClipRRect(
+                        //   borderRadius: BorderRadius.circular(10.0),
+                        //   child: Image.memory( base64.decode(f.picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                        // ),
+                        ClipOval(
+                      child: Image.memory(
+                        base64.decode(f.picture),
+                        height: 45,
+                        width: 45,
+                        fit: BoxFit.fill,
+                        gaplessPlayback: true,
+                      ),
                     ),
+
                     ///Icon(FontAwesomeIcons.hamburger,size: 56,color: MyTheme.convert(ThemeColorName.NormalText),),
-                    title: Text(f.getName(context),style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) ),),
-                    subtitle: Text(f.calorie.toString()+'  Kcal',style: TextStyle(color:MyTheme.convert(ThemeColorName.NormalText) )),
-                    trailing: Icon(Icons.more_vert,color: MyTheme.convert(ThemeColorName.NormalText)),
+                    title: Text(
+                      f.getName(context),
+                      style: TextStyle(
+                          color: MyTheme.convert(ThemeColorName.NormalText)),
+                    ),
+                    subtitle: Text(f.calorie.toString() + '  Kcal',
+                        style: TextStyle(
+                            color: MyTheme.convert(ThemeColorName.NormalText))),
+                    trailing: Icon(Icons.more_vert,
+                        color: MyTheme.convert(ThemeColorName.NormalText)),
                   ),
                 ),
-                onTap:  ( )  {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FoodDetails(currentFood: f,))); ///recomdFoodInfoList: this.recmdFoodDetailInfoList
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FoodDetails(
+                                currentFood: f,
+                              )));
+
+                  ///recomdFoodInfoList: this.recmdFoodDetailInfoList
                 },
               );
             },
-            itemCount:this.foods.length,
+            itemCount: this.foods.length,
           ),
         );
       },
     );
   }
+
   void queryFoods(String foodName) async {
-    Response res = await Requests.searchFood(context,{
-      "name":foodName,
+    Response res = await Requests.searchFood(context, {
+      "name": foodName,
     });
-    if(res.data['code'] == 1){
+    if (res.data['code'] == 1) {
       print("搜索食物成功！");
-      for(Map f in (res.data['data'] as Map).values){
+      for (Map f in (res.data['data'] as Map).values) {
         this.foods.add(Food.fromJson(f));
       }
-      setState((){});
-    }else{
+      setState(() {});
+    } else {
       print("搜索食物失败！");
     }
   }
-
 }

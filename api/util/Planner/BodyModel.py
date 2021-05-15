@@ -1,8 +1,11 @@
-from util.Planner.BodyChange import BodyChange
-from util.Planner.DailyParams import DailyParams
 import math
 
+from util.Planner.BodyChange import BodyChange
+from util.Planner.DailyParams import DailyParams
+
 RK4wt = [1, 2, 3, 4]
+
+
 class BodyModel(object):
     def __init__(self, fat=0, lean=0, glycogen=0, decw=0, therm=0):
         self.RK4wt = [1, 2, 3, 4]
@@ -100,12 +103,12 @@ class BodyModel(object):
         carbintake = dailyParams.getCarbIntake()
         carbsin = baseline.getCarbsIn()
         return so - baseline.sodium - 3000.0 * self.decw - 4000.0 * (
-                    1.0 - carbintake / carbsin)
+                1.0 - carbintake / carbsin)
 
     def dfdt(self, baseline, dailyParams):
         dfdt = (1.0 - self.getp()) * (
-                    dailyParams.calories - self.getTEE(baseline, dailyParams) - self.carbflux(baseline,
-                                                                                              dailyParams)) / 9440.0
+                dailyParams.calories - self.getTEE(baseline, dailyParams) - self.carbflux(baseline,
+                                                                                          dailyParams)) / 9440.0
         return dfdt
 
     def dldt(self, baseline, dailyParams):

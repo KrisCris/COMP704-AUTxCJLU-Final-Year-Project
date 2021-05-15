@@ -43,4 +43,4 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {'stmp': 1127894133}
+          example: { 'stmp': 1127894133 }

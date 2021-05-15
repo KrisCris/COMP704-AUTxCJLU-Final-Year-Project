@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,7 +9,6 @@ import 'package:fore_end/MyTool/util/MyCounter.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/interface/Disable.dart';
-import 'package:fore_end/interface/Themeable.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
 ///定义了输入框的输入类别
@@ -289,7 +289,7 @@ class CustomTextField extends StatefulWidget
 ///混入了 [DisableStateMixIn] 用于控制disable状态
 ///
 class CustomTextFieldState extends State<CustomTextField>
-    with TickerProviderStateMixin,DisableStateMixIn {
+    with TickerProviderStateMixin, DisableStateMixIn {
   ///控制颜色变化的动画
   TweenAnimation<CalculatableColor> colorAnimation =
       TweenAnimation<CalculatableColor>();
@@ -306,7 +306,7 @@ class CustomTextFieldState extends State<CustomTextField>
   ///是否检测状态为correct
   bool isCorrect = false;
 
-  ThemeColorName status= ThemeColorName.Textfield;
+  ThemeColorName status = ThemeColorName.Textfield;
 
   ///颜色变化的动画持续时间
   ///单位：毫秒
@@ -373,8 +373,8 @@ class CustomTextFieldState extends State<CustomTextField>
   ///初始化颜色动画的颜色
   void initColor() {
     this.colorAnimation.initAnimation(
-        MyTheme.convert(status),
-        MyTheme.convert(status), colorChangeDura, this, () {
+        MyTheme.convert(status), MyTheme.convert(status), colorChangeDura, this,
+        () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -431,7 +431,8 @@ class CustomTextFieldState extends State<CustomTextField>
                 this.isCorrect = false;
               } else {
                 //内容非空，先显示后缀图标
-                if (this.status == ThemeColorName.Textfield && widget.isAutoChangeState) {
+                if (this.status == ThemeColorName.Textfield &&
+                    widget.isAutoChangeState) {
                   this.suffixSizeAnimation.beginAnimation();
                 }
                 //若没有设定isAutoCheck，则不执行后续内容
@@ -517,9 +518,8 @@ class CustomTextFieldState extends State<CustomTextField>
               visible: this.lengthAnimation.value == 0 ? false : true,
               child: Transform.translate(
                 offset: Offset(this.calculatePosition(), 0),
-                child: Container(
-                    width: this.lengthAnimation.value,
-                    child: child),
+                child:
+                    Container(width: this.lengthAnimation.value, child: child),
               ));
         });
     return vis;
@@ -537,7 +537,8 @@ class CustomTextFieldState extends State<CustomTextField>
       focusNode: widget._focusNode,
       controller: widget._inputcontroller,
       maxLines: 1,
-      style: TextStyle(fontSize: 18,color: MyTheme.convert(ThemeColorName.NormalText)),
+      style: TextStyle(
+          fontSize: 18, color: MyTheme.convert(ThemeColorName.NormalText)),
       autofocus: widget.isAutoFocus,
       cursorColor: colorAnimation.value,
       cursorWidth: 2,
@@ -575,15 +576,13 @@ class CustomTextFieldState extends State<CustomTextField>
         //文本框基本属性
         hintText: widget.placeholder,
         hintStyle: TextStyle(
-          fontFamily: "Futura",
-          color: MyTheme.convert(ThemeColorName.NormalText),
-          decoration: TextDecoration.none
-        ),
+            fontFamily: "Futura",
+            color: MyTheme.convert(ThemeColorName.NormalText),
+            decoration: TextDecoration.none),
         helperStyle: TextStyle(
             fontFamily: "Futura",
             color: MyTheme.convert(ThemeColorName.NormalText),
-            decoration: TextDecoration.none
-        ),
+            decoration: TextDecoration.none),
         contentPadding: new EdgeInsets.fromLTRB(0, 20, 0, widget.bottomPadding),
         isDense: true,
         helperText: this.isCorrect ? "" : widget.helpText,
@@ -593,14 +592,16 @@ class CustomTextFieldState extends State<CustomTextField>
             ? null
             : widget.errorText,
 
-        suffixIcon: widget.disableSuffix?null:Transform.translate(
-            offset: Offset(10, 5),
-            child: Icon(
-                this.isCorrect
-                    ? FontAwesomeIcons.checkCircle
-                    : FontAwesomeIcons.timesCircle,
-                color: this.colorAnimation.value,
-                size: this.suffixSizeAnimation.value)),
+        suffixIcon: widget.disableSuffix
+            ? null
+            : Transform.translate(
+                offset: Offset(10, 5),
+                child: Icon(
+                    this.isCorrect
+                        ? FontAwesomeIcons.checkCircle
+                        : FontAwesomeIcons.timesCircle,
+                    color: this.colorAnimation.value,
+                    size: this.suffixSizeAnimation.value)),
       ),
       obscureText: widget.inputType == InputFieldType.password,
     );
@@ -623,8 +624,7 @@ class CustomTextFieldState extends State<CustomTextField>
 
   ///设置correct状态时的动画播放
   void setCorrect() {
-    this.colorAnimation.initAnimation(
-        MyTheme.convert(this.status),
+    this.colorAnimation.initAnimation(MyTheme.convert(this.status),
         MyTheme.convert(ThemeColorName.Success), colorChangeDura, this, () {
       setState(() {});
     });
@@ -635,9 +635,7 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置error状态时的动画播放
   @override
   void setError() {
-
-    this.colorAnimation.initAnimation(
-        MyTheme.convert(this.status),
+    this.colorAnimation.initAnimation(MyTheme.convert(this.status),
         MyTheme.convert(ThemeColorName.Error), colorChangeDura, this, () {
       setState(() {});
     });
@@ -650,7 +648,9 @@ class CustomTextFieldState extends State<CustomTextField>
   void setNormal() {
     this.colorAnimation.initAnimation(
         MyTheme.convert(this.status),
-        MyTheme.convert(ThemeColorName.HighLightTextField), colorChangeDura, this, () {
+        MyTheme.convert(ThemeColorName.HighLightTextField),
+        colorChangeDura,
+        this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -660,10 +660,8 @@ class CustomTextFieldState extends State<CustomTextField>
   ///设置warning状态时候的动画播放
   @override
   void setWarning() {
-    this.colorAnimation.initAnimation(
-        MyTheme.convert(this.status),
-        MyTheme.convert(ThemeColorName.Warning),
-        colorChangeDura, this, () {
+    this.colorAnimation.initAnimation(MyTheme.convert(this.status),
+        MyTheme.convert(ThemeColorName.Warning), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -674,10 +672,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setDisabled() {
     //进入禁用状态，直接从当前颜色变化到disable状态
-    this.colorAnimation.initAnimation(
-        MyTheme.convert(this.status),
-        MyTheme.convert(ThemeColorName.Textfield),
-        colorChangeDura, this, () {
+    this.colorAnimation.initAnimation(MyTheme.convert(this.status),
+        MyTheme.convert(ThemeColorName.Textfield), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -690,10 +686,8 @@ class CustomTextFieldState extends State<CustomTextField>
   @override
   void setEnabled() {
     //可用状态，从当前颜色回到theme控制的颜色
-    this.colorAnimation.initAnimation(
-        this.colorAnimation.value,
-        MyTheme.convert(this.status),
-        colorChangeDura, this, () {
+    this.colorAnimation.initAnimation(this.colorAnimation.value,
+        MyTheme.convert(this.status), colorChangeDura, this, () {
       setState(() {});
     });
     this.colorAnimation.beginAnimation();
@@ -726,11 +720,8 @@ class CustomTextFieldState extends State<CustomTextField>
   void setUnFocus() {
     //进入非聚焦状态，correct和error状态都不进行变化，只有normal状态进行变化
     if (this.status == ThemeColorName.HighLightTextField) {
-      this.colorAnimation.initAnimation(
-          MyTheme.convert(this.status),
-          MyTheme.convert(ThemeColorName.Textfield),
-          colorChangeDura,
-          this, () {
+      this.colorAnimation.initAnimation(MyTheme.convert(this.status),
+          MyTheme.convert(ThemeColorName.Textfield), colorChangeDura, this, () {
         setState(() {});
       });
       this.status = ThemeColorName.Textfield;

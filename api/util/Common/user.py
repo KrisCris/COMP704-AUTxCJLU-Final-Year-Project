@@ -3,15 +3,13 @@ import random
 import smtplib
 import string
 import uuid
-
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from werkzeug.security import check_password_hash
 
 from util.Common.constants import DEBUG
 from util.Common.constants import SENDER, SENDER_NAME, SENDER_PW, SMTP_URL
-
 from util.Common.func import reply_json, get_time_gap, get_current_time
 
 '''

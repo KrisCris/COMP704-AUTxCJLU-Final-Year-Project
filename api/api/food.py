@@ -1,16 +1,14 @@
-import cv2
 import random
-from PIL import Image
-from flask import Blueprint, request
+
 from flasgger import swag_from
+from flask import Blueprint, request
 
 from cv.detect import detect as food_detect
-from db.Plan import Plan
 from db.DailyConsumption import DailyConsumption
 from db.Food import Food
-from db.User import User
-from util.Common.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
+from db.Plan import Plan
 from util.Common.func import reply_json, get_relative_days, get_current_time, attributes_receiver, echoErr
+from util.Common.img import base64_to_image, fix_flutter_img_rotation_issue, crop_image_by_coords_2, img_to_b64
 from util.Common.user import require_login
 
 food = Blueprint(name='food', import_name=__name__)
@@ -32,7 +30,6 @@ def detect(*args, **kwargs):
     res = food_detect(img, False)
     if res is None:
         return reply_json(-6)
-    import math
     res_dict = []
     for fr in res:
         #  search in db
@@ -40,7 +37,6 @@ def detect(*args, **kwargs):
         f_db = {}
         if f:
             f_db = f.toDict()
-
 
         # crop image based on results
         food_image = crop_image_by_coords_2(img, int(fr[0]), int(fr[1]), int(fr[2]), int(fr[3]))
@@ -50,7 +46,6 @@ def detect(*args, **kwargs):
 
         # to b64
         b64_fimg = img_to_b64(food_image)
-        import random
         res_dict.append({
             'basic': {'img': b64_fimg, 'name': fr[5]},
             'info': f_db
@@ -139,7 +134,7 @@ def getConsumeHistory(*args, **kwargs):
     result = DailyConsumption.get_periodic_record(begin=begin, end=end, uid=uid)
     return reply_json(
         code=1,
-        data= result
+        data=result
     )
 
 
@@ -204,9 +199,9 @@ def recmdFoodInSearch(*args, **kwargs):
     }
     foods = None
     if planType == 1:
-        foods = Food.getFoodsRestricted(category=food.category, protein=0.2, fat=0.25, ch=0.5)
+        foods = Food.getFoodsRestricted(category=food.category, protein=0.2, fat=0.25, ch=0.5, food=food)
     elif planType == 3:
-        foods = Food.getFoodsRestricted(category=food.category, protein=0.3, fat=0.6, ch=0.1)
+        foods = Food.getFoodsRestricted(category=food.category, protein=0.3, fat=0.6, ch=0.1, food=food)
     elif planType == 2:
         foods = food.getKNN(k=10)
 

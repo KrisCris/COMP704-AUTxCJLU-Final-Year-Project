@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/interface/Disable.dart';
-import 'package:fore_end/interface/Themeable.dart';
 
 class CustomButton extends StatefulWidget with DisableWidgetMixIn {
   ///The radius of border
@@ -87,13 +86,13 @@ class CustomButton extends StatefulWidget with DisableWidgetMixIn {
       this.fontsize = 18.0,
       this.sizeChangeMode = 0,
       this.isBold = false,
-        this.futureLoading = true,
+      this.futureLoading = true,
       bool disabled = false,
       bool canChangeDisabled = true,
       this.radius = 30.0,
       this.hasShadow = false,
       this.width,
-      this.height=45,
+      this.height = 45,
       this.leftMargin = 0.0,
       this.rightMargin = 0.0,
       this.topMargin = 0.0,
@@ -192,6 +191,7 @@ class CustomButtonState extends State<CustomButton>
 
   bool disableChangeDone = true;
   bool loading = false;
+
   ///初次渲染组件时的宽度
   double firstWidth;
 
@@ -245,10 +245,11 @@ class CustomButtonState extends State<CustomButton>
     this
         .fluctuateAnimation
         .initAnimation(0.0, 5.0, (widget.flucDura / 4).round(), this, null);
-    this.lengthAnimation.initAnimation(
-        widget.width, widget.width, widget.lengthDura, this, (){setState(() {
-
-        });});
+    this
+        .lengthAnimation
+        .initAnimation(widget.width, widget.width, widget.lengthDura, this, () {
+      setState(() {});
+    });
     //控制抖动动画次数，每次抖动的偏移量
     this.fluctuateAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -306,12 +307,12 @@ class CustomButtonState extends State<CustomButton>
           this.transparentAnimation.reverseAnimation();
           if (widget.tapFunc != null) {
             var res = widget.tapFunc();
-            if(res is Future){
-              if(widget.futureLoading){
+            if (res is Future) {
+              if (widget.futureLoading) {
                 this.loading = true;
               }
               widget.disabled.value = true;
-              (res as Future).then((value){
+              (res as Future).then((value) {
                 this.loading = false;
                 widget.disabled.value = false;
                 print("Future执行完毕");
@@ -350,53 +351,52 @@ class CustomButtonState extends State<CustomButton>
           color: MyTheme.convert(ThemeColorName.TransparentShadow)
               .withOpacity(this.transparentAnimation.value)),
       child: Container(
-        width: this.lengthAnimation.value,
-        height: widget.height,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.radius),
-            color: this.colorAnimation.value,
-            boxShadow: [
-              widget.hasShadow
-                  ? BoxShadow(
-                      blurRadius: 12, //阴影范围
-                      spreadRadius: 3, //阴影浓度
-                      color: Color(0x33000000), //阴影颜色
-                    )
-                  : BoxShadow(
-                      blurRadius: 0, //阴影范围
-                      spreadRadius: 0, //阴影浓度
-                      color: Color(0x33000000), //阴影颜色
-                    )
-            ]
-        ),
-        margin: EdgeInsets.only(
-            left: widget.leftMargin,
-            right: widget.rightMargin,
-            top: widget.topMargin,
-            bottom: widget.bottomMargin),
-        child: AnimatedCrossFade(
-          firstChild: Center(
-            child: Text(
-              widget.text,
-              textDirection: TextDirection.ltr,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: widget.fontsize,
-                  color: widget.textColor,
-                  fontFamily: "Futura",
-                  decoration: TextDecoration.none,
-                  fontWeight:
-                  widget.isBold ? FontWeight.bold : FontWeight.normal),
+          width: this.lengthAnimation.value,
+          height: widget.height,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.radius),
+              color: this.colorAnimation.value,
+              boxShadow: [
+                widget.hasShadow
+                    ? BoxShadow(
+                        blurRadius: 12, //阴影范围
+                        spreadRadius: 3, //阴影浓度
+                        color: Color(0x33000000), //阴影颜色
+                      )
+                    : BoxShadow(
+                        blurRadius: 0, //阴影范围
+                        spreadRadius: 0, //阴影浓度
+                        color: Color(0x33000000), //阴影颜色
+                      )
+              ]),
+          margin: EdgeInsets.only(
+              left: widget.leftMargin,
+              right: widget.rightMargin,
+              top: widget.topMargin,
+              bottom: widget.bottomMargin),
+          child: AnimatedCrossFade(
+            firstChild: Center(
+              child: Text(
+                widget.text,
+                textDirection: TextDirection.ltr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: widget.fontsize,
+                    color: widget.textColor,
+                    fontFamily: "Futura",
+                    decoration: TextDecoration.none,
+                    fontWeight:
+                        widget.isBold ? FontWeight.bold : FontWeight.normal),
+              ),
             ),
-          ),
-          secondChild: Center(
-            child: Icon(FontAwesomeIcons.spinner,color: MyTheme.convert(ThemeColorName.NormalIcon))
-          ),
-          crossFadeState: this.loading?CrossFadeState.showSecond:CrossFadeState.showFirst,
-          duration: Duration(milliseconds: 300),
-        )
-
-      ),
+            secondChild: Center(
+                child: Icon(FontAwesomeIcons.spinner,
+                    color: MyTheme.convert(ThemeColorName.NormalIcon))),
+            crossFadeState: this.loading
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 300),
+          )),
     );
   }
 
@@ -452,6 +452,6 @@ class CustomButtonState extends State<CustomButton>
 
   @override
   void initEnabled() {
-   this.setEnabled();
+    this.setEnabled();
   }
 }

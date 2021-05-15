@@ -1,5 +1,6 @@
-import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
@@ -41,14 +42,12 @@ class DotPainter extends ContextPainter {
     if (this.context != null) {
       width = context.size.width;
     } else {
-      if(width == 0)
-        width = ScreenTool.partOfScreenWidth(1);
+      if (width == 0) width = ScreenTool.partOfScreenWidth(1);
     }
     if (this.context != null) {
       height = context.size.height;
     } else {
-      if(height == 0)
-        height = width;
+      if (height == 0) height = width;
     }
     configuredSize = new Size(width, height);
     double moveVal = 0;

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
@@ -14,7 +13,7 @@ class PlanChooser extends StatelessWidget {
   GlobalKey<CrossFadeTextState> txt = new GlobalKey<CrossFadeTextState>();
   PlanChooser({this.nextDo});
 
-  void setNextDo(Function f){
+  void setNextDo(Function f) {
     this.nextDo = f;
   }
 
@@ -66,30 +65,25 @@ class PlanChooser extends StatelessWidget {
       borderRadius: 10,
     );
     addMuscle.setOnTap(() {
-      txt.currentState.changeTo(
-          CustomLocalizations.of(context).buildMuscleInfo);
+      txt.currentState
+          .changeTo(CustomLocalizations.of(context).buildMuscleInfo);
     });
     loseWeight.setOnTap(() {
-      txt.currentState.changeTo(
-          CustomLocalizations.of(context).shedWeightInfo);
+      txt.currentState.changeTo(CustomLocalizations.of(context).shedWeightInfo);
     });
     keep.setOnTap(() {
       txt.currentState.changeTo(CustomLocalizations.of(context).maintainInfo);
     });
     CardChooserGroup<int> group = CardChooserGroup<int>(
       initVal: -1,
-      cards: [
-        addMuscle,
-        loseWeight,
-        keep
-      ],
+      cards: [addMuscle, loseWeight, keep],
       direction: CardChooserGroupDirection.vertical,
       mainAxisAlignment: MainAxisAlignment.center,
       gap: 20.0,
     );
-    group.addValueChangeListener((){
+    group.addValueChangeListener(() {
       this.planType = group.getValue();
-      if(group.getValue() >=0){
+      if (group.getValue() >= 0) {
         nextButton.setDisabled(false);
       }
     });
@@ -97,9 +91,9 @@ class PlanChooser extends StatelessWidget {
       children: [
         ClipRect(
           child: Container(
-              width: ScreenTool.partOfScreenWidth(1),
-              height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF172632),
+            width: ScreenTool.partOfScreenWidth(1),
+            height: ScreenTool.partOfScreenHeight(1),
+            color: Color(0xFF172632),
           ),
         ),
         Container(
@@ -134,7 +128,7 @@ class PlanChooser extends StatelessWidget {
                 ],
               ),
               SizedBox(height: ScreenTool.partOfScreenHeight(0.03)),
-              Expanded(child:group),
+              Expanded(child: group),
               SizedBox(height: 10),
               nextButton,
               SizedBox(height: 50),

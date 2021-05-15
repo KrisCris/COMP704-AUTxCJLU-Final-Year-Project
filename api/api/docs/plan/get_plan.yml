@@ -40,7 +40,7 @@ responses:
             'begin': 1788007833, 'end': 1900827386,
             'type': 1, 'goal': 65,
             'hasFinished': False
-        }
+          }
   -6:
     description: plan not exist
     schema:

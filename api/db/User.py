@@ -46,7 +46,6 @@ class User(db.Model):
         self.l_percent = 40
         self.d_percent = 30
 
-
     def add(self):
         db.session.add(self)
         db.session.commit()

@@ -23,7 +23,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: []
+          example: [ ]
   -3:
     description: User Already Exists
     schema:
@@ -38,7 +38,7 @@ responses:
           example: 'Already Exist'
         data:
           type: array
-          example: []
+          example: [ ]
   -5:
     description: Email Sending Failed
     schema:
@@ -53,7 +53,7 @@ responses:
           example: 'Operation Failed'
         data:
           type: array
-          example: []
+          example: [ ]
   -7:
     description: Wait
     schema:

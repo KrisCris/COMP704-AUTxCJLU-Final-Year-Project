@@ -15,17 +15,18 @@ class TitleText extends StatelessWidget {
   Alignment alignment;
   Color fontColor;
   Color dividerColor;
-  TitleText(
-      {this.text = "",
-      this.alignment,
-      this.underLineDistance = 5,
-      double underLineLength,
-      this.fontSize = 14,
-      this.lineWidth = 3,
-      double maxWidth = 100,
-      double maxHeight = 20,
-      Color fontColor,
-      Color dividerColor,}) {
+  TitleText({
+    this.text = "",
+    this.alignment,
+    this.underLineDistance = 5,
+    double underLineLength,
+    this.fontSize = 14,
+    this.lineWidth = 3,
+    double maxWidth = 100,
+    double maxHeight = 20,
+    Color fontColor,
+    Color dividerColor,
+  }) {
     this.maxWidth = ScreenTool.partOfScreenWidth(maxWidth);
     this.maxHeight = ScreenTool.partOfScreenHeight(maxHeight);
     if (underLineLength == null) {
@@ -34,10 +35,10 @@ class TitleText extends StatelessWidget {
       underLineLength = ScreenTool.partOfScreenWidth(underLineLength);
       this.underLineLength = underLineLength;
     }
-    if(fontColor == null){
+    if (fontColor == null) {
       fontColor = MyTheme.convert(ThemeColorName.NormalText);
     }
-    if(dividerColor == null){
+    if (dividerColor == null) {
       dividerColor = MyTheme.convert(ThemeColorName.NormalText);
     }
     this.fontColor = fontColor;

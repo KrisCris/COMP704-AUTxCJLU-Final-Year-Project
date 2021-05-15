@@ -1,6 +1,3 @@
-import math
-
-
 class DailyParams(object):
     def __init__(self, calories=0, carbpercent=0, sodium=0, actparam=0):
         self.calories = calories or 0

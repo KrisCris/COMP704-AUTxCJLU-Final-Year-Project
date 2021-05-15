@@ -55,7 +55,7 @@ class ValueableImageState extends State<ValueableImage>
   @override
   void setDisabled() {
     //如果没有点击事件，则不需要处理disable状态变化
-    if(widget.onTap == null)return;
+    if (widget.onTap == null) return;
 
     setState(() {});
   }
@@ -63,7 +63,7 @@ class ValueableImageState extends State<ValueableImage>
   @override
   void setEnabled() {
     //如果没有点击事件，则不需要处理disable状态变化
-    if(widget.onTap == null)return;
+    if (widget.onTap == null) return;
     setState(() {});
   }
 

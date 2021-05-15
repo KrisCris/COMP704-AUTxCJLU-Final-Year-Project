@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Plan.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
@@ -21,11 +20,11 @@ class PlanNotifier extends StatelessWidget {
       @required double height,
       this.margin = 20,
       Color backgroundColor,
-        Color effectColor
-      }) {
+      Color effectColor}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
-    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
+    this.backgroundColor =
+        backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
     this.effectColor = effectColor;
   }
 
@@ -36,7 +35,9 @@ class PlanNotifier extends StatelessWidget {
     double barThickness = 15;
     ValueBar calories = ValueBar<int>(
       minVal: 0,
-      maxVal: p.dailyCaloriesUpperLimit.floor(),  ///可以作为柱状图的上限
+      maxVal: p.dailyCaloriesUpperLimit.floor(),
+
+      ///可以作为柱状图的上限
       adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,

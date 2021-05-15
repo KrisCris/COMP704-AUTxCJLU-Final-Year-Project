@@ -32,5 +32,5 @@ responses:
           example: 'success'
         data:
           type: array
-          example: [{'time': 11110000, 'weight': 72}, {'time': 146669999, 'weight': 68}, {'time': 1900055453, 'weight': 63}]
+          example: [ { 'time': 11110000, 'weight': 72 }, { 'time': 146669999, 'weight': 68 }, { 'time': 1900055453, 'weight': 63 } ]
     

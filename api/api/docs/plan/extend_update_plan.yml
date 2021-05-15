@@ -24,7 +24,7 @@ parameters:
     required: true
     description: plan id
 responses:
-  1: 
+  1:
     description: successful
     schema:
       properties:
@@ -38,4 +38,4 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {'ext':12}
+          example: { 'ext': 12 }

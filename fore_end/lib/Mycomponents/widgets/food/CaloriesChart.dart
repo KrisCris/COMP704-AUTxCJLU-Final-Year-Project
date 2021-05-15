@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fore_end/MyTool/Plan.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/LocalDataManager.dart';
@@ -15,7 +13,6 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,16 +48,18 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
   Map<DateTime, double> localDateValueMap = new Map<DateTime, double>();
 
-
   ///保存周几对应的现实日期，根据今天的时间来计算
   List<DayInfo> weekDateInfos;
+
   ///今天的数据（或者是选中的那天的数据）
   DayInfo todayInfo;
 
   ///初始化或者切换星期的时候，重置每周的数据
-  void resetWeekDateInfos(DateTime settingday){
-    DateTime settingZero = DateTime(settingday.year, settingday.month, settingday.day, 0, 0, 0);
-    DateTime monday = settingZero.add(Duration(days: (settingZero.weekday - 1) * -1));
+  void resetWeekDateInfos(DateTime settingday) {
+    DateTime settingZero =
+        DateTime(settingday.year, settingday.month, settingday.day, 0, 0, 0);
+    DateTime monday =
+        settingZero.add(Duration(days: (settingZero.weekday - 1) * -1));
     this.weekDateInfos = [
       DayInfo(name: "Monday", abbr: "Mon", value: 0, date: monday),
       DayInfo(
@@ -95,7 +94,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
           date: monday.add(Duration(days: 6))),
     ];
     this.todayInfo = this.weekDateInfos[settingZero.weekday - 1];
-}
+  }
 
   void initialDate() {
     User u = User.getInstance();
@@ -124,7 +123,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     int endTime =
         (this.weekDateInfos[6].date.millisecondsSinceEpoch / 1000).floor();
     List oneWeekCaloriesList = new List();
-    Response res = await Requests.getCaloriesIntake(context,{
+    Response res = await Requests.getCaloriesIntake(context, {
       "begin": beginTime,
       "end": endTime,
       "uid": User.getInstance().uid,
@@ -173,15 +172,16 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   }
 
   void judgeDate({DateTime time}) {
-    DateTime settingDay = DateTime(time.year, time.month, time.day,0,0,0);
+    DateTime settingDay = DateTime(time.year, time.month, time.day, 0, 0, 0);
     DateTime mondayDate = this.weekDateInfos[0].date;
     DateTime sundayDate = this.weekDateInfos[6].date;
 
-    if ((settingDay.isBefore(sundayDate) || settingDay.compareTo(sundayDate) == 0) &&
-        (settingDay.isAfter(mondayDate) || settingDay.compareTo(mondayDate) == 0)
-    ) {
-        ///如果是选择了在目前的一周内 那么什么也不用做  只需要刷新今天的数据颜色
-      this.todayInfo = this.weekDateInfos[settingDay.weekday-1];
+    if ((settingDay.isBefore(sundayDate) ||
+            settingDay.compareTo(sundayDate) == 0) &&
+        (settingDay.isAfter(mondayDate) ||
+            settingDay.compareTo(mondayDate) == 0)) {
+      ///如果是选择了在目前的一周内 那么什么也不用做  只需要刷新今天的数据颜色
+      this.todayInfo = this.weekDateInfos[settingDay.weekday - 1];
     } else {
       this.calculateDate(settingDay);
     }
@@ -192,11 +192,13 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   void calculateDate(DateTime settingDay) {
     String weekDayOfSetting = DateFormat('EEEE').format(settingDay);
     this.resetWeekDateInfos(settingDay);
+
     ///先设定日期处理
     this.getHistoryCalories();
 
     ///从接口获取每一天的数据,只有本地没有时 最后才去获取
   }
+
   ///每次获取数据之前都清空之前的数据
   void clearValue() {
     for (DayInfo df in this.weekDateInfos) {
@@ -292,12 +294,11 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               String weekDay;
               DateTime currentDate = this.weekDateInfos[group.x.toInt()].date;
-              weekDay =formatDate(currentDate, [yyyy, '-', mm, '-', dd]);
+              weekDay = formatDate(currentDate, [yyyy, '-', mm, '-', dd]);
               return BarTooltipItem(
                   weekDay + '\n' + (rod.y - 1).toString() + ' Kcal',
                   TextStyle(color: Colors.yellow));
             }),
-
         touchCallback: (barTouchResponse) {
           setState(() {
             if (barTouchResponse.spot != null &&

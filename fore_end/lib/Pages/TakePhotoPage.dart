@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,13 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/MyTool/FoodRecognizer.dart';
-import 'package:fore_end/MyTool/util/LocalDataManager.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/DotBox.dart';
 import 'package:fore_end/Pages/ResultPage.dart';
-import 'package:fore_end/Pages/TestPicturePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -206,39 +204,36 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget waitingForCameraWidget() {
     double marginHor = ScreenTool.partOfScreenWidth(0.2);
     double marginTop = ScreenTool.partOfScreenHeight(0.25);
-    DotColumn card = new DotColumn(
-        width: 0.7,
-        borderRadius: 5,
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          Transform.translate(
-            offset: Offset(0, this.loadingCameraAnimation.value),
-            child:
-                Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
-          ),
-          Container(
-            height: 60,
-            width: ScreenTool.partOfScreenWidth(0.7),
-            child: Text(
-              widget.waitingText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black),
-            ),
-          ),
-          SizedBox(
-            height: 40,
-          ),
+    DotColumn card = new DotColumn(width: 0.7, borderRadius: 5, children: [
+      SizedBox(
+        height: 40,
+      ),
+      Transform.translate(
+        offset: Offset(0, this.loadingCameraAnimation.value),
+        child:
+            Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
+      ),
+      Container(
+        height: 60,
+        width: ScreenTool.partOfScreenWidth(0.7),
+        child: Text(
+          widget.waitingText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Futura",
+              color: Colors.black),
+        ),
+      ),
+      SizedBox(
+        height: 40,
+      ),
     ]);
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
-      height:ScreenTool.partOfScreenHeight(1),
+      height: ScreenTool.partOfScreenHeight(1),
       color: Color(0xFF172632),
       child: Align(
         alignment: Alignment.center,

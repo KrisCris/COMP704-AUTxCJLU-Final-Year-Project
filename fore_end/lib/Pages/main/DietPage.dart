@@ -1,4 +1,3 @@
-
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +11,11 @@ import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
+
 import '../FoodRecommandation.dart';
 
 class DietPage extends StatefulWidget {
-  DietPage({Key key}):super(key:key);
+  DietPage({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return new DietPageState();
@@ -25,7 +25,7 @@ class DietPage extends StatefulWidget {
 class DietPageState extends State<DietPage> {
   GlobalKey<FoodSearchBarState> foodsearchKey;
 
-  OpenContainer buildOpenContainer(){
+  OpenContainer buildOpenContainer() {
     return OpenContainer(
       closedColor: Colors.transparent,
       closedBuilder: (context, action) {
@@ -42,15 +42,17 @@ class DietPageState extends State<DietPage> {
       },
     );
   }
+
   @override
   void initState() {
     this.foodsearchKey = GlobalKey<FoodSearchBarState>();
     HintManager.instance.foodSearchKey = this.foodsearchKey;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-   HintManager.instance.receiveHint(context);
+    HintManager.instance.receiveHint(context);
     return Container(
         width: ScreenTool.partOfScreenWidth(1),
         child: Stack(
@@ -122,7 +124,9 @@ class DietPageState extends State<DietPage> {
                 ],
               ),
             ),
-            FoodSearchBar(key: this.foodsearchKey,),
+            FoodSearchBar(
+              key: this.foodsearchKey,
+            ),
           ],
         ));
   }

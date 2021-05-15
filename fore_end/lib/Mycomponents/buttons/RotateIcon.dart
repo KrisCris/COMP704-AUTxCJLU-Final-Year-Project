@@ -1,8 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'dart:math' as math;
-
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 
 ///简化版的IconButton,专门用于需要旋转的图标，没有很复杂的功能
@@ -36,18 +36,19 @@ class RotateIcon extends StatefulWidget {
       {Key key,
       this.onTap,
       this.angle = math.pi,
-        this.autoPlay = false,
-        this.recycle = false,
+      this.autoPlay = false,
+      this.recycle = false,
       @required this.icon,
       this.rotateTime = 150,
       this.iconSize = 12,
       Color iconColor})
-      : super(key: key){
+      : super(key: key) {
     this.isRotate = ValueNotifier(false);
-    this.iconColor = MyTheme.convert(ThemeColorName.NormalIcon,color: iconColor);
+    this.iconColor =
+        MyTheme.convert(ThemeColorName.NormalIcon, color: iconColor);
   }
 
-  void rotate(){
+  void rotate() {
     this.isRotate.value = !this.isRotate.value;
   }
 
@@ -69,10 +70,12 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
     this.angleAnimation.dispose();
     super.dispose();
   }
+
   @override
   void didUpdateWidget(covariant RotateIcon oldWidget) {
     widget.isRotate = oldWidget.isRotate;
   }
+
   @override
   void initState() {
     super.initState();
@@ -85,18 +88,19 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
         () {
       setState(() {});
     });
-    if(this.widget.recycle){
+    if (this.widget.recycle) {
       this.angleAnimation.addStatusListener((status) {
-        if(status == AnimationStatus.completed){
-          this.angleAnimation.initAnimation(0, widget.angle, widget.rotateTime, this,
-                  () {
-                setState(() {});
-              });
+        if (status == AnimationStatus.completed) {
+          this
+              .angleAnimation
+              .initAnimation(0, widget.angle, widget.rotateTime, this, () {
+            setState(() {});
+          });
           this.angleAnimation.forward();
         }
       });
     }
-    if(this.widget.autoPlay){
+    if (this.widget.autoPlay) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         this.rotate();
       });
@@ -118,7 +122,7 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
 
   ///当按钮被点击的时候执行动画效果，以及设定的 [onTap] 函数
   void _innerOnTap() {
-    if(this.widget.autoPlay)return;
+    if (this.widget.autoPlay) return;
 
     if (this.fowardRotating) {
       this.fowardRotating = false;
@@ -127,12 +131,12 @@ class RotateIconState extends State<RotateIcon> with TickerProviderStateMixin {
       this.fowardRotating = true;
       this.angleAnimation.forward();
     }
-    if(widget.onTap != null){
+    if (widget.onTap != null) {
       widget.onTap();
     }
   }
 
-  void rotate(){
+  void rotate() {
     if (this.fowardRotating) {
       this.fowardRotating = false;
       this.angleAnimation.reverse();

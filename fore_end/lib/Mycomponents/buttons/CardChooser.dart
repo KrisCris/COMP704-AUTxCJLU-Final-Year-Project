@@ -6,8 +6,7 @@ import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 import 'package:fore_end/interface/Valueable.dart';
 
 ///卡片选择器，功能类似于方框勾选组件
-class CardChooser<T> extends StatefulWidget
-with ValueableWidgetMixIn<T>{
+class CardChooser<T> extends StatefulWidget with ValueableWidgetMixIn<T> {
   ///卡片的宽度
   double _width;
 
@@ -62,13 +61,13 @@ with ValueableWidgetMixIn<T>{
   CardChooser(
       {double width = 300,
       double height = 200,
-        T value,
+      T value,
       IconData icon,
       @required String text,
       Color backgroundColor = Colors.white,
       Color paintColor = Colors.black26,
       Color textColor = Colors.black,
-        bool isChosen = false,
+      bool isChosen = false,
       double textSize = 12,
       int dotAnimationDuration = 800,
       int sizeChangeAnimationDuration = 70,
@@ -92,9 +91,9 @@ with ValueableWidgetMixIn<T>{
     this._backgroundColor = backgroundColor;
     this._gapBetweenIconAndText = gapBetweenIconAndText;
     this._sizeChangeAnimationDuration = sizeChangeAnimationDuration;
-    if(onTap != null){
+    if (onTap != null) {
       this._onTap = [onTap];
-    }else{
+    } else {
       this._onTap = [];
     }
     this._dotGap = dotGap;
@@ -119,7 +118,7 @@ with ValueableWidgetMixIn<T>{
     this._chosen.value = false;
   }
 
-  bool isChosen(){
+  bool isChosen() {
     return this._chosen.value;
   }
 }
@@ -145,6 +144,7 @@ class CardChooserState extends State<CardChooser>
     shadowSizeAnimation.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
@@ -178,7 +178,7 @@ class CardChooserState extends State<CardChooser>
   }
 
   void initChosenNotifier() {
-    if(widget._chosen.value){
+    if (widget._chosen.value) {
       fontSizeAnimation.beginAnimation();
       dotMoveAnimation.beginAnimation();
     }
@@ -215,13 +215,13 @@ class CardChooserState extends State<CardChooser>
         onTapDown: (TapDownDetails dt) {
           this.sizeChangeAnimation.beginAnimation();
         },
-        onTapCancel: (){
+        onTapCancel: () {
           this.sizeChangeAnimation.reverse();
         },
         onTapUp: (TapUpDetails dt) {
           widget._chosen.value = true;
           if (widget._onTap.isNotEmpty) {
-            for(Function f in widget._onTap){
+            for (Function f in widget._onTap) {
               f();
             }
           }
