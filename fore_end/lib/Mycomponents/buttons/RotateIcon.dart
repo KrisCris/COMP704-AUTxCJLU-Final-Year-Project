@@ -1,8 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
-import 'dart:math' as math;
-
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 
 ///简化版的IconButton,专门用于需要旋转的图标，没有很复杂的功能

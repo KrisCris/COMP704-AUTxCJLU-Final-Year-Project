@@ -1,12 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Hint.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
@@ -16,8 +13,9 @@ import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/SettingPage.dart';
 import 'package:fore_end/Pages/main/AboutUs.dart';
 import 'package:fore_end/Pages/main/DietPage.dart';
-import 'package:fore_end/Pages/main/TakePhotoPage.dart';
 import 'package:fore_end/Pages/main/PlanDetailPage.dart';
+import 'package:fore_end/Pages/main/TakePhotoPage.dart';
+
 import '../account/AccountPage.dart';
 
 class MainPage extends StatefulWidget {

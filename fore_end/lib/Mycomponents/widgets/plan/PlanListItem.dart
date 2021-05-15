@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import "package:intl/intl.dart";
 import 'package:fore_end/MyTool/util/MyTheme.dart';
+import "package:intl/intl.dart";
 
 class PlanTextItem extends StatefulWidget {
   String leftText; //左侧显示文字

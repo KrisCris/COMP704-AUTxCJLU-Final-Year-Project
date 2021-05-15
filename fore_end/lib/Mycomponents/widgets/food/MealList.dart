@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Meal.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
 
 ///statefulWidget组件可以随时更新变化的数据
 class MealListUI extends StatelessWidget {

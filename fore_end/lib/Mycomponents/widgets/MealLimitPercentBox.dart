@@ -10,7 +10,6 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
-import 'package:fore_end/interface/Valueable.dart';
 
 class MealLimitPercentBox extends StatefulWidget {
   final int lowerLimit;

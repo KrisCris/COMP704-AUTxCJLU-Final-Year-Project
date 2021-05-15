@@ -1,7 +1,9 @@
-import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'contextPainter.dart';
 
 class LinePainter extends ContextPainter {

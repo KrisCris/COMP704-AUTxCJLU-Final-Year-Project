@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
-import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,24 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fore_end/MyTool/Food.dart';
-import 'package:fore_end/MyTool/FoodRecognizer.dart';
 import 'package:fore_end/MyTool/Meal.dart';
 import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/Picker_Tool.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/NutritionBox.dart';
-import 'package:fore_end/Mycomponents/widgets/basic/ExpandListView.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PersentBar.dart';
-import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
-import 'package:fore_end/Mycomponents/widgets/food/NutritionPieChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/RecommendBox.dart';
 import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
 
 class FoodDetails extends StatefulWidget {
   Food currentFood;

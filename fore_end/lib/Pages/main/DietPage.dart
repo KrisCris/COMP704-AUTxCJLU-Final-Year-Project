@@ -11,6 +11,7 @@ import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
 import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
+
 import '../FoodRecommandation.dart';
 
 class DietPage extends StatefulWidget {

@@ -1,9 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'indicator.dart';
+import 'package:flutter/material.dart';
 
 class PieChartSample2 extends StatefulWidget {
   // List<double> nutritionList = new List();

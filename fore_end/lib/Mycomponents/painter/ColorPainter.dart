@@ -1,6 +1,6 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/rendering/custom_paint.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 

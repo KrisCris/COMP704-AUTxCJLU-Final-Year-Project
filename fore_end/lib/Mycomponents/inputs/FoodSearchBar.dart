@@ -7,7 +7,6 @@ import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/CustomBadge.dart';
 import 'package:fore_end/Pages/FoodDetailsPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';

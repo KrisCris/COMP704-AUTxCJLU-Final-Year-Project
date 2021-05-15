@@ -5,7 +5,6 @@ import 'package:fore_end/MyTool/SoftwarePreference.dart';
 import 'package:fore_end/MyTool/util/CalculatableColor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../User.dart';
 import 'LocalDataManager.dart';
 enum ThemeColorName {
   Warning,Success,Error,

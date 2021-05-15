@@ -4,7 +4,6 @@ import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
 
 class Welcome extends StatelessWidget {
   @override

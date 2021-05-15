@@ -6,7 +6,6 @@ import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/text/NutritionText.dart';
-import 'package:fore_end/Mycomponents/text/ValueText.dart';
 import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
 
 class SwitchFoodInfoArea extends StatefulWidget {

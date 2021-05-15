@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-
 class MyCounter {
   Timer _tm;
   bool _isRun;

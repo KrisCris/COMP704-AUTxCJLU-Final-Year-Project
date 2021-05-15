@@ -1,10 +1,10 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyAnimation/MyAnimation.dart';
 import 'package:fore_end/Mycomponents/painter/contextPainter.dart';
 import 'package:fore_end/Mycomponents/widgets/basic/PersentBar.dart';
-import 'package:image/image.dart';
 
 class PersentPainter extends ContextPainter {
   TweenAnimation<PersentSection> animation;
