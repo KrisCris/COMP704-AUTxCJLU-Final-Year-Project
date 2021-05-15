@@ -32,9 +32,9 @@ responses:
             type: object
             example: {
               "email": "root@root.com",
-              "nickname":"ROOT",
-              "avatar":"b64String",
-              "gender":1,
+              "nickname": "ROOT",
+              "avatar": "b64String",
+              "gender": 1,
               "age": 18
             }
   -1:
@@ -51,7 +51,7 @@ responses:
           example: 'login required'
         data:
           type: array
-          example: []
+          example: [ ]
 
 
 

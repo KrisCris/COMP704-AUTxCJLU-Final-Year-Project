@@ -28,7 +28,12 @@ class NutritionText extends StatelessWidget {
                   fontFamily: "Futura",
                   fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
-          ValueText(numLower: this.value, valueFontSize: 11, unit: this.unit, unitFontSize: 9,)
+          ValueText(
+            numLower: this.value,
+            valueFontSize: 11,
+            unit: this.unit,
+            unitFontSize: 9,
+          )
         ],
       ),
     );

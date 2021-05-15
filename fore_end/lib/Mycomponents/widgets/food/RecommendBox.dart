@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,9 +7,6 @@ import 'package:fore_end/MyTool/Food.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'dart:math' as math;
-import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
 import 'package:fore_end/Mycomponents/buttons/RotateIcon.dart';
 import 'package:fore_end/Pages/FoodDetailsPage.dart';
 
@@ -51,7 +49,6 @@ class RecommendBox extends StatefulWidget {
   ///展开详细内容的动画持续时间
   int expandDuration;
 
-
   GlobalKey<RecommendBoxState> key;
   GlobalKey<RotateIconState> iconKey;
   GlobalKey fadeKey;
@@ -59,7 +56,6 @@ class RecommendBox extends StatefulWidget {
   List<Food> foods;
   bool isSuitable;
   String foodName;
-
 
   RecommendBox({
     // @required Food food,
@@ -74,16 +70,14 @@ class RecommendBox extends StatefulWidget {
     double borderRadius = 10,
     bool shouldShowPic = false,
     @required this.foods,
-    bool isSuitable=false,
-    String foodName="hamburger",
-
+    bool isSuitable = false,
+    String foodName = "hamburger",
     this.key,
     double width = 1,
-  })  :
-        super(key:key) {
+  }) : super(key: key) {
     // this.food = food;
-    this.foodName=foodName;
-    this.isSuitable=isSuitable;
+    this.foodName = foodName;
+    this.isSuitable = isSuitable;
     this.height = ScreenTool.partOfScreenHeight(height);
     this.width = ScreenTool.partOfScreenWidth(width);
     this.detailedPaddingLeft = detailedPaddingLeft;
@@ -93,10 +87,8 @@ class RecommendBox extends StatefulWidget {
     this.paddingRight = paddingRight;
     this.expandDuration = expandDuration;
     this.borderRadius = borderRadius;
-    this.title=title;
-
+    this.title = title;
   }
-
 
   @override
   State<StatefulWidget> createState() {
@@ -118,6 +110,7 @@ class RecommendBoxState extends State<RecommendBox>
   ///picType = 0 -> defaultPicture
   ///picType = 1 -> photo
   int picType = 0;
+
   ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
   @override
@@ -153,7 +146,7 @@ class RecommendBoxState extends State<RecommendBox>
       child: this.getContainer(),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          color:MyTheme.convert(ThemeColorName.ComponentBackground),
+          color: MyTheme.convert(ThemeColorName.ComponentBackground),
           boxShadow: [
             BoxShadow(
               blurRadius: 12, //阴影范围
@@ -218,7 +211,8 @@ class RecommendBoxState extends State<RecommendBox>
         gaplessPlayback: true,
         fit: BoxFit.cover,
         width: 40,
-        height: 40,);
+        height: 40,
+      );
       this.picType = 1;
     }
     this.pic = Container(
@@ -230,8 +224,7 @@ class RecommendBoxState extends State<RecommendBox>
         ),
         child: ClipOval(
           child: img,
-        )
-    );
+        ));
     return this.pic;
   }
 
@@ -249,10 +242,10 @@ class RecommendBoxState extends State<RecommendBox>
 
   Widget getExpandIcon() {
     return RotateIcon(
-      icon:  FontAwesomeIcons.chevronDown,
+      icon: FontAwesomeIcons.chevronDown,
       iconColor: Colors.blue,
       key: widget.iconKey,
-      onTap: (){
+      onTap: () {
         if (this.shouldExpand) {
           this.shouldExpand = false;
         } else {
@@ -266,55 +259,68 @@ class RecommendBoxState extends State<RecommendBox>
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
     // List<Widget> col = [
-      return Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 30,right: 30),
-            child: Text(
-                this.widget.isSuitable?CustomLocalizations.of(context).commentOfFoodOne+this.widget.foodName+
-                CustomLocalizations.of(context).commentOfFoodThree+CustomLocalizations.of(context).commentOfAdviceTwo
-                :CustomLocalizations.of(context).commentOfFoodOne+this.widget.foodName+CustomLocalizations.of(context).commentOfFoodTwo+CustomLocalizations.of(context).commentOfAdviceOne,
-                // overflow: ,
-                softWrap: true,
-                style: TextStyle(
-                    decoration: TextDecoration.none,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Futura",
-                    color: MyTheme.convert(ThemeColorName.NormalText))),
-
-          ),
-          Container(
-            height: 60,
-            margin: EdgeInsets.only(left: 30,right: 30,top: 10,bottom: 20),
-            // padding: EdgeInsets.only(left: 1,),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: this.widget.foods.length,
-                itemBuilder: (BuildContext ctx, int idx) {
-                  GestureDetector foodImage = GestureDetector(
-                    // child: Image.memory( base64.decode(this.widget.foods[idx].picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
-                    child:ClipOval(
-                      child: Image.memory( base64.decode(this.widget.foods[idx].picture),
-                                            height:60, width:60,
-                                            fit: BoxFit.cover,
-                                            gaplessPlayback:true, ),
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: 30, right: 30),
+          child: Text(
+              this.widget.isSuitable
+                  ? CustomLocalizations.of(context).commentOfFoodOne +
+                      this.widget.foodName +
+                      CustomLocalizations.of(context).commentOfFoodThree +
+                      CustomLocalizations.of(context).commentOfAdviceTwo
+                  : CustomLocalizations.of(context).commentOfFoodOne +
+                      this.widget.foodName +
+                      CustomLocalizations.of(context).commentOfFoodTwo +
+                      CustomLocalizations.of(context).commentOfAdviceOne,
+              // overflow: ,
+              softWrap: true,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Futura",
+                  color: MyTheme.convert(ThemeColorName.NormalText))),
+        ),
+        Container(
+          height: 60,
+          margin: EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 20),
+          // padding: EdgeInsets.only(left: 1,),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: this.widget.foods.length,
+              itemBuilder: (BuildContext ctx, int idx) {
+                GestureDetector foodImage = GestureDetector(
+                  // child: Image.memory( base64.decode(this.widget.foods[idx].picture),height:45, width:45, fit: BoxFit.fill, gaplessPlayback:true, ),
+                  child: ClipOval(
+                    child: Image.memory(
+                      base64.decode(this.widget.foods[idx].picture),
+                      height: 60,
+                      width: 60,
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
                     ),
-                    onTap:(){
-                      ///点击食物图片会自动跳转
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FoodDetails(currentFood: this.widget.foods[idx],)));
-                      print("click the food"+ idx.toString());
-                    },
-                  );
-                  return Container(
-                      margin: EdgeInsets.only(right: 10,),
-                      child: foodImage);
-                }),
-          ),
-
-        ],
-      );
+                  ),
+                  onTap: () {
+                    ///点击食物图片会自动跳转
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FoodDetails(
+                                  currentFood: this.widget.foods[idx],
+                                )));
+                    print("click the food" + idx.toString());
+                  },
+                );
+                return Container(
+                    margin: EdgeInsets.only(
+                      right: 10,
+                    ),
+                    child: foodImage);
+              }),
+        ),
+      ],
+    );
   }
 
   Widget propertyLine(String name, String value) {
@@ -351,7 +357,6 @@ class RecommendBoxState extends State<RecommendBox>
 
   //控制是否可以展开
   void clickFunc() {
-
     if (this.shouldExpand) {
       this.shouldExpand = false;
     } else {
@@ -359,7 +364,6 @@ class RecommendBoxState extends State<RecommendBox>
     }
     (widget.iconKey.currentWidget as RotateIcon).rotate();
     this.setState(() {});
-
   }
 
   @override

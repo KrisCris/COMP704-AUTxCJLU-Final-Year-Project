@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:common_utils/common_utils.dart';
+import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +17,8 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 import 'package:fore_end/Mycomponents/widgets/plan/PlanListItem.dart';
-import 'package:date_format/date_format.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import "package:intl/intl.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPlanPage extends StatefulWidget {
   ///不会变的全局数据
@@ -32,9 +31,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   ///数据放到State
   ///pagesData 用来存放所有不同页面的数据   然后在build 里面获取这些数据
   List<Map> pagesData = new List<Map>(); //里面放Map
-  List localPagesData = new List();  //里面放离线数据 Map
+  List localPagesData = new List(); //里面放离线数据 Map
 
-  bool searching =false;
+  bool searching = false;
   String commentOfPlan = "减肥卓有成效，完成情况良好，未有延期记录";
 
   List data;
@@ -58,8 +57,6 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   DateTime registerTime;
   int index = 0;
 
-
-
   ///默认的初始页号
   SwiperController swiperController = new SwiperController();
   //
@@ -68,8 +65,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   //
   // }
 
-
-  ///TODO:现在这个页面还差 1.评价的判断和赋值  2.计划延迟的次数  3.计划的初始体重  
+  ///TODO:现在这个页面还差 1.评价的判断和赋值  2.计划延迟的次数  3.计划的初始体重
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +103,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     );
     return SingleChildScrollView(
         child: Column(
-          children: [
-            Container(
+      children: [
+        Container(
           height: ScreenTool.partOfScreenHeight(0.1),
           // margin: EdgeInsets.only(top:20),
           padding: EdgeInsets.only(
@@ -139,12 +135,16 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               Text(
                 CustomLocalizations.of(context).from,
                 style: TextStyle(
-                    fontSize: 20, color: MyTheme.convert(ThemeColorName.NormalText), fontFamily: 'Futura'),
+                    fontSize: 20,
+                    color: MyTheme.convert(ThemeColorName.NormalText),
+                    fontFamily: 'Futura'),
               ),
               from,
               Text(CustomLocalizations.of(context).to,
                   style: TextStyle(
-                      fontSize: 20, color: MyTheme.convert(ThemeColorName.NormalText), fontFamily: 'Futura')),
+                      fontSize: 20,
+                      color: MyTheme.convert(ThemeColorName.NormalText),
+                      fontFamily: 'Futura')),
               to
             ],
             mainAxisAlignment: MainAxisAlignment.center,
@@ -158,8 +158,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               // borderRadius: BorderRadius.circular(5),
               color: MyTheme.convert(ThemeColorName.ComponentBackground),
             ),
-            child:
-            this.searching
+            child: this.searching
                 ? Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -181,9 +180,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                               fontWeight: FontWeight.bold,
                               fontSize: 12),
                         ))
-                    :
-            this.getSwiper()
-        ),
+                    : this.getSwiper()),
       ],
     ));
   }
@@ -198,7 +195,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
     this.finishedPlanTime = now;
 
-    if(u.isOffline){
+    if (u.isOffline) {
       this.searching = false;
       print("历史计划界面离线成功--------1");
       SharedPreferences pre = LocalDataManager.pre;
@@ -207,19 +204,17 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       String json = pre.getString("localHistoryPlan");
       this.localPagesData = jsonDecode(json);
       this.setValue(this.localPagesData);
-      if(bg != null){
+      if (bg != null) {
         this.startedPlanTime = DateTime.fromMillisecondsSinceEpoch(bg);
       }
-      if(ed != null){
+      if (ed != null) {
         this.finishedPlanTime = DateTime.fromMillisecondsSinceEpoch(ed);
       }
       print("历史计划里界面离线成功--------1");
-
-    }else{
+    } else {
       this.searching = true;
       this.searchData();
     }
-
   }
 
   void clearData() {
@@ -231,8 +226,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void searchData() async {
     User u = User.getInstance();
     this.searching = true;
-    Response res = await Requests.getHistoryPlan(
-        context,{
+    Response res = await Requests.getHistoryPlan(context, {
       "uid": u.uid,
       "token": u.token,
       "begin": (this.startedPlanTime.millisecondsSinceEpoch / 1000).floor(),
@@ -248,20 +242,18 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     //   this.pagesData.add(m);
     // }
     // setValue(this.pagesData);
-    DateTime today = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     this.searching = false;
-    if(mounted){
-      setState(() {
-      });
+    if (mounted) {
+      setState(() {});
     }
   }
 
-  void setValue(List pagesData){
-
-
+  void setValue(List pagesData) {
     // String foodNames;
     // double foodCalorie;
-    this.index=pagesData.length;
+    this.index = pagesData.length;
     pagesData.forEach((eachPlan) {
       this.index++;
       // Map consumption = eachPlan["consumption"];
@@ -289,18 +281,18 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       // int delayPlanTimes = eachPlan["exts"];
 
       ///如果为0就显示 计划还在进行
-
     });
 
     setState(() {});
   }
 
-  Widget getColumnContent(int idx){
+  Widget getColumnContent(int idx) {
     // return SizedBox();
     return Column(
       children: [
         TitleText(
-          text: Plan.planTypes[this.data[idx]["planBrief"]["type"]].toUpperCase(),
+          text:
+              Plan.planTypes[this.data[idx]["planBrief"]["type"]].toUpperCase(),
           underLineLength: 0.5,
           fontSize: 25,
           maxWidth: 0.8,
@@ -318,7 +310,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).finishPlan,
           rightText: "",
-          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.tsToStr(this.data[idx]["planBrief"]["realEnd"]):CustomLocalizations.of(context).planIsGoing,
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]
+              ? this.tsToStr(this.data[idx]["planBrief"]["realEnd"])
+              : CustomLocalizations.of(context).planIsGoing,
           isShowRightValue: true,
         ),
         SizedBox(
@@ -337,38 +331,46 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesTotal,
           rightText: "Kcal",
-          rightValue: this.numToString(this.data[idx]["consumption"]["accumCalories"]),
+          rightValue:
+              this.numToString(this.data[idx]["consumption"]["accumCalories"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesDaily,
           rightText: "Kcal",
-          rightValue: this.numToString(this.data[idx]["consumption"]["avgCalories"]),
+          rightValue:
+              this.numToString(this.data[idx]["consumption"]["avgCalories"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).proteinTotal,
           rightText: "g",
-          rightValue: this.numToString(this.data[idx]["consumption"]["accumProtein"]),
+          rightValue:
+              this.numToString(this.data[idx]["consumption"]["accumProtein"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).proteinDaily,
           rightText: "g",
-          rightValue: this.numToString(this.data[idx]["consumption"]["avgProtein"]),
+          rightValue:
+              this.numToString(this.data[idx]["consumption"]["avgProtein"]),
         ),
 
         PlanTextItem(
           leftText: CustomLocalizations.of(context).goalWeight,
           rightText: "Kg",
-          rightValue: this.numToString(this.data[idx]["planBrief"]["goalWeight"]),
+          rightValue:
+              this.numToString(this.data[idx]["planBrief"]["goalWeight"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightStart,
           rightText: "Kg",
-          rightValue: this.numToString(this.data[idx]["weeklyDetails"][0]["weight"]),
+          rightValue:
+              this.numToString(this.data[idx]["weeklyDetails"][0]["weight"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightFinish,
           rightText: "Kg",
-          rightValue: this.data[idx]["planBrief"]["hasCompleted"]?this.numToString(this.data[idx]["planBrief"]["achievedWeight"]):"--",
+          rightValue: this.data[idx]["planBrief"]["hasCompleted"]
+              ? this.numToString(this.data[idx]["planBrief"]["achievedWeight"])
+              : "--",
         ),
 
         SizedBox(
@@ -393,19 +395,20 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesOver,
           rightText: " Days",
-          rightValue: this.numToString(this.data[idx]["consumption"]["calsHigh"]["days"]),
+          rightValue: this
+              .numToString(this.data[idx]["consumption"]["calsHigh"]["days"]),
         ),
         PlanTextItem(
-          leftText:
-          CustomLocalizations.of(context).caloriesInsufficient,
+          leftText: CustomLocalizations.of(context).caloriesInsufficient,
           rightText: " Days",
-          rightValue: this.numToString(this.data[idx]["consumption"]["calsLow"]["days"]),
+          rightValue: this
+              .numToString(this.data[idx]["consumption"]["calsLow"]["days"]),
         ),
         PlanTextItem(
-          leftText:
-          CustomLocalizations.of(context).caloriesInsufficient,
+          leftText: CustomLocalizations.of(context).caloriesInsufficient,
           rightText: " Days",
-          rightValue: this.numToString(this.data[idx]["consumption"]["proteinLow"]["days"]),
+          rightValue: this
+              .numToString(this.data[idx]["consumption"]["proteinLow"]["days"]),
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).planDelayTimes,
@@ -439,6 +442,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       ],
     );
   }
+
   Widget getSwiper() {
     return Swiper(
       containerWidth: 0.8,
@@ -455,15 +459,16 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                 margin: EdgeInsets.only(left: 15, right: 15, top: 10),
                 padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                 decoration: BoxDecoration(
-                  border: Border.all(color: MyTheme.convert(ThemeColorName.NormalText)),
+                  border: Border.all(
+                      color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
                 height: ScreenTool.partOfScreenHeight(0.82),
                 width: ScreenTool.partOfScreenWidth(0.9),
-                child: this.getColumnContent(index)
-            ),
+                child: this.getColumnContent(index)),
           ],
         );
       },
+
       ///pagination展示默认左右分页指示器
       pagination: new SwiperPagination(
         margin: new EdgeInsets.all(9), //分页指示器与容器边框的距离
@@ -485,30 +490,30 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       loop: false, //无限轮播模式开关
       index: 0, //初始的时候下标位置
       autoplay: false, //自动播放开关.
-      onTap: (int index) {
-      }, //当用户手动拖拽或者自动播放引起下标改变的时候调用
+      onTap: (int index) {}, //当用户手动拖拽或者自动播放引起下标改变的时候调用
       duration: 300, //动画时间，单位是毫秒
     );
   }
 
-  String  toThousands(int value){
-    String stringValue=value.toString();
-    if(value>=1000){
+  String toThousands(int value) {
+    String stringValue = value.toString();
+    if (value >= 1000) {
       var format = NumberFormat('0,000');
       return format.format(value);
     }
     return stringValue;
   }
 
-  String tsToStr(int t){
-    DateTime date=DateTime.fromMillisecondsSinceEpoch(t*1000);
-    return DateTime.parse(formatDate(date, [yyyy, '-', mm, '-', dd])).toString().split(" ")[0];
+  String tsToStr(int t) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(t * 1000);
+    return DateTime.parse(formatDate(date, [yyyy, '-', mm, '-', dd]))
+        .toString()
+        .split(" ")[0];
   }
 
-  String numToString(num n){
+  String numToString(num n) {
     String tmp = n.toString();
     tmp = tmp.split(".")[0];
     return tmp;
   }
-
 }

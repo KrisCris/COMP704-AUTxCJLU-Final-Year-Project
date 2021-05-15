@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 ///用于从左往右执行剪切的矩形clipper
-class LeftRightClipper extends CustomClipper<Rect>{
+class LeftRightClipper extends CustomClipper<Rect> {
   final double width;
 
   LeftRightClipper(this.width);
@@ -15,5 +15,4 @@ class LeftRightClipper extends CustomClipper<Rect>{
   bool shouldReclip(covariant CustomClipper<Rect> oldClipper) {
     return true;
   }
-
 }

@@ -38,7 +38,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: [{
+          example: [ {
             "calories": 124.47,
             "fid": 141,
             "id": 34,
@@ -50,4 +50,4 @@ responses:
             "type": 1,
             "uid": 5,
             "weight": 40
-          }]
+          } ]

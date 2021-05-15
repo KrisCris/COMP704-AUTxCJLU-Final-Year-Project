@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 ///用于从上往下执行剪切的矩形clipper
-class TopDownClipper extends CustomClipper<Rect>{
+class TopDownClipper extends CustomClipper<Rect> {
   final double height;
 
   TopDownClipper(this.height);
@@ -15,5 +15,4 @@ class TopDownClipper extends CustomClipper<Rect>{
   bool shouldReclip(covariant CustomClipper<Rect> oldClipper) {
     return true;
   }
-
 }

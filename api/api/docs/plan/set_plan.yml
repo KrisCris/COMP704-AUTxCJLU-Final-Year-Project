@@ -84,4 +84,4 @@ responses:
             'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
             'begin': newPlan.begin, 'end': newPlan.end,
             'type': newPlan.type, 'goal': newPlan.goalWeight
-        }
+          }

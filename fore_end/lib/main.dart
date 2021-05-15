@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
-import 'package:fore_end/Pages/FoodRecommandation.dart';
-import 'package:fore_end/Pages/detail/HistoryPlanPage.dart';
-import 'package:fore_end/Pages/main/AboutUs.dart';
-import 'MyTool/SoftwarePreference.dart';
-import 'MyTool/util/LocalDataManager.dart';
-import 'Mycomponents/widgets/food/NutritionPieChart.dart';
-import 'Pages/ComponentTestPage.dart';
-import 'Pages/FoodDetailsPage.dart';
+
 import 'Pages/LoginPage.dart';
 import 'Pages/RegisterPage.dart';
 import 'Pages/WelcomePage.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,23 +21,22 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       home: CoverPage(),
+        home: CoverPage(),
         // home: FoodRecommandation(),
         // home: ComponentTestPage(),
-      // home: AboutUsPage(),
-      routes: <String, WidgetBuilder>{
-        "login": (context) => Login(),
-        "register": (context) => Register(),
-        "welcome": (context) => Welcome(),
-      },
+        // home: AboutUsPage(),
+        routes: <String, WidgetBuilder>{
+          "login": (context) => Login(),
+          "register": (context) => Register(),
+          "welcome": (context) => Welcome(),
+        },
         builder: EasyLoading.init(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        CustomLocalizationsDelegate.delegate
-      ],
-      supportedLocales: CustomLocalizations.supported.values
-    );
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          CustomLocalizationsDelegate.delegate
+        ],
+        supportedLocales: CustomLocalizations.supported.values);
   }
 
   void _preCacheAllImage() {

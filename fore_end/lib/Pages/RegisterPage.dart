@@ -1,17 +1,17 @@
 import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
 import 'package:fore_end/Mycomponents/inputs/VerifyCodeInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import 'GuidePage.dart';
@@ -40,31 +40,28 @@ class Register extends StatelessWidget {
     this.scrollCtl = new ScrollController();
 
     this.emailTextField = CustomTextField(
-      placeholder: CustomLocalizations
-          .of(context)
-          .email,
+      placeholder: CustomLocalizations.of(context).email,
       inputType: InputFieldType.email,
       isAutoChangeState: false,
       errorText: "Wrong email address!",
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations
-          .of(context)
-          .emailHint,
+      helpText: CustomLocalizations.of(context).emailHint,
       maxlength: 30,
       onCorrect: () async {
         // if (!this.counter.isStop()) return;
-        this.emailTextField.setHelpText(
-            "checking whether email has been registered...");
-        Response res = await Requests.checkEmailRepeat(context,{
-          "email": this.emailTextField.getValue()
-        });
+        this
+            .emailTextField
+            .setHelpText("checking whether email has been registered...");
+        Response res = await Requests.checkEmailRepeat(
+            context, {"email": this.emailTextField.getValue()});
         if (res.data['code'] == 1) {
           this.verifyTextField.setButtonDisabled(false);
           this.emailTextField.setCorrect();
         } else {
           this.verifyTextField.setButtonDisabled(true);
-          this.emailTextField.setErrorText(
-              "This Email has already been registered");
+          this
+              .emailTextField
+              .setErrorText("This Email has already been registered");
           this.emailTextField.setError();
         }
       },
@@ -77,15 +74,9 @@ class Register extends StatelessWidget {
     );
 
     this.verifyTextField = VerifyCodeInputer(
-      firstShowText: CustomLocalizations
-          .of(context)
-          .acquireVerify,
-      repeatShowText: CustomLocalizations
-          .of(context)
-          .acquireAgain,
-      placeHolder: CustomLocalizations
-          .of(context)
-          .verifyCode,
+      firstShowText: CustomLocalizations.of(context).acquireVerify,
+      repeatShowText: CustomLocalizations.of(context).acquireAgain,
+      placeHolder: CustomLocalizations.of(context).verifyCode,
       onCheckSuccess: () {
         this.nextButton.setDisabled(false);
       },
@@ -96,15 +87,11 @@ class Register extends StatelessWidget {
     );
 
     this.confirmPasswordTextField = CustomTextField(
-      placeholder: CustomLocalizations
-          .of(context)
-          .confirmPassword,
+      placeholder: CustomLocalizations.of(context).confirmPassword,
       inputType: InputFieldType.password,
       isAutoChangeState: false,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations
-          .of(context)
-          .confirmPasswordHint,
+      helpText: CustomLocalizations.of(context).confirmPasswordHint,
       maxlength: 30,
       onCorrect: () {
         if (this.confirmPasswordTextField.getValue() ==
@@ -131,20 +118,16 @@ class Register extends StatelessWidget {
     );
 
     this.passwordTextField = CustomTextField(
-      placeholder: CustomLocalizations
-          .of(context)
-          .password,
+      placeholder: CustomLocalizations.of(context).password,
       next: this.confirmPasswordTextField.getFocusNode(),
       inputType: InputFieldType.password,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations
-          .of(context)
-          .passwordHint,
+      helpText: CustomLocalizations.of(context).passwordHint,
       maxlength: 30,
       onCorrect: () {
         this.passwordDone = true;
         if (this.confirmPasswordTextField.getValue() !=
-            this.passwordTextField.getValue() &&
+                this.passwordTextField.getValue() &&
             !this.confirmPasswordTextField.isEmpty()) {
           this.confirmPasswordTextField.setError();
           this.repasswordDone = false;
@@ -161,15 +144,11 @@ class Register extends StatelessWidget {
     );
 
     this.nicknameTextField = CustomTextField(
-      placeholder: CustomLocalizations
-          .of(context)
-          .nickName,
+      placeholder: CustomLocalizations.of(context).nickName,
       next: this.passwordTextField.getFocusNode(),
       inputType: InputFieldType.text,
       width: ScreenTool.partOfScreenWidth(0.7),
-      helpText: CustomLocalizations
-          .of(context)
-          .nickNameHint,
+      helpText: CustomLocalizations.of(context).nickNameHint,
       maxlength: 30,
       onCorrect: () {
         this.nickNameDone = true;
@@ -188,8 +167,8 @@ class Register extends StatelessWidget {
     );
 
     this.emailTextField.addListener(() {
-      String contentWhenClickButton = this.verifyTextField
-          .getContentWhenClickButton();
+      String contentWhenClickButton =
+          this.verifyTextField.getContentWhenClickButton();
       if (contentWhenClickButton == null || contentWhenClickButton.isEmpty)
         return;
 
@@ -204,9 +183,7 @@ class Register extends StatelessWidget {
       }
     });
     this.backButton = CustomButton(
-      text: CustomLocalizations
-          .of(context)
-          .back,
+      text: CustomLocalizations.of(context).back,
       isBold: true,
       leftMargin: 20,
       bottomMargin: 20,
@@ -219,9 +196,7 @@ class Register extends StatelessWidget {
 
     this.nextButton = CustomButton(
       disabled: true,
-      text: CustomLocalizations
-          .of(context)
-          .next,
+      text: CustomLocalizations.of(context).next,
       isBold: true,
       rightMargin: 20,
       bottomMargin: 20,
@@ -238,7 +213,7 @@ class Register extends StatelessWidget {
         this.nextButton.setDisabled(true);
         EasyLoading.showToast("Waiting for register...");
         try {
-          Response res = await Requests.signUp(context,{
+          Response res = await Requests.signUp(context, {
             "email": this.verifyTextField.getContentWhenClickButton(),
             "password": this.passwordTextField.getValue(),
             "nickname": this.nicknameTextField.getValue()
@@ -246,7 +221,7 @@ class Register extends StatelessWidget {
           if (res.data['code'] == 1) {
             EasyLoading.showSuccess("Register success, login in...",
                 duration: Duration(milliseconds: 1000));
-            res = await Requests.login(context,{
+            res = await Requests.login(context, {
               "email": this.verifyTextField.getContentWhenClickButton(),
               "password": this.passwordTextField.getValue()
             });
@@ -258,15 +233,15 @@ class Register extends StatelessWidget {
               int code = await u.synchronize();
               if (code == 4) {
                 EasyLoading.dismiss();
-                Navigator.pushAndRemoveUntil(
-                    context, new MaterialPageRoute(builder: (context) {
+                Navigator.pushAndRemoveUntil(context,
+                    new MaterialPageRoute(builder: (context) {
                   return new GuidePage();
                 }), (ct) => false);
               } else {
                 EasyLoading.showError("Login token invalid",
                     duration: Duration(milliseconds: 2000));
-                Navigator.pushAndRemoveUntil(
-                    context, new MaterialPageRoute(builder: (context) {
+                Navigator.pushAndRemoveUntil(context,
+                    new MaterialPageRoute(builder: (context) {
                   return new Welcome();
                 }), (ct) => false);
               }
@@ -305,8 +280,7 @@ class Register extends StatelessWidget {
                 Container(
                     width: ScreenTool.partOfScreenWidth(0.7),
                     height: ScreenTool.partOfScreenHeight(0.1),
-                    child: this.verifyTextField
-                ),
+                    child: this.verifyTextField),
                 SizedBox(height: 20),
                 SizedBox(height: 1),
                 SizedBox(height: 1),
@@ -332,20 +306,20 @@ class Register extends StatelessWidget {
             )));
     Widget listScrool = Flexible(
         child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          controller: this.scrollCtl,
-          children: [emailPart, passwordPart],
-        ));
+      physics: const NeverScrollableScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      controller: this.scrollCtl,
+      children: [emailPart, passwordPart],
+    ));
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: (){
+          onTap: () {
             FocusScope.of(context).requestFocus(FocusNode());
           },
-          child:Container(
+          child: Container(
               color: MyTheme.convert(ThemeColorName.PageBackground),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -355,9 +329,7 @@ class Register extends StatelessWidget {
                     Container(
                       width: ScreenTool.partOfScreenWidth(0.7),
                       child: Text(
-                        CustomLocalizations
-                            .of(context)
-                            .createAccount,
+                        CustomLocalizations.of(context).createAccount,
                         textDirection: TextDirection.ltr,
                         style: TextStyle(
                             fontSize: 50,
@@ -376,8 +348,6 @@ class Register extends StatelessWidget {
                           this.nextButton
                         ]),
                   ])),
-
-        )
-    );
+        ));
   }
 }

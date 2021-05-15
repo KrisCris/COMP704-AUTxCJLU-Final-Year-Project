@@ -33,4 +33,4 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {'shouldUpdate': True}
+          example: { 'shouldUpdate': True }

@@ -24,7 +24,7 @@ parameters:
     required: true
     description: plan id
 responses:
-  1: 
+  1:
     description: successful
     schema:
       properties:
@@ -39,7 +39,7 @@ responses:
         data:
           type: number
           example: null
-  -2: 
+  -2:
     description: already finished the plan
     schema:
       properties:
@@ -54,7 +54,7 @@ responses:
         data:
           type: number
           example: null
-  -6: 
+  -6:
     description: plan does not exist
     schema:
       properties:

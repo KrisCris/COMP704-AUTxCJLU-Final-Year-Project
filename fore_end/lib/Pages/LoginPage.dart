@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/Req.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/CustomTextField.dart';
-import 'package:fore_end/Mycomponents/widgets/Background.dart';
 import 'package:fore_end/Pages/main/MainPage.dart';
+
 import 'GuidePage.dart';
 
 class Login extends StatelessWidget {
@@ -136,7 +136,8 @@ class Login extends StatelessWidget {
 
   void login(String email, String pass, BuildContext context) async {
     try {
-      Response res = await Requests.login(context,{"email": email, "password": pass});
+      Response res =
+          await Requests.login(context, {"email": email, "password": pass});
       if (res.data['code'] == -2) {
         EasyLoading.showError("Email or password wrong",
             duration: Duration(milliseconds: 2000));

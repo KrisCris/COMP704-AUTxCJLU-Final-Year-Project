@@ -51,7 +51,7 @@ class ValueText<T extends num> extends StatelessWidget {
       ]);
     }
     res.add(TextSpan(
-        text: " "+unit,
+        text: " " + unit,
         style: TextStyle(
           color: this.fontColor,
           fontSize: this.unitFontSize,

@@ -59,13 +59,13 @@ responses:
         data:
           type: object
           example: {
-                'pid': p.id,
-                'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
-                'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
-                'begin': p.begin, 'end': p.end,
-                'ext': None,
-                'type': p.type, 'goal': p.goalWeight,
-            }
+            'pid': p.id,
+            'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+            'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+            'begin': p.begin, 'end': p.end,
+            'ext': None,
+            'type': p.type, 'goal': p.goalWeight,
+          }
   -2:
     description: need new plan instead
     schema:
@@ -80,7 +80,7 @@ responses:
           example: 'success'
         data:
           type: object
-          example: {'hasRecommendation': True if FLAG_EXT else False, 'recommend_ext': FLAG_EXT}
+          example: { 'hasRecommendation': True if FLAG_EXT else False, 'recommend_ext': FLAG_EXT }
   -6:
     description: plan not exist
     schema:

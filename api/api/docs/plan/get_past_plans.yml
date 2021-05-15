@@ -40,47 +40,47 @@ responses:
           type: object
           example: {
             1: {
-                'planBrief': {
-                  'pid': 1,
-                  'cl': 2000, 'ch': 2300,
-                  'pl': 325, 'ph': 400,
-                  'ext': 12,
-                  'begin': 1788007833, 'end': 1900827386,
-                  'type': 1, 'goal': 65,
-                  'hasFinished': True
+              'planBrief': {
+                'pid': 1,
+                'cl': 2000, 'ch': 2300,
+                'pl': 325, 'ph': 400,
+                'ext': 12,
+                'begin': 1788007833, 'end': 1900827386,
+                'type': 1, 'goal': 65,
+                'hasFinished': True
+              },
+              'weeklyDetails': [
+                {
+                  'pid': 1, 'uid': 1,
+                  'time': 1788007833, 'weight': 70,
+                  'cH': 2300, 'cL': 2000,
+                  'pH': 400, 'pL': 325,
+                  'pal': 1.8, 'ext': 12
                 },
-                'weeklyDetails': [
-                  {
-                    'pid': 1, 'uid': 1,
-                    'time': 1788007833, 'weight': 70,
-                    'cH': 2300, 'cL': 2000,
-                    'pH': 400, 'pL': 325,
-                    'pal': 1.8, 'ext': 12
-                  },
-                ],
-                'exts': 0,
-                'consumption': {
-                    'accumCalories': 0,
-                    'accumProtein': 0,
-                    'avgCalories': 0,
-                    'avgProtein': 0,
-                    'calsHigh': {
-                        'days': 0,
-                        'details': [],
-                    },
-                    'calsLow': {
-                        'days': 0,
-                        'details': [],
-                    },
-                    'proteinHigh': {
-                        'days': 0,
-                        'details': [],
-                    },
-                    'proteinLow': {
-                        'days': 0,
-                        'details': [],
-                    },
-                    'detailedRecords': []
+              ],
+              'exts': 0,
+              'consumption': {
+                'accumCalories': 0,
+                'accumProtein': 0,
+                'avgCalories': 0,
+                'avgProtein': 0,
+                'calsHigh': {
+                  'days': 0,
+                  'details': [ ],
+                },
+                'calsLow': {
+                  'days': 0,
+                  'details': [ ],
+                },
+                'proteinHigh': {
+                  'days': 0,
+                  'details': [ ],
+                },
+                'proteinLow': {
+                  'days': 0,
+                  'details': [ ],
+                },
+                'detailedRecords': [ ]
               }
             }
           }

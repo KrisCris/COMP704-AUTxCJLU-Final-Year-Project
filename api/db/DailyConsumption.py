@@ -44,6 +44,8 @@ class DailyConsumption(db.Model):
 
     @staticmethod
     def get_periodic_record(begin: int, end: int, uid: int):
+        if end == begin:
+            end = end + 24 * 3600
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         arr = []
@@ -54,6 +56,8 @@ class DailyConsumption(db.Model):
 
     @staticmethod
     def getConsumptionGroupByType(begin: int, end: int, uid: int):
+        if end == begin:
+            end = end + 24 * 3600
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         dic = {
@@ -78,6 +82,8 @@ class DailyConsumption(db.Model):
 
     @staticmethod
     def getAccumulatedCaloriesIntake(begin: int, end: int, uid: int):
+        if end == begin:
+            end = end + 24 * 3600
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         cal = 0
@@ -87,6 +93,8 @@ class DailyConsumption(db.Model):
 
     @staticmethod
     def getListedCaloriesIntake(begin: int, end: int, uid: int):
+        if end == begin:
+            end = end + 24 * 3600
         records = DailyConsumption.query.filter(DailyConsumption.uid == uid).filter(
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         arr = []
@@ -121,11 +129,11 @@ class DailyConsumption(db.Model):
 
     @staticmethod
     def getRecentConsumedSuitableFood(pid, mealType):
-        dcs = DailyConsumption.query\
-            .filter(DailyConsumption.pid == pid)\
-            .filter(DailyConsumption.type == mealType)\
-            .order_by(DailyConsumption.time.desc()).limit(20)\
-            .from_self()\
+        dcs = DailyConsumption.query \
+            .filter(DailyConsumption.pid == pid) \
+            .filter(DailyConsumption.type == mealType) \
+            .order_by(DailyConsumption.time.desc()).limit(20) \
+            .from_self() \
             .order_by(DailyConsumption.time.asc())
         from db.Plan import Plan
         planType = Plan.getPlanByID(pid).type

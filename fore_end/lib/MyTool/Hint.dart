@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-class Hint{
+class Hint {
   String hintContent;
   bool instanceClose;
   Function() onClick;
 
-  Hint({@required this.hintContent, @required this.onClick, this.instanceClose=true});
-  void close(){
-
-  }
+  Hint(
+      {@required this.hintContent,
+      @required this.onClick,
+      this.instanceClose = true});
+  void close() {}
 }

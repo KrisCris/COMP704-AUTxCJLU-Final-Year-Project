@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
 import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
@@ -27,13 +26,16 @@ class GoalInputer extends StatefulWidget {
   void setNextDo(Function f) {
     this.nextDo = f;
   }
-  void setData(int genderRatio, double height, int weight, int age,double exerciseRatio){
-    this.genderRatio=genderRatio;
+
+  void setData(int genderRatio, double height, int weight, int age,
+      double exerciseRatio) {
+    this.genderRatio = genderRatio;
     this.height = height;
     this.weight = weight;
     this.age = age;
     this.exerciseRatio = exerciseRatio;
   }
+
   @override
   State<StatefulWidget> createState() {
     return GoalInputerState();
@@ -95,11 +97,10 @@ class GoalInputerState extends State<GoalInputer> {
 
   Widget getBackground() {
     return ClipRect(
-      child:  Container(
+      child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
-          color:Color(0xFF172632)
-        ),
+          color: Color(0xFF172632)),
     );
   }
 
@@ -121,16 +122,19 @@ class GoalInputerState extends State<GoalInputer> {
 
   Widget getLoseWeightSetting() {
     double basicCalorie = widget.exerciseRatio *
-        ( 10 * widget.weight.roundToDouble() + 6.25 * widget.height*100 - 5*widget.age.roundToDouble() + widget.genderRatio.roundToDouble());
-  double maxDailyCalorie = basicCalorie - 1000;
-  double maxLoseWeight = maxDailyCalorie*365/7000;
+        (10 * widget.weight.roundToDouble() +
+            6.25 * widget.height * 100 -
+            5 * widget.age.roundToDouble() +
+            widget.genderRatio.roundToDouble());
+    double maxDailyCalorie = basicCalorie - 1000;
+    double maxLoseWeight = maxDailyCalorie * 365 / 7000;
     ValueBar day = ValueBar<int>(
       barThickness: 20,
       width: 0.8,
       maxVal: 365,
       minVal: 1,
       adjustVal: 1,
-      valueName:'',
+      valueName: '',
       unit: CustomLocalizations.of(context).days,
       initVal: 30,
       borderThickness: 4,
@@ -156,17 +160,22 @@ class GoalInputerState extends State<GoalInputer> {
       borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
       edgeEmpty: [0, 0.95, 0, 0.95],
     );
-    day.setOnChange((){
+    day.setOnChange(() {
       widget.days = day.widgetValue.value;
-      widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
+      widget.dailyCostCalorie =
+          (weight.widgetValue.value * 7000) / day.widgetValue.value;
     });
-    weight.setOnChange((){
+    weight.setOnChange(() {
       widget.weightLose = weight.widgetValue.value;
-      widget.dailyCostCalorie = (weight.widgetValue.value * 7000)/day.widgetValue.value;
-      int newDay = ((weight.widgetValue.value*7000/maxDailyCalorie) as double).round();
+      widget.dailyCostCalorie =
+          (weight.widgetValue.value * 7000) / day.widgetValue.value;
+      int newDay =
+          ((weight.widgetValue.value * 7000 / maxDailyCalorie) as double)
+              .round();
       day.changeMin(newDay);
     });
-    widget.dailyCostCalorie = (weight.widgetValue.value  * 7000)/day.widgetValue.value;
+    widget.dailyCostCalorie =
+        (weight.widgetValue.value * 7000) / day.widgetValue.value;
     widget.days = day.widgetValue.value;
     widget.weightLose = weight.widgetValue.value;
 
@@ -220,7 +229,7 @@ class GoalInputerState extends State<GoalInputer> {
       maxVal: 365,
       adjustVal: 1,
       minVal: 1,
-      valueName:'',
+      valueName: '',
       unit: CustomLocalizations.of(context).days,
       initVal: 30,
       borderThickness: 4,
@@ -230,7 +239,7 @@ class GoalInputerState extends State<GoalInputer> {
       borderRadius_RT_RB_RT_RB: [2, 2, 2, 2],
       edgeEmpty: [0, 0.95, 0, 0.95],
     );
-    day.setOnChange((){
+    day.setOnChange(() {
       widget.days = day.widgetValue.value;
     });
 
@@ -247,7 +256,8 @@ class GoalInputerState extends State<GoalInputer> {
               width: ScreenTool.partOfScreenWidth(0.55),
               height: 80,
               child: TitleText(
-                text: CustomLocalizations.of(context).planBuildMuscleDayQuestion,
+                text:
+                    CustomLocalizations.of(context).planBuildMuscleDayQuestion,
                 //"How Many Days Do You Want To Spend To Build Your Muscle?",
                 maxWidth: 0.6,
                 maxHeight: 50,
@@ -272,6 +282,4 @@ class GoalInputerState extends State<GoalInputer> {
       return SizedBox(height: 0);
     }
   }
-
-
 }

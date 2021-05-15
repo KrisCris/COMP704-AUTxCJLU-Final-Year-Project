@@ -5,7 +5,8 @@ import 'CardChooser.dart';
 
 enum CardChooserGroupDirection { vertical, horizontal }
 
-class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetMixIn<T> {
+class CardChooserGroup<T> extends StatelessWidget
+    with ValueableStatelessWidgetMixIn<T> {
   CardChooserGroupDirection direction;
   MainAxisAlignment mainAxisAlignment;
   bool listView;
@@ -17,22 +18,22 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
   CardChooserGroup(
       {@required T initVal,
       this.cards,
-        this.listView=false,
+      this.listView = false,
       this.direction = CardChooserGroupDirection.vertical,
       this.mainAxisAlignment = MainAxisAlignment.center,
-        this.paddingLeft=0,
-        this.paddingRight=0,
-        List<Function> onChange,
+      this.paddingLeft = 0,
+      this.paddingRight = 0,
+      List<Function> onChange,
       this.gap = 0}) {
     this.widgetValue = ValueNotifier(initVal);
-    if(onChange == null){
+    if (onChange == null) {
       this.onChangeValue = [];
-    }else{
+    } else {
       this.onChangeValue = onChange;
     }
     this.initValueListener();
     for (CardChooser cd in cards) {
-      if(cd.isChosen()){
+      if (cd.isChosen()) {
         this.setValue(cd.getValue());
       }
       cd.setOnTap(() {
@@ -52,13 +53,11 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
     if (direction == CardChooserGroupDirection.vertical) {
       for (CardChooser cd in this.cards) {
         idx++;
-        res.add(Align(
-            alignment: Alignment.center,
-            child: cd));
+        res.add(Align(alignment: Alignment.center, child: cd));
         if (this.gap <= 0 || idx == this.cards.length - 1) continue;
         res.add(SizedBox(height: this.gap));
       }
-      if(!this.listView){
+      if (!this.listView) {
         return Column(mainAxisAlignment: this.mainAxisAlignment, children: res);
       }
       return ListView(
@@ -67,21 +66,19 @@ class CardChooserGroup<T> extends StatelessWidget with ValueableStatelessWidgetM
         children: res,
       );
     } else {
-      if(this.paddingLeft !=0){
+      if (this.paddingLeft != 0) {
         res.add(SizedBox(width: this.paddingLeft));
       }
       for (CardChooser cd in this.cards) {
         idx++;
-        res.add(Align(
-          alignment: Alignment.center,
-          child: cd));
+        res.add(Align(alignment: Alignment.center, child: cd));
         if (this.gap <= 0 || idx == this.cards.length - 1) continue;
         res.add(SizedBox(width: this.gap));
       }
-      if(this.paddingRight !=0){
+      if (this.paddingRight != 0) {
         res.add(SizedBox(width: this.paddingRight));
       }
-      if(!this.listView) {
+      if (!this.listView) {
         return Row(mainAxisAlignment: this.mainAxisAlignment, children: res);
       }
       return ListView(

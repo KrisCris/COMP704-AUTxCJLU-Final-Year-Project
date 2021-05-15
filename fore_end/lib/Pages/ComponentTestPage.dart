@@ -1,26 +1,6 @@
-import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/Food.dart';
-import 'package:fore_end/MyTool/Meal.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/DateButton/DateButton.dart';
-import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
-import 'package:fore_end/Mycomponents/widgets/food/DetailedMealList.dart';
-import 'package:fore_end/Mycomponents/widgets/food/NutritionPieChart.dart';
-import 'package:fore_end/Mycomponents/widgets/food/SmallFoodBox.dart';
-import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
-import 'package:fore_end/Mycomponents/widgets/food/ValueAdjuster.dart';
-import 'dart:math' as math;
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-
-import 'FoodDetailsPage.dart';
-
-
-
 
 class ComponentTestPage extends StatefulWidget {
   State state;
@@ -35,8 +15,6 @@ class ComponentTestPage extends StatefulWidget {
 
 class ComponentTestState extends State<ComponentTestPage>
     with TickerProviderStateMixin {
-
-
   @override
   void dispose() {
     super.dispose();
@@ -51,7 +29,4 @@ class ComponentTestState extends State<ComponentTestPage>
   Widget build(BuildContext context) {
     return Container();
   }
-
-
-
 }

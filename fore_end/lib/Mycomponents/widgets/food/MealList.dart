@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/Meal.dart';
+import 'package:fore_end/MyTool/User.dart';
 import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/MyTool/User.dart';
-
-
 
 ///statefulWidget组件可以随时更新变化的数据
 class MealListUI extends StatelessWidget {
   Key key;
-  MealListUI({Key key}){
+  MealListUI({Key key}) {
     this.key = key;
   }
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();
-    return
-      Container(
-        height: 200,
-        width: double.infinity,
-        child:
-        ListView.builder(
-            itemCount: u.meals.value.length,///一个listview里面item的个数，这里一日三餐有三个
-            itemExtent: 150, ///itemExtent是设置每个item的在滚动方向上面的宽度，水平就是宽度，垂直就是高度
-            scrollDirection: Axis.horizontal, ///滚动的方向为水平滚动
-            itemBuilder: (BuildContext context, int index) {
-              return MealView(
-                mealsListData: u.meals.value[index], ///按list里的个数来构建，上面已经初始化了
-                key: u.meals.value[index].key,
-              );
-            }
-        ),
-      );
+    return Container(
+      height: 200,
+      width: double.infinity,
+      child: ListView.builder(
+          itemCount: u.meals.value.length,
+
+          ///一个listview里面item的个数，这里一日三餐有三个
+          itemExtent: 150,
+
+          ///itemExtent是设置每个item的在滚动方向上面的宽度，水平就是宽度，垂直就是高度
+          scrollDirection: Axis.horizontal,
+
+          ///滚动的方向为水平滚动
+          itemBuilder: (BuildContext context, int index) {
+            return MealView(
+              mealsListData: u.meals.value[index],
+
+              ///按list里的个数来构建，上面已经初始化了
+              key: u.meals.value[index].key,
+            );
+          }),
+    );
   }
 }
 
@@ -47,7 +49,7 @@ class MealView extends StatefulWidget {
   }
 }
 
-class MealViewState extends State<MealView>{
+class MealViewState extends State<MealView> {
   @override
   void didUpdateWidget(covariant MealView oldWidget) {
     ///一般不需要重写  默认是直接废弃oldWidget
@@ -61,11 +63,10 @@ class MealViewState extends State<MealView>{
       children: <Widget>[
         Padding(
             padding:
-            const EdgeInsets.only(top: 0, left: 5, right: 0, bottom: 0),
+                const EdgeInsets.only(top: 0, left: 5, right: 0, bottom: 0),
 
             ///用来对其每个item与包裹着他们的大的ListView的内边距
-            child:
-            Container(
+            child: Container(
               height: 250,
 
               ///这是ListView里面每一个item的容器高度，宽度设置在上面listView.build的itemExtent是设置每个item的宽度
@@ -84,26 +85,25 @@ class MealViewState extends State<MealView>{
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Icon(
-                        widget.mealsListData.getIcon(), size: 30,
+                    Icon(widget.mealsListData.getIcon(),
+                        size: 30,
                         color: MyTheme.convert(ThemeColorName.NormalIcon)),
-
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     Text(
                       ///标题
-                      CustomLocalizations.of(context).getContent(widget.mealsListData.mealName),
+                      CustomLocalizations.of(context)
+                          .getContent(widget.mealsListData.mealName),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontFamily: "Futura",
                           fontSize: 18,
                           letterSpacing: 0.2,
-                          color: MyTheme.convert(ThemeColorName.HeaderText)
-                      ),
+                          color: MyTheme.convert(ThemeColorName.HeaderText)),
                     ),
-
                     Expanded(
-
                       ///食物列表，一般只显示三个
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -131,10 +131,11 @@ class MealViewState extends State<MealView>{
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Padding(
-                            padding:
-                            const EdgeInsets.only(left: 0, bottom: 5),
+                            padding: const EdgeInsets.only(left: 0, bottom: 5),
                             child: Text(
-                              widget.mealsListData.calculateTotalCalories().toString(),
+                              widget.mealsListData
+                                  .calculateTotalCalories()
+                                  .toString(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -142,14 +143,13 @@ class MealViewState extends State<MealView>{
                                 fontFamily: "Futura",
                                 fontSize: 24,
                                 letterSpacing: 0.1,
-                                color:MyTheme.convert(ThemeColorName.HeaderText),
+                                color:
+                                    MyTheme.convert(ThemeColorName.HeaderText),
                               ),
                             ),
                           ),
-
                           Padding(
-                            padding:
-                            const EdgeInsets.only(left: 4, bottom: 7),
+                            padding: const EdgeInsets.only(left: 4, bottom: 7),
                             child: Text(
                               'KCal',
                               style: TextStyle(
@@ -158,16 +158,14 @@ class MealViewState extends State<MealView>{
                                 fontFamily: "Futura",
                                 fontSize: 15,
                                 letterSpacing: 0.2,
-                                color: MyTheme.convert(ThemeColorName.NormalText),
+                                color:
+                                    MyTheme.convert(ThemeColorName.NormalText),
                               ),
                             ),
                           ),
-                        ]
-                    ),
-                  ]
-              ),
-            )
-        )
+                        ]),
+                  ]),
+            ))
         // )
       ],
     );

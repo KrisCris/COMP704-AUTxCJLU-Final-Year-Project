@@ -16,7 +16,8 @@ INITIAL_ACTIVITY_CHG_PCT = 0.0
 
 
 class Intervention(object):
-    def __init__(self, day=100, calories=INITIAL_CALORIES, carbinpercent=INITIAL_CARB_INTAKE_PCT, actchangepercent=INITIAL_ACTIVITY_CHG_PCT, sodium=INITIAL_SODIUM):
+    def __init__(self, day=100, calories=INITIAL_CALORIES, carbinpercent=INITIAL_CARB_INTAKE_PCT,
+                 actchangepercent=INITIAL_ACTIVITY_CHG_PCT, sodium=INITIAL_SODIUM):
         self.calories = calories if calories and calories >= MIN_CALORIES else INITIAL_CALORIES
         self.carbinpercent = carbinpercent if carbinpercent and MAX_CARB_INTAKE_PCT >= carbinpercent >= MIN_CARB_INTAKE_PCT else INITIAL_CARB_INTAKE_PCT
         self.PAL = INITIAL_PAL

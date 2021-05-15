@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/MyTool/User.dart';
+import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
 import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
@@ -25,9 +24,9 @@ class BodyDataInputer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();
-    if(u.gender != null){
+    if (u.gender != null) {
       this.gender = u.gender;
-      this.genderRatio = u.gender==1?5:-161;
+      this.genderRatio = u.gender == 1 ? 5 : -161;
     }
     CustomButton nextButton = CustomButton(
       radius: 5,
@@ -35,14 +34,18 @@ class BodyDataInputer extends StatelessWidget {
       width: 0.8,
       height: 50,
       text: CustomLocalizations.of(context).next,
-      disabled: u.gender==null,
+      disabled: u.gender == null,
       tapFunc: this.nextDo,
     );
 
     CardChooser male = CardChooser<int>(
       value: 5,
       text: CustomLocalizations.of(context).male,
-      isChosen: u.gender == null?false:u.gender == 1?true:false,
+      isChosen: u.gender == null
+          ? false
+          : u.gender == 1
+              ? true
+              : false,
       textSize: 15,
       textColor: Colors.white,
       backgroundColor: Color(0xFF3594DD),
@@ -54,7 +57,11 @@ class BodyDataInputer extends StatelessWidget {
       value: -161,
       text: CustomLocalizations.of(context).female,
       textSize: 15,
-      isChosen:  u.gender == null?false:u.gender == 2?true:false,
+      isChosen: u.gender == null
+          ? false
+          : u.gender == 2
+              ? true
+              : false,
       textColor: Colors.white,
       backgroundColor: Color(0xFFFF7979),
       borderRadius: 10,
@@ -66,11 +73,11 @@ class BodyDataInputer extends StatelessWidget {
       roundNum: 2,
       adjustVal: 0.01,
       width: 0.8,
-      valueName:CustomLocalizations.of(context).height,
+      valueName: CustomLocalizations.of(context).height,
       unit: "m",
       maxVal: 2.50,
       minVal: 1.00,
-      initVal: u.bodyHeight == null?1.65:u.bodyHeight,
+      initVal: u.bodyHeight == null ? 1.65 : u.bodyHeight,
       borderThickness: 4,
       barColor: Colors.white,
       showValue: true,
@@ -85,7 +92,7 @@ class BodyDataInputer extends StatelessWidget {
       unit: "KG",
       maxVal: 150,
       minVal: 30,
-      initVal: u.bodyWeight == null?50:u.bodyWeight.floor(),
+      initVal: u.bodyWeight == null ? 50 : u.bodyWeight.floor(),
       adjustVal: 1,
       barColor: Color(0xFFBCA5D6),
       borderThickness: 4,
@@ -115,9 +122,9 @@ class BodyDataInputer extends StatelessWidget {
     genderChoose.addValueChangeListener(() {
       if (genderChoose.getValue() >= 0) {
         this.genderRatio = genderChoose.getValue();
-        if(this.genderRatio == 5){
+        if (this.genderRatio == 5) {
           this.gender = 1;
-        }else if(this.genderRatio == -161){
+        } else if (this.genderRatio == -161) {
           this.gender = 2;
         }
         nextButton.setDisabled(false);
@@ -130,8 +137,7 @@ class BodyDataInputer extends StatelessWidget {
           child: Container(
               width: ScreenTool.partOfScreenWidth(1),
               height: ScreenTool.partOfScreenHeight(1),
-              color: Color(0xFF172632)
-            ),
+              color: Color(0xFF172632)),
         ),
         Container(
           width: ScreenTool.partOfScreenWidth(1),
@@ -155,7 +161,6 @@ class BodyDataInputer extends StatelessWidget {
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.bold)),
                   )
-
                 ],
               ),
               SizedBox(height: 10),

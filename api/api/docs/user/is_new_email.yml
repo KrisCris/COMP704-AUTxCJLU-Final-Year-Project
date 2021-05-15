@@ -23,7 +23,7 @@ responses:
           example: 'success'
         data:
           type: array
-          example: []
+          example: [ ]
   -3:
     description: Already used
     schema:
@@ -38,7 +38,7 @@ responses:
           example: 'Already Exist'
         data:
           type: array
-          example: []
+          example: [ ]
 
 
 
