@@ -172,13 +172,22 @@ class _FoodDetailsState extends State<FoodDetails> {
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    this.widget.currentFood.getName(context),
-                    style: TextStyle(
-                        color: MyTheme.convert(ThemeColorName.NormalText),
-                        fontSize: 25,
-                        fontFamily: 'Futura'),
-                  )
+                  Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width - 50),
+
+                    child: Text(
+
+                      this.widget.currentFood.getName(context),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: MyTheme.convert(ThemeColorName.NormalText),
+                          fontSize: 25,
+                          fontFamily: 'Futura'),
+                    ),
+                  ),
+
+
                 ],
               ),
             ),
