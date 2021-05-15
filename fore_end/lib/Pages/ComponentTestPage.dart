@@ -19,9 +19,6 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'FoodDetailsPage.dart';
 
-
-
-
 class ComponentTestPage extends StatefulWidget {
   State state;
   int animateDuration = 800;
@@ -35,8 +32,6 @@ class ComponentTestPage extends StatefulWidget {
 
 class ComponentTestState extends State<ComponentTestPage>
     with TickerProviderStateMixin {
-
-
   @override
   void dispose() {
     super.dispose();
@@ -51,7 +46,4 @@ class ComponentTestState extends State<ComponentTestPage>
   Widget build(BuildContext context) {
     return Container();
   }
-
-
-
 }

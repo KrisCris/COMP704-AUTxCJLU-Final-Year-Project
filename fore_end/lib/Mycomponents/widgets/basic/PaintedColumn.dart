@@ -39,17 +39,16 @@ class PaintedColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
-      child:ClipRRect(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(this.borderRadius),
         child: Stack(
           children: [
             CustomPaint(
               painter: ColorPainter(
-                color: this.backgroundColor,
-                context:context,
-                contextPainter: this.forePainter
-              ),
-              child:  Container(
+                  color: this.backgroundColor,
+                  context: context,
+                  contextPainter: this.forePainter),
+              child: Container(
                 width: this.width,
                 child: Column(
                   mainAxisAlignment: this.mainAxisAlignment,
@@ -59,7 +58,7 @@ class PaintedColumn extends StatelessWidget {
             ),
           ],
         ),
-      ) ,
+      ),
     );
   }
 }

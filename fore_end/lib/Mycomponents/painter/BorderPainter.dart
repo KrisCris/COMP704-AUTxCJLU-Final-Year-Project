@@ -18,8 +18,8 @@ class BorderPainter extends CustomPainter {
       {@required List<double> borderRadius_LT_LB_RT_RB,
       List<double> edgeEmptySize,
       Color color = Colors.white,
-        this.showBorder=true,
-        double borderDistance = 0,
+      this.showBorder = true,
+      double borderDistance = 0,
       double borderWidth = 3.0}) {
     if (edgeEmptySize == null) {
       edgeEmptySize = [0, 0, 0, 0];
@@ -39,7 +39,7 @@ class BorderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if(!this.showBorder)return;
+    if (!this.showBorder) return;
 
     this.leftEdgeEmptySize = this.leftEdgeEmptySize < 1
         ? this.leftEdgeEmptySize * size.height
@@ -55,17 +55,20 @@ class BorderPainter extends CustomPainter {
         : this.bottomEdgeEmptySize;
 
     Rect rectLT = Rect.fromCircle(
-        center: Offset(borderRadius[0]-borderDistance, borderRadius[0]-borderDistance),
+        center: Offset(
+            borderRadius[0] - borderDistance, borderRadius[0] - borderDistance),
         radius: borderRadius[0]);
     Rect rectLB = Rect.fromCircle(
-        center: Offset(borderRadius[1]-borderDistance, size.height - borderRadius[1]+borderDistance),
+        center: Offset(borderRadius[1] - borderDistance,
+            size.height - borderRadius[1] + borderDistance),
         radius: borderRadius[1]);
     Rect rectRT = Rect.fromCircle(
-        center: Offset(size.width - borderRadius[2]+borderDistance, borderRadius[2]-borderDistance),
+        center: Offset(size.width - borderRadius[2] + borderDistance,
+            borderRadius[2] - borderDistance),
         radius: borderRadius[2]);
     Rect rectRB = Rect.fromCircle(
-        center:
-            Offset(size.width - borderRadius[3]+borderDistance, size.height - borderRadius[3]+borderDistance),
+        center: Offset(size.width - borderRadius[3] + borderDistance,
+            size.height - borderRadius[3] + borderDistance),
         radius: borderRadius[3]);
     canvas.drawArc(rectLT, pi, pi / 2, false, pen);
     canvas.drawArc(rectLB, pi / 2, pi / 2, false, pen);
@@ -78,44 +81,53 @@ class BorderPainter extends CustomPainter {
 
     //绘制左边框
     canvas.drawLine(
-        Offset(0-borderDistance, borderRadius[0]-borderDistance),
-        Offset(0-borderDistance, borderRadius[0] + (leftLine / 2) - (leftEdgeEmptySize / 2)),
+        Offset(0 - borderDistance, borderRadius[0] - borderDistance),
+        Offset(0 - borderDistance,
+            borderRadius[0] + (leftLine / 2) - (leftEdgeEmptySize / 2)),
         pen);
     canvas.drawLine(
-        Offset(0-borderDistance, borderRadius[0] + leftLine / 2 + (leftEdgeEmptySize / 2)),
-        Offset(0-borderDistance, borderRadius[0] + leftLine+borderDistance),
+        Offset(0 - borderDistance,
+            borderRadius[0] + leftLine / 2 + (leftEdgeEmptySize / 2)),
+        Offset(0 - borderDistance, borderRadius[0] + leftLine + borderDistance),
         pen);
 
     //绘制右边框
     canvas.drawLine(
-        Offset(size.width+borderDistance, borderRadius[2]-borderDistance),
-        Offset(size.width+borderDistance,
+        Offset(size.width + borderDistance, borderRadius[2] - borderDistance),
+        Offset(size.width + borderDistance,
             borderRadius[2] + (rightLine / 2) - (rightEdgeEmptySize / 2)),
         pen);
     canvas.drawLine(
-        Offset(size.width+borderDistance,
+        Offset(size.width + borderDistance,
             borderRadius[2] + rightLine / 2 + (rightEdgeEmptySize / 2)),
-        Offset(size.width+borderDistance, borderRadius[2] + rightLine+borderDistance),
+        Offset(size.width + borderDistance,
+            borderRadius[2] + rightLine + borderDistance),
         pen);
 
     //绘制上边框
-    canvas.drawLine(Offset(borderRadius[0]-borderDistance, 0-borderDistance),
-        Offset(borderRadius[0] + topLine / 2 - topEdgeEmptySize / 2, 0-borderDistance), pen);
     canvas.drawLine(
-        Offset(borderRadius[0] + topLine / 2 + (topEdgeEmptySize / 2), 0-borderDistance),
-        Offset(size.width - borderRadius[2]+borderDistance, 0-borderDistance),
+        Offset(borderRadius[0] - borderDistance, 0 - borderDistance),
+        Offset(borderRadius[0] + topLine / 2 - topEdgeEmptySize / 2,
+            0 - borderDistance),
+        pen);
+    canvas.drawLine(
+        Offset(borderRadius[0] + topLine / 2 + (topEdgeEmptySize / 2),
+            0 - borderDistance),
+        Offset(
+            size.width - borderRadius[2] + borderDistance, 0 - borderDistance),
         pen);
 
     //绘制下边框
     canvas.drawLine(
-        Offset(borderRadius[1]-borderDistance, size.height+borderDistance),
+        Offset(borderRadius[1] - borderDistance, size.height + borderDistance),
         Offset(borderRadius[1] + bottomLine / 2 - bottomEdgeEmptySize / 2,
-            size.height+borderDistance),
+            size.height + borderDistance),
         pen);
     canvas.drawLine(
         Offset(borderRadius[1] + bottomLine / 2 + bottomEdgeEmptySize / 2,
-            size.height+borderDistance),
-        Offset(size.width - borderRadius[3]+borderDistance, size.height+borderDistance ),
+            size.height + borderDistance),
+        Offset(size.width - borderRadius[3] + borderDistance,
+            size.height + borderDistance),
         pen);
   }
 

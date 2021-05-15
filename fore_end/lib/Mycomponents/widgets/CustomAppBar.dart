@@ -11,12 +11,10 @@ import 'package:fore_end/Pages/WelcomePage.dart';
 
 ///自定义的AppBar，显示一些基本信息
 class CustomAppBar extends StatefulWidget {
-
   ///历史遗留问题，不推荐使用这种方式保存State的引用
   CustomAppBarState state;
 
-  CustomAppBar({Key key})
-      : super(key: key) {}
+  CustomAppBar({Key key}) : super(key: key) {}
 
   ///历史遗留问题，不推荐使用这种方式保存State的引用
   @override
@@ -81,10 +79,7 @@ class CustomAppBarState extends State<CustomAppBar>
               ),
               CustomPaint(
                 painter: ColorPainter(
-                  leftExtra: 5,
-                  rightExtra: 5,
-                  color: Colors.black12
-                ),
+                    leftExtra: 5, rightExtra: 5, color: Colors.black12),
                 child: Text(
                   "Registered For x Days",
                   textDirection: TextDirection.ltr,
@@ -108,12 +103,12 @@ class CustomAppBarState extends State<CustomAppBar>
                 text: "Log out",
                 backgroundOpacity: 0,
                 iconSize: 22,
-                onClick: (){
+                onClick: () {
                   User.getInstance().logOut();
                   Navigator.pushAndRemoveUntil(context,
                       new MaterialPageRoute(builder: (ctx) {
-                        return Welcome();
-                      }), (route) => false);
+                    return Welcome();
+                  }), (route) => false);
                 },
               ),
             ],

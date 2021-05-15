@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:fore_end/interface/Valueable.dart';
 
 ///用于统一修改可变值组件的区域
 class EditableArea extends StatelessWidget {
-
   ///区域内显示的组件
   List<Widget> displayContent;
 
@@ -43,9 +41,9 @@ class EditableArea extends StatelessWidget {
       @required this.displayContent,
       this.width = 300,
       this.height = 500,
-        this.editing = false,
-        this.borderRadius =0,
-        @required this.onEditComplete,
+      this.editing = false,
+      this.borderRadius = 0,
+      @required this.onEditComplete,
       this.title = ""})
       : super(key: key) {
     if (this.width <= 1) {
@@ -63,15 +61,15 @@ class EditableArea extends StatelessWidget {
         width: this.width,
         height: this.height,
         decoration: BoxDecoration(
-            color: MyTheme.convert(ThemeColorName.ComponentBackground),
-            borderRadius: BorderRadius.all(Radius.circular(this.borderRadius)),
-            // boxShadow: [
-            //   BoxShadow(
-            //     blurRadius: 12, //阴影范围
-            //     spreadRadius: 3, //阴影浓度
-            //     color: Color(0x33000000), //阴影颜色
-            //   ),
-            // ]
+          color: MyTheme.convert(ThemeColorName.ComponentBackground),
+          borderRadius: BorderRadius.all(Radius.circular(this.borderRadius)),
+          // boxShadow: [
+          //   BoxShadow(
+          //     blurRadius: 12, //阴影范围
+          //     spreadRadius: 3, //阴影浓度
+          //     color: Color(0x33000000), //阴影颜色
+          //   ),
+          // ]
         ),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -114,11 +112,11 @@ class EditableArea extends StatelessWidget {
       backgroundOpacity: 0,
       iconSize: 20,
     );
-    this.editButton.onClick = (){
-      if(!this.editing){
+    this.editButton.onClick = () {
+      if (!this.editing) {
         this.editButton.changeIcon(FontAwesomeIcons.check);
         this._startEdit(context);
-      }else{
+      } else {
         this.editButton.changeIcon(FontAwesomeIcons.edit);
         this._endEdit();
       }
@@ -136,7 +134,7 @@ class EditableArea extends StatelessWidget {
   void _endEdit() {
     this.editing = false;
     this._disableAll();
-    if(this.onEditComplete != null){
+    if (this.onEditComplete != null) {
       this.onEditComplete();
     }
   }
@@ -144,7 +142,7 @@ class EditableArea extends StatelessWidget {
   ///将所有可以设置为disable的组件全部设置为disable
   void _disableAll() {
     for (Widget wd in this.displayContent) {
-      if(wd is DisableWidgetMixIn){
+      if (wd is DisableWidgetMixIn) {
         (wd as DisableWidgetMixIn).setDisabled(true);
       }
     }
@@ -153,17 +151,17 @@ class EditableArea extends StatelessWidget {
   ///将所有可以设置为disable的组件全部取消disable
   void enableAll() {
     for (Widget wd in this.displayContent) {
-      if(wd is DisableWidgetMixIn){
+      if (wd is DisableWidgetMixIn) {
         (wd as DisableWidgetMixIn).setDisabled(false);
       }
     }
   }
 
   ///获取所有可以产生值的组件里的值，以list返回
-  List<String> getAllValue(){
+  List<String> getAllValue() {
     List<String> res = new List<String>();
     for (Widget wd in this.displayContent) {
-      if( wd is ValueableWidgetMixIn<String>){
+      if (wd is ValueableWidgetMixIn<String>) {
         res.add((wd as ValueableWidgetMixIn).getValue());
       }
     }
@@ -172,16 +170,16 @@ class EditableArea extends StatelessWidget {
 
   ///获取所有可以产生值的组件里的值，并以给定的键 [keys] 对应
   ///若给定的键不够，将自动补充键
-  Map<String,String> getMapWithValue(List<String> keys){
-    Map<String,String> res = new Map<String,String>();
+  Map<String, String> getMapWithValue(List<String> keys) {
+    Map<String, String> res = new Map<String, String>();
 
-    int i=0;
-    for(Widget wd in this.displayContent){
-      if(!(wd is ValueableWidgetMixIn))continue;
-      if(keys.length <= i){
-        String key = "name-"+(i-keys.length).toString();
+    int i = 0;
+    for (Widget wd in this.displayContent) {
+      if (!(wd is ValueableWidgetMixIn)) continue;
+      if (keys.length <= i) {
+        String key = "name-" + (i - keys.length).toString();
         res[key] = (wd as ValueableWidgetMixIn).getValue();
-      }else{
+      } else {
         res.addAll((wd as ValueableWidgetMixIn).getValueWithKey(keys[i]));
       }
       i++;

@@ -9,18 +9,18 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
 import 'package:fore_end/Mycomponents/text/TitleText.dart';
 
-class ChooseExtendTime extends StatelessWidget{
+class ChooseExtendTime extends StatelessWidget {
   GlobalKey<ValueBarState> barKey = GlobalKey<ValueBarState>();
   @override
   Widget build(BuildContext context) {
     ValueBar bar = ValueBar<int>(
       key: barKey,
-        adjustVal: 1,
-        minVal: 7,
-        maxVal: 365,
-        initVal: 7,
-        unit: CustomLocalizations.of(context).days,
-        valuePosition: ValuePosition.center,
+      adjustVal: 1,
+      minVal: 7,
+      maxVal: 365,
+      initVal: 7,
+      unit: CustomLocalizations.of(context).days,
+      valuePosition: ValuePosition.center,
     );
     return Container(
       height: ScreenTool.partOfScreenHeight(1),
@@ -50,14 +50,15 @@ class ChooseExtendTime extends StatelessWidget{
                 radius: 5,
                 tapFunc: () async {
                   User u = User.getInstance();
-                  int days = (barKey.currentWidget as ValueBar).widgetValue.value;
-                  Response res = await Requests.delayPlan(context,{
-                    "uid":u.uid,
-                    "token":u.token,
-                    "pid":u.plan.id,
-                    "days":days
+                  int days =
+                      (barKey.currentWidget as ValueBar).widgetValue.value;
+                  Response res = await Requests.delayPlan(context, {
+                    "uid": u.uid,
+                    "token": u.token,
+                    "pid": u.plan.id,
+                    "days": days
                   });
-                  if(res != null && res.data['code'] == 1){
+                  if (res != null && res.data['code'] == 1) {
                     Navigator.of(context).pop(days);
                   }
                 },
@@ -69,5 +70,4 @@ class ChooseExtendTime extends StatelessWidget{
       ),
     );
   }
-
 }

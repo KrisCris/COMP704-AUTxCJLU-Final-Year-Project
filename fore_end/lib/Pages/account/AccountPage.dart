@@ -29,7 +29,10 @@ class AccountPage extends StatefulWidget {
   String email;
   String imageSource = User.getInstance().avatar;
   User user = User.getInstance();
-  var genderData = ['Male', 'Female',];
+  var genderData = [
+    'Male',
+    'Female',
+  ];
   bool visible = true;
   PageState state;
 
@@ -44,10 +47,9 @@ class AccountPage extends StatefulWidget {
   }
 
   int setGender(String gender) {
-    if (gender == "Male"|| gender == "男性")
+    if (gender == "Male" || gender == "男性")
       return 0;
-    else if (gender == "Female"|| gender == "女性")
-      return 1;
+    else if (gender == "Female" || gender == "女性") return 1;
     return null;
   }
 
@@ -74,7 +76,6 @@ class PageState extends State<AccountPage> {
   GlobalKey<MealLimitPercentBoxState> lunch;
   GlobalKey<MealLimitPercentBoxState> dinner;
 
-
   @override
   void initState() {
     breakfast = GlobalKey<MealLimitPercentBoxState>();
@@ -82,6 +83,7 @@ class PageState extends State<AccountPage> {
     dinner = GlobalKey<MealLimitPercentBoxState>();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();
@@ -101,8 +103,7 @@ class PageState extends State<AccountPage> {
       List<String> basicInfo = new List<String>();
       basicInfo = this.basicInfoEditableArea.getAllValue();
       try {
-        Response res = await Requests.modifyBasicInfo(
-            context,{
+        Response res = await Requests.modifyBasicInfo(context, {
           "uid": widget.user.uid,
           "token": widget.user.token,
           "age": int.parse(basicInfo[2]),
@@ -129,98 +130,116 @@ class PageState extends State<AccountPage> {
     return FlutterEasyLoading(
         child: Scaffold(
             body: Stack(
-            children: [
-              Container(
-                width: ScreenTool.partOfScreenWidth(1),
-                height: ScreenTool.partOfScreenHeight(1),
-                color: MyTheme.convert(ThemeColorName.PageBackground),
-              ),
-              ListView(
-                // padding: EdgeInsets.only(),
-                children: <Widget>[
-                  //Account Page的最上面标题
-                  Row(
-                    children: [
-                      SizedBox(width: 10,),
-                      GestureDetector(
-                        child: Icon(FontAwesomeIcons.arrowLeft,size: 30,color: MyTheme.convert(ThemeColorName.NormalIcon),),
-                        onTap: (){
-                          Navigator.pop(context);
-                        },
-                      ),
-
-                      Container(
-                        // margin: EdgeInsets.all(20),
-                        margin: EdgeInsets.fromLTRB(20, 18, 10, 10),
-                        child: Text(
-                          CustomLocalizations.of(context).accountPageTitle,
-                          style: TextStyle(
-                            color: MyTheme.convert(ThemeColorName.HeaderText),
-                            fontSize: 32,
-                            fontFamily: "Futura",
-                          ),
-                        ),
-                      ),
-
-                    ],
+      children: [
+        Container(
+          width: ScreenTool.partOfScreenWidth(1),
+          height: ScreenTool.partOfScreenHeight(1),
+          color: MyTheme.convert(ThemeColorName.PageBackground),
+        ),
+        ListView(
+          // padding: EdgeInsets.only(),
+          children: <Widget>[
+            //Account Page的最上面标题
+            Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                  child: Icon(
+                    FontAwesomeIcons.arrowLeft,
+                    size: 30,
+                    color: MyTheme.convert(ThemeColorName.NormalIcon),
                   ),
-                  SizedBox(
-                    height: 10,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Container(
+                  // margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.fromLTRB(20, 18, 10, 10),
+                  child: Text(
+                    CustomLocalizations.of(context).accountPageTitle,
+                    style: TextStyle(
+                      color: MyTheme.convert(ThemeColorName.HeaderText),
+                      fontSize: 32,
+                      fontFamily: "Futura",
+                    ),
                   ),
-                  EditableArea(
-                      width: 0.7,
-                      height: 190,
-                      title: CustomLocalizations.of(context).accountInformation,
-                      displayContent: [
-                        this.getEmailItem(),
-                        this.getPwdItem(context),
-                      ]),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  this.basicInfoEditableArea,
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MealLimitPercentBox(
-                        name:"breakfast",
-                        lowerLimit: 0, upperLimit: 100,
-                        initVal: u.breakfastRatio, changeUnit: 10,
-                        height: 90,width: 0.325,
-                        k: breakfast,
-                        relatedBox: [lunch,dinner],
-                      ),
-                      MealLimitPercentBox(
-                        name:"lunch",
-                        lowerLimit: 0, upperLimit: 100,
-                        initVal: u.lunchRatio, changeUnit: 10,
-                        height: 90,width: 0.325,
-                        k: lunch,
-                        relatedBox: [dinner,breakfast],
-                      ),
-                      MealLimitPercentBox(
-                        name:"dinner",
-                        lowerLimit: 0, upperLimit: 100,
-                        initVal: u.dinnerRatio, changeUnit: 10,
-                        height: 90,width: 0.325,
-                        k: dinner,
-                        relatedBox: [breakfast,lunch],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10,)
-                ],
-              )
-            ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            EditableArea(
+                width: 0.7,
+                height: 190,
+                title: CustomLocalizations.of(context).accountInformation,
+                displayContent: [
+                  this.getEmailItem(),
+                  this.getPwdItem(context),
+                ]),
+            SizedBox(
+              height: 10,
+            ),
+            this.basicInfoEditableArea,
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MealLimitPercentBox(
+                  name: "breakfast",
+                  lowerLimit: 0,
+                  upperLimit: 100,
+                  initVal: u.breakfastRatio,
+                  changeUnit: 10,
+                  height: 90,
+                  width: 0.325,
+                  k: breakfast,
+                  relatedBox: [lunch, dinner],
+                ),
+                MealLimitPercentBox(
+                  name: "lunch",
+                  lowerLimit: 0,
+                  upperLimit: 100,
+                  initVal: u.lunchRatio,
+                  changeUnit: 10,
+                  height: 90,
+                  width: 0.325,
+                  k: lunch,
+                  relatedBox: [dinner, breakfast],
+                ),
+                MealLimitPercentBox(
+                  name: "dinner",
+                  lowerLimit: 0,
+                  upperLimit: 100,
+                  initVal: u.dinnerRatio,
+                  changeUnit: 10,
+                  height: 90,
+                  width: 0.325,
+                  k: dinner,
+                  relatedBox: [breakfast, lunch],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        )
+      ],
     )));
   }
 
   Widget getEmailItem() {
     SettingItem item = new SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.envelope,color: MyTheme.convert(ThemeColorName.NormalIcon),),
+      leftIcon: Icon(
+        FontAwesomeIcons.envelope,
+        color: MyTheme.convert(ThemeColorName.NormalIcon),
+      ),
       leftText: CustomLocalizations.of(context).email,
       rightComponent: CustomTextButton(
         widget.user.email,
@@ -260,11 +279,10 @@ class PageState extends State<AccountPage> {
   Widget getAvatarItem() {
     User u = User.getInstance();
     SettingItem item = SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.userCircle,color: MyTheme.convert(ThemeColorName.NormalIcon)),
+      leftIcon: Icon(FontAwesomeIcons.userCircle,
+          color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: CustomLocalizations.of(context).profilePhoto,
-      rightComponent:
-
-      ValueableImage(
+      rightComponent: ValueableImage(
         base64: u.avatar,
         disabled: true,
         behavior: HitTestBehavior.translucent,
@@ -288,7 +306,8 @@ class PageState extends State<AccountPage> {
 
   Widget getGenderItem(BuildContext context) {
     SettingItem genderItem = SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.transgender,color: MyTheme.convert(ThemeColorName.NormalIcon)),
+      leftIcon: Icon(FontAwesomeIcons.transgender,
+          color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: CustomLocalizations.of(context).gender,
       disabled: true,
       rightComponent: CustomTextButton(
@@ -303,7 +322,8 @@ class PageState extends State<AccountPage> {
       int newGender;
       if (genderItem.getValue() == "Female" || genderItem.getValue() == "女性") {
         newGender = 1;
-      } else if (genderItem.getValue() == "Male"|| genderItem.getValue() == "男性") {
+      } else if (genderItem.getValue() == "Male" ||
+          genderItem.getValue() == "男性") {
         newGender = 0;
       }
 
@@ -328,7 +348,8 @@ class PageState extends State<AccountPage> {
 
   Widget getUserNameItem() {
     return SettingItem(
-      leftIcon: Icon(FontAwesomeIcons.user,color: MyTheme.convert(ThemeColorName.NormalIcon)),
+      leftIcon: Icon(FontAwesomeIcons.user,
+          color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: CustomLocalizations.of(context).username,
       text: widget.user.userName,
       inputFieldWidth: 0.45,
@@ -338,7 +359,8 @@ class PageState extends State<AccountPage> {
 
   Widget getAgeItem() {
     return SettingItem(
-      leftIcon: Icon(Icons.calendar_today,color: MyTheme.convert(ThemeColorName.NormalIcon)),
+      leftIcon: Icon(Icons.calendar_today,
+          color: MyTheme.convert(ThemeColorName.NormalIcon)),
       leftText: CustomLocalizations.of(context).age,
       text: widget.user.age.toString(),
       inputFieldWidth: 0.45,

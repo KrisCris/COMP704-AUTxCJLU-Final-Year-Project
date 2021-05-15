@@ -20,9 +20,10 @@ class ColorPainter extends ContextPainter {
       this.rightExtra = 0,
       this.topExtra = 0,
       this.leftExtra = 0,
-        this.animation,
+      this.animation,
       BuildContext context,
-      ContextPainter contextPainter}):super(repaint: animation){
+      ContextPainter contextPainter})
+      : super(repaint: animation) {
     this.context = context;
     this.nextPainter = contextPainter;
     if (this.nextPainter != null) {
@@ -57,7 +58,7 @@ class ColorPainter extends ContextPainter {
 
   @override
   bool shouldRepaint(covariant ColorPainter oldDelegate) {
-    if(this.animation == null)return false;
+    if (this.animation == null) return false;
     return this.animation.value != oldDelegate.animation.value;
   }
 }

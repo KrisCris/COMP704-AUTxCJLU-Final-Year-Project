@@ -46,8 +46,10 @@ class CustomTextButton extends StatefulWidget
       this.colorChangeDura = 300,
       Key key})
       : super(key: key) {
-    this.textColor = MyTheme.convert(ThemeColorName.NormalText, color: textColor);
-    this.clickColor = MyTheme.convert(ThemeColorName.HighLightText, color: clickColor);
+    this.textColor =
+        MyTheme.convert(ThemeColorName.NormalText, color: textColor);
+    this.clickColor =
+        MyTheme.convert(ThemeColorName.HighLightText, color: clickColor);
     this.tapUpFunc = tapUpFunc == null ? () {} : tapUpFunc;
     this.widgetValue = ValueNotifier<String>(text);
     this.disabled = ValueNotifier(disabled);
@@ -179,10 +181,11 @@ class CustomTextButtonState extends State<CustomTextButton>
     });
     this.animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        this.animation.initAnimation(widget.textColor, widget.clickColor,
-            widget.colorChangeDura, this, (){setState(() {
-
-            });});
+        this.animation.initAnimation(
+            widget.textColor, widget.clickColor, widget.colorChangeDura, this,
+            () {
+          setState(() {});
+        });
         this.animation.popStatusListener();
       }
     });

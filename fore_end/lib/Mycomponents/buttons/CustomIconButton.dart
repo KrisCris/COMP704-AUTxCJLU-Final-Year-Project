@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
@@ -12,7 +11,7 @@ import 'package:fore_end/interface/Disable.dart';
 import 'package:fore_end/interface/Focusable.dart';
 
 class CustomIconButton extends StatefulWidget
-    with DisableWidgetMixIn, FocusableWidgetMixIn{
+    with DisableWidgetMixIn, FocusableWidgetMixIn {
   ///显示的ICON图标
   IconData icon;
 
@@ -65,7 +64,6 @@ class CustomIconButton extends StatefulWidget
   Function onTapUp;
   Function onTapCancel;
 
-
   ///作为navigator的一部分时, 当navigator切换页面完毕后，执行的回调函数
   Function navigatorCallback;
 
@@ -86,34 +84,33 @@ class CustomIconButton extends StatefulWidget
   MyCounter counter;
 
   CustomIconButton(
-      {
-      @required this.icon,
+      {@required this.icon,
       this.text = "",
-        this.sizeChangeWhenClick = false,
-        this.backgroundSizeChange = false,
-        this.backgroundColorChange = true,
+      this.sizeChangeWhenClick = false,
+      this.backgroundSizeChange = false,
+      this.backgroundColorChange = true,
       this.iconSize = 20,
       this.fontSize = 12,
-        this.gap = 0,
+      this.gap = 0,
       this.buttonSize = 55,
       this.borderRadius = 1000,
       this.backgroundOpacity = 1,
-        this.angleDuration = 200,
-        this.adjustHeight = 0,
+      this.angleDuration = 200,
+      this.adjustHeight = 0,
       this.shadows,
       this.onClick,
-        this.onLongPress,
-        this.onLongPressUp,
-        this.counter,
-        this.onTapCancel,
-        this.onTapDown,
-        this.onTapUp,
-        bool disabled = false,
-        bool focus = false,
-        Key key,
-        this.customColor,
+      this.onLongPress,
+      this.onLongPressUp,
+      this.counter,
+      this.onTapCancel,
+      this.onTapDown,
+      this.onTapUp,
+      bool disabled = false,
+      bool focus = false,
+      Key key,
+      this.customColor,
       this.navigatorCallback})
-      : super(key:key) {
+      : super(key: key) {
     this.disabled = new ValueNotifier<bool>(disabled);
     this.focus = new ValueNotifier<bool>(focus);
   }
@@ -125,7 +122,7 @@ class CustomIconButton extends StatefulWidget
 
   ///切换按钮上显示的图标
   ///参数 [icon] 是切换后的图标
-  void changeIcon(IconData icon){
+  void changeIcon(IconData icon) {
     this.icon = icon;
     this.state.setState(() {});
   }
@@ -140,7 +137,6 @@ class CustomIconButton extends StatefulWidget
   void setParentNavigator(PaintedNavigator nv) {
     this.navi = nv;
   }
-
 }
 
 ///CustomIconButton的State类
@@ -150,7 +146,7 @@ class CustomIconButton extends StatefulWidget
 ///混入了 [FocusableStateMixIn] 用于控制Focus状态
 ///
 class CustomIconButtonState extends State<CustomIconButton>
-    with TickerProviderStateMixin,DisableStateMixIn,FocusableStateMixIn {
+    with TickerProviderStateMixin, DisableStateMixIn, FocusableStateMixIn {
   TweenAnimation<CalculatableColor> backgroundColorAnimation =
       TweenAnimation<CalculatableColor>();
   TweenAnimation<CalculatableColor> iconAndTextColorAnimation =
@@ -166,21 +162,22 @@ class CustomIconButtonState extends State<CustomIconButton>
     //初始化disable监听器，实现在DisbaleStateMxiIn中
     this.initDisableListener(this.widget.disabled);
     widget.focus.addListener(() {
-      if(widget.focus.value){
+      if (widget.focus.value) {
         this.setFocus();
-      }else{
+      } else {
         this.setUnFocus();
       }
     });
     this.iconAndTextColorAnimation.initAnimation(
-        this.getIconAndTextColor(widget.focus.value,null),
-        this.getIconAndTextColor(widget.focus.value,null),
+        this.getIconAndTextColor(widget.focus.value, null),
+        this.getIconAndTextColor(widget.focus.value, null),
         150,
         this, () {
       setState(() {});
     });
     super.didUpdateWidget(oldWidget);
   }
+
   ///历史遗留问题, 不推荐在buiild函数中绑定state
   @override
   Widget build(BuildContext context) {
@@ -194,18 +191,18 @@ class CustomIconButtonState extends State<CustomIconButton>
     //添加disabled监听器，可以像CustomButton中那样直接调用
     //已经实现的函数
     widget.disabled.addListener(() {
-        if(widget.disabled.value){
-          this.setDisabled();
-        }else{
-          this.setEnabled();
-        }
+      if (widget.disabled.value) {
+        this.setDisabled();
+      } else {
+        this.setEnabled();
+      }
     });
 
     //添加focus监听器
     widget.focus.addListener(() {
-      if(widget.focus.value){
+      if (widget.focus.value) {
         this.setFocus();
-      }else{
+      } else {
         this.setUnFocus();
       }
     });
@@ -217,33 +214,40 @@ class CustomIconButtonState extends State<CustomIconButton>
 
     //各种动画的初始化
     bool colorSet = widget.focus.value;
-    if(widget.backgroundColorChange == false){
+    if (widget.backgroundColorChange == false) {
       colorSet = false;
     }
     this.backgroundColorAnimation.initAnimation(
         this.getBackgroundColor(colorSet),
-        this.getBackgroundColor(colorSet), 150, this, () {
+        this.getBackgroundColor(colorSet),
+        150,
+        this, () {
       setState(() {});
     });
     this.iconAndTextColorAnimation.initAnimation(
-        this.getIconAndTextColor(widget.focus.value,null),
-        this.getIconAndTextColor(widget.focus.value,null),
+        this.getIconAndTextColor(widget.focus.value, null),
+        this.getIconAndTextColor(widget.focus.value, null),
         150,
         this, () {
       setState(() {});
     });
     double res = widget.iconSize;
-    if(widget.sizeChangeWhenClick){
+    if (widget.sizeChangeWhenClick) {
       res -= 5;
     }
-    this.iconSizeAnimation.initAnimation(widget.iconSize, res, 100, this, () {setState(() {});});
-    if(widget.backgroundSizeChange){
+    this.iconSizeAnimation.initAnimation(widget.iconSize, res, 100, this, () {
+      setState(() {});
+    });
+    if (widget.backgroundSizeChange) {
       res = widget.buttonSize - 5;
-    }else{
+    } else {
       res = widget.buttonSize;
     }
-    this.backgourndSizeAnimation.initAnimation(widget.buttonSize, res, 100, this, () {setState(() {
-    });});
+    this
+        .backgourndSizeAnimation
+        .initAnimation(widget.buttonSize, res, 100, this, () {
+      setState(() {});
+    });
   }
 
   Widget get IconText {
@@ -302,21 +306,20 @@ class CustomIconButtonState extends State<CustomIconButton>
         // onLongPressEnd: (  v  ){
         //   print("长按结束");
         // },
-        onLongPressStart: (state){
-          if(this.widget.onLongPress != null){
+        onLongPressStart: (state) {
+          if (this.widget.onLongPress != null) {
             this.widget.onLongPress();
           }
         },
         onLongPressUp: () {
-          if(this.widget.onLongPressUp != null){
+          if (this.widget.onLongPressUp != null) {
             this.widget.onLongPressUp();
           }
-
         },
         onTap: () {
           if (widget.onClick != null) {
             if (widget.navi == null) {
-              if(!this.disabled){
+              if (!this.disabled) {
                 widget.onClick();
               }
             } else {
@@ -330,15 +333,15 @@ class CustomIconButtonState extends State<CustomIconButton>
             widget.navi.switchPageByObject(widget);
           }
         },
-        onTapDown: (TapDownDetails details){
+        onTapDown: (TapDownDetails details) {
           this.iconSizeAnimation.forward();
           this.backgourndSizeAnimation.forward();
         },
-        onTapUp: (TapUpDetails details){
+        onTapUp: (TapUpDetails details) {
           this.iconSizeAnimation.reverse();
           this.backgourndSizeAnimation.reverse();
         },
-        onTapCancel: (){
+        onTapCancel: () {
           this.iconSizeAnimation.reverse();
           this.backgourndSizeAnimation.reverse();
         },
@@ -374,8 +377,8 @@ class CustomIconButtonState extends State<CustomIconButton>
   CalculatableColor getIconAndTextColor(bool isFocus, bool isDisabled) {
     if (isFocus) {
       return MyTheme.convert(ThemeColorName.HightLightIcon);
-    }else{
-      if (this.widget.customColor != null){
+    } else {
+      if (this.widget.customColor != null) {
         return this.widget.customColor;
       }
       return MyTheme.convert(ThemeColorName.NormalIcon);
@@ -384,18 +387,17 @@ class CustomIconButtonState extends State<CustomIconButton>
 
   ///DisableStateMixIn的抽象函数，暂不需要实现
   @override
-  void setEnabled() {
-  }
+  void setEnabled() {}
 
   @override
+
   ///DisableStateMixIn的抽象函数，暂不需要实现
-  void setDisabled(){
-  }
+  void setDisabled() {}
 
   ///聚焦时需要执行的动画变化
   @override
   void setFocus() {
-    if(widget.backgroundColorChange){
+    if (widget.backgroundColorChange) {
       this.backgroundColorAnimation.initAnimation(
           this.getBackgroundColor(false),
           this.getBackgroundColor(true),
@@ -406,8 +408,8 @@ class CustomIconButtonState extends State<CustomIconButton>
       this.backgroundColorAnimation.beginAnimation();
     }
     this.iconAndTextColorAnimation.initAnimation(
-        getIconAndTextColor(false,null),
-        getIconAndTextColor(true,null),
+        getIconAndTextColor(false, null),
+        getIconAndTextColor(true, null),
         200,
         this, () {
       setState(() {});
@@ -418,19 +420,16 @@ class CustomIconButtonState extends State<CustomIconButton>
   ///取消聚焦时，需要执行的动画变化
   @override
   void setUnFocus() {
-    if(widget.backgroundColorChange){
-      this.backgroundColorAnimation.initAnimation(
-          this.getBackgroundColor(true),
-          this.getBackgroundColor(false),
-          200,
-          this, () {
+    if (widget.backgroundColorChange) {
+      this.backgroundColorAnimation.initAnimation(this.getBackgroundColor(true),
+          this.getBackgroundColor(false), 200, this, () {
         setState(() {});
       });
       this.backgroundColorAnimation.beginAnimation();
     }
     this.iconAndTextColorAnimation.initAnimation(
-        getIconAndTextColor(true,null),
-        getIconAndTextColor(false,null),
+        getIconAndTextColor(true, null),
+        getIconAndTextColor(false, null),
         200,
         this, () {
       setState(() {});
@@ -438,5 +437,4 @@ class CustomIconButtonState extends State<CustomIconButton>
 
     this.iconAndTextColorAnimation.beginAnimation();
   }
-
 }

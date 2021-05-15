@@ -91,7 +91,7 @@ class FoodBox extends StatefulWidget {
     this.shouldShowPic = ValueNotifier(shouldShowPic);
     this.iconKey = GlobalKey<RotateIconState>();
     this.fadeKey = GlobalKey();
-    this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
+    this.valueAdjusterKey = new GlobalKey<ValueAdjusterState>();
   }
 
   void setRemoveFunc(Function f) {
@@ -122,9 +122,8 @@ class FoodBoxState extends State<FoodBox>
   ///用于显示图片的容器，特意用属性保存是为了防止刷新的时候产生闪烁
   Container pic;
 
-
   ///全局重量 点击按钮刷新组件
-  int foodWeight =50;
+  int foodWeight = 50;
 
   ///增加和减少重量
   // void plusWeight(){
@@ -170,8 +169,6 @@ class FoodBoxState extends State<FoodBox>
       }
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -258,25 +255,25 @@ class FoodBoxState extends State<FoodBox>
         height: 40,
       );
     } else {
-        img = Image.memory(
-          base64Decode(widget.food.picture),
-          gaplessPlayback: true,
-          fit: BoxFit.cover,
-          width: 40,
-          height: 40,);
-        this.picType = 1;
+      img = Image.memory(
+        base64Decode(widget.food.picture),
+        gaplessPlayback: true,
+        fit: BoxFit.cover,
+        width: 40,
+        height: 40,
+      );
+      this.picType = 1;
     }
     this.pic = Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ClipOval(
-        child: img,
-      )
-    );
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ClipOval(
+          child: img,
+        ));
     return this.pic;
   }
 
@@ -294,10 +291,10 @@ class FoodBoxState extends State<FoodBox>
 
   Widget getExpandIcon() {
     return RotateIcon(
-        icon:  FontAwesomeIcons.chevronDown,
-        iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
+      icon: FontAwesomeIcons.chevronDown,
+      iconColor: MyTheme.convert(ThemeColorName.NormalIcon),
       key: widget.iconKey,
-      onTap: (){
+      onTap: () {
         if (this.shouldExpand) {
           this.shouldExpand = false;
         } else {
@@ -310,21 +307,26 @@ class FoodBoxState extends State<FoodBox>
 
   //TODO: 部分食物数据还是静态值，需要修改
   Widget getDetailedProperty() {
-    ValueAdjuster valueAdjuster = ValueAdjuster<int>(shouldFirstValueChange: true,initValue:10,valueWeight: 10,key: this.widget.valueAdjusterKey,upper: 300,lower:10);
-    valueAdjuster.onValueChange = (){
+    ValueAdjuster valueAdjuster = ValueAdjuster<int>(
+        shouldFirstValueChange: true,
+        initValue: 10,
+        valueWeight: 10,
+        key: this.widget.valueAdjusterKey,
+        upper: 300,
+        lower: 10);
+    valueAdjuster.onValueChange = () {
       setState(() {
         print("ValueAdjuster onValueChange");
-        this.foodWeight=this.widget.valueAdjusterKey.currentState.getVal();
+        this.foodWeight = this.widget.valueAdjusterKey.currentState.getVal();
         widget.food.setWeight(foodWeight);
       });
-
     };
     List<Widget> col = [
       this.propertyLine("Calorie", widget.food.getCaloriePerUnit()),
       this.propertyLine("Fat", widget.food.getFatPerUnit()),
       this.propertyLine("Protein", widget.food.getProteinPerUnit()),
       this.propertyLine("Carbohydrate", widget.food.getCarbohydratePerUnit()),
-      this.propertyLine("Weight", foodWeight.toString()+"g"),
+      this.propertyLine("Weight", foodWeight.toString() + "g"),
     ];
     if (widget.couldRemove) {
       col.addAll([
@@ -334,7 +336,6 @@ class FoodBoxState extends State<FoodBox>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            
             CustomButton(
               firstColorName: ThemeColorName.Error,
               text: "Remove",
@@ -351,9 +352,7 @@ class FoodBoxState extends State<FoodBox>
     col.add(SizedBox(
       height: widget.paddingBottom,
     ));
-    return Column(
-      children: col
-    );
+    return Column(children: col);
   }
 
   Widget propertyLine(String name, String value) {
@@ -389,7 +388,6 @@ class FoodBoxState extends State<FoodBox>
   }
 
   void clickFunc() {
-
     if (this.shouldExpand) {
       this.shouldExpand = false;
     } else {

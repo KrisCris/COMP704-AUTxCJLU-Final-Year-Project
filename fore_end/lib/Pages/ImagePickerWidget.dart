@@ -47,7 +47,6 @@ class _ImagePickerState extends State<ImagePickerWidget> {
     }
   }
 
-
   /*拍照*/
   _takePhoto() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -65,5 +64,3 @@ class _ImagePickerState extends State<ImagePickerWidget> {
     });
   }
 }
-
-

@@ -15,10 +15,17 @@ class ExtendTimeHint extends StatelessWidget {
   String title;
   String delayText;
   String finishText;
-  ExtendTimeHint({Key key,this.onClickAccept,this.onClickFinish,String title,String delayText,String finishText}) : super(key: key){
-   this.title = title;
-   this.delayText = delayText;
-   this.finishText = finishText;
+  ExtendTimeHint(
+      {Key key,
+      this.onClickAccept,
+      this.onClickFinish,
+      String title,
+      String delayText,
+      String finishText})
+      : super(key: key) {
+    this.title = title;
+    this.delayText = delayText;
+    this.finishText = finishText;
   }
 
   @override
@@ -45,29 +52,30 @@ class ExtendTimeHint extends StatelessWidget {
               ),
               SizedBox(height: 20),
               CustomButton(
-                text: this.delayText ?? CustomLocalizations.of(context).acceptDelayButton,
+                text: this.delayText ??
+                    CustomLocalizations.of(context).acceptDelayButton,
                 width: 0.6,
                 radius: 5,
                 tapFunc: () async {
-                  if(this.onClickAccept != null){
+                  if (this.onClickAccept != null) {
                     await this.onClickAccept();
                   }
                   Navigator.of(context).pop(true);
-                  },
+                },
               ),
               SizedBox(height: 5),
               CustomButton(
-                text: this.finishText ?? CustomLocalizations.of(context).finishPlanButton,
-                width: 0.6,
-                radius: 5,
-                firstColorName: ThemeColorName.Error,
-                tapFunc: ()async{
-                  if(this.onClickFinish != null){
-                    await this.onClickFinish();
-                  }
-                  Navigator.of(context).pop(false);
-                }
-              ),
+                  text: this.finishText ??
+                      CustomLocalizations.of(context).finishPlanButton,
+                  width: 0.6,
+                  radius: 5,
+                  firstColorName: ThemeColorName.Error,
+                  tapFunc: () async {
+                    if (this.onClickFinish != null) {
+                      await this.onClickFinish();
+                    }
+                    Navigator.of(context).pop(false);
+                  }),
               SizedBox(height: 10),
               SizedBox(height: 10),
             ],

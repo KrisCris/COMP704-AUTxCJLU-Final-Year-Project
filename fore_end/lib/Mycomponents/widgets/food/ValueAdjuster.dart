@@ -20,6 +20,7 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
 
   ///初始化时，是否需要执行一次变化函数
   bool shouldFirstValueChange;
+
   ///onValueChange是当变量发生改变时调用的方法
   Function onValueChange;
 
@@ -36,20 +37,21 @@ class ValueAdjuster<T extends num> extends StatefulWidget {
     ///GlobalKey<ValueAdjusterState> valueAdjusterKey;
     ///this.valueAdjusterKey=new GlobalKey<ValueAdjusterState>();
     ///this.widget.valueAdjusterKey.currentState.getVal();
-    if(valueWeight == null){
-      throw FormatException("valueWeight is a required argument in ValueAdjuster component");
+    if (valueWeight == null) {
+      throw FormatException(
+          "valueWeight is a required argument in ValueAdjuster component");
     }
-    if(initValue == null){
-      throw FormatException("initValue is a required argument in ValueAdjuster component");
+    if (initValue == null) {
+      throw FormatException(
+          "initValue is a required argument in ValueAdjuster component");
     }
     this.valueWeight = valueWeight;
-    this.onValueChange=onValueChange;
+    this.onValueChange = onValueChange;
   }
 
   @override
- ValueAdjusterState createState(){
-   return ValueAdjusterState();
-
+  ValueAdjusterState createState() {
+    return ValueAdjusterState();
   }
 }
 
@@ -62,10 +64,10 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   MyCounter counter;
   MyCounter minusCounter;
 
-
-  T getVal(){
+  T getVal() {
     return valueNotifier.value;
   }
+
   @override
   void didUpdateWidget(covariant ValueAdjuster<T> oldWidget) {
     // TODO: implement didUpdateWidget
@@ -77,35 +79,35 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
     // TODO: implement initState
     this.counter = MyCounter(
         duration: 300,
-        calling: (){
+        calling: () {
           print("hello!");
           plusWeight();
-        }
-    );
-    this.minusCounter= MyCounter(
+        });
+    this.minusCounter = MyCounter(
         duration: 300,
-        calling: (){
+        calling: () {
           print("Nothello!");
           minusWeight();
-        }
-    );
+        });
     super.initState();
+
     ///初始化valueNotifier为上面的类型，并且初始化它的值
     ///并且监听变化
     this.valueNotifier = new ValueNotifier<T>(this.widget.initValue);
-    if(this.widget.onValueChange != null){
+    if (this.widget.onValueChange != null) {
       this.valueNotifier.addListener(this.widget.onValueChange);
     }
-    WidgetsBinding.instance.addPostFrameCallback((data){
-      if(widget.onValueChange != null && widget.shouldFirstValueChange){
+    WidgetsBinding.instance.addPostFrameCallback((data) {
+      if (widget.onValueChange != null && widget.shouldFirstValueChange) {
         widget.onValueChange();
       }
     });
-
   }
 
   void plusWeight() {
-    if(this.widget.upper != null && (this.valueNotifier.value+this.widget.valueWeight > this.widget.upper))return;
+    if (this.widget.upper != null &&
+        (this.valueNotifier.value + this.widget.valueWeight >
+            this.widget.upper)) return;
     setState(() {
       ///增加或减少的是valueNotifier.value的值
       this.valueNotifier.value += this.widget.valueWeight;
@@ -113,7 +115,9 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   }
 
   void minusWeight() {
-    if(this.widget.lower != null && (this.valueNotifier.value-this.widget.valueWeight < this.widget.upper))return;
+    if (this.widget.lower != null &&
+        (this.valueNotifier.value - this.widget.valueWeight <
+            this.widget.upper)) return;
     setState(() {
       if (this.valueNotifier.value >= this.widget.valueWeight) {
         this.valueNotifier.value -= this.widget.valueWeight;
@@ -133,16 +137,17 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
           onClick: () {
             minusWeight();
           },
-          onLongPress: (){
+          onLongPress: () {
             this.minusCounter.start();
           },
-          onLongPressUp: (){
+          onLongPressUp: () {
             this.minusCounter.stop();
           },
         ),
         SizedBox(
           width: 20,
         ),
+
         ///有可能double会输出多余的0，刚刚测试是不会的 如果是double那么小数点只取决于给定的valueWeight
 
         Text(this.valueNotifier.value.toString(),
@@ -152,8 +157,7 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
                 // color:MyTheme.convert(ThemeColorName.PickerToolText),
                 fontFamily: "Futura",
                 decoration: TextDecoration.none,
-                fontWeight: FontWeight.bold)
-        ),
+                fontWeight: FontWeight.bold)),
         SizedBox(
           width: 20,
         ),
@@ -165,10 +169,10 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
           onClick: () {
             plusWeight();
           },
-          onLongPress: (){
+          onLongPress: () {
             this.counter.start();
           },
-          onLongPressUp: (){
+          onLongPressUp: () {
             this.counter.stop();
           },
         ),

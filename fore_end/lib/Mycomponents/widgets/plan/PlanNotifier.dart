@@ -21,11 +21,11 @@ class PlanNotifier extends StatelessWidget {
       @required double height,
       this.margin = 20,
       Color backgroundColor,
-        Color effectColor
-      }) {
+      Color effectColor}) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
-    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
+    this.backgroundColor =
+        backgroundColor ?? MyTheme.convert(ThemeColorName.ComponentBackground);
     this.effectColor = effectColor;
   }
 
@@ -36,7 +36,9 @@ class PlanNotifier extends StatelessWidget {
     double barThickness = 15;
     ValueBar calories = ValueBar<int>(
       minVal: 0,
-      maxVal: p.dailyCaloriesUpperLimit.floor(),  ///可以作为柱状图的上限
+      maxVal: p.dailyCaloriesUpperLimit.floor(),
+
+      ///可以作为柱状图的上限
       adjustVal: 1,
       width: this.width - 2 * margin,
       borderThickness: 6,

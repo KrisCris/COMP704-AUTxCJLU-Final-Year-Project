@@ -55,15 +55,16 @@ class ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(mealsName == null){
+    if (mealsName == null) {
       mealsName = [
         CustomLocalizations.of(context).breakfast,
         CustomLocalizations.of(context).lunch,
         CustomLocalizations.of(context).dinner
       ];
     }
+
     ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字 ====参考中间的提示文字
-    Widget addMealTextButton =GestureDetector(
+    Widget addMealTextButton = GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
@@ -76,34 +77,34 @@ class ResultPageState extends State<ResultPage> {
           ),
         ),
       ),
-      onTap: (){
+      onTap: () {
         ///测试点击每个食物展示底部弹窗,总卡路里通过统计整个页面食物的数据获得
         ///也可以根据当前页面上面，有没有食物结果来判断是否显示下面的字
         ///这里还可以计算总的其他营养数据 比如protein
         int cal = 0;
         widget.recognizer.foods.forEach((fd) {
-          cal += (fd.food.calorie*fd.food.weight/100).toInt();
+          cal += (fd.food.calorie * fd.food.weight / 100).toInt();
         });
+
         ///转为Int显示
-        String totalCalories=cal.toString();
+        String totalCalories = cal.toString();
 
         ///TODO:这里在一开始计算totalcalories的时候 重量为0
 
         JhPickerTool.showStringPicker(context,
-            title: CustomLocalizations.of(context).total +totalCalories+ ' Kcal',
+            title:
+                CustomLocalizations.of(context).total + totalCalories + ' Kcal',
             normalIndex: 0,
             isChangeColor: true,
             data: this.mealsName, clickCallBack: (int index, var item) {
-              if(index == 0){
-                FoodRecognizer.addFoodToMealName(context,"breakfast");
-              }else if(index == 1){
-                FoodRecognizer.addFoodToMealName(context,"lunch");
-              }else if(index == 2){
-                FoodRecognizer.addFoodToMealName(context,"dinner");
-              }
-            });
-
-
+          if (index == 0) {
+            FoodRecognizer.addFoodToMealName(context, "breakfast");
+          } else if (index == 1) {
+            FoodRecognizer.addFoodToMealName(context, "lunch");
+          } else if (index == 2) {
+            FoodRecognizer.addFoodToMealName(context, "dinner");
+          }
+        });
       },
     );
 
@@ -122,12 +123,12 @@ class ResultPageState extends State<ResultPage> {
         ),
         Expanded(child: SizedBox()),
         CustomIconButton(
-            icon: FontAwesomeIcons.times,
-            iconSize: 23,
-            buttonSize: 35,
-            backgroundOpacity: 0,
-            onClick: (){
-              Navigator.pop(context);
+          icon: FontAwesomeIcons.times,
+          iconSize: 23,
+          buttonSize: 35,
+          backgroundOpacity: 0,
+          onClick: () {
+            Navigator.pop(context);
           },
         ),
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
@@ -142,7 +143,6 @@ class ResultPageState extends State<ResultPage> {
                 : CrossFadeState.showSecond,
             duration: Duration(milliseconds: 100)));
 
-
     return Container(
       width: ScreenTool.partOfScreenWidth(1),
       height: ScreenTool.partOfScreenHeight(1),
@@ -154,8 +154,9 @@ class ResultPageState extends State<ResultPage> {
           ),
           header,
           content,
+
           ///有可能有bug，主界面热加载会导致名为“Duplicate GlobalKeys detected in widget tree.”
-          widget.recognizer.isEmpty()? Container():addMealTextButton,
+          widget.recognizer.isEmpty() ? Container() : addMealTextButton,
         ],
       ),
     );
@@ -186,7 +187,7 @@ class ResultPageState extends State<ResultPage> {
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: widget.recognizer.foods.length,
-          itemBuilder: (BuildContext context, int pos){
+          itemBuilder: (BuildContext context, int pos) {
             return widget.recognizer.foods[pos];
           },
         ));

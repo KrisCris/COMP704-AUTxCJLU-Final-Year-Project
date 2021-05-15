@@ -23,39 +23,40 @@ class CustomDrawer extends StatefulWidget {
   final Function onOpen;
   final Function onClose;
   final GlobalKey<DietPageState> dietKey;
-  const CustomDrawer({
-    Key key,
-    this.elevation = 16.0,
-    this.children,
-    this.semanticLabel,
-    this.widthPercent,
-    this.onOpen,
-    this.onClose,
-    this.dietKey
-  })  : assert(widthPercent <= 1.0 && widthPercent > 0.0),
+  const CustomDrawer(
+      {Key key,
+      this.elevation = 16.0,
+      this.children,
+      this.semanticLabel,
+      this.widthPercent,
+      this.onOpen,
+      this.onClose,
+      this.dietKey})
+      : assert(widthPercent <= 1.0 && widthPercent > 0.0),
         super(key: key);
   @override
   CustomDrawerState createState() => CustomDrawerState();
 }
 
 class CustomDrawerState extends State<CustomDrawer> {
-
-
   @override
   void initState() {
     ///add start
-    if(widget.onOpen!=null){
+    if (widget.onOpen != null) {
       widget.onOpen();
     }
+
     ///add end
     super.initState();
   }
+
   @override
   void dispose() {
     ///add start
-    if(widget.onClose!=null){
+    if (widget.onClose != null) {
       widget.onClose();
     }
+
     ///add end
     super.dispose();
   }
@@ -70,9 +71,11 @@ class CustomDrawerState extends State<CustomDrawer> {
         break;
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-        label = widget.semanticLabel ?? MaterialLocalizations.of(context)?.drawerLabel;
+        label = widget.semanticLabel ??
+            MaterialLocalizations.of(context)?.drawerLabel;
     }
-    final double _width = MediaQuery.of(context).size.width * widget.widthPercent;
+    final double _width =
+        MediaQuery.of(context).size.width * widget.widthPercent;
     Widget info = this.getDrawerHeader(context);
     List<Widget> items = [
       SizedBox(
@@ -86,9 +89,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     items.addAll(widget.children);
     GlobalKey<HintBoxState> hintBoxKey = new GlobalKey<HintBoxState>();
     HintManager.instance.boxKey = hintBoxKey;
-    items.add(Expanded(
-      child: HintBox(hintBoxKey)
-    ));
+    items.add(Expanded(child: HintBox(hintBoxKey)));
     items.add(SizedBox(height: 15));
     return Semantics(
       scopesRoute: true,
@@ -96,48 +97,43 @@ class CustomDrawerState extends State<CustomDrawer> {
       explicitChildNodes: true,
       label: label,
       child: Stack(
-       children: [
-         BackdropFilter(
-           filter: ImageFilter.blur(sigmaX:5.0,sigmaY:5.0),
-           child:  Opacity(
-             opacity: 0.75,
-             child: ClipRect(
-              child: CustomPaint(
-                foregroundPainter: LinePainter(
-                  k: 1,
-                  lineWidth: 2,
-                  lineGap: 4,
-                  context: context,
-                  color: MyTheme.convert(ThemeColorName.TransparentShadow),
-                ),
-                child:Container(
-                  width: ScreenTool.partOfScreenWidth(1),
-                  color: MyTheme.convert(ThemeColorName.PageBackground),
+        children: [
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            child: Opacity(
+              opacity: 0.75,
+              child: ClipRect(
+                child: CustomPaint(
+                  foregroundPainter: LinePainter(
+                    k: 1,
+                    lineWidth: 2,
+                    lineGap: 4,
+                    context: context,
+                    color: MyTheme.convert(ThemeColorName.TransparentShadow),
+                  ),
+                  child: Container(
+                    width: ScreenTool.partOfScreenWidth(1),
+                    color: MyTheme.convert(ThemeColorName.PageBackground),
+                  ),
                 ),
               ),
-             ),
-           ),
-         ),
-         Row(
-           children: [
-             SizedBox(
-               width: 15,
-             ),
-             Expanded(
-               child:
-               Column(
-                   children: items
-               ),
-             ),
-             SizedBox(
-               width: 15,
-             ),
-           ],
-         )
-
-       ],
+            ),
+          ),
+          Row(
+            children: [
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: Column(children: items),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+            ],
+          )
+        ],
       ),
-
     );
   }
 
@@ -158,7 +154,10 @@ class CustomDrawerState extends State<CustomDrawer> {
                     fontWeight: FontWeight.normal,
                     fontFamily: "Futura",
                     color: MyTheme.convert(ThemeColorName.NormalText))),
-            Text(CustomLocalizations.of(context).registerDuration+ User.getInstance().registerTime().toString()+CustomLocalizations.of(context).days,
+            Text(
+                CustomLocalizations.of(context).registerDuration +
+                    User.getInstance().registerTime().toString() +
+                    CustomLocalizations.of(context).days,
                 style: TextStyle(
                     decoration: TextDecoration.none,
                     fontSize: 15,
@@ -172,7 +171,7 @@ class CustomDrawerState extends State<CustomDrawer> {
           icon: FontAwesomeIcons.times,
           backgroundOpacity: 0,
           iconSize: 30,
-          onClick: (){
+          onClick: () {
             Navigator.of(context).pop();
           },
         ),
@@ -182,16 +181,17 @@ class CustomDrawerState extends State<CustomDrawer> {
 
   Widget getCircleAvatar({double size = 60}) {
     return Container(
-      margin: EdgeInsets.only(top: 8,bottom: 0),
+        margin: EdgeInsets.only(top: 8, bottom: 0),
         width: size,
         height: size,
         decoration: new BoxDecoration(
-            shape: BoxShape.rectangle, ///circle是圆的 这里改为圆角
+            shape: BoxShape.rectangle,
+
+            ///circle是圆的 这里改为圆角
             borderRadius: BorderRadius.circular(6.0),
             image: DecorationImage(
                 image: MemoryImage(User.getInstance().getAvatarBin()),
-                fit: BoxFit.cover
-            ),
+                fit: BoxFit.cover),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10, //阴影范围
@@ -199,7 +199,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 color: Color(0x33000000), //阴影颜色
               ),
             ])
-      // child: , //增加文字等
-    );
+        // child: , //增加文字等
+        );
   }
 }

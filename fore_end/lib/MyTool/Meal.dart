@@ -42,14 +42,14 @@ class Meal {
 
   void save() {
     SharedPreferences pre = LocalDataManager.pre;
-    pre.setInt(this.mealName+"Time", this.time);
+    pre.setInt(this.mealName + "Time", this.time);
     pre.setString(this.mealName, this._encode());
   }
 
   void delete() {
     SharedPreferences pre = LocalDataManager.pre;
     pre.remove(this.mealName);
-    pre.remove(this.mealName+"Time");
+    pre.remove(this.mealName + "Time");
   }
 
   void read({SharedPreferences pre}) {
@@ -57,7 +57,7 @@ class Meal {
     if (preLocal == null) {
       preLocal = pre;
     }
-    this.time = preLocal.getInt(this.mealName+"Time");
+    this.time = preLocal.getInt(this.mealName + "Time");
     this.addFoodWithString(preLocal.getString(this.mealName));
   }
 
@@ -105,12 +105,12 @@ class Meal {
   }
 
   static List<Food> decode(String str) {
-    if(str == null){
+    if (str == null) {
       return [];
     }
     var data = jsonDecode(str);
     List<Food> res = [];
-    for(Map m in data){
+    for (Map m in data) {
       res.add(Food.fromJson(m));
     }
     return res;

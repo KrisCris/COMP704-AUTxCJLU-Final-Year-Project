@@ -73,7 +73,9 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       helpText: CustomLocalizations.of(context).emailHint,
       maxlength: 30,
       onError: () {
-        this.emailTextField.setErrorText(CustomLocalizations.of(context).emailHint+"!");
+        this
+            .emailTextField
+            .setErrorText(CustomLocalizations.of(context).emailHint + "!");
         this.emailTextField.setError();
         this.verifyTextField.setButtonDisabled(true);
         // this.nextButton.setDisable(true);
@@ -108,7 +110,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       onCheckFailed: () {
         this.nextButton.setDisabled(true);
       },
-      width: 1-leftRightGap*2,
+      width: 1 - leftRightGap * 2,
       emailField: this.emailTextField,
     );
 
@@ -174,7 +176,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
         this.repasswordDone = false;
         this.pwdTwoTextField.setError();
         this.nextButton.setDisabled(true);
-        this.pwdTwoTextField.setErrorText(CustomLocalizations.of(context).differentPasswordHint);
+        this.pwdTwoTextField.setErrorText(
+            CustomLocalizations.of(context).differentPasswordHint);
       },
     );
 
@@ -200,8 +203,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       String oldPassword = oldPasswordTextField.getValue();
       String newPassword = pwdTwoTextField.getValue();
       try {
-        Response res = await Requests.modifyPassword(
-            context,{
+        Response res = await Requests.modifyPassword(context, {
           "uid": user.uid,
           "token": user.token,
           "password": oldPassword,
@@ -239,10 +241,8 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
       child: Container(
         color: MyTheme.convert(ThemeColorName.PageBackground),
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
-
           children: <Widget>[
             Container(
               width: ScreenTool.partOfScreenWidth(0.8),
@@ -296,7 +296,7 @@ class UpdatePasswordPageState extends State<UpdatePwdPage> {
             Container(
               width: ScreenTool.partOfScreenWidth(0.8),
               height: ScreenTool.partOfScreenHeight(0.1),
-              margin: EdgeInsets.only(top: 10,bottom: 10),
+              margin: EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

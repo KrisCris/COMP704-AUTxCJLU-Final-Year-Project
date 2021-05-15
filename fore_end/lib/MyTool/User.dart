@@ -54,24 +54,23 @@ class User {
   ///通过今天的日期时间获取服务器的数据，这需要用户在每次添加一个食物时，上传数据库并且记录上传的日期。
   ValueNotifier<List<Meal>> meals;
 
-  User._internal({
-    String username = User.defaultUsername,
-    int age,
-    int gender,
-    int uid,
-    int registerDate,
-    double bodyWeight,
-    double bodyHeight,
-    Plan plan,
-    bool needGuide,
-    bool offline,
-    String avatar = User.defaultAvatar,
-    String token,
-    String email,
-    int breakfastRatio,
-    int lunchRatio,
-    int dinnerRatio
-  }) {
+  User._internal(
+      {String username = User.defaultUsername,
+      int age,
+      int gender,
+      int uid,
+      int registerDate,
+      double bodyWeight,
+      double bodyHeight,
+      Plan plan,
+      bool needGuide,
+      bool offline,
+      String avatar = User.defaultAvatar,
+      String token,
+      String email,
+      int breakfastRatio,
+      int lunchRatio,
+      int dinnerRatio}) {
     this._userName = username;
     this._token = token;
     this._email = email;
@@ -126,23 +125,22 @@ class User {
         return null;
       }
       User._instance = User._internal(
-        token: pre.getString('token'),
-        uid: pre.getInt('uid'),
-        username: pre.getString("userName"),
-        email: pre.getString('email'),
-        gender: pre.getInt('gender'),
-        bodyHeight: pre.getDouble("bodyHeight"),
-        bodyWeight: pre.getDouble("bodyWeight"),
-        registerDate: pre.getInt("registerDate"),
-        offline: false,
-        age: pre.getInt('age'),
-        plan: Plan.readLocal(),
-        avatar: pre.getString("avatar"),
-        needGuide: pre.getBool("needSetPlan"),
-        breakfastRatio: pre.getInt("breakfastRatio"),
-        lunchRatio: pre.getInt('lunchRatio'),
-        dinnerRatio: pre.getInt("dinnerRatio")
-      );
+          token: pre.getString('token'),
+          uid: pre.getInt('uid'),
+          username: pre.getString("userName"),
+          email: pre.getString('email'),
+          gender: pre.getInt('gender'),
+          bodyHeight: pre.getDouble("bodyHeight"),
+          bodyWeight: pre.getDouble("bodyWeight"),
+          registerDate: pre.getInt("registerDate"),
+          offline: false,
+          age: pre.getInt('age'),
+          plan: Plan.readLocal(),
+          avatar: pre.getString("avatar"),
+          needGuide: pre.getBool("needSetPlan"),
+          breakfastRatio: pre.getInt("breakfastRatio"),
+          lunchRatio: pre.getInt('lunchRatio'),
+          dinnerRatio: pre.getInt("dinnerRatio"));
     }
     return User._instance;
   }
@@ -153,8 +151,8 @@ class User {
 
   ///与服务器上的用户数据同步
   Future<int> synchronize() async {
-    Response res =
-        await Requests.getBasicInfo(null,{'uid': this._uid, 'token': this._token});
+    Response res = await Requests.getBasicInfo(
+        null, {'uid': this._uid, 'token': this._token});
     if (res == null) {
       return 5;
     }
@@ -176,7 +174,7 @@ class User {
 
       DateTime nowDay = DateTime.now();
       nowDay = DateTime(nowDay.year, nowDay.month, nowDay.day);
-      res = await Requests.dailyMeal(null,{
+      res = await Requests.dailyMeal(null, {
         "uid": this._uid,
         "token": this._token,
         "begin": nowDay.millisecondsSinceEpoch / 1000,
@@ -204,7 +202,8 @@ class User {
           }
         }
       }
-      res = await Requests.getPlan(null,{"uid": this._uid, "token": this._token});
+      res = await Requests.getPlan(
+          null, {"uid": this._uid, "token": this._token});
       if (res.data["code"] == -6) {
         this._needGuide = true;
         print(res.data);
@@ -225,8 +224,7 @@ class User {
         if (this._plan.pastDeadline) {
           await this._plan.calculateDelayDays();
         }
-        res = await Requests.shouldUpdateWeight(
-          null,
+        res = await Requests.shouldUpdateWeight(null,
             {"uid": this._uid, "token": this._token, "pid": this._plan.id});
         if (res != null && res.data['code'] == 1) {
           this._shouldUpdateWeight = res.data['data']['shouldUpdate'];
@@ -383,9 +381,9 @@ class User {
     pre.setString("avatar", _avatar);
     pre.setBool("needSetPlan", _needGuide);
     pre.setInt("registerDate", _registerDate);
-    pre.setInt("breakfastRatio",_breakfastRatio);
-    pre.setInt("lunchRatio",_lunchRatio);
-    pre.setInt("dinnerRatio",_dinnerRatio);
+    pre.setInt("breakfastRatio", _breakfastRatio);
+    pre.setInt("lunchRatio", _lunchRatio);
+    pre.setInt("dinnerRatio", _dinnerRatio);
     this.saveMeal();
     if (this._plan != null) {
       this._plan.save();

@@ -20,22 +20,31 @@ class UpdateBody extends StatelessWidget {
   bool needWeight;
   bool needCancel;
 
-  UpdateBody({this.onUpdate,this.text,this.needHeight = true,this.needWeight = true,this.needCancel = true});
-  double getHeight(){
-    if(this.height != null){
+  UpdateBody(
+      {this.onUpdate,
+      this.text,
+      this.needHeight = true,
+      this.needWeight = true,
+      this.needCancel = true});
+  double getHeight() {
+    if (this.height != null) {
       return this.height.widgetValue.value;
-    }else{
-      double ht = User.getInstance().bodyHeight*100;
+    } else {
+      double ht = User.getInstance().bodyHeight * 100;
       return ht;
     }
   }
-  int getWeight(){
-    return this.weight!=null ? this.weight.widgetValue.value : User.getInstance().bodyWeight;
+
+  int getWeight() {
+    return this.weight != null
+        ? this.weight.widgetValue.value
+        : User.getInstance().bodyWeight;
   }
+
   @override
   Widget build(BuildContext context) {
     User u = User.getInstance();
-    if(this.needHeight){
+    if (this.needHeight) {
       height = ValueBar<double>(
         barThickness: 14,
         roundNum: 2,
@@ -53,7 +62,7 @@ class UpdateBody extends StatelessWidget {
         showBorder: false,
       );
     }
-    if(this.needWeight){
+    if (this.needWeight) {
       weight = ValueBar<int>(
         barThickness: 14,
         width: 0.8,
@@ -77,7 +86,7 @@ class UpdateBody extends StatelessWidget {
         width: ScreenTool.partOfScreenWidth(0.85),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color:MyTheme.convert(ThemeColorName.ComponentBackground),
+          color: MyTheme.convert(ThemeColorName.ComponentBackground),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -89,7 +98,8 @@ class UpdateBody extends StatelessWidget {
                 SizedBox(width: 10),
                 TitleText(
                   fontSize: 18,
-                  text: this.text ?? CustomLocalizations.of(context).updateBodyTitle,
+                  text: this.text ??
+                      CustomLocalizations.of(context).updateBodyTitle,
                   underLineLength: 0,
                   maxWidth: 0.7,
                   maxHeight: 60,
@@ -105,34 +115,33 @@ class UpdateBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(width: 20),
-                this.needCancel == true ?
-                CustomButton(
-                  text: CustomLocalizations.of(context).cancel,
-                  firstColorName: ThemeColorName.Error,
-                  width: 80,
-                  radius: 5,
-                  tapFunc: (){
-                    Navigator.pop(context);
-                  },
-                ) : SizedBox(width: 0),
+                this.needCancel == true
+                    ? CustomButton(
+                        text: CustomLocalizations.of(context).cancel,
+                        firstColorName: ThemeColorName.Error,
+                        width: 80,
+                        radius: 5,
+                        tapFunc: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    : SizedBox(width: 0),
                 Expanded(child: SizedBox()),
                 CustomButton(
-                  text: CustomLocalizations.of(context).confirm,
-                  width: 80,
-                  radius: 5,
-                  tapFunc:(){
-                    User u = User.getInstance();
-                    if(this.weight != null){
-                      u.bodyWeight = this.weight.getValue().toDouble();
-                    }
-                    if(this.height != null){
-                      u.bodyHeight = this.height.getValue().toDouble();
-                    }
-                    u.save();
-                    this.onUpdate();
-                  }
-
-                ),
+                    text: CustomLocalizations.of(context).confirm,
+                    width: 80,
+                    radius: 5,
+                    tapFunc: () {
+                      User u = User.getInstance();
+                      if (this.weight != null) {
+                        u.bodyWeight = this.weight.getValue().toDouble();
+                      }
+                      if (this.height != null) {
+                        u.bodyHeight = this.height.getValue().toDouble();
+                      }
+                      u.save();
+                      this.onUpdate();
+                    }),
                 SizedBox(width: 20),
               ],
             ),

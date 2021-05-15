@@ -16,30 +16,29 @@ class PaintedTextField extends StatelessWidget {
   final IconData icon;
   FocusNode node;
   final double borderRadius;
-  PaintedTextField(
-      {Color backgroundColor,
-       Color textColor,
-        this.paddingLeft = 5,
-        this.contentPadding = 0,
-      this.gap = 5,
-        this.hint = "",
-      double width = 0.5,
-      this.icon,
-      this.borderRadius,
-      Key key,  })
-      : super(key: key) {
+  PaintedTextField({
+    Color backgroundColor,
+    Color textColor,
+    this.paddingLeft = 5,
+    this.contentPadding = 0,
+    this.gap = 5,
+    this.hint = "",
+    double width = 0.5,
+    this.icon,
+    this.borderRadius,
+    Key key,
+  }) : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.node = new FocusNode(debugLabel: "PaintedTextField");
-    this.backgroundColor = backgroundColor ?? MyTheme.convert(ThemeColorName.TransparentShadow);
+    this.backgroundColor =
+        backgroundColor ?? MyTheme.convert(ThemeColorName.TransparentShadow);
     this.textColor = textColor ?? MyTheme.convert(ThemeColorName.NormalText);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> content = [
-      SizedBox(width: this.paddingLeft)
-    ];
-    if(this.icon != null){
+    List<Widget> content = [SizedBox(width: this.paddingLeft)];
+    if (this.icon != null) {
       content.add(CustomIconButton(
         icon: this.icon,
         iconSize: 18,
@@ -49,7 +48,7 @@ class PaintedTextField extends StatelessWidget {
     }
     content.addAll([
       SizedBox(width: this.gap),
-      Expanded(child:this.getTextField()),
+      Expanded(child: this.getTextField()),
     ]);
     return CustomPaint(
       painter: ColorPainter(
@@ -68,14 +67,10 @@ class PaintedTextField extends StatelessWidget {
   TextField getTextField() {
     return TextField(
       focusNode: this.node,
-      style: TextStyle(
-        color: this.textColor
-      ),
+      style: TextStyle(color: this.textColor),
       decoration: InputDecoration(
         hintText: this.hint,
-        hintStyle: TextStyle(
-            color: this.textColor
-        ),
+        hintStyle: TextStyle(color: this.textColor),
         border: OutlineInputBorder(borderSide: BorderSide.none), //去除下边框
         contentPadding: const EdgeInsets.symmetric(vertical: 1),
       ),

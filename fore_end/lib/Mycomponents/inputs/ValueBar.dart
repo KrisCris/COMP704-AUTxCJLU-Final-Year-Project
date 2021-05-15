@@ -48,11 +48,11 @@ class ValueBar<T extends num> extends StatefulWidget
 
   ValueBar(
       {double width = 100,
-        Key key,
+      Key key,
       this.barThickness = 10,
       this.borderThickness = 2,
       this.onChange,
-      Map<T,String> mapper,
+      Map<T, String> mapper,
       List<double> borderRadius_RT_RB_RT_RB,
       this.showBorder = true,
       this.roundNum = 1,
@@ -64,14 +64,14 @@ class ValueBar<T extends num> extends StatefulWidget
       this.effectGap = 45,
       this.edgeEmpty,
       this.showValue = false,
-        this.couldExpand = false,
+      this.couldExpand = false,
       bool showAdjustButton = false,
       this.showDragHead = true,
       this.borderColor = Colors.black,
       this.borderDistance = 0,
       Color barColor,
       Color effectColor = Colors.black12,
-        Color warningColor,
+      Color warningColor,
       this.blockWidth = 20,
       @required T minVal,
       @required T maxVal,
@@ -79,7 +79,8 @@ class ValueBar<T extends num> extends StatefulWidget
       : assert(initVal != null),
         assert(minVal != null),
         assert(maxVal != null),
-        assert(adjustVal != null),super(key:key) {
+        assert(adjustVal != null),
+        super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.widgetValue = ValueNotifier(initVal);
     this.minVal = ValueNotifier(minVal);
@@ -88,7 +89,7 @@ class ValueBar<T extends num> extends StatefulWidget
     this.showAdjustButton = showAdjustButton;
     this.mapper = mapper;
     if (this.mapper != null) {
-     this.widgetValue.value = this.mapper.keys.first;
+      this.widgetValue.value = this.mapper.keys.first;
     }
     if (this.showAdjustButton) {
       this.width -= (ValueBar.buttonSize + ValueBar.buttonGap) * 2;
@@ -99,7 +100,7 @@ class ValueBar<T extends num> extends StatefulWidget
     if (effectColor == null) {
       effectColor = Color(0xFF37BC79);
     }
-    if(warningColor == null){
+    if (warningColor == null) {
       warningColor = Color(0xFFFF0055);
     }
     if (borderRadius_RT_RB_RT_RB == null) {
@@ -151,11 +152,17 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
   @override
   void didUpdateWidget(covariant ValueBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.widgetValue.value != this.widget.widgetValue.value){
+    if (oldWidget.widgetValue.value != this.widget.widgetValue.value) {
       this.onChangeValue();
     }
-    if(this.textColorAnimation.value != widget.warningColor){
-      this.textColorAnimation.initAnimation(MyTheme.convert(ThemeColorName.NormalText), widget.warningColor, 200, this, () {setState(() {});});
+    if (this.textColorAnimation.value != widget.warningColor) {
+      this.textColorAnimation.initAnimation(
+          MyTheme.convert(ThemeColorName.NormalText),
+          widget.warningColor,
+          200,
+          this, () {
+        setState(() {});
+      });
     }
     setState(() {});
     // widget.widgetValue = oldWidget.widgetValue;
@@ -165,7 +172,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
 
   @override
   void initState() {
-    if(widget.mapper != null){
+    if (widget.mapper != null) {
       this.nowIndex = 0;
     }
     this.initValueListener(widget.widgetValue);
@@ -180,9 +187,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.barWidthAnimation = TweenAnimation<double>();
     this.barColorAnimation = TweenAnimation<CalculatableColor>();
     this.textColorAnimation = TweenAnimation<CalculatableColor>();
-    this
-        .barWidthAnimation
-        .initAnimation(0, 0, 200, this, () {
+    this.barWidthAnimation.initAnimation(0, 0, 200, this, () {
       setState(() {});
     });
     this.moveAnimation.initAnimation(0.0, widget.effectGap, 800, this, () {
@@ -196,9 +201,18 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
         this.moveAnimation.forward();
       }
     });
-    this.textColorAnimation.initAnimation(MyTheme.convert(ThemeColorName.NormalText), widget.warningColor, 200, this, () {setState(() {});});
-    this.barColorAnimation.initAnimation(widget.barColor, widget.warningColor, 200, this, () {setState(() {
-    });});
+    this.textColorAnimation.initAnimation(
+        MyTheme.convert(ThemeColorName.NormalText),
+        widget.warningColor,
+        200,
+        this, () {
+      setState(() {});
+    });
+    this
+        .barColorAnimation
+        .initAnimation(widget.barColor, widget.warningColor, 200, this, () {
+      setState(() {});
+    });
     this.drawProgress();
     super.initState();
   }
@@ -239,11 +253,12 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             borderDistance: widget.borderDistance),
         child: Container(
           width: widget.width,
-          height: widget.barThickness + 2*ValueBar.backgroundExtraSpace,
+          height: widget.barThickness + 2 * ValueBar.backgroundExtraSpace,
           child: Align(
             alignment: Alignment.topLeft,
             child: Transform.translate(
-              offset: Offset(widget.borderThickness, ValueBar.backgroundExtraSpace),
+              offset:
+                  Offset(widget.borderThickness, ValueBar.backgroundExtraSpace),
               child: ClipRRect(
                   borderRadius: BorderRadius.only(
                       topLeft:
@@ -290,8 +305,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             width: widget.blockWidth,
             height: widget.barThickness,
             margin: EdgeInsets.only(
-                left:
-                    this.barWidthAnimation.value + widget.borderThickness,
+                left: this.barWidthAnimation.value + widget.borderThickness,
                 top: ValueBar.backgroundExtraSpace),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -307,40 +321,42 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
       double extra = widget.showAdjustButton
           ? (ValueBar.buttonSize + ValueBar.buttonGap) * 2
           : 0;
-      return  Container(
-              width: widget.width + extra,
-              height: widget.barThickness +  ValueBar.backgroundExtraSpace*2 + 20,
-              child: Row(
-                children: [
-                   GestureDetector(
-                     behavior: HitTestBehavior.translucent,
-                      onTap: (){
-                        this.addValue(-1 * widget.adjustVal);
-                      },
-                      child: Container(
-                        width: ValueBar.buttonSize,
-                        height: widget.barThickness+2*ValueBar.backgroundExtraSpace,
-                      ),
-                  ),
-                  SizedBox(width: ValueBar.buttonGap),
-                  Stack(children: barInfo),
-                  SizedBox(width: ValueBar.buttonGap),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: (){
-                      this.addValue( widget.adjustVal);
-                    },
-                    child: Container(
-                      width: ValueBar.buttonSize,
-                      height: widget.barThickness+2*ValueBar.backgroundExtraSpace,
-                    ),
-                  ),
-                ],
-              ));
+      return Container(
+          width: widget.width + extra,
+          height: widget.barThickness + ValueBar.backgroundExtraSpace * 2 + 20,
+          child: Row(
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  this.addValue(-1 * widget.adjustVal);
+                },
+                child: Container(
+                  width: ValueBar.buttonSize,
+                  height:
+                      widget.barThickness + 2 * ValueBar.backgroundExtraSpace,
+                ),
+              ),
+              SizedBox(width: ValueBar.buttonGap),
+              Stack(children: barInfo),
+              SizedBox(width: ValueBar.buttonGap),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  this.addValue(widget.adjustVal);
+                },
+                child: Container(
+                  width: ValueBar.buttonSize,
+                  height:
+                      widget.barThickness + 2 * ValueBar.backgroundExtraSpace,
+                ),
+              ),
+            ],
+          ));
     } else {
       return Container(
         width: widget.width,
-        height: widget.barThickness + 2*ValueBar.backgroundExtraSpace,
+        height: widget.barThickness + 2 * ValueBar.backgroundExtraSpace,
         child: Stack(children: barInfo),
       );
     }
@@ -395,7 +411,8 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     }
     this.drawProgress();
   }
-  void drawProgress(){
+
+  void drawProgress() {
     if (!this.needBarAnimation) return;
     double persent = 0.0;
     if (widget.mapper != null) {
@@ -410,11 +427,11 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
             (widget.maxVal - widget.minVal.value);
       }
     }
-    if(persent > 1){
+    if (persent > 1) {
       persent = 1;
       this.textColorAnimation.forward();
       this.barColorAnimation.forward();
-    }else{
+    } else {
       this.textColorAnimation.reverse();
       this.barColorAnimation.reverse();
     }
@@ -430,6 +447,7 @@ class ValueBarState<T extends num> extends State<ValueBar<T>>
     this.barWidthAnimation.forward();
     this.moveAnimation.forward();
   }
+
   void solveDragSpace(double dx, int addOrMinus) {
     dx = dx - widget.blockWidth / 2;
     if (dx > widget.width - 2 * widget.borderThickness - widget.blockWidth) {

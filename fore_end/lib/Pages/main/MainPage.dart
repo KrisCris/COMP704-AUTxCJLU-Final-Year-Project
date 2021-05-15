@@ -79,7 +79,9 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
                         controller: ctl,
                         children: [
                           new TakePhotoPage(key: this.photoKey),
-                          new DietPage(key: this.dietPageKey,),
+                          new DietPage(
+                            key: this.dietPageKey,
+                          ),
                           new PlanDetailPage(),
                         ]),
                   ],
@@ -124,16 +126,14 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-
-
   Widget getAccount(BuildContext context) {
     return CustomButton(
       tapFunc: () {
         //这里写setting pages的跳转
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return AccountPage();
-        })).then((value){
-          if(value){
+        })).then((value) {
+          if (value) {
             drawerKey.currentState.setState(() {});
             setState(() {});
           }
@@ -152,9 +152,7 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
       tapFunc: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
-        })).then((value){
-
-        });
+        })).then((value) {});
       },
       text: CustomLocalizations.of(context).drawerSetting,
       width: (ScreenTool.partOfScreenWidth(1) - 60) / 2,
@@ -247,6 +245,4 @@ class MainState extends State<MainPage> with TickerProviderStateMixin {
         onClick: () {});
     return [takePhotoButton, myDietButton, addPlanButton];
   }
-
-
 }

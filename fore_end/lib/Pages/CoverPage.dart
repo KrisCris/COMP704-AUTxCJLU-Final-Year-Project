@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:math';
 
@@ -28,7 +27,7 @@ class CoverPage extends StatefulWidget {
 class CoverState extends State<CoverPage> {
   User savedUser;
   ValueNotifier<int> loginProcess = new ValueNotifier(-1);
-  String hintString="loginState";
+  String hintString = "loginState";
 
   Widget getPage(String text) {
     return Container(
@@ -67,57 +66,60 @@ class CoverState extends State<CoverPage> {
               ))),
     );
   }
+
   @override
-  void initState(){
+  void initState() {
     loginProcess.addListener(() {
-      if(loginProcess.value == 0){
+      if (loginProcess.value == 0) {
         hintString = "loginState";
-      }else if(loginProcess.value == 1){
+      } else if (loginProcess.value == 1) {
         hintString = "preference";
-      }else if(loginProcess.value == 2){
+      } else if (loginProcess.value == 2) {
         hintString = "foodRecognizer";
-      }else if(loginProcess.value == 3){
+      } else if (loginProcess.value == 3) {
         hintString = "welcome";
-        Future.delayed(Duration(milliseconds: 1500),(){
+        Future.delayed(Duration(milliseconds: 1500), () {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context){return new Welcome();}),
-                  (route){return route==null;}
-          );
+              MaterialPageRoute(builder: (context) {
+            return new Welcome();
+          }), (route) {
+            return route == null;
+          });
         });
-      }else if(loginProcess.value == 4){
+      } else if (loginProcess.value == 4) {
         hintString = "syncLocalData";
         this.updateLocalData();
-      }else if(loginProcess.value == 5){
+      } else if (loginProcess.value == 5) {
         hintString = "offlineLogin";
-        Future.delayed(Duration(milliseconds: 1000),(){
+        Future.delayed(Duration(milliseconds: 1000), () {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context){
-                User u = User.getInstance();
-                u.isOffline = true;
-                if(u.needGuide){
-                  return GuidePage();
-                }else{
-                  return new MainPage(user: u);
-                }
-              }),
-                  (route){return route==null;}
-          );
+              MaterialPageRoute(builder: (context) {
+            User u = User.getInstance();
+            u.isOffline = true;
+            if (u.needGuide) {
+              return GuidePage();
+            } else {
+              return new MainPage(user: u);
+            }
+          }), (route) {
+            return route == null;
+          });
         });
-      }else if(loginProcess.value == 6){
+      } else if (loginProcess.value == 6) {
         hintString = "autoLogin";
-        Future.delayed(Duration(milliseconds: 500),(){
+        Future.delayed(Duration(milliseconds: 500), () {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context){
-                User u = User.getInstance();
-                u.isOffline = false;
-                if(u.needGuide){
-                  return GuidePage();
-                }else{
-                  return new MainPage(user: u);
-                }
-              }),
-                  (route){return route==null;}
-          );
+              MaterialPageRoute(builder: (context) {
+            User u = User.getInstance();
+            u.isOffline = false;
+            if (u.needGuide) {
+              return GuidePage();
+            } else {
+              return new MainPage(user: u);
+            }
+          }), (route) {
+            return route == null;
+          });
         });
       }
       setState(() {});
@@ -125,67 +127,69 @@ class CoverState extends State<CoverPage> {
     attemptLogin();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    if(loginProcess.value == -1){
+    if (loginProcess.value == -1) {
       return Container(decoration: BoxDecoration(color: Colors.white));
     }
-    return this.getPage(CustomLocalizations.of(context).getContent(this.hintString));
+    return this
+        .getPage(CustomLocalizations.of(context).getContent(this.hintString));
   }
 
   Future<int> attemptLogin() async {
     await LocalDataManager.init();
     SoftwarePreference preference = SoftwarePreference.getInstance();
     this.loginProcess.value = 1;
-    await Future.delayed(Duration(milliseconds: 300),(){});
+    await Future.delayed(Duration(milliseconds: 300), () {});
 
     FoodRecognizer fd = FoodRecognizer.instance;
     this.loginProcess.value = 2;
-    await Future.delayed(Duration(milliseconds: 300),(){});
+    await Future.delayed(Duration(milliseconds: 300), () {});
 
     User u = User.getInstance();
-    if(u.token == null){
+    if (u.token == null) {
       this.loginProcess.value = 3;
-    }else{
+    } else {
       int userCode = await u.synchronize();
       this.loginProcess.value = userCode;
     }
   }
+
   Future<int> updateLocalData() async {
     SharedPreferences pre = LocalDataManager.pre;
     User u = User.getInstance();
     DateTime end = DateTime.now();
     DateTime begin = end.add(Duration(days: -30));
-    int endTime = (end.millisecondsSinceEpoch/1000).floor();
-    int beginTime = (begin.millisecondsSinceEpoch/1000).floor();
-    pre.setInt("localBeginTime", beginTime*1000);
-    pre.setInt("localEndTime", endTime*1000);
-    Response res = await Requests.getCaloriesIntake(
-        context,{
+    int endTime = (end.millisecondsSinceEpoch / 1000).floor();
+    int beginTime = (begin.millisecondsSinceEpoch / 1000).floor();
+    pre.setInt("localBeginTime", beginTime * 1000);
+    pre.setInt("localEndTime", endTime * 1000);
+    Response res = await Requests.getCaloriesIntake(context, {
       "begin": beginTime,
       "end": endTime,
       "uid": u.uid,
       "token": u.token,
     });
-    if(res != null){
+    if (res != null) {
       String json = jsonEncode(res.data['data']);
       pre.setString("localCalories", json);
     }
-    Requests.historyMeal(context,{
-      'begin':beginTime,
-      'end':endTime,
+    Requests.historyMeal(context, {
+      'begin': beginTime,
+      'end': endTime,
       "uid": u.uid,
       "token": u.token,
-    }).then((res){
-      if(res != null){
-        Map<String,List<Map>> timeMap = new Map<String,List<Map>>();
-        for(Map m in res.data['data']){
-          DateTime dt = DateTime.fromMillisecondsSinceEpoch(m['time']*1000);
-          dt = DateTime(dt.year,dt.month,dt.day);
+    }).then((res) {
+      if (res != null) {
+        Map<String, List<Map>> timeMap = new Map<String, List<Map>>();
+        for (Map m in res.data['data']) {
+          DateTime dt = DateTime.fromMillisecondsSinceEpoch(m['time'] * 1000);
+          dt = DateTime(dt.year, dt.month, dt.day);
           String stringTime = dt.millisecondsSinceEpoch.toString();
-          if(timeMap.containsKey(stringTime)){
+          if (timeMap.containsKey(stringTime)) {
             timeMap[stringTime].add(m);
-          }else{
+          } else {
             timeMap[stringTime] = [m];
           }
         }
@@ -193,64 +197,53 @@ class CoverState extends State<CoverPage> {
         pre.setString("localHistoryMeals", json);
       }
     });
-    res = await Requests.getWeightTrend(context,{
-      "uid":u.uid,
-      "token":u.token,
-      "begin": beginTime,
-      "end":endTime
-    });
-    if(res != null && res.data['code'] == 1){
+    res = await Requests.getWeightTrend(context,
+        {"uid": u.uid, "token": u.token, "begin": beginTime, "end": endTime});
+    if (res != null && res.data['code'] == 1) {
       List<BodyChangeLog> bodyChanges = [];
       DateTime oneDay;
       int oneWeight;
-      for(Map m in res.data['data']['trend']){
-        DateTime tm = DateTime.fromMillisecondsSinceEpoch(m['time']*1000);
+      for (Map m in res.data['data']['trend']) {
+        DateTime tm = DateTime.fromMillisecondsSinceEpoch(m['time'] * 1000);
         //保存某一天的数据
-        if(oneDay == null){
+        if (oneDay == null) {
           oneDay = tm;
           oneWeight = (m['weight'] as double).floor();
-        }else{
+        } else {
           //如果这次获取到的时间和上次保存的是同一天
-          if(oneDay.year == tm.year && oneDay.month == tm.month && oneDay.day == tm.day){
+          if (oneDay.year == tm.year &&
+              oneDay.month == tm.month &&
+              oneDay.day == tm.day) {
             //取同一天里靠后的那次数据
-            if(tm.compareTo(oneDay) >= 0){
+            if (tm.compareTo(oneDay) >= 0) {
               oneDay = tm;
               oneWeight = (m['weight'] as double).floor();
             }
-          }else{
+          } else {
             //如果不是同一天，将之前保存的那天的数据录入，然后更新保存的时间
             bodyChanges.add(BodyChangeLog(
                 time: oneDay.millisecondsSinceEpoch,
                 weight: oneWeight,
-                height: 0
-            ));
+                height: 0));
             oneDay = tm;
             oneWeight = (m['weight'] as double).floor();
           }
         }
       }
       //将最后保存的那天的数据录入
-      if(oneDay != null && oneWeight != null){
+      if (oneDay != null && oneWeight != null) {
         bodyChanges.add(BodyChangeLog(
-            time: oneDay.millisecondsSinceEpoch,
-            weight: oneWeight,
-            height: 0
-        ));
+            time: oneDay.millisecondsSinceEpoch, weight: oneWeight, height: 0));
       }
       String json = jsonEncode(bodyChanges);
       pre.setString("localBodyChanges", json);
     }
-    res = await Requests.getHistoryPlan(context,{
-      "uid": u.uid,
-      "token": u.token,
-      "begin": beginTime,
-      "end": endTime
-    });
-    if(res != null && res.data['code'] == 1){
+    res = await Requests.getHistoryPlan(context,
+        {"uid": u.uid, "token": u.token, "begin": beginTime, "end": endTime});
+    if (res != null && res.data['code'] == 1) {
       String json = jsonEncode(res.data['data']);
       pre.setString("localHistoryPlan", json);
     }
     loginProcess.value = 6;
   }
-
 }

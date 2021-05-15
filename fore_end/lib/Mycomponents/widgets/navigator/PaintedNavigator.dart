@@ -17,45 +17,48 @@ class PaintedNavigator extends StatelessWidget {
   List<CustomIconButton> buttons;
   TabController controller;
   Color backgroundColor;
+
   ///当前被选中的标签按钮
   CustomIconButton activateButton;
   bool changing;
 
-  PaintedNavigator(
-      {double width,
-      double height,
-      this.buttons,
-      this.controller,
-        this.borderRadius,
-      this.backgroundColor,}) {
+  PaintedNavigator({
+    double width,
+    double height,
+    this.buttons,
+    this.controller,
+    this.borderRadius,
+    this.backgroundColor,
+  }) {
     this.changing = false;
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
-    if(this.borderRadius ==null){
-      this.borderRadius = this.height/2;
+    if (this.borderRadius == null) {
+      this.borderRadius = this.height / 2;
     }
-    this.backgroundColor = this.backgroundColor ?? MyTheme.convert(ThemeColorName.TransparentShadow);
-    int idx=0;
+    this.backgroundColor = this.backgroundColor ??
+        MyTheme.convert(ThemeColorName.TransparentShadow);
+    int idx = 0;
     for (CustomIconButton bt in this.buttons) {
       bt.setParentNavigator(this);
-      if(controller.index == idx){
+      if (controller.index == idx) {
         int selected = idx;
         this.buttons[idx].addDelayInit(() {
           this.activateButtonByIndex(selected);
         });
       }
-      idx ++;
+      idx++;
     }
     this.controller.addListener(() {
       if (this.controller.indexIsChanging) {
         this.changing = true;
       } else {
-          this.changing = false;
-          print("page animate done, now " + this.controller.index.toString());
-          this.activateButtonByIndex(this.controller.index);
-          //当切换标签页完毕时，执行回调
-          if (this.activateButton.navigatorCallback != null)
-            this.activateButton.navigatorCallback();
+        this.changing = false;
+        print("page animate done, now " + this.controller.index.toString());
+        this.activateButtonByIndex(this.controller.index);
+        //当切换标签页完毕时，执行回调
+        if (this.activateButton.navigatorCallback != null)
+          this.activateButton.navigatorCallback();
       }
     });
   }
@@ -65,23 +68,24 @@ class PaintedNavigator extends StatelessWidget {
       painter: ColorPainter(
           color: this.backgroundColor,
           context: context,
-          borderRadius: this.borderRadius
-      ),
+          borderRadius: this.borderRadius),
       child: Container(
         height: this.height,
         child: this.getNavigator(),
       ),
     );
   }
-  bool replace(CustomIconButton original, CustomIconButton newone){
-    for(int i=0;i< buttons.length;i++){
-      if(buttons[i] == original){
+
+  bool replace(CustomIconButton original, CustomIconButton newone) {
+    for (int i = 0; i < buttons.length; i++) {
+      if (buttons[i] == original) {
         buttons[i] = newone;
         return true;
       }
     }
     return false;
   }
+
   Widget getNavigator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -106,6 +110,7 @@ class PaintedNavigator extends StatelessWidget {
       }
     }
   }
+
   ///根据索引 [i] 选中某个按钮
   void activateButtonByIndex(int i) {
     for (int j = 0; j < this.buttons.length; j++) {
@@ -117,6 +122,7 @@ class PaintedNavigator extends StatelessWidget {
       }
     }
   }
+
   ///根据按钮实例 [button] 切换标签页
   void switchPageByObject(CustomIconButton button) {
     for (int i = 0; i < this.buttons.length; i++) {

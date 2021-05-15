@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,10 @@ import 'package:fore_end/Pages/GuidePage.dart';
 import 'package:fore_end/Pages/WelcomePage.dart';
 import 'package:fore_end/Pages/account/UpdateBody.dart';
 
-class HintManager{
+class HintManager {
   static final HintManager _instance = HintManager._privateConstructor();
   static HintManager get instance => _instance;
-  HintManager._privateConstructor(){
+  HintManager._privateConstructor() {
     hints = {};
   }
 
@@ -38,6 +37,7 @@ class HintManager{
     }
     return null;
   }
+
   void removeHint(String name) {
     this.hints.remove(name);
     this.boxKey?.currentState?.setState(() {});
@@ -46,12 +46,13 @@ class HintManager{
   void receiveHint(BuildContext context) {
     this.hints.clear();
     User u = User.getInstance();
-    if(u.isOffline){
+    if (u.isOffline) {
       hints["offlineHint"] = new Hint(
           hintContent: CustomLocalizations.of(context).offlineHint,
           instanceClose: false,
           onClick: () {
-            Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context){
+            Navigator.pushAndRemoveUntil(context,
+                new MaterialPageRoute(builder: (context) {
               return Welcome();
             }), (route) => false);
           });
@@ -59,7 +60,7 @@ class HintManager{
     if (u.shouldUpdateWeight) {
       hints['weightUpdateHint'] = new Hint(
           instanceClose: false,
-          hintContent:CustomLocalizations.of(context).weightUpdateHint,
+          hintContent: CustomLocalizations.of(context).weightUpdateHint,
           onClick: () {
             showDialog<bool>(
               context: context,
@@ -69,7 +70,7 @@ class HintManager{
                     needHeight: false);
                 updateBody.onUpdate = () async {
                   User u = User.getInstance();
-                  Response res = await Requests.finishPlan(context,{
+                  Response res = await Requests.finishPlan(context, {
                     "uid": u.uid,
                     "token": u.token,
                     "pid": u.plan?.id ?? -1,
@@ -95,11 +96,11 @@ class HintManager{
             });
           });
     }
-    if(u.plan.pastDeadline){
+    if (u.plan.pastDeadline) {
       this.hints['passDeadlineHint'] = Hint(
           instanceClose: false,
-          hintContent:CustomLocalizations.of(context).passDeadlineHint,
-          onClick: ()async{
+          hintContent: CustomLocalizations.of(context).passDeadlineHint,
+          onClick: () async {
             bool b = await showDialog<bool>(
               context: context,
               barrierDismissible: false,
@@ -111,8 +112,7 @@ class HintManager{
                       "," +
                       CustomLocalizations.of(context).planDelayChoose,
                   onClickAccept: () async {
-                    Response res = await Requests.delayPlan(
-                      context,
+                    Response res = await Requests.delayPlan(context,
                         {"uid": u.uid, "token": u.token, "pid": u.plan.id});
                     if (res != null && res.data['code'] == 1) {
                       u.plan.extendDays = res.data['data']['ext'];
@@ -125,7 +125,8 @@ class HintManager{
             //accept delay
             if (b == true) {
               this.removeHint("passDeadLineHint");
-              this?.boxKey?.currentState?.setState(() {});;
+              this?.boxKey?.currentState?.setState(() {});
+              ;
             }
             //finish plan
             else {
@@ -139,9 +140,7 @@ class HintManager{
                     needCancel: false,
                   );
                   updt.onUpdate = () async {
-                    Response res = await Requests.finishPlan(
-                        context,
-                        {
+                    Response res = await Requests.finishPlan(context, {
                       "uid": u.uid,
                       "token": u.token,
                       "pid": u.plan.id,
@@ -159,25 +158,29 @@ class HintManager{
               if (success) {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
-                      return GuidePage(firstTime: false);
-                    }), (route) {
+                  return GuidePage(firstTime: false);
+                }), (route) {
                   return route == null;
                 });
               }
             }
-          }
-      );
+          });
     }
-    if(this.hints.length > 0){
+    if (this.hints.length > 0) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        this.foodSearchKey?.currentState?.badgeKey?.currentState?.setHintNumber(this.hints.length);
+        this
+            .foodSearchKey
+            ?.currentState
+            ?.badgeKey
+            ?.currentState
+            ?.setHintNumber(this.hints.length);
       });
     }
   }
-
 }
-class HintBox extends StatefulWidget{
-  HintBox(Key key):super(key:key);
+
+class HintBox extends StatefulWidget {
+  HintBox(Key key) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -185,8 +188,7 @@ class HintBox extends StatefulWidget{
   }
 }
 
-class HintBoxState extends State<HintBox>{
-
+class HintBoxState extends State<HintBox> {
   @override
   void initState() {
     super.initState();
@@ -197,34 +199,33 @@ class HintBoxState extends State<HintBox>{
     return Container(
       child: AnimatedCrossFade(
         firstChild: Center(
-          child: TitleText(
-            text: CustomLocalizations.of(context).noMessage
-          ),
+          child: TitleText(text: CustomLocalizations.of(context).noMessage),
         ),
         secondChild: Row(
           children: [
             SizedBox(width: 15),
             Expanded(
                 child: Container(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: HintManager.instance.hints.length,
-                      itemBuilder: (BuildContext ctx, int idx) {
-                        return CustomButton(
-                          topMargin: 15,
-                          bottomMargin: 15,
-                          width: ScreenTool.partOfScreenWidth(1) - 60,
-                          height: 80,
-                          radius: 5,
-                          text: HintManager.instance.getHintByIndex(idx).hintContent,
-                          firstColorName: ThemeColorName.TransparentShadow,
-                          tapFunc: () {
-                            HintManager.instance.getHintByIndex(idx).onClick();
-                          },
-                        );
-                      }),
-                )),
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: HintManager.instance.hints.length,
+                  itemBuilder: (BuildContext ctx, int idx) {
+                    return CustomButton(
+                      topMargin: 15,
+                      bottomMargin: 15,
+                      width: ScreenTool.partOfScreenWidth(1) - 60,
+                      height: 80,
+                      radius: 5,
+                      text:
+                          HintManager.instance.getHintByIndex(idx).hintContent,
+                      firstColorName: ThemeColorName.TransparentShadow,
+                      tapFunc: () {
+                        HintManager.instance.getHintByIndex(idx).onClick();
+                      },
+                    );
+                  }),
+            )),
             SizedBox(width: 15)
           ],
         ),

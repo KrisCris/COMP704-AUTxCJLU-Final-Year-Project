@@ -51,8 +51,9 @@ class VerifyCodeInputer extends StatefulWidget {
       this.repeatShowText = "Acquire again",
       this.checkWrongText = "Wrong verify code",
       this.placeHolder = "input verify code",
-      double width = 0.7}): super(key: key){
-      this.width = ScreenTool.partOfScreenWidth(width);
+      double width = 0.7})
+      : super(key: key) {
+    this.width = ScreenTool.partOfScreenWidth(width);
   }
 
   ///历史遗留问题，不推荐用这种方式保存State的引用
@@ -127,7 +128,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
       //   if (widget.emailField.isCorrect()) this.button.setDisabled(false);
       // }
     };
-    this.counter.callingFinish = (){
+    this.counter.callingFinish = () {
       this.button.text = widget.repeatShowText;
       this.button.fontsize = 13;
       if (widget.emailField.isCorrect()) this.button.setDisabled(false);
@@ -151,11 +152,8 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
       child: Stack(
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                this.getInput()
-              ]
-          ),
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [this.getInput()]),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [this.getButton()],
@@ -174,7 +172,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
         radius: 8,
         disabled: true,
         sizeChangeMode: 2,
-        tapFunc: (){
+        tapFunc: () {
           this.verified = false;
           this.contentWhenClickButton = widget.emailField.getValue();
           this.button.fontsize = 20;
@@ -227,8 +225,7 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   Future<void> checkVerifyCode(String emailVal, String codeVal) async {
     try {
       Response res = await Requests.checkVerifyCode(
-        context,
-          {"email": emailVal, "auth_code": codeVal});
+          context, {"email": emailVal, "auth_code": codeVal});
       if (res.data['code'] == 1) {
         widget.onCheckSuccess();
         this.textField.setCorrect();
@@ -247,7 +244,8 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   ///向邮箱中发送验证码
   Future<void> sendEmail(String emailVal) async {
     try {
-      Response res = await Requests.sendRegisterEmail(context,{"email": emailVal});
+      Response res =
+          await Requests.sendRegisterEmail(context, {"email": emailVal});
     } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());
@@ -257,7 +255,8 @@ class VerifyCodeState extends State<VerifyCodeInputer> {
   //TODO: zsk 补充注释
   Future<void> sendSecurityCode(String emailVal) async {
     try {
-      Response res = await Requests.sendSecurityCode(context,{"email": emailVal});
+      Response res =
+          await Requests.sendSecurityCode(context, {"email": emailVal});
     } on DioError catch (e) {
       print("Exception when sending email:\n");
       print(e.toString());

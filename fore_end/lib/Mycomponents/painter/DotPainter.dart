@@ -41,14 +41,12 @@ class DotPainter extends ContextPainter {
     if (this.context != null) {
       width = context.size.width;
     } else {
-      if(width == 0)
-        width = ScreenTool.partOfScreenWidth(1);
+      if (width == 0) width = ScreenTool.partOfScreenWidth(1);
     }
     if (this.context != null) {
       height = context.size.height;
     } else {
-      if(height == 0)
-        height = width;
+      if (height == 0) height = width;
     }
     configuredSize = new Size(width, height);
     double moveVal = 0;

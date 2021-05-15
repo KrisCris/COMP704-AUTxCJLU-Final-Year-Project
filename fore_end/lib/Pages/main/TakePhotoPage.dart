@@ -23,7 +23,7 @@ class TakePhotoPage extends StatefulWidget {
   TakePhotoState state;
   CameraDescription camera;
   String waitingText;
-  TakePhotoPage({Key key}):super(key:key) {}
+  TakePhotoPage({Key key}) : super(key: key) {}
 
   @override
   State<StatefulWidget> createState() {
@@ -37,7 +37,10 @@ class TakePhotoPage extends StatefulWidget {
 }
 
 class TakePhotoState extends State<TakePhotoPage>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin,WidgetsBindingObserver {
+    with
+        TickerProviderStateMixin,
+        AutomaticKeepAliveClientMixin,
+        WidgetsBindingObserver {
   CameraController _ctl;
   Future<void> _initDone;
   bool _hasCamera = true;
@@ -102,7 +105,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("nowState: "+state.toString());
+    print("nowState: " + state.toString());
     // App state changed before we got the chance to initialize.
     if (this._ctl == null || !this._ctl.value.isInitialized) {
       return;
@@ -209,39 +212,36 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget waitingForCameraWidget() {
     double marginHor = ScreenTool.partOfScreenWidth(0.2);
     double marginTop = ScreenTool.partOfScreenHeight(0.25);
-    DotColumn card = new DotColumn(
-        width: 0.7,
-        borderRadius: 5,
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          Transform.translate(
-            offset: Offset(0, this.loadingCameraAnimation.value),
-            child:
-                Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
-          ),
-          Container(
-            height: 60,
-            width: ScreenTool.partOfScreenWidth(0.7),
-            child: Text(
-              widget.waitingText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black),
-            ),
-          ),
-          SizedBox(
-            height: 40,
-          ),
+    DotColumn card = new DotColumn(width: 0.7, borderRadius: 5, children: [
+      SizedBox(
+        height: 40,
+      ),
+      Transform.translate(
+        offset: Offset(0, this.loadingCameraAnimation.value),
+        child:
+            Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
+      ),
+      Container(
+        height: 60,
+        width: ScreenTool.partOfScreenWidth(0.7),
+        child: Text(
+          widget.waitingText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Futura",
+              color: Colors.black),
+        ),
+      ),
+      SizedBox(
+        height: 40,
+      ),
     ]);
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
-      height:ScreenTool.partOfScreenHeight(1),
+      height: ScreenTool.partOfScreenHeight(1),
       color: MyTheme.convert(ThemeColorName.PageBackground),
       child: Align(
         alignment: Alignment.center,
@@ -312,7 +312,8 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getPhotoButton() {
     return new CustomIconButton(
-      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor.transform(Colors.redAccent)),
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon,
+          color: CalculatableColor.transform(Colors.redAccent)),
       icon: FontAwesomeIcons.solidCircle,
       iconSize: ScreenTool.partOfScreenWidth(0.16),
       adjustHeight: 2.5,
@@ -329,7 +330,7 @@ class TakePhotoState extends State<TakePhotoPage>
         )
       ],
       onClick: () async {
-        if(User.getInstance().isOffline){
+        if (User.getInstance().isOffline) {
           Fluttertoast.showToast(
             msg: "food detect requires online login",
             toastLength: Toast.LENGTH_SHORT,
@@ -353,7 +354,8 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getAlbumButton() {
     return new CustomIconButton(
-      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor(0xFFF1F1F1)),
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon,
+          color: CalculatableColor(0xFFF1F1F1)),
       icon: FontAwesomeIcons.solidImages,
       iconSize: ScreenTool.partOfScreenWidth(0.11),
       buttonSize: ScreenTool.partOfScreenWidth(0.13),
@@ -369,7 +371,7 @@ class TakePhotoState extends State<TakePhotoPage>
       onClick: () async {
         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
         if (image == null) return;
-        if(User.getInstance().isOffline){
+        if (User.getInstance().isOffline) {
           Fluttertoast.showToast(
             msg: "food detect requires online login",
             toastLength: Toast.LENGTH_SHORT,
@@ -391,7 +393,8 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Widget getResultButton() {
     return new CustomIconButton(
-      customColor: MyTheme.convert(ThemeColorName.NormalIcon, color: CalculatableColor(0xFFF1F1F1)),
+      customColor: MyTheme.convert(ThemeColorName.NormalIcon,
+          color: CalculatableColor(0xFFF1F1F1)),
       icon: FontAwesomeIcons.chevronCircleRight,
       iconSize: ScreenTool.partOfScreenWidth(0.12),
       buttonSize: ScreenTool.partOfScreenWidth(0.14),
@@ -431,7 +434,7 @@ class TakePhotoState extends State<TakePhotoPage>
 
   Future<int> getImageRotateAngular(List<int> bytes) async {
     Map<String, dynamic> tags = await readExif(MemoryBlobReader(bytes));
-    if(tags == null){
+    if (tags == null) {
       return 0;
     }
     var orientation = tags['Orientation']; //获取该照片的拍摄方向

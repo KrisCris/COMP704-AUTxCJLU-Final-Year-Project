@@ -206,39 +206,36 @@ class TakePhotoState extends State<TakePhotoPage>
   Widget waitingForCameraWidget() {
     double marginHor = ScreenTool.partOfScreenWidth(0.2);
     double marginTop = ScreenTool.partOfScreenHeight(0.25);
-    DotColumn card = new DotColumn(
-        width: 0.7,
-        borderRadius: 5,
-        children: [
-          SizedBox(
-            height: 40,
-          ),
-          Transform.translate(
-            offset: Offset(0, this.loadingCameraAnimation.value),
-            child:
-                Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
-          ),
-          Container(
-            height: 60,
-            width: ScreenTool.partOfScreenWidth(0.7),
-            child: Text(
-              widget.waitingText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Futura",
-                  color: Colors.black),
-            ),
-          ),
-          SizedBox(
-            height: 40,
-          ),
+    DotColumn card = new DotColumn(width: 0.7, borderRadius: 5, children: [
+      SizedBox(
+        height: 40,
+      ),
+      Transform.translate(
+        offset: Offset(0, this.loadingCameraAnimation.value),
+        child:
+            Icon(FontAwesomeIcons.camera, color: Colors.blueAccent, size: 40),
+      ),
+      Container(
+        height: 60,
+        width: ScreenTool.partOfScreenWidth(0.7),
+        child: Text(
+          widget.waitingText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              decoration: TextDecoration.none,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Futura",
+              color: Colors.black),
+        ),
+      ),
+      SizedBox(
+        height: 40,
+      ),
     ]);
     return new Container(
       width: ScreenTool.partOfScreenWidth(1),
-      height:ScreenTool.partOfScreenHeight(1),
+      height: ScreenTool.partOfScreenHeight(1),
       color: Color(0xFF172632),
       child: Align(
         alignment: Alignment.center,

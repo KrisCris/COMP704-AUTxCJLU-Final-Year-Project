@@ -10,14 +10,13 @@ class DropLinePainter extends CustomPainter {
   int lineNum;
   double heightPercent;
 
-  DropLinePainter({
-    Color color = Colors.blueGrey,
-    double radians = math.pi/4,
-    double yOffset = 0,
-    int lineNum = 6,
-    double strokeWidth = 8,
-    double heightPercent = 0.75
-  }) {
+  DropLinePainter(
+      {Color color = Colors.blueGrey,
+      double radians = math.pi / 4,
+      double yOffset = 0,
+      int lineNum = 6,
+      double strokeWidth = 8,
+      double heightPercent = 0.75}) {
     // dropping line properties
     this.radians = radians;
     this.lineNum = lineNum;
@@ -32,16 +31,16 @@ class DropLinePainter extends CustomPainter {
     this.painter.strokeWidth = strokeWidth;
   }
 
-
   @override
   void paint(Canvas canvas, Size size) {
     double height = size.height;
     double width = size.width;
-    double gap = (width - this.lineNum * this.painter.strokeWidth) / (this.lineNum + 1);
+    double gap =
+        (width - this.lineNum * this.painter.strokeWidth) / (this.lineNum + 1);
     double slope = math.tan(this.radians);
     if (slope > 0) {
       double xPos = gap + this.painter.strokeWidth / 2;
-      for (int ln = 0; ln < lineNum; ln++){
+      for (int ln = 0; ln < lineNum; ln++) {
         // print a line
         double baseY = -slope * xPos + yOffset;
         Offset topPoint = Offset(xPos, baseY - this.heightPercent * height);
@@ -53,11 +52,8 @@ class DropLinePainter extends CustomPainter {
     }
   }
 
-
-
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-
 }

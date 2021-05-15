@@ -6,7 +6,6 @@ import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
 import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
 import 'package:fore_end/Mycomponents/widgets/Background.dart';
 
-
 class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class Welcome extends StatelessWidget {
         ),
       ],
     );
-    return  Container(
+    return Container(
       color: MyTheme.convert(ThemeColorName.PageBackground),
       child: col,
     );

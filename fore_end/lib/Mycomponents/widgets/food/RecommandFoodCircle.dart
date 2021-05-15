@@ -23,7 +23,8 @@ class RecommandFoodCircle extends StatefulWidget {
       this.onCheck})
       : super(key: key);
 
-  @override bool get wantKeepAlive =>true;
+  @override
+  bool get wantKeepAlive => true;
   @override
   State<StatefulWidget> createState() {
     return RecommandFoodCircleState();
@@ -43,7 +44,7 @@ class RecommandFoodCircleState extends State<RecommandFoodCircle>
     this.circleAnimation.initAnimation(0.0, 1.0, 500, this, null);
     this.circleAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if(this.isCheck)return;
+        if (this.isCheck) return;
 
         this.isCheck = true;
         if (widget.onCheck != null) {
@@ -51,7 +52,7 @@ class RecommandFoodCircleState extends State<RecommandFoodCircle>
         }
         setState(() {});
       } else if (status == AnimationStatus.dismissed) {
-        if(!this.isCheck)return;
+        if (!this.isCheck) return;
 
         this.isCheck = false;
         if (widget.onUnCheck != null) {

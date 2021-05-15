@@ -88,12 +88,11 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       ///如果当前这餐已经有了，则减去
       this.caloriesLimit =
           recommendLimit - (u.meals.value)[mealidx].calculateTotalCalories();
-      if(this.caloriesLimit <=0){
+      if (this.caloriesLimit <= 0) {
         this.caloriesLimit = 1;
       }
     }
-    Requests.recommandFood(
-        context,{
+    Requests.recommandFood(context, {
       "uid": u.uid,
       "token": u.token,
       "pid": u.plan.id,
@@ -280,8 +279,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                     left: 10, right: 10, top: verticalGap, bottom: verticalGap),
                 child: w);
           }),
-    )
-      ;
+    );
   }
 
   Widget CalorieHint() {
@@ -327,7 +325,8 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         " " +
                         CustomLocalizations.of(context).to +
                         " " +
-                        CustomLocalizations.of(context).getContent(widget.mealType),
+                        CustomLocalizations.of(context)
+                            .getContent(widget.mealType),
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
@@ -341,8 +340,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                         m = new Meal(mealName: widget.mealType);
                         newMeal = true;
                       }
-                      Response res = await Requests.consumeFoods(
-                          context,{
+                      Response res = await Requests.consumeFoods(context, {
                         "uid": u.uid,
                         "token": u.token,
                         "pid": u.plan.id,

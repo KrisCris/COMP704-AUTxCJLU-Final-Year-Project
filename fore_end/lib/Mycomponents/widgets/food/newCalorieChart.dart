@@ -28,43 +28,41 @@ class NewCaloriesBarChart extends StatefulWidget {
   // };
   //
 
-
-
   DateTime mealTime;
-  DateTime today = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
+  DateTime today =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-  String weekDayOfToday=DateFormat('EEEE').format(DateTime.now());
+  String weekDayOfToday = DateFormat('EEEE').format(DateTime.now());
 
-  bool isChangeColor=false;
-  Plan p=User.getInstance().plan;
-  User u=User.getInstance();
+  bool isChangeColor = false;
+  Plan p = User.getInstance().plan;
+  User u = User.getInstance();
 
   ///每条柱状图的上限，超出也会显示
-  int planLimitedCalories=2000;
+  int planLimitedCalories = 2000;
 
   ///组件的宽高
-  double width=ScreenTool.partOfScreenWidth(0.95);
-  double height=300;
+  double width = ScreenTool.partOfScreenWidth(0.95);
+  double height = 300;
 
   ///构建函数
-  NewCaloriesBarChart(
-      { Key key,
-        double width=0.95,
-        double height=300,
-      }):super(key:key){
-    this.width=ScreenTool.partOfScreenWidth(this.width);
-    this.height=this.height;
+  NewCaloriesBarChart({
+    Key key,
+    double width = 0.95,
+    double height = 300,
+  }) : super(key: key) {
+    this.width = ScreenTool.partOfScreenWidth(this.width);
+    this.height = this.height;
   }
 
   @override
   State<StatefulWidget> createState() => NewCaloriesBarChartState();
 }
 
-
 class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
   // final Color barBackgroundColor = const Color(0xff72d8bf);
-  final Color barBackgroundColor = MyTheme.convert(
-      ThemeColorName.PageBackground);
+  final Color barBackgroundColor =
+      MyTheme.convert(ThemeColorName.PageBackground);
   final Duration animDuration = const Duration(milliseconds: 250);
   int touchedIndex;
 
@@ -101,7 +99,6 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
   int sundayValue = 0;
 
   ///TODO:多注意刷新的问题 一般方法里在数据发生改变后都要去setstate一下
-
 
   @override
   @mustCallSuper
@@ -157,7 +154,6 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     this.fridayDate = widget.today.add(Duration(days: mondayIndex + 4));
     this.saturdayDate = widget.today.add(Duration(days: mondayIndex + 5));
     this.sundayDate = widget.today.add(Duration(days: mondayIndex + 6));
-
 
     ///获取接口的数据 增加离线初始化  初始化
 
@@ -254,7 +250,6 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     ///先清空之前的数据
     this.clearValue();
 
-
     this.localDateValueMap.forEach((date, value) {
       DateTime formatedDate = date;
       double caloriesOfElement = value;
@@ -276,9 +271,7 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
       }
     });
     print("读取本地化数据完成  ----------");
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   ///这个问题应该在judge之后进行一次刷新  这些代码复用都要再精简 拿出去
@@ -365,11 +358,8 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
         print('calculateDate  none');
     }
 
-    setState(() {
-
-    });
+    setState(() {});
   }
-
 
   ///从服务器获取一周的卡路里记录，然后保存给widget的变量里
   void calculateDate(DateTime settingDay) {
@@ -469,7 +459,6 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     this.saturdayDate = settingDay.add(Duration(days: mondayIndex + 5));
     this.sundayDate = settingDay.add(Duration(days: mondayIndex + 6));
 
-
     ///从接口获取每一天的数据,只有本地没有时 最后才去获取
     this.getHistoryCalories();
   }
@@ -485,19 +474,19 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
 
     beginTime =
         (DateTime(beginDate.year, beginDate.month, beginDate.day, 0, 0, 0)
-            .millisecondsSinceEpoch / 1000).floor();
+                    .millisecondsSinceEpoch /
+                1000)
+            .floor();
     endTime = (DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59)
-        .millisecondsSinceEpoch / 1000).floor();
+                .millisecondsSinceEpoch /
+            1000)
+        .floor();
 
-    Response res = await Requests.getCaloriesIntake(context,{
+    Response res = await Requests.getCaloriesIntake(context, {
       "begin": beginTime,
       "end": endTime,
-      "uid": User
-          .getInstance()
-          .uid,
-      "token": User
-          .getInstance()
-          .token,
+      "uid": User.getInstance().uid,
+      "token": User.getInstance().token,
     });
     if (res.data['code'] == 1) {
       this.clearValue();
@@ -508,20 +497,17 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     }
 
     ///执行完calculateDate  再刷新界面，处理完数据就可以刷新了。
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   ///处理接口返回的卡路里list
   void assignValueBasedOnList(List caloriesList) {
-
     ///一周的时间，挨个去添加数据
     caloriesList.forEach((element) {
-      DateTime dateOfElement = DateTime.fromMillisecondsSinceEpoch(
-          element["time"] * 1000);
-      DateTime formatedDate = DateTime.parse(
-          formatDate(dateOfElement, [yyyy, '-', mm, '-', dd]));
+      DateTime dateOfElement =
+          DateTime.fromMillisecondsSinceEpoch(element["time"] * 1000);
+      DateTime formatedDate =
+          DateTime.parse(formatDate(dateOfElement, [yyyy, '-', mm, '-', dd]));
       int isEqual = formatedDate.compareTo(this.thursdayDate);
       double caloriesOfElement = element["calories"];
       if (formatedDate.compareTo(this.mondayDate) == 0) {
@@ -539,28 +525,34 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
       } else if (formatedDate.compareTo(this.sundayDate) == 0) {
         this.sundayValue += caloriesOfElement.toInt();
       }
-    }
-    );
+    });
     print("caloriesList 本地化今天的数据完成--------");
     this.setTodayValueFromLocal();
 
     print("caloriesList 遍历完成--------");
 
     ///遍历完一周的数据并且累加后，再保存到本地
-    this.localDateValueMap.addAll(
-        {this.mondayDate: this.mondayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.tuesdayDate: this.tuesdayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.wednesdayDate: this.wednesdayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.thursdayDate: this.thursdayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.fridayDate: this.fridayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.saturdayDate: this.saturdayValue.toDouble()});
-    this.localDateValueMap.addAll(
-        {this.sundayDate: this.sundayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.mondayDate: this.mondayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.tuesdayDate: this.tuesdayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.wednesdayDate: this.wednesdayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.thursdayDate: this.thursdayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.fridayDate: this.fridayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.saturdayDate: this.saturdayValue.toDouble()});
+    this
+        .localDateValueMap
+        .addAll({this.sundayDate: this.sundayValue.toDouble()});
 
     print("caloriesList 数据添加到本地完成--------");
   }
@@ -594,9 +586,7 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  CustomLocalizations
-                      .of(context)
-                      .caloriesChartTitle,
+                  CustomLocalizations.of(context).caloriesChartTitle,
                   style: TextStyle(
                       color: MyTheme.convert(ThemeColorName.NormalText),
                       fontSize: 18,
@@ -604,7 +594,9 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.none),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -619,18 +611,19 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [DateSelect(
-                    width: 0.5,
-                    height: 40,
-                    beginTime: DateTime(2021, 1, 1),
-                    lastTime: DateTime.now(),
-                    onChangeDate: (int newDate) {
-                      this.judgeDate(
-                          time: DateTime.fromMillisecondsSinceEpoch(newDate));
+                  children: [
+                    DateSelect(
+                      width: 0.5,
+                      height: 40,
+                      beginTime: DateTime(2021, 1, 1),
+                      lastTime: DateTime.now(),
+                      onChangeDate: (int newDate) {
+                        this.judgeDate(
+                            time: DateTime.fromMillisecondsSinceEpoch(newDate));
 
-                      ///这里选择好新的日期后 设置今天的日期为新的日期
-                    },
-                  ),
+                        ///这里选择好新的日期后 设置今天的日期为新的日期
+                      },
+                    ),
                   ],
                 ),
               ],
@@ -641,44 +634,46 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() =>
-      List.generate(7, (i) {
+  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
         switch (i) {
           case 0:
-            return makeGroupData(
-                0, this.mondayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isMondayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(0, this.mondayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor:
+                    this.isMondayDate ? Color(0xffE05067) : Color(0xffED9055));
           case 1:
-            return makeGroupData(
-                1, this.tuesdayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isTuesdayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(1, this.tuesdayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor:
+                    this.isTuesdayDate ? Color(0xffE05067) : Color(0xffED9055));
           case 2:
-            return makeGroupData(
-                2, this.wednesdayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isWednesdayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(2, this.wednesdayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor: this.isWednesdayDate
+                    ? Color(0xffE05067)
+                    : Color(0xffED9055));
           case 3:
-            return makeGroupData(
-                3, this.thursdayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isThursdayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(3, this.thursdayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor: this.isThursdayDate
+                    ? Color(0xffE05067)
+                    : Color(0xffED9055));
           case 4:
-            return makeGroupData(
-                4, this.fridayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isFridayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(4, this.fridayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor:
+                    this.isFridayDate ? Color(0xffE05067) : Color(0xffED9055));
           case 5:
-            return makeGroupData(
-                5, this.saturdayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isSaturdayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(5, this.saturdayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor: this.isSaturdayDate
+                    ? Color(0xffE05067)
+                    : Color(0xffED9055));
           case 6:
-            return makeGroupData(
-                6, this.sundayValue.toDouble(), isTouched: i == touchedIndex,
-                barColor: this.isSundayDate ? Color(0xffE05067) : Color(
-                    0xffED9055));
+            return makeGroupData(6, this.sundayValue.toDouble(),
+                isTouched: i == touchedIndex,
+                barColor:
+                    this.isSundayDate ? Color(0xffE05067) : Color(0xffED9055));
           default:
             return null;
         }
@@ -748,8 +743,7 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) =>
-          const TextStyle(
+          getTextStyles: (value) => const TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
           margin: 16,
           getTitles: (double value) {
@@ -785,13 +779,14 @@ class NewCaloriesBarChartState extends State<NewCaloriesBarChart> {
   }
 
   ///1条形柱的颜色  和  宽度
-  BarChartGroupData makeGroupData(int x,
-      double y, {
-        bool isTouched = false,
-        Color barColor = const Color(0xffED9055),
-        double width = 22,
-        List<int> showTooltips = const [],
-      }) {
+  BarChartGroupData makeGroupData(
+    int x,
+    double y, {
+    bool isTouched = false,
+    Color barColor = const Color(0xffED9055),
+    double width = 22,
+    List<int> showTooltips = const [],
+  }) {
     return BarChartGroupData(
       x: x,
       barRods: [

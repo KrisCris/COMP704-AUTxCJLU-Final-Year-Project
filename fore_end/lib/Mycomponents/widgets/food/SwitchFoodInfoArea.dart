@@ -13,7 +13,9 @@ class SwitchFoodInfoArea extends StatefulWidget {
   double width;
   double height;
   Function(Food f) onWeightChange;
-  SwitchFoodInfoArea({Key key, double width, double height,this.onWeightChange}) : super(key: key) {
+  SwitchFoodInfoArea(
+      {Key key, double width, double height, this.onWeightChange})
+      : super(key: key) {
     this.width = ScreenTool.partOfScreenWidth(width);
     this.height = ScreenTool.partOfScreenHeight(height);
   }
@@ -90,11 +92,16 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
   }
 
   Widget detailedInfo(Food f) {
-    GlobalKey<ValueAdjusterState> valueAdjusterKey = new GlobalKey<ValueAdjusterState>();
-    ValueAdjuster vaj = ValueAdjuster<int>(valueWeight: 10,initValue: f.weight.floor(),key: valueAdjusterKey,lower:10);
-    vaj.onValueChange = (){
+    GlobalKey<ValueAdjusterState> valueAdjusterKey =
+        new GlobalKey<ValueAdjusterState>();
+    ValueAdjuster vaj = ValueAdjuster<int>(
+        valueWeight: 10,
+        initValue: f.weight.floor(),
+        key: valueAdjusterKey,
+        lower: 10);
+    vaj.onValueChange = () {
       f.weight = valueAdjusterKey.currentState.valueNotifier.value;
-      if(this.widget.onWeightChange!=null){
+      if (this.widget.onWeightChange != null) {
         this.widget.onWeightChange(f);
       }
     };
@@ -102,14 +109,14 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          width: 0.05*widget.width,
+          width: 0.05 * widget.width,
         ),
         Container(
-          width: 0.9*widget.width,
+          width: 0.9 * widget.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 0.05*widget.height),
+              SizedBox(height: 0.05 * widget.height),
               Text(
                 f.getName(context),
                 style: TextStyle(
@@ -118,28 +125,36 @@ class SwitchFoodInfoAreaState extends State<SwitchFoodInfoArea> {
                     fontSize: 16,
                     color: MyTheme.convert(ThemeColorName.NormalText)),
               ),
-              SizedBox(height: 0.1*widget.height),
+              SizedBox(height: 0.1 * widget.height),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  NutritionText(name: CustomLocalizations.of(context).calories, value: f.calorie, unit: "Kcal/100g", width: 0.3*widget.width),
-                  NutritionText(name: CustomLocalizations.of(context).protein, value: f.protein, unit: "g/100g", width: 0.3*widget.width),
-                  NutritionText(name: CustomLocalizations.of(context).fat, value: f.fat, unit: "g/100g", width: 0.3*widget.width),
+                  NutritionText(
+                      name: CustomLocalizations.of(context).calories,
+                      value: f.calorie,
+                      unit: "Kcal/100g",
+                      width: 0.3 * widget.width),
+                  NutritionText(
+                      name: CustomLocalizations.of(context).protein,
+                      value: f.protein,
+                      unit: "g/100g",
+                      width: 0.3 * widget.width),
+                  NutritionText(
+                      name: CustomLocalizations.of(context).fat,
+                      value: f.fat,
+                      unit: "g/100g",
+                      width: 0.3 * widget.width),
                 ],
               ),
-              SizedBox(height: 0.3*widget.height),
+              SizedBox(height: 0.3 * widget.height),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  vaj
-                ],
+                children: [vaj],
               ),
             ],
           ),
         ),
-        SizedBox(
-          width: 0.05*widget.width
-        )
+        SizedBox(width: 0.05 * widget.width)
       ],
     );
   }

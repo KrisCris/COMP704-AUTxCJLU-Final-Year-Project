@@ -6,7 +6,7 @@ import 'package:fore_end/MyTool/util/ScreenTool.dart';
 import 'package:fore_end/Mycomponents/painter/ColorPainter.dart';
 import 'package:fore_end/Mycomponents/painter/DotPainter.dart';
 
-class DotColumn extends StatefulWidget{
+class DotColumn extends StatefulWidget {
   ///卡片的宽度
   double _width;
 
@@ -45,20 +45,20 @@ class DotColumn extends StatefulWidget{
 
   DotColumn(
       {double width = 300,
-        double height = 200,
-        Color backgroundColor,
-        Color paintColor = Colors.black12,
-        int dotAnimationDuration = 800,
-        double dotGap = 15,
-        this.children,
-        this.mainAxisAlignment = MainAxisAlignment.center,
-        double paddingLeft = 0,
-        double paddingRight = 0,
-        double borderRadius = 0,
-        Function onTap}) {
+      double height = 200,
+      Color backgroundColor,
+      Color paintColor = Colors.black12,
+      int dotAnimationDuration = 800,
+      double dotGap = 15,
+      this.children,
+      this.mainAxisAlignment = MainAxisAlignment.center,
+      double paddingLeft = 0,
+      double paddingRight = 0,
+      double borderRadius = 0,
+      Function onTap}) {
     this._width = ScreenTool.partOfScreenWidth(width);
     this._height = ScreenTool.partOfScreenHeight(height);
-    if(backgroundColor == null){
+    if (backgroundColor == null) {
       backgroundColor = MyTheme.convert(ThemeColorName.ComponentBackground);
     }
     this._dotAnimationDuration = dotAnimationDuration;
@@ -66,9 +66,9 @@ class DotColumn extends StatefulWidget{
     this._paddingRight = paddingRight;
     this._paintColor = paintColor;
     this._backgroundColor = backgroundColor;
-    if(onTap != null){
+    if (onTap != null) {
       this._onTap = [onTap];
-    }else{
+    } else {
       this._onTap = [];
     }
     this._dotGap = dotGap;
@@ -80,8 +80,7 @@ class DotColumn extends StatefulWidget{
   }
 }
 
-class DotColumnState extends State<DotColumn>
-with TickerProviderStateMixin{
+class DotColumnState extends State<DotColumn> with TickerProviderStateMixin {
   TweenAnimation<double> dotMoveAnimation;
 
   @override
@@ -94,6 +93,7 @@ with TickerProviderStateMixin{
     dotMoveAnimation.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +114,7 @@ with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     List<Widget> rowContent = [];
-    if(widget._paddingLeft != 0){
+    if (widget._paddingLeft != 0) {
       rowContent.add(SizedBox(width: widget._paddingLeft));
     }
     rowContent.add(Column(
@@ -122,40 +122,40 @@ with TickerProviderStateMixin{
       mainAxisAlignment: widget.mainAxisAlignment,
       children: widget.children,
     ));
-    if(widget._paddingRight != 0){
+    if (widget._paddingRight != 0) {
       rowContent.add(SizedBox(width: widget._paddingRight));
     }
     Widget res = ClipRRect(
-          borderRadius: BorderRadius.circular(widget._borderRadius),
-            child: Stack(
-              children: [
-                CustomPaint(
-                  foregroundPainter: ColorPainter(
-                      color: widget._backgroundColor,
-                      context:context,
-                      animation: this.dotMoveAnimation,
-                      contextPainter: DotPainter(
-                          color: widget._paintColor,
-                          dotGap: widget._dotGap,
-                          context: context,
-                          moveAnimation: this.dotMoveAnimation),
-                  ),
-                  child: Container(
-                    width: widget._width,
-                  ),
-                ),
-                Container(
-                  // alignment: Alignment.center,
-                  // color: widget._backgroundColor,
-                  width: widget._width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: rowContent,
-                  ),
-                ),
-              ],
+      borderRadius: BorderRadius.circular(widget._borderRadius),
+      child: Stack(
+        children: [
+          CustomPaint(
+            foregroundPainter: ColorPainter(
+              color: widget._backgroundColor,
+              context: context,
+              animation: this.dotMoveAnimation,
+              contextPainter: DotPainter(
+                  color: widget._paintColor,
+                  dotGap: widget._dotGap,
+                  context: context,
+                  moveAnimation: this.dotMoveAnimation),
             ),
-        );
+            child: Container(
+              width: widget._width,
+            ),
+          ),
+          Container(
+            // alignment: Alignment.center,
+            // color: widget._backgroundColor,
+            width: widget._width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: rowContent,
+            ),
+          ),
+        ],
+      ),
+    );
 
     return Column(
       children: [res],

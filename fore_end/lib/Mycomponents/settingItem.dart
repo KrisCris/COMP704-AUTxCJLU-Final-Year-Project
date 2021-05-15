@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fore_end/MyTool/util/MyTheme.dart';
@@ -13,7 +12,6 @@ class SettingItem extends StatefulWidget
     with DisableWidgetMixIn, ValueableWidgetMixIn<String> {
   final String leftText; //左侧显示文字
   final Widget leftIcon; //左侧图片
-
 
   double inputFieldWidth;
   Function onTap; //点击事件
@@ -47,7 +45,7 @@ class SettingItem extends StatefulWidget
         bottomPadding: 0,
         textAlign: TextAlign.right,
       );
-    }else{
+    } else {
       this.rightComponent = rightComponent;
     }
   }
@@ -96,15 +94,17 @@ class ItemState extends State<SettingItem> with DisableStateMixIn {
                 margin: EdgeInsets.only(left: 15),
                 child: Text(
                   widget.leftText,
-                  style: TextStyle(fontSize: 15.0, color: MyTheme.convert(ThemeColorName.NormalText)),
+                  style: TextStyle(
+                      fontSize: 15.0,
+                      color: MyTheme.convert(ThemeColorName.NormalText)),
                 ),
               ),
               Expanded(child: SizedBox()),
               // (widget.rightComponent as Widget),
               Transform.translate(
-                offset: Offset(0,10),
-                child:Container(
-                  margin: EdgeInsets.only(left: 10 ),
+                offset: Offset(0, 10),
+                child: Container(
+                  margin: EdgeInsets.only(left: 10),
                   child: (widget.rightComponent as Widget),
                 ),
               )

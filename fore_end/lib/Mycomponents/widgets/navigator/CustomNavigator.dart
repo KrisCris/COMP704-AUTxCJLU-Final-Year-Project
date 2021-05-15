@@ -5,7 +5,6 @@ import '../../buttons/CustomIconButton.dart';
 
 ///自定义的导航器，用于多个标签页之间的切换
 class CustomNavigator extends StatefulWidget {
-
   ///导航器的宽度
   double width;
 
@@ -40,12 +39,10 @@ class CustomNavigator extends StatefulWidget {
     this.backgroundColor = Colors.white,
     this.controller,
     List<CustomIconButton> buttons,
-  }):super(key:key) {
+  }) : super(key: key) {
     this.buttons = buttons;
     //遍历数组，设置对应按钮所属的导航器
-    for (CustomIconButton bt in this.buttons) {
-
-    }
+    for (CustomIconButton bt in this.buttons) {}
     //默认选中第一个标签按钮
     this.buttons[0].addDelayInit(() {
       this.activateButtonByIndex(0);
@@ -83,7 +80,6 @@ class CustomNavigator extends StatefulWidget {
 ///
 class CustomNavigatorState extends State<CustomNavigator>
     with TickerProviderStateMixin {
-
   ///背景透明度动画
   TweenAnimation backgroundOpacity;
 
@@ -120,7 +116,9 @@ class CustomNavigatorState extends State<CustomNavigator>
     this.shadowDense.initAnimation(3.0, 0.0, 300, this, () {
       setState(() {});
     });
-    this.lengthChange.initAnimation(widget.width, widget.width * 0.9, 300, this, null);
+    this
+        .lengthChange
+        .initAnimation(widget.width, widget.width * 0.9, 300, this, null);
 
     this.positionChange.initAnimation(0.0, -65.0, 300, this, null);
 

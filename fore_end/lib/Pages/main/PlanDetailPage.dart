@@ -18,7 +18,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlanDetailPage extends StatelessWidget {
   GlobalKey<GoalDataState> goalKey = new GlobalKey<GoalDataState>();
-  GlobalKey<BodyWeightChartState> chartKey = new GlobalKey<BodyWeightChartState>();
+  GlobalKey<BodyWeightChartState> chartKey =
+      new GlobalKey<BodyWeightChartState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +27,7 @@ class PlanDetailPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: MediaQuery.of(context).viewPadding.top+6),
+          SizedBox(height: MediaQuery.of(context).viewPadding.top + 6),
           DotColumn(
             width: 0.95,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -34,8 +35,10 @@ class PlanDetailPage extends StatelessWidget {
             children: [
               SizedBox(height: 12),
               Text(
-                CustomLocalizations.of(context).planType +" : "+
-                CustomLocalizations.of(context).getContent(User.getInstance().plan.getPlanType()),
+                CustomLocalizations.of(context).planType +
+                    " : " +
+                    CustomLocalizations.of(context)
+                        .getContent(User.getInstance().plan.getPlanType()),
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -67,32 +70,33 @@ class PlanDetailPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       UpdateBody updateBody = new UpdateBody(
-                        text: "Before change your plan, please record your current weight",
+                          text:
+                              "Before change your plan, please record your current weight",
                           needHeight: false);
-                      updateBody.onUpdate = () async{
+                      updateBody.onUpdate = () async {
                         User u = User.getInstance();
-                        Response res = await Requests.finishPlan(
-                            context,{
+                        Response res = await Requests.finishPlan(context, {
                           "uid": u.uid,
-                          "token":u.token,
-                          "pid":u.plan?.id ?? -1,
+                          "token": u.token,
+                          "pid": u.plan?.id ?? -1,
                           "weight": updateBody.weight.widgetValue.value.floor()
                         });
-                        if(res != null && res.data['code'] == 1){
-                          Navigator.pop(context,true);
-                        }else{
+                        if (res != null && res.data['code'] == 1) {
+                          Navigator.pop(context, true);
+                        } else {
                           Fluttertoast.showToast(msg: "update failed");
                         }
                       };
                       return updateBody;
                     },
                   ).then((val) {
-                    if(val == true){
-                      Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (ctx) {
+                    if (val == true) {
+                      Navigator.pushAndRemoveUntil(context,
+                          new MaterialPageRoute(builder: (ctx) {
                         return GuidePage(
                           firstTime: false,
                         );
-                      }),(route)=>route==null);
+                      }), (route) => route == null);
                     }
                   });
                 },
@@ -134,13 +138,11 @@ class PlanDetailPage extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Container(
-            width: ScreenTool.partOfScreenWidth(0.95),
-            decoration: BoxDecoration(
-              color: MyTheme. convert(ThemeColorName.ComponentBackground),
-              borderRadius: BorderRadius.circular(6)
-            ),
-            child: BodyWeightChart(key:chartKey)
-          ),
+              width: ScreenTool.partOfScreenWidth(0.95),
+              decoration: BoxDecoration(
+                  color: MyTheme.convert(ThemeColorName.ComponentBackground),
+                  borderRadius: BorderRadius.circular(6)),
+              child: BodyWeightChart(key: chartKey)),
         ],
       ),
     );

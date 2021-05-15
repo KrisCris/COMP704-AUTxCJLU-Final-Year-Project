@@ -28,23 +28,22 @@ class MyApp extends StatelessWidget {
     this.context = context;
     this._preCacheAllImage();
     return MaterialApp(
-       home: CoverPage(),
+        home: CoverPage(),
         // home: FoodRecommandation(),
         // home: ComponentTestPage(),
-      // home: AboutUsPage(),
-      routes: <String, WidgetBuilder>{
-        "login": (context) => Login(),
-        "register": (context) => Register(),
-        "welcome": (context) => Welcome(),
-      },
+        // home: AboutUsPage(),
+        routes: <String, WidgetBuilder>{
+          "login": (context) => Login(),
+          "register": (context) => Register(),
+          "welcome": (context) => Welcome(),
+        },
         builder: EasyLoading.init(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        CustomLocalizationsDelegate.delegate
-      ],
-      supportedLocales: CustomLocalizations.supported.values
-    );
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          CustomLocalizationsDelegate.delegate
+        ],
+        supportedLocales: CustomLocalizations.supported.values);
   }
 
   void _preCacheAllImage() {

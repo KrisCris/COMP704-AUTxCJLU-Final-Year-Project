@@ -213,8 +213,7 @@ class ShedWeightPlan extends Plan {
   Future<int> calculateDelayDays() async {
     User u = User.getInstance();
     Response res = await Requests.calculateDelayTime(
-      null,
-        {"uid": u.uid, "token": u.token, "pid": this.id});
+        null, {"uid": u.uid, "token": u.token, "pid": this.id});
     if (res != null && res.data['code'] == 1) {
       this.calculatedDelayDays = res.data['data']['ext'];
       return this.calculatedDelayDays;
@@ -238,8 +237,7 @@ class ShedWeightPlan extends Plan {
               CustomLocalizations.of(context).planDelayChoose,
           onClickAccept: () async {
             Response res = await Requests.delayPlan(
-              context,
-                {"uid": u.uid, "token": u.token, "pid": this.id});
+                context, {"uid": u.uid, "token": u.token, "pid": this.id});
             if (res != null && res.data['code'] == 1) {
               this.extendDays = res.data['data']['ext'];
               this.save();
@@ -263,7 +261,7 @@ class ShedWeightPlan extends Plan {
             needCancel: false,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.finishPlan(context,{
+            Response res = await Requests.finishPlan(context, {
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
@@ -301,7 +299,7 @@ class ShedWeightPlan extends Plan {
           needCancel: true,
         );
         updt.onUpdate = () async {
-          Response res = await Requests.updateBody(context,{
+          Response res = await Requests.updateBody(context, {
             "uid": u.uid,
             "token": u.token,
             "weight": updt.getWeight(),
@@ -395,16 +393,14 @@ class ShedWeightPlan extends Plan {
                 CustomLocalizations.of(context4).planDelayChoose,
             onClickAccept: () async {
               Response res = await Requests.delayAndUpdatePlan(
-                  context,
-                  {"uid": u.uid, "token": u.token, "pid": this.id});
+                  context, {"uid": u.uid, "token": u.token, "pid": this.id});
               if (res != null && res.data['code'] == 1) {
                 this.extendDays = res.data['data']['ext'];
                 this.save();
               }
             },
             onClickFinish: () async {
-              Response res = await Requests.finishPlan(
-                  context, {
+              Response res = await Requests.finishPlan(context, {
                 "uid": u.uid,
                 "token": u.token,
                 "pid": this.id,
@@ -512,8 +508,7 @@ class BuildMusclePlan extends Plan {
             needCancel: false,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.finishPlan(context,
-                {
+            Response res = await Requests.finishPlan(context, {
               "uid": u.uid,
               "token": u.token,
               "pid": this.id,
@@ -551,8 +546,7 @@ class BuildMusclePlan extends Plan {
             needCancel: true,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.updateBody(
-                context,{
+            Response res = await Requests.updateBody(context, {
               "uid": u.uid,
               "token": u.token,
               "weight": updt.getWeight(),
@@ -628,8 +622,7 @@ class MaintainPlan extends Plan {
             needCancel: true,
           );
           updt.onUpdate = () async {
-            Response res = await Requests.updateBody(
-                context,{
+            Response res = await Requests.updateBody(context, {
               "uid": u.uid,
               "token": u.token,
               "weight": updt.getWeight(),

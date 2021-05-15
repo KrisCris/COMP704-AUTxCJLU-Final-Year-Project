@@ -42,7 +42,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
       width: 0.8,
       maxVal: 100,
       minVal: 1,
-      initVal: u.age == null?18:u.age,
+      initVal: u.age == null ? 18 : u.age,
       borderThickness: 4,
       barColor: Color(0xFF82BFFC),
       showValue: true,
@@ -87,27 +87,26 @@ class ExtraBodyDataInputer extends StatelessWidget {
       }
     });
     CrossFadeText describeText = CrossFadeText(
-      text: "",
-      fontSize: 15,
-      fontColor: Colors.white,
-      key: txt,
-      onStateInitDone: (Duration timeStamp){
-        CrossFadeTextState stt = this.txt.currentState;
-        if (exerciseChoise.widgetValue.value == 1.4) {
-          stt.changeTo(CustomLocalizations.of(context).veryLightInfo);
-        } else if (exerciseChoise.widgetValue.value == 1.5) {
-          stt.changeTo(CustomLocalizations.of(context).lightInfo);
-        } else if (exerciseChoise.widgetValue.value == 1.7) {
-          stt.changeTo(CustomLocalizations.of(context).moderateInfo);
-        } else if (exerciseChoise.widgetValue.value == 1.9) {
-          stt.changeTo(CustomLocalizations.of(context).activeInfo);
-        } else if (exerciseChoise.widgetValue.value == 2.1) {
-          stt.changeTo(CustomLocalizations.of(context).veryActiveInfo);
-        } else if (exerciseChoise.widgetValue.value == 2.3) {
-          stt.changeTo(CustomLocalizations.of(context).heavyInfo);
-        }
-      }
-    );
+        text: "",
+        fontSize: 15,
+        fontColor: Colors.white,
+        key: txt,
+        onStateInitDone: (Duration timeStamp) {
+          CrossFadeTextState stt = this.txt.currentState;
+          if (exerciseChoise.widgetValue.value == 1.4) {
+            stt.changeTo(CustomLocalizations.of(context).veryLightInfo);
+          } else if (exerciseChoise.widgetValue.value == 1.5) {
+            stt.changeTo(CustomLocalizations.of(context).lightInfo);
+          } else if (exerciseChoise.widgetValue.value == 1.7) {
+            stt.changeTo(CustomLocalizations.of(context).moderateInfo);
+          } else if (exerciseChoise.widgetValue.value == 1.9) {
+            stt.changeTo(CustomLocalizations.of(context).activeInfo);
+          } else if (exerciseChoise.widgetValue.value == 2.1) {
+            stt.changeTo(CustomLocalizations.of(context).veryActiveInfo);
+          } else if (exerciseChoise.widgetValue.value == 2.3) {
+            stt.changeTo(CustomLocalizations.of(context).heavyInfo);
+          }
+        });
     age.setOnChange(() {
       this.age = age.getValue();
     });
@@ -187,8 +186,7 @@ class ExtraBodyDataInputer extends StatelessWidget {
       child: Container(
           width: ScreenTool.partOfScreenWidth(1),
           height: ScreenTool.partOfScreenHeight(1),
-          color: Color(0xFF172632)
-        ),
+          color: Color(0xFF172632)),
     );
   }
 
