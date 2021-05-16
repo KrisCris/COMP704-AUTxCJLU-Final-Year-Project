@@ -55,7 +55,7 @@ class Food {
     this._cnName = cnName;
   }
   Food.fromJson(Map<String, dynamic> json) {
-    this.id = json['id'];
+    this.id = json['fid']??json['id'];
     this._name = json['name'];
     this._cnName = json['cnName'];
     this.picture = json['picture'] ?? json['img'];
