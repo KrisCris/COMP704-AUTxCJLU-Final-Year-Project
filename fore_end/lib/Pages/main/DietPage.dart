@@ -1,15 +1,15 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomTextButton.dart';
-import 'package:fore_end/Mycomponents/inputs/FoodSearchBar.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/HintManager.dart';
-import 'package:fore_end/Mycomponents/widgets/food/CaloriesChart.dart';
-import 'package:fore_end/Mycomponents/widgets/food/MealList.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/PlanNotifier.dart';
+import 'package:fore_end/Utils/CustomLocalizations.dart';
+import 'package:fore_end/Utils/ScreenTool.dart';
+import 'package:fore_end/Components/buttons/CustomTextButton.dart';
+import 'package:fore_end/Components/input/FoodSearchBar.dart';
+import 'package:fore_end/Components/texts/TitleText.dart';
+import 'package:fore_end/Models/HintManager.dart';
+import 'package:fore_end/Components/widgets/food/CaloriesChart.dart';
+import 'package:fore_end/Components/widgets/food/MealList.dart';
+import 'package:fore_end/Components/widgets/plan/PlanNotifier.dart';
 import 'package:fore_end/Pages/detail/DetailMealPage.dart';
 
 import '../FoodRecommandation.dart';

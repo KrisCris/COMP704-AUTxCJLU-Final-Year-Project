@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/SoftwarePreference.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CardChooser.dart';
-import 'package:fore_end/Mycomponents/buttons/CardChooserGroup.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Models/SoftwarePreference.dart';
+import 'package:fore_end/Utils/CustomLocalizations.dart';
+import 'package:fore_end/Utils/MyTheme.dart';
+import 'package:fore_end/Utils/ScreenTool.dart';
+import 'package:fore_end/Components/buttons/CardChooser.dart';
+import 'package:fore_end/Components/buttons/CardChooserGroup.dart';
+import 'package:fore_end/Components/texts/TitleText.dart';
 
 class SettingPage extends StatefulWidget {
   @override

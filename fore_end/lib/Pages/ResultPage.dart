@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fore_end/MyTool/FoodRecognizer.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/Picker_Tool.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomIconButton.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
-import 'package:fore_end/Mycomponents/widgets/food/FoodBox.dart';
+import 'package:fore_end/Models/FoodRecognizer.dart';
+import 'package:fore_end/Utils/CustomLocalizations.dart';
+import 'package:fore_end/Utils/MyTheme.dart';
+import 'package:fore_end/Utils/Picker_Tool.dart';
+import 'package:fore_end/Utils/ScreenTool.dart';
+import 'package:fore_end/Components/buttons/CustomButton.dart';
+import 'package:fore_end/Components/buttons/CustomIconButton.dart';
+import 'package:fore_end/Components/texts/TitleText.dart';
+import 'package:fore_end/Components/widgets/food/FoodBox.dart';
 
 class ResultPage extends StatefulWidget {
   static const String defaultBackground = "image/fruit-main.jpg";

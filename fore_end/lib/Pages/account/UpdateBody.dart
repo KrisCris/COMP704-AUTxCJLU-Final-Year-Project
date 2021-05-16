@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
-import 'package:fore_end/MyTool/util/MyTheme.dart';
-import 'package:fore_end/MyTool/util/ScreenTool.dart';
-import 'package:fore_end/Mycomponents/buttons/CustomButton.dart';
-import 'package:fore_end/Mycomponents/inputs/ValueBar.dart';
-import 'package:fore_end/Mycomponents/text/TitleText.dart';
+import 'package:fore_end/Models/User.dart';
+import 'package:fore_end/Utils/CustomLocalizations.dart';
+import 'package:fore_end/Utils/MyTheme.dart';
+import 'package:fore_end/Utils/ScreenTool.dart';
+import 'package:fore_end/Components/buttons/CustomButton.dart';
+import 'package:fore_end/Components/input/ValueBar.dart';
+import 'package:fore_end/Components/texts/TitleText.dart';
 
 class UpdateBody extends StatelessWidget {
   Function onUpdate;
