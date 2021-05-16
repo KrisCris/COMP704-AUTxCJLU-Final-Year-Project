@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fore_end/MyTool/User.dart';
-import 'package:fore_end/MyTool/util/Req.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/BodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/ConfirmPlan.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/ExtraBodyDataInputer.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/GoalInpter.dart';
-import 'package:fore_end/Mycomponents/widgets/plan/PlanChooser.dart';
+import 'package:fore_end/Models/User.dart';
+import 'package:fore_end/Utils/Req.dart';
+import 'package:fore_end/Components/widgets/plan/BodyDataInputer.dart';
+import 'package:fore_end/Components/widgets/plan/ConfirmPlan.dart';
+import 'package:fore_end/Components/widgets/plan/ExtraBodyDataInputer.dart';
+import 'package:fore_end/Components/widgets/plan/GoalInpter.dart';
+import 'package:fore_end/Components/widgets/plan/PlanChooser.dart';
 
 import 'main/MainPage.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fore_end/MyTool/util/CustomLocalizations.dart';
+import 'package:fore_end/Utils/CustomLocalizations.dart';
 import 'package:fore_end/Pages/CoverPage.dart';
 
 import 'Pages/LoginPage.dart';
