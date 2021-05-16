@@ -56,17 +56,20 @@ class FoodRecognizer {
     Meal m = u.getMealByName(mealName);
     int mealsType = mealName == "breakfast" ? 1 : (mealName == "lunch" ? 2 : 3);
     if (m != null) {
-      FoodRecognizer.addFoodToMeal(m);
-      // List<List> totalFoodInfo=new List<List>();
-      String temp = jsonEncode(m.foods);
+      List<Food> foods=new List<Food>();
+      for(FoodBox fb in FoodRecognizer.instance.foods){
+        foods.add(fb.food);
+      }
+      // String temp = jsonEncode(m.foods);
       Response res = await Requests.consumeFoods(ctx, {
         "uid": u.uid,
         "token": u.token,
         "pid": u.plan.id,
         "type": mealsType.toString(),
-        "foods_info": jsonEncode(m.foods),
+        "foods_info": jsonEncode(foods),
       });
       if (res.data["code"] == 1) {
+        FoodRecognizer.addFoodToMeal(m);
         m.time = res.data['data']['stmp'] * 1000;
         m.save();
         FoodRecognizer.instance.foods.clear();
