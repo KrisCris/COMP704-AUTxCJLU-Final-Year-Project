@@ -153,7 +153,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: 12),
                     ))
-                : this.index <= 0
+                : this.plans.length <= 0
                     ? Align(
                         alignment: Alignment.center,
                         child: Text(
@@ -173,7 +173,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
   void initState() {
     User u = User.getInstance();
     DateTime now = DateTime.now();
-
+    this.plans = [];
     this.nowTimeWhenInit = now;
     this.registerTime = now.add(Duration(days: -1 * u.registerTime()));
     this.startedPlanTime = now.add(Duration(days: -1 * u.registerTime()));
@@ -218,7 +218,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     });
     if (res == null) return;
 
-    for(Map everyPlan in res.data['data']){
+    for (Map everyPlan in res.data['data']) {
       plans.add(Consumption.fromJson(everyPlan));
     }
     DateTime today =
@@ -229,15 +229,12 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     }
   }
 
-
-
   void setValue(List pagesData) {
     // String foodNames;
     // double foodCalorie;
 
     List<double> totalCaloriesOfSameDay = [];
-    Map<int,int> highCalorisDayOfIndex={};
-
+    Map<int, int> highCalorisDayOfIndex = {};
 
     this.index = pagesData.length;
     pagesData.forEach((eachPlan) {
@@ -246,6 +243,8 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
 
     setState(() {});
   }
+
+  // bool isShowProteinInfo(){}
 
   Widget getColumnContent(int idx) {
     // return SizedBox();
@@ -289,33 +288,32 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesTotal,
           rightText: "Kcal",
-          rightValue:this.plans[idx].accumCalories,
+          rightValue: this.plans[idx].accumCalories,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesDaily,
           rightText: "Kcal",
-          rightValue:this.plans[idx].avgCalories,
+          rightValue: this.plans[idx].avgCalories,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).proteinTotal,
           rightText: "g",
-          rightValue:this.plans[idx].accumProtein,
+          rightValue: this.plans[idx].accumProtein,
         ),
         PlanTextItem(
-          leftText: CustomLocalizations.of(context).proteinDaily,
-          rightText: "g",
-          rightValue:this.plans[idx].avgProtein
-        ),
+            leftText: CustomLocalizations.of(context).proteinDaily,
+            rightText: "g",
+            rightValue: this.plans[idx].avgProtein),
 
         PlanTextItem(
           leftText: CustomLocalizations.of(context).goalWeight,
           rightText: "Kg",
-          rightValue:this.plans[idx].goalWeight,
+          rightValue: this.plans[idx].goalWeight,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightStart,
           rightText: "Kg",
-          rightValue:this.plans[idx].startWeight,
+          rightValue: this.plans[idx].startWeight,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).weightFinish,
@@ -336,16 +334,10 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
         SizedBox(
           height: 5,
         ),
-        // PlanTextItem(
-        //   leftText:
-        //   CustomLocalizations.of(context).caloriesStandard,
-        //   rightText: " Days",
-        //   rightValue: this.data,
-        // ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesOver,
           rightText: " Days",
-          rightValue:this.plans[idx].daysOfCalsHigh,
+          rightValue: this.plans[idx].daysOfCalsHigh,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).caloriesInsufficient,
@@ -353,44 +345,20 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
           rightValue: this.plans[idx].daysOfcalsLow,
         ),
         PlanTextItem(
-          leftText: CustomLocalizations.of(context).prot,
+          leftText: CustomLocalizations.of(context).proteinOver,
           rightText: " Days",
-          rightValue:this.plans[idx].daysOfproteinLow,
+          rightValue: this.plans[idx].daysOfproteinHigh,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).proteinInsufficient,
           rightText: " Days",
-          rightValue:this.plans[idx].daysOfproteinLow,
+          rightValue: this.plans[idx].daysOfproteinLow,
         ),
         PlanTextItem(
           leftText: CustomLocalizations.of(context).planDelayTimes,
           rightText: " Times",
-          rightValue: this.numToString(this.data[idx]["exts"]),
+          rightValue: this.plans[idx].delayTimesOfPlan,
         ),
-        // SizedBox(
-        //   height: 15,
-        // ),
-        // TitleText(
-        //   text: CustomLocalizations.of(context).comment,
-        //   underLineLength: 0.5,
-        //   fontSize: 18,
-        //   maxWidth: 0.8,
-        //   maxHeight: 30,
-        // ),
-        // SizedBox(
-        //   height: 5,
-        // ),
-        // Text(
-        //   CustomLocalizations.of(context).commentFirst,
-        //   style: TextStyle(
-        //       fontSize: 15,
-        //       color: MyTheme.convert(ThemeColorName.NormalText),
-        //       fontFamily:
-        //       'Futura'), //color: MyTheme.convert(ThemeColorName.NormalText)
-        //   softWrap: true, //自动换行
-        //   // textAlign: TextAlign.start,
-        //   // overflow: TextOverflow.visible,
-        // ),
       ],
     );
   }
@@ -437,7 +405,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
       controller: this.swiperController,
 
       indicatorLayout: PageIndicatorLayout.COLOR, //分页指示器滑动方式
-      itemCount: this.index, //页数，这个应该由plan个数决定
+      itemCount: this.plans.length, //页数，这个应该由plan个数决定
       scrollDirection: Axis.horizontal, //滚动方向，现在是水平滚动，设置为Axis.vertical为垂直滚动
       loop: false, //无限轮播模式开关
       index: 0, //初始的时候下标位置
@@ -455,12 +423,9 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
     }
     return stringValue;
   }
-
-
-
 }
 
-class Consumption{
+class Consumption {
   double _accumCalories;
   double _accumProtein;
   double _avgCalories;
@@ -474,173 +439,206 @@ class Consumption{
   double _startWeight;
   double _achievedWeight;
   double _goalWeight;
-  bool _isPlanCompleted;
   int _planType;
   DateTime _planBeginTime;
   DateTime _planEndTime;
   DateTime _planRealEndTime;
 
-  Consumption.fromJson(Map<String,dynamic> map){
-    this._accumCalories=map["consumption"]["accumCalories"];
-    this._accumProtein=map["consumption"]["accumProtein"];
-    this._avgCalories=map["consumption"]["avgCalories"];
-    this._avgProtein=map["consumption"]["avgProtein"];
-    this._delayTimesOfPlan=map["exts"];
-    this._goalWeight=map["planBrief"]["goalWeight"];
-    this._achievedWeight=map["planBrief"]["achievedWeight"];
-    this._startWeight=map["weeklyDetails"][0]["weight"];
-    this._planBeginTime=DateTime.fromMillisecondsSinceEpoch(map["planBrief"]["begin"]*1000);
-    this._planEndTime=DateTime.fromMillisecondsSinceEpoch(map["planBrief"]["end"]*1000);
-    this._planRealEndTime=DateTime.fromMillisecondsSinceEpoch(map["planBrief"]["realEnd"]*1000);
-    this._planType=map["planBrief"]["type"];
-    this._isPlanCompleted=map["planBrief"]["hasCompleted"];
+  Consumption.fromJson(Map<String, dynamic> map) {
+    this._daysOfproteinHigh = 0;
+    this._daysOfCalsHigh= 0;
+    this._daysOfcalsLow = 0;
+    this._daysOfproteinLow= 0;
+    this._accumCalories = map["consumption"]["accumCalories"];
+    this._accumProtein = map["consumption"]["accumProtein"];
+    this._avgCalories = map["consumption"]["avgCalories"];
+    this._avgProtein = map["consumption"]["avgProtein"];
+    this._delayTimesOfPlan = map["exts"];
+    this._goalWeight = map["planBrief"]["goalWeight"];
+    this._achievedWeight = map["planBrief"]["achievedWeight"];
+    this._startWeight = map["weeklyDetails"][0]["weight"];
+    this._planBeginTime =
+        DateTime.fromMillisecondsSinceEpoch(map["planBrief"]["begin"] * 1000);
+    this._planEndTime =
+        DateTime.fromMillisecondsSinceEpoch(map["planBrief"]["end"] * 1000);
+    if (map["planBrief"]["realEnd"] == null) {
+      this._planRealEndTime = null;
+    } else {
+      this._planRealEndTime = DateTime.fromMillisecondsSinceEpoch(
+          map["planBrief"]["realEnd"] * 1000);
+    }
+    this._planType = map["planBrief"]["type"];
 
     this.assignDay(map["weeklyDetails"]);
   }
 
-  String get planType{
-   return Plan.planTypes[this._planType].toUpperCase();
+  String get planType {
+    return Plan.planTypes[this._planType].toUpperCase();
   }
 
-  String get calsHighDays{
+  String get calsHighDays {
     return this.numToString(this._daysOfCalsHigh);
   }
-  String get calsLowDays{
+
+  String get calsLowDays {
     return this.numToString(this._daysOfcalsLow);
   }
-  String get proteinHighDays{
+
+  String get proteinHighDays {
     return this.numToString(this._daysOfproteinHigh);
   }
-  String get proteinLowDays{
+
+  String get proteinLowDays {
     return this.numToString(this._daysOfproteinLow);
   }
-  String get planBeginTime{
+
+  String get planBeginTime {
     return this.tsToStr(this._planBeginTime);
   }
-  String get planEndTime{
+
+  String get planEndTime {
     return this.tsToStr(this._planEndTime);
   }
-  String getPlanRealEndTime(BuildContext context){
-    if(this._planRealEndTime==null) return CustomLocalizations.of(context).planIsGoing;
+
+  String getPlanRealEndTime(BuildContext context) {
+    if (this._planRealEndTime == null)
+      return CustomLocalizations.of(context).planIsGoing;
     return this.tsToStr(this._planRealEndTime);
   }
-  String get achievedWeight{
-    if(this._achievedWeight==null) return "--";
+
+  String get achievedWeight {
+    if (this._achievedWeight == null) return "--";
     return this.numToString(_achievedWeight);
   }
-
 
   String numToString(num n) {
     String tmp = n.toString();
     tmp = tmp.split(".")[0];
     return tmp;
   }
+
   String tsToStr(DateTime date) {
     return DateTime.parse(formatDate(date, [yyyy, '-', mm, '-', dd]))
         .toString()
         .split(" ")[0];
   }
 
-  bool isEqual(DateTime dt1,DateTime dt2) {
+  bool isEqual(DateTime dt1, DateTime dt2) {
     if (dt1 == null) return false;
     return dt1.compareTo(dt2) == 0;
   }
 
-  void assignDay(List<Map> weeklyDetailsOfPlan){
+  void assignDay(List<dynamic> weeklyDetailsOfPlan) {
 
-    for(Map m in weeklyDetailsOfPlan){
-      List<Map<String,dynamic>> foodsConsumeOneWeek = m['foodsConsumed'];
-      double caloriesUpper=m["cH"];
-      double caloriesLower=m["cL"];
-      double proteinUpper=m["pH"];
-      double proteinLower=m["pL"];
+    for (Map m in weeklyDetailsOfPlan) {
+      List<dynamic> foodsConsumeOneWeek = m['foodsConsumed'];
+      double caloriesUpper = m["cH"];
+      double caloriesLower = m["cL"];
+      double proteinUpper = m["pH"];
+      double proteinLower = m["pL"];
       DateTime dateOfStartDay;
-      bool isTheFirstDay=true;
-      double totalCalories=0;
-      double totalProtein=0;
+      bool isTheFirstDay = true;
+      double totalCalories = 0;
+      double totalProtein = 0;
 
-      for(Map food in foodsConsumeOneWeek){
-        DateTime eatingTime= DateTime.parse(formatDate(DateTime.fromMillisecondsSinceEpoch(food["time"] * 1000), [yyyy, '-', mm, '-', dd]));
-        if(this.isEqual(dateOfStartDay, eatingTime)){
-          totalCalories+=food["calories"];
-          totalProtein+=food["protein"];
-        }else {
-          if(totalCalories>caloriesUpper){
+      for (Map food in foodsConsumeOneWeek) {
+        DateTime eatingTime = DateTime.parse(formatDate(
+            DateTime.fromMillisecondsSinceEpoch(food["time"] * 1000),
+            [yyyy, '-', mm, '-', dd]));
+        if(dateOfStartDay == null){
+          dateOfStartDay = eatingTime;
+          print(dateOfStartDay.toString());
+        }
+        if (this.isEqual(dateOfStartDay, eatingTime)) {
+          print(food['cnName'] + (food["calories"]*food['weight']/100).floor().toString());
+          totalCalories += (food["calories"]*food['weight']/100).floor();
+          totalProtein += (food["protein"]*food['weight']/100).floor();
+        } else {
+          if (totalCalories > caloriesUpper) {
             this._daysOfCalsHigh++;
-          }else if(totalCalories<caloriesLower){
+          } else if (totalCalories < caloriesLower) {
             this._daysOfcalsLow++;
           }
-          if(totalProtein>proteinUpper){
+          if (totalProtein > proteinUpper) {
             this._daysOfproteinHigh++;
-          }else if(totalProtein<proteinLower){
+          } else if (totalProtein < proteinLower) {
             this._daysOfproteinLow++;
           }
-          totalProtein=0;
-          totalCalories=0;
-          isTheFirstDay=true;
-        }
-        if(isTheFirstDay){
-          dateOfStartDay=eatingTime;
-          totalCalories+=food["calories"];
-          isTheFirstDay=false;
+          print("total cal:"+totalCalories.toString());
+          totalProtein = 0;
+          totalCalories = 0;
+          dateOfStartDay = eatingTime;
+          totalCalories += (food["calories"]*food['weight']/100).floor();
+          totalProtein += (food["protein"]*food['weight']/100).floor();
+          print("\n\n");
+          print(dateOfStartDay.toString());
+          print(food['cnName'] + (food["calories"]*food['weight']/100).floor().toString());
         }
       }
-      if(totalCalories>caloriesUpper){
+      if (totalCalories > caloriesUpper) {
         this._daysOfCalsHigh++;
-      }else if(totalCalories<caloriesLower){
+      } else if (totalCalories < caloriesLower) {
         this._daysOfcalsLow++;
       }
-      if(totalProtein>proteinUpper){
+      if (totalProtein > proteinUpper) {
         this._daysOfproteinHigh++;
-      }else if(totalProtein<proteinLower){
+      } else if (totalProtein < proteinLower) {
         this._daysOfproteinLow++;
       }
-      totalProtein=0;
-      totalCalories=0;
-      isTheFirstDay=true;
+      totalProtein = 0;
+      totalCalories = 0;
+      dateOfStartDay = null;
     }
   }
 
   String get accumProtein {
     return this.numToString(_accumProtein);
   }
+
   String get avgCalories {
     return this.numToString(_avgCalories);
   }
+
   String get avgProtein {
     return this.numToString(_avgProtein);
   }
+
   String get accumCalories {
     return this.numToString(_accumCalories);
   }
+
   String get daysOfCalsHigh {
     return this.numToString(_daysOfCalsHigh);
   }
+
   String get daysOfcalsLow {
     return this.numToString(_daysOfcalsLow);
   }
+
   String get daysOfproteinHigh {
     return this.numToString(_daysOfproteinHigh);
   }
+
   String get daysOfproteinLow {
     return this.numToString(_daysOfproteinLow);
   }
+
   String get delayTimesOfPlan {
     return this.numToString(_delayTimesOfPlan);
   }
+
   String get startWeight {
     return this.numToString(_startWeight);
   }
+
   String get goalWeight {
     return this.numToString(_goalWeight);
   }
+
   // String get isPlanCompleted {
   //   return this.numToString(_isPlanCompleted);
   // }
   String get planRealEndTime {
     return this.tsToStr(_planRealEndTime);
   }
-
-
-
 }
