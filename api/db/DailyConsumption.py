@@ -1,3 +1,4 @@
+from db.PlanDetail import PlanDetail
 from db.db import db
 from util.Common.func import get_current_time
 
@@ -9,6 +10,7 @@ class DailyConsumption(db.Model):
     uid = db.Column(db.INTEGER, db.ForeignKey('user.id'), nullable=False)
     pid = db.Column(db.INTEGER, db.ForeignKey('plan.id'), nullable=False)
     fid = db.Column(db.INTEGER, db.ForeignKey('food.id'), nullable=False)
+    pdid = db.Column(db.INTEGER, db.ForeignKey('planDetail.id'), nullable=False)
     type = db.Column(db.INTEGER, nullable=False, comment='1=breakfast, 2=lunch, 3=dinner')
     day = db.Column(db.INTEGER, nullable=False, comment='relative days since the plan began')
     time = db.Column(db.INTEGER)

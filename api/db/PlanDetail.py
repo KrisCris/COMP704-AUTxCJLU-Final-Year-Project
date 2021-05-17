@@ -86,3 +86,11 @@ class PlanDetail(db.Model):
         res = PlanDetail.query.filter(PlanDetail.uid == uid).filter(PlanDetail.time >= begin).filter(
             PlanDetail.time <= end).order_by(PlanDetail.id.asc()).all()
         return res
+
+    def getCorrespondingConsumptionsRecords(self):
+        from db.DailyConsumption import DailyConsumption
+        results = DailyConsumption.query.filter(DailyConsumption.pdid == self.id).order_by(DailyConsumption.time.asc()).all()
+        list = []
+        for result in results:
+            list.append(result.toDict())
+        return list
