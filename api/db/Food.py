@@ -1,6 +1,6 @@
 from operator import itemgetter
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.sql.expression import func
 
 from db.db import db
@@ -111,11 +111,12 @@ class Food(db.Model):
         return food_dict
 
     @staticmethod
-    def getFoodsRestricted(category, protein, ch, fat, food):
+    def getFoodsRestricted(category, protein, ch, fat, food, maxCH=18, maxF=18):
         f: Food = food
         return Food.query.filter(Food.name != f.name).filter(Food.cnName != f.cnName).filter(
-            Food.category == category).filter(Food.ratioF <= fat).filter(
-            Food.ratioP >= protein).filter(Food.ratioCH <= ch).all()
+            Food.category == category).filter(or_(and_(Food.ratioF <= fat, Food.ratioP >= protein, Food.ratioCH <= ch),
+                                                  and_(Food.carbohydrate <= maxCH, Food.fat <= maxF),
+                                                  Food.calories <= 125)).all()
 
     def getKNN(self, k, matchCate=False):
         tupleList = []
@@ -136,14 +137,22 @@ class Food(db.Model):
 
     def isSuitable(self, planType):
         if planType == 1:
-            if self.ratioCH > 0.5 or self.ratioF > 0.25:
+            if self.calories <= 125:
+                return True
+            elif self.fat <= 8 and self.carbohydrate <= 18:
+                return True
+            elif self.ratioCH > 0.5 or self.ratioF > 0.25:
                 return False
             else:
                 return True
         if planType == 2:
             return True
         if planType == 3:
-            if self.ratioP < 0.3 and self.ratioF > 0.2:
+            if self.calories <= 125:
+                return True
+            elif self.fat <= 8 and self.carbohydrate <= 18:
+                return True
+            elif self.ratioP < 0.3 and self.ratioF > 0.2:
                 return False
             else:
                 return True
