@@ -296,11 +296,11 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     Color mid = Colors.lightGreenAccent;
     Color lmid = Colors.greenAccent;
     Color low = Colors.cyanAccent;
-    Color high = Colors.deepOrangeAccent;
+    Color high = Colors.yellowAccent;
     Color waytoohigh = Colors.redAccent;
-    if (calories > upper*1.25){
+    if (calories > upper){
       return waytoohigh;
-    } else if (calories > upper){
+    } else if (calories > (lower+upper)/2){
       return high;
     } else if (calories>=lower && calories<=upper){
       return mid;
@@ -385,7 +385,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       x: x,
       barRods: [
         BarChartRodData(
-          y: y > widget.planCalsUpperLimit.toDouble()*1.2 ? widget.planCalsUpperLimit.toDouble()*1.2 : y,
+          y: y > widget.planCalsUpperLimit.toDouble() ? widget.planCalsUpperLimit.toDouble() : y,
           colors: isTouched ? [Colors.yellow] : [barColor],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -393,7 +393,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
             ///y是每条数据的上限  比如2000 Kcal
             // y: widget.p.dailyCaloriesUpperLimit.floor().toDouble(),
-            y: widget.planCalsUpperLimit.toDouble()*1.2,
+            y: widget.planCalsUpperLimit.toDouble(),
             colors: [MyTheme.convert(ThemeColorName.PageBackground)],
           ),
         ),
