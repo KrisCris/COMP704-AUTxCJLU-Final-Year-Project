@@ -617,6 +617,7 @@ class CustomLocalizations {
       "en":"Days Calories Insufficient",
       "zh":"卡路里不足天数"
     },
+
     "proteinInsufficient":{
       "en":"Days Protein Insufficient",
       "zh":"蛋白质不足天数"
@@ -1066,6 +1067,7 @@ class CustomLocalizations {
   get  caloriesOver=> getContent("caloriesOver");
   get  caloriesInsufficient=> getContent("caloriesInsufficient");
   get proteinInsufficient => getContent("proteinInsufficient");
+  get proteinOver => getContent("proteinOver");
   get  comment=> getContent("comment");
   get  commentFirst=> getContent("commentFirst");
   get  foodDetailPageTitle=> getContent("foodDetailPageTitle");
@@ -1075,6 +1077,7 @@ class CustomLocalizations {
   get  cholesterol=> getContent("cholesterol");
   get  fat=> getContent("fat");
   get  recommendBoxTitle => getContent("recommendBoxTitle");
+
 
   get  protein=> getContent("protein");
   get recommandMeal => getContent("recommand meal");
