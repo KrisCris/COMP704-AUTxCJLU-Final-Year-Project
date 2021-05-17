@@ -104,11 +104,9 @@ class BodyDataInputer extends StatelessWidget {
     );
     height.setOnChange(() {
       this.bodyHeight = height.getValue();
-      User.getInstance().bodyHeight = this.bodyHeight;
     });
     weight.setOnChange(() {
       this.bodyWeight = weight.getValue();
-      User.getInstance().bodyWeight = this.bodyWeight.toDouble();
     });
 
     this.bodyHeight = height.getValue();

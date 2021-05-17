@@ -128,6 +128,10 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
         });
         if (res.data['code'] == 1) {
           u.setPlan(res);
+          u.bodyHeight = bodyHeight;
+          u.bodyWeight = bodyWeight.toDouble();
+          u.gender = gender;
+          u.age = age;
           Navigator.pushAndRemoveUntil(context,
               new MaterialPageRoute(builder: (context) {
             return new MainPage(user: u);
