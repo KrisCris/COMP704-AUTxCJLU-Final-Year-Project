@@ -405,7 +405,7 @@ class _HistoryPlanPageState extends State<HistoryPlanPage> {
               .numToString(this.data[idx]["consumption"]["calsLow"]["days"]),
         ),
         PlanTextItem(
-          leftText: CustomLocalizations.of(context).caloriesInsufficient,
+          leftText: CustomLocalizations.of(context).proteinInsufficient,
           rightText: " Days",
           rightValue: this
               .numToString(this.data[idx]["consumption"]["proteinLow"]["days"]),

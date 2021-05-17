@@ -175,7 +175,6 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
     if(isAfter && isBefore){
       this.todayInfo.value = User.getInstance().getTodayCaloriesIntake();
     }
-
     setState(() {});
   }
 
