@@ -51,10 +51,10 @@ def require_login(func):
         token = args[0].get('token')
 
         from db.User import User
-        user = User.query.filter(User.token == token).filter(User.id == uid).first()
+        user = User.query.filter(User.id == uid).first()
         if user is None:
             return reply_json(-1)
-        if user.token != token:
+        if user.token != token and not user.test_account:
             return reply_json(-1)
         return func(*args, **kwargs)
 

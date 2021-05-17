@@ -24,6 +24,7 @@ class User(db.Model):
     b_percent = db.Column(db.INTEGER)
     l_percent = db.Column(db.INTEGER)
     d_percent = db.Column(db.INTEGER)
+    test_account = db.Column(db.BOOLEAN)
 
     def __init__(self, email, auth_code, gender=1, age=20, weight=70, height=175, last_code_sent=get_current_time(),
                  nickname='', password='',
@@ -45,6 +46,7 @@ class User(db.Model):
         self.b_percent = 30
         self.l_percent = 40
         self.d_percent = 30
+        self.test_account = False
 
     def add(self):
         db.session.add(self)
