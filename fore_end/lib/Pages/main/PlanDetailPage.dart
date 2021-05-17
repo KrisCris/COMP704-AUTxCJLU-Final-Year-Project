@@ -130,6 +130,7 @@ class PlanDetailPage extends StatelessWidget {
                   User u = User.getInstance();
                   await u.plan.solveUpdateWeight(context);
                   chartKey.currentState.repaintData();
+                  this.goalKey.currentState.setState(() {});
                 },
               ),
               SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
