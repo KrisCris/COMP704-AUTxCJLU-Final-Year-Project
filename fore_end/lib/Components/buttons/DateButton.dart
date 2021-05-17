@@ -129,6 +129,10 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
                   onClick: () {
                     this.minusDay();
                   },
+                  onLongPress: (){
+                    this.minusDay(day: 7);
+                  }
+              ,
                 )
               : Container(),
           GestureDetector(
@@ -190,7 +194,11 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
                   backgroundOpacity: 0,
                   onClick: () {
                     this.addDay();
-                  })
+                  },
+                  onLongPress: (){
+                    this.addDay(day:7);
+                  },
+          )
               : Container(),
         ],
       ),
@@ -206,12 +214,12 @@ class DateSelectState extends State<DateSelect> with ValueableStateMixIn {
     }
   }
 
-  void addDay() {
-    this._modifyDat(day: this.widget.gap);
+  void addDay({int day=1}) {
+    this._modifyDat(day: day);
   }
 
-  void minusDay() {
-    this._modifyDat(day: -this.widget.gap);
+  void minusDay({int day=1}) {
+    this._modifyDat(day: -day);
   }
 
   @override
