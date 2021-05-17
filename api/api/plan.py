@@ -292,8 +292,12 @@ def update_body_info(*args, **kwargs):
                 gender=True if u.gender == 1 else False,
                 type=1
             )
+            # if -2, means the weight gained too much... Should change the plan instead
+            if result == 'unachievable' or result.get('low'):
+                return reply_json(-2)
             calories = result.get('goalCal')
             newPlanDetail = PlanDetail(
+                uid=uid,
                 pid=p.id,
                 weight=u.weight,
                 caloriesL=round(calories * 0.95) if round(calories * 0.95) >= 1000 else 1000,
@@ -305,9 +309,7 @@ def update_body_info(*args, **kwargs):
             )
             newPlanDetail.add()
 
-            # if -2, means the weight gained too much... Should change the plan instead
-            if result == 'unachievable' or result.get('low'):
-                return reply_json(-2)
+
 
             planData = {
                 'pid': p.id,
@@ -334,6 +336,7 @@ def update_body_info(*args, **kwargs):
             maintCals = result.get('maintainCal')
 
             newPlanDetail = PlanDetail(
+                uid=uid,
                 pid=p.id,
                 weight=u.weight,
                 caloriesL=round(maintCals * 0.95) if round(maintCals * 0.95) >= 1000 else 1000,
