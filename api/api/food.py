@@ -4,6 +4,7 @@ from flasgger import swag_from
 from flask import Blueprint, request
 
 from cv.detect import detect as food_detect
+from db import PlanDetail
 from db.DailyConsumption import DailyConsumption
 from db.Food import Food
 from db.Plan import Plan
@@ -94,6 +95,7 @@ def getFoodInfo(*args, **kwargs):
 def consume_foods(*args, **kwargs):
     uid = args[0].get('uid')
     pid = args[0].get('pid')
+    pdid = PlanDetail.getLatest(pid).id
     # 1 = breakfast, 2 = lunch, 3 = dinner
     type = args[0].get('type')
     # a list that contains all the food and its corresponding info including proteins, calories, names.
@@ -109,6 +111,7 @@ def consume_foods(*args, **kwargs):
     for food_info in foods_info:
         f = DailyConsumption(
             uid=uid, pid=pid, type=type, day=day,
+            pdid=pdid,
             name=food_info['name'],
             img=food_info['picture'],
             fid=food_info['id'],

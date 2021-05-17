@@ -21,7 +21,7 @@ class DailyConsumption(db.Model):
     img = db.Column(db.Text(16777216))
     cnName = db.Column(db.VARCHAR(256))
 
-    def __init__(self, uid, pid, fid, type, day, name=None, calories=None, protein=None, weight=None,
+    def __init__(self, uid, pid, fid, pdid, type, day, name=None, calories=None, protein=None, weight=None,
                  time=get_current_time(), img=None, cnName=None):
         self.uid = uid
         self.pid = pid
@@ -35,6 +35,7 @@ class DailyConsumption(db.Model):
         self.weight = weight
         self.img = img
         self.cnName = cnName
+        self.pdid = pdid
 
     def add(self):
         db.session.add(self)
@@ -101,10 +102,13 @@ class DailyConsumption(db.Model):
             DailyConsumption.time >= begin).filter(DailyConsumption.time <= end).order_by(DailyConsumption.time.asc())
         arr = []
         for record in records:
+            d = PlanDetail.getByID(record.pdid)
             arr.append({
                 'id': record.id,
                 'time': record.time,
-                'calories': record.calories * record.weight / 100
+                'calories': record.calories * record.weight / 100,
+                'calH': d.caloriesH,
+                'calL': d.caloriesL
             })
         return arr
 

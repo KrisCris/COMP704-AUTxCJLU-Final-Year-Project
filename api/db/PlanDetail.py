@@ -53,6 +53,10 @@ class PlanDetail(db.Model):
         return self
 
     @staticmethod
+    def getByID(pdid) -> 'PlanDetail':
+        return PlanDetail.query.filter(PlanDetail.id==pdid).first()
+
+    @staticmethod
     def getWeightTrendInPlan(pid):
         plans = PlanDetail.query.filter(PlanDetail.pid == pid).order_by(PlanDetail.id.asc())
         weight_arr = []
@@ -92,5 +96,7 @@ class PlanDetail(db.Model):
         results = DailyConsumption.query.filter(DailyConsumption.pdid == self.id).order_by(DailyConsumption.time.asc()).all()
         list = []
         for result in results:
-            list.append(result.toDict())
+            resdict = result.toDict()
+            resdict['img'] = None
+            list.append(resdict)
         return list
