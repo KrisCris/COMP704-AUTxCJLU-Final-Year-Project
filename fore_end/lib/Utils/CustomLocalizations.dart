@@ -617,6 +617,7 @@ class CustomLocalizations {
       "en":"Calories Insufficient Days",
       "zh":"卡路里不足天数"
     },
+
     "proteinInsufficient":{
       "en":"Protein Insufficient Days",
       "zh":"蛋白质不足天数"
