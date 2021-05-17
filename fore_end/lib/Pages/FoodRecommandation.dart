@@ -320,12 +320,14 @@ class FoodRecommandationState extends State<FoodRecommandation> {
                   ),
                   Expanded(child: SizedBox()),
                   CustomButton(
-                    text: CustomLocalizations.of(context).add +
-                        " " +
-                        CustomLocalizations.of(context).to +
-                        " " +
-                        CustomLocalizations.of(context)
-                            .getContent(widget.mealType),
+                    text: CustomLocalizations.of(context).add
+                        // +
+                        // " " +
+                        // CustomLocalizations.of(context).to +
+                        // " " +
+                        // CustomLocalizations.of(context)
+                        //     .getContent(widget.mealType)
+                    ,
                     firstColorName: ThemeColorName.Success,
                     textColor: MyTheme.convert(ThemeColorName.NormalText),
                     fontsize: 13,
