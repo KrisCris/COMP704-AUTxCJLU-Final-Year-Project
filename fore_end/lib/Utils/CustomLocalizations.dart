@@ -610,16 +610,20 @@ class CustomLocalizations {
       "zh":"卡路里标准天数"
     },
     "caloriesOver":{
-      "en":"Overload Days",
+      "en":"Days Calories Exceeded",
       "zh":"卡路里过量天数"
     },
     "caloriesInsufficient":{
-      "en":"Calories Insufficient Days",
+      "en":"Days Calories Insufficient",
       "zh":"卡路里不足天数"
     },
     "proteinInsufficient":{
-      "en":"Protein Insufficient Days",
+      "en":"Days Protein Insufficient",
       "zh":"蛋白质不足天数"
+    },
+    "proteinOver":{
+      "en":"Days Protein Exceeded",
+      "zh":"蛋白质过量天数"
     },
     "comment":{
       "en":"Plan Comment",
@@ -630,15 +634,15 @@ class CustomLocalizations {
       "zh":"减肥计划还不错，完成情况良好，未有延期记录!"
     },
     "no message":{
-      "en":"No Messages",
+      "en":"No Message",
       "zh":"无消息"
     },
     "offlineHint":{
-      "en": "You are now in offline mode, most function is unavailable. Click to login.",
+      "en": "You are in offline mode, most functions are unavailable. Click to login.",
       'zh':"您正处于离线登录模式，部分功能无法使用。点击此处进行登录"
     },
     "weightUpdateHint":{
-      "en":  "1 week had passed since your last body weight updating. It's time to update!",
+      "en":  "One week had passed since your last body weight updating. It's time to update!",
       "zh":"距离您上次记录体重已经有一周的时间，点击此处进行记录操作"
     },
     "passDeadlineHint":{
@@ -703,19 +707,19 @@ class CustomLocalizations {
       "zh":"食物营养信息页"
     },
     "planIsGoing":{
-      "en":"Plan still going",
+      "en":"Plan in progress",
       "zh":"项目正在进行中"
     },
 
 
 
     "recommand meal":{
-      "en":"recommand meal",
+      "en":"Recommended meal",
       "zh":"推荐餐食"
     },
 
     "recommand":{
-      "en":"recommand",
+      "en":"Recommended",
       "zh":"推荐"
     }
 };
