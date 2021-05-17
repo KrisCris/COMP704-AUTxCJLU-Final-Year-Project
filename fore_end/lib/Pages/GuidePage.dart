@@ -128,7 +128,6 @@ class GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
         });
         if (res.data['code'] == 1) {
           u.setPlan(res);
-
           Navigator.pushAndRemoveUntil(context,
               new MaterialPageRoute(builder: (context) {
             return new MainPage(user: u);
