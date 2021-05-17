@@ -478,7 +478,7 @@ def getPastPlans(*args, **kwargs):
                     'days': 0,
                     'details': [],
                 },
-                'detailedRecords': []
+                # 'detailedRecords': []
             }
             counter = 0
             for dc in dcs:
@@ -492,10 +492,13 @@ def getPastPlans(*args, **kwargs):
                 # detailed
                 detail = dc.toDict()
                 detail.pop('img')
-                consumptionRecords['detailedRecords'].append(detail)
+                # consumptionRecords['detailedRecords'].append(detail)
+
             if counter > 0:
-                consumptionRecords['avgCalories'] = consumptionRecords['accumCalories'] / counter
-                consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / counter
+                timegap = get_current_time() - p.begin
+                days = timegap/3600/24 + 1 if timegap % (3600*24) else timegap/3600/24
+                consumptionRecords['avgCalories'] = consumptionRecords['accumCalories'] / days
+                consumptionRecords['avgProtein'] = consumptionRecords['accumProtein'] / days
 
             dataMap[result.pid] = {
                 'planBrief': p.toDict(),
@@ -503,8 +506,9 @@ def getPastPlans(*args, **kwargs):
                 'exts': 0,
                 'consumption': consumptionRecords
             }
-
-        dataMap[result.pid]['weeklyDetails'].append(result.toDict())
+        resdict = result.toDict()
+        resdict["foodsConsumed"] = result.getCorrespondingConsumptionsRecords()
+        dataMap[result.pid]['weeklyDetails'].append(resdict)
 
         if result.ext != dataMap[result.pid]['weeklyDetails'][-1]['ext']:
             dataMap[result.pid]['exts'] += 1
