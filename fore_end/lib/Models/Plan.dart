@@ -610,9 +610,9 @@ class MaintainPlan extends Plan {
   }
 
   @override
-  void solveUpdateWeight(BuildContext context) {
+  void solveUpdateWeight(BuildContext context) async {
     User u = User.getInstance();
-    showDialog<int>(
+    await showDialog<int>(
         context: context,
         builder: (BuildContext context) {
           UpdateBody updt = UpdateBody(
