@@ -30,13 +30,13 @@ class FoodRecommandation extends StatefulWidget {
     User u = User.getInstance();
     if (this.mealType == null) {
       int hour = DateTime.now().hour;
-      if (hour > 4 && hour <= 11) {
+      if (hour >= 0 && hour < 11) {
         this.mealType = "breakfast";
         this.persent = u.breakfastRatio;
-      } else if (hour > 11 && hour <= 16) {
+      } else if (hour >= 11 && hour <= 16) {
         this.mealType = "lunch";
         this.persent = u.lunchRatio;
-      } else if ((hour > 16 && hour <= 24) || (hour >= 0 && hour < 4)) {
+      } else if ((hour > 16 && hour <= 24)) {
         this.mealType = "dinner";
         this.persent = u.dinnerRatio;
       }
@@ -200,7 +200,7 @@ class FoodRecommandationState extends State<FoodRecommandation> {
       children: [
         SizedBox(width: ScreenTool.partOfScreenWidth(0.05)),
         TitleText(
-          text: CustomLocalizations.of(context).recommand +
+          text: CustomLocalizations.of(context).recommand +" "+
               CustomLocalizations.of(context).getContent(widget.mealType),
           underLineLength: 200,
           maxHeight: 20,
