@@ -284,10 +284,12 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
         return makeGroupData(i, this.weekDateInfos[i].value.toDouble(),
             isTouched: i == touchedIndex,
-            barColor: this.weekDateInfos[i].isEqual(this.todayInfo.date)
-                // ? Color(0xff72d8bf)
-                // : Color(0xffED9055)
-                ? Colors.lightBlueAccent: this.getTargetColor(this.weekDateInfos[i].value, this.widget.planCalsUpperLimit, this.widget.planCalsLowerLimit)
+            barColor:
+            // this.weekDateInfos[i].isEqual(this.todayInfo.date)
+            // // ? Color(0xff72d8bf)
+            // // : Color(0xffED9055)
+            //     ? Colors.lightBlueAccent:
+            this.getTargetColor(this.weekDateInfos[i].value, this.widget.planCalsUpperLimit, this.widget.planCalsLowerLimit)
         );
       });
 
@@ -324,7 +326,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
               DateTime currentDate = this.weekDateInfos[group.x.toInt()].date;
               weekDay = formatDate(currentDate, [yyyy, '-', mm, '-', dd]);
               return BarTooltipItem(
-                  weekDay + '\n' + (rod.y - 1).toString() + ' Kcal',
+                  weekDay + '\n' + (this.weekDateInfos[groupIndex].value).toString() + ' Kcal',
                   TextStyle(color: Colors.yellow));
             }),
         touchCallback: (barTouchResponse) {
@@ -351,7 +353,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
               this.weekDateInfos[value.toInt()].isEqual(this.todayInfo.date)
               // ? Color(0xff72d8bf)
               // : Color(0xffED9055)
-                  ? Colors.lightBlueAccent : MyTheme.convert(ThemeColorName.NormalText)
+                  ? Colors.green : MyTheme.convert(ThemeColorName.NormalText)
               ,
               fontWeight: FontWeight.bold,
               fontSize: 14),
@@ -384,7 +386,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       x: x,
       barRods: [
         BarChartRodData(
-          y: isTouched ? y + 1 : y,
+          y: y > widget.planCalsUpperLimit.toDouble()*1.2 ? widget.planCalsUpperLimit.toDouble()*1.2 : y,
           colors: isTouched ? [Colors.yellow] : [barColor],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
