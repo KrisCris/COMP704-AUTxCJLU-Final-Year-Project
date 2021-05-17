@@ -21,10 +21,10 @@ class CaloriesBarChart extends StatefulWidget {
   bool isChangeColor = false;
 
   ///每条柱状图的上限，超出也会显示
-  int planCalsUpperLimit =
-      User.getInstance().plan.dailyCaloriesUpperLimit.floor() ?? 2000;
-  int planCalsLowerLimit =
-      User.getInstance().plan.dailyCaloriesLowerLimit.floor() ?? 2000;
+  // int planCalsUpperLimit =
+  //     User.getInstance().plan.dailyCaloriesUpperLimit.floor() ?? 2000;
+  // int planCalsLowerLimit =
+  //     User.getInstance().plan.dailyCaloriesLowerLimit.floor() ?? 2000;
 
   ///组件的宽高
   double width;
@@ -152,6 +152,8 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       for (DayInfo df in this.weekDateInfos) {
         if (df.isEqual(formatedDate)) {
           df.value += caloriesOfElement.toInt();
+          df.lowerLimit = element['calL'];
+          df.upperLimit = element['calH'];
           return;
         }
       }
@@ -170,10 +172,10 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   void didUpdateWidget(covariant CaloriesBarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
     DateTime now = DateTime.now();
-    bool isBefore = this.todayInfo.date.isBefore(DateTime(now.year,now.month,now.day).add(Duration(days: 1)));
-    bool isAfter = this.todayInfo.date.isAfter(DateTime(now.year,now.month,now.day));
-    if(isAfter && isBefore){
-      this.todayInfo.value = User.getInstance().getTodayCaloriesIntake();
+    int idx = DateTime.now().weekday - 1;
+    DateTime maybeToday = this.weekDateInfos[idx].date;
+    if(maybeToday.year==now.year && maybeToday.month==now.month && maybeToday.day==now.day){
+      this.weekDateInfos[idx].value = User.getInstance().getTodayCaloriesIntake();
     }
     setState(() {});
   }
@@ -281,14 +283,14 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   }
 
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
-        return makeGroupData(i, this.weekDateInfos[i].value.toDouble(),
+        return makeGroupData(i, this.weekDateInfos[i].value.toDouble(),this.getTheMax(this.weekDateInfos),
             isTouched: i == touchedIndex,
             barColor:
             // this.weekDateInfos[i].isEqual(this.todayInfo.date)
             // // ? Color(0xff72d8bf)
             // // : Color(0xffED9055)
             //     ? Colors.lightBlueAccent:
-            this.getTargetColor(this.weekDateInfos[i].value, this.widget.planCalsUpperLimit, this.widget.planCalsLowerLimit)
+            this.getTargetColor(this.weekDateInfos[i].value, this.weekDateInfos[i].upperLimit, this.weekDateInfos[i].lowerLimit)
         );
       });
 
@@ -310,6 +312,20 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       return low;
     }
   }
+
+  double getTheMax(List<DayInfo> days){
+    double max = 0;
+    for(DayInfo day in days){
+      if (day.upperLimit > max){
+        max = day.upperLimit;
+      }
+    }
+    if (max == 0){
+      max = 2000;
+    }
+    return max;
+  }
+
   ///这里是长按某行数据时的提示框，可以修改里面的提示文字，这里显示 日期 + 数值
   BarChartData mainBarData() {
     ///先初始化数据,默认就是以今天作为初始化
@@ -375,7 +391,9 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   ///1条形柱的颜色  和  宽度
   BarChartGroupData makeGroupData(
     int x,
-    double y, {
+    double y,
+      double upper,
+      {
     bool isTouched = false,
     Color barColor = const Color(0xff72d8bf),
     double width = 22,
@@ -385,7 +403,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
       x: x,
       barRods: [
         BarChartRodData(
-          y: y > widget.planCalsUpperLimit.toDouble() ? widget.planCalsUpperLimit.toDouble() : y,
+          y: y > upper ? upper : y,
           colors: isTouched ? [Colors.yellow] : [barColor],
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
@@ -393,7 +411,7 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
 
             ///y是每条数据的上限  比如2000 Kcal
             // y: widget.p.dailyCaloriesUpperLimit.floor().toDouble(),
-            y: widget.planCalsUpperLimit.toDouble(),
+            y: upper,
             colors: [MyTheme.convert(ThemeColorName.PageBackground)],
           ),
         ),
@@ -403,13 +421,17 @@ class CaloriesBarChartState extends State<CaloriesBarChart> {
   }
 }
 
+
+
 class DayInfo {
   String name;
   String abbr;
   DateTime date;
   int value;
+  double upperLimit;
+  double lowerLimit;
 
-  DayInfo({this.name, this.abbr, this.date, this.value});
+  DayInfo({this.name, this.abbr, this.date, this.value, this.upperLimit=0, this.lowerLimit=0});
 
   bool isEqual(DateTime dt) {
     return this.date.compareTo(dt) == 0;
