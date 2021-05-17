@@ -116,7 +116,7 @@ class ValueAdjusterState<T extends num> extends State<ValueAdjuster<T>> {
   void minusWeight() {
     if (this.widget.lower != null &&
         (this.valueNotifier.value - this.widget.valueWeight <
-            this.widget.upper)) return;
+            this.widget.lower)) return;
     setState(() {
       if (this.valueNotifier.value >= this.widget.valueWeight) {
         this.valueNotifier.value -= this.widget.valueWeight;
