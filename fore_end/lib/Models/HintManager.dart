@@ -61,39 +61,42 @@ class HintManager {
       hints['weightUpdateHint'] = new Hint(
           instanceClose: false,
           hintContent: CustomLocalizations.of(context).weightUpdateHint,
-          onClick: () {
-            showDialog<bool>(
-              context: context,
-              builder: (BuildContext context) {
-                UpdateBody updateBody = new UpdateBody(
-                    text: CustomLocalizations.of(context).beforeChangePlan,
-                    needHeight: false);
-                updateBody.onUpdate = () async {
-                  User u = User.getInstance();
-                  Response res = await Requests.finishPlan(context, {
-                    "uid": u.uid,
-                    "token": u.token,
-                    "pid": u.plan?.id ?? -1,
-                    "weight": updateBody.weight.widgetValue.value.floor()
-                  });
-                  if (res != null && res.data['code'] == 1) {
-                    this.removeHint("weightUpdateHint");
-                    Navigator.pop(context, true);
-                  } else {
-                    Fluttertoast.showToast(msg: "update failed");
-                  }
-                };
-                return updateBody;
-              },
-            ).then((val) {
-              if (val == true) {
-                Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
-                  return GuidePage(
-                    firstTime: false,
-                  );
-                }));
-              }
-            });
+          onClick: () async {
+            await u.plan.solveUpdateWeight(context);
+            this.removeHint("weightUpdateHint");
+            u.shouldUpdateWeight = false;
+            // showDialog<bool>(
+            //   context: context,
+            //   builder: (BuildContext context) {
+            //     UpdateBody updateBody = new UpdateBody(
+            //         text: CustomLocalizations.of(context).beforeChangePlan,
+            //         needHeight: false);
+            //     updateBody.onUpdate = () async {
+            //       User u = User.getInstance();
+            //       Response res = await Requests.finishPlan(context, {
+            //         "uid": u.uid,
+            //         "token": u.token,
+            //         "pid": u.plan?.id ?? -1,
+            //         "weight": updateBody.weight.widgetValue.value.floor()
+            //       });
+            //       if (res != null && res.data['code'] == 1) {
+            //         this.removeHint("weightUpdateHint");
+            //         Navigator.pop(context, true);
+            //       } else {
+            //         Fluttertoast.showToast(msg: "update failed");
+            //       }
+            //     };
+            //     return updateBody;
+            //   },
+            // ).then((val) {
+            //   if (val == true) {
+            //     Navigator.push(context, new MaterialPageRoute(builder: (ctx) {
+            //       return GuidePage(
+            //         firstTime: false,
+            //       );
+            //     }));
+            //   }
+            // });
           });
     }
     if (u.plan.pastDeadline) {

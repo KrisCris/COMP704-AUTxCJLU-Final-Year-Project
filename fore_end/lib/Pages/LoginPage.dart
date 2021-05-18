@@ -146,6 +146,7 @@ class Login extends StatelessWidget {
         User u = User.getInstance();
         u.token = res.data['data']['token'];
         u.uid = res.data['data']['uid'];
+        u.isOffline = false;
         u.email = email;
         int code = await u.synchronize();
         if (code == 4) {
