@@ -1,0 +1,66 @@
+Modify Basic Info (gender, age, nickname)
+---
+tags:
+  - USER
+parameters:
+  - in: formData
+    name: uid
+    type: integer
+    required: true
+    description: User ID
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: Token
+  - in: formData
+    name: age
+    type: integer
+    required: true
+    description: age
+  - in: formData
+    name: gender
+    type: integer
+    required: true
+    description: gender code
+  - in: formData
+    name: nickname
+    type: string
+    required: true
+    description: nickname
+  - in: formData
+    name: avatar
+    type: string
+    required: true
+    description: b64 string of avatar
+responses:
+  1:
+    description: Successfully Changed Password (Require re-login)
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          example: [ ]
+  -1:
+    description: Login Required
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -1
+        msg:
+          type: string
+          description: return info
+          example: 'login required'
+        data:
+          type: array
+          example: [ ]

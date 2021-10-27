@@ -1,0 +1,36 @@
+should_update_weight
+---
+tags:
+  - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: pid
+    type: string
+    required: True
+    description: plan id
+responses:
+  1:
+    description: result
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: { 'shouldUpdate': True }

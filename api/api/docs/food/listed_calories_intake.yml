@@ -1,0 +1,57 @@
+Put Calories intake in a list
+---
+tags:
+  - FOOD
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: begin
+    type: string
+    required: true
+    description: begin
+  - in: formData
+    name: end
+    type: string
+    required: true
+    description: end
+responses:
+  1:
+    description: Successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          example: [
+            {
+              "calories": 10994.5,
+              "id": 33,
+              "time": 1620817490
+            },
+            {
+              "calories": 4978.8,
+              "id": 34,
+              "time": 1620817490
+            },
+            {
+              "calories": 6581.999999999999,
+              "id": 35,
+              "time": 1620820642
+            }
+          ]

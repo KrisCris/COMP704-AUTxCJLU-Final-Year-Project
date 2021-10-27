@@ -1,0 +1,61 @@
+Edit intake ratio of each meal
+---
+tags:
+  - USER
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: User ID
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: Token
+  - in: formData
+    name: breakfast
+    type: string
+    required: true
+    description: breakfast
+  - in: formData
+    name: lunch
+    type: string
+    required: true
+    description: lunch
+  - in: formData
+    name: dinner
+    type: string
+    required: true
+    description: dinner
+responses:
+  1:
+    description: Success
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: object
+          example: null
+  -2:
+    description: sum of 3 values are not 100
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -2
+        msg:
+          type: string
+          description: return info
+          example: 'should added up to 100'
+        data:
+          type: number
+          example: null

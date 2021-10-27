@@ -1,0 +1,41 @@
+extend_plan only
+---
+tags:
+  - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: pid
+    type: string
+    required: true
+    description: plan id
+  - in: formData
+    name: days
+    type: string
+    required: true
+    description: number of days
+responses:
+  1:
+    description: success
+    schema:
+      properties:
+        code:
+          type: number
+          example: 1
+        msg:
+          type: string
+          example: 'success'
+        data:
+          type: object
+          example: {
+            'ext': 12
+          }

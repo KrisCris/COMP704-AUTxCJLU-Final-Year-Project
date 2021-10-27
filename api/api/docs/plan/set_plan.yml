@@ -1,0 +1,87 @@
+set_plan
+---
+tags:
+  - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: age
+    type: string
+    required: true
+    description: age
+  - in: formData
+    name: gender
+    type: string
+    required: true
+    description: gender
+  - in: formData
+    name: weight
+    type: string
+    required: true
+    description: weight
+  - in: formData
+    name: goalWeight
+    type: string
+    required: true
+    description: goalWeight
+  - in: formData
+    name: height
+    type: string
+    required: true
+    description: height
+  - in: formData
+    name: calories
+    type: string
+    required: true
+    description: calories
+  - in: formData
+    name: maintCalories
+    type: string
+    required: true
+    description: maintCalories
+  - in: formData
+    name: type
+    type: string
+    required: true
+    description: type
+  - in: formData
+    name: duration
+    type: string
+    required: true
+    description: duration
+  - in: formData
+    name: pal
+    type: string
+    required: true
+    description: pal
+responses:
+  1:
+    description: successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: {
+            'pid': newPlan.id,
+            'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+            'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+            'begin': newPlan.begin, 'end': newPlan.end,
+            'type': newPlan.type, 'goal': newPlan.goalWeight
+          }

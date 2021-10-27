@@ -1,0 +1,208 @@
+Recommend Foods for Search Results
+---
+tags:
+  - FOOD
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: mealType
+    type: string
+    required: true
+    description: meal type, breakfast = 1, launch = 2, dinner = 3
+  - in: formData
+    name: pid
+    type: string
+    required: true
+    description: plan id
+responses:
+  1:
+    description: successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: {
+            "randFoods": {
+              "1": [
+                {
+                  "calories": 124.47,
+                  "carbohydrate": 3.82,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "菜",
+                    "desc": null,
+                    "id": 1,
+                    "name": "Dishes"
+                  },
+                  "category": 1,
+                  "cellulose": 0.17,
+                  "cnName": "韩式烤牛肉",
+                  "fat": 4.79,
+                  "id": 141,
+                  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFB",
+                  "name": "beef bowl",
+                  "protein": 16.62,
+                  "ratioCH": 0.151,
+                  "ratioF": 0.19,
+                  "ratioP": 0.659
+                },
+                {
+                  "calories": 116.31,
+                  "carbohydrate": 7.65,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "菜",
+                    "desc": null,
+                    "id": 1,
+                    "name": "Dishes"
+                  },
+                  "category": 1,
+                  "cellulose": 2.33,
+                  "cnName": "香辣虾",
+                  "fat": 4.62,
+                  "id": 128,
+                  "img": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAg",
+                  "name": "shrimp with chill source",
+                  "protein": 13.54,
+                  "ratioCH": 0.296,
+                  "ratioF": 0.179,
+                  "ratioP": 0.525
+                }
+              ],
+              "2": [
+                {
+                  "calories": 336.04,
+                  "carbohydrate": 22.7,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "点心",
+                    "desc": null,
+                    "id": 2,
+                    "name": "Dessert"
+                  },
+                  "category": 2,
+                  "cellulose": 0,
+                  "cnName": "生鱼片碗",
+                  "fat": 6.2,
+                  "id": 125,
+                  "img": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgMFAwMDBQUEAwMEBQYFBQUFB",
+                  "name": "sashimi bowl",
+                  "protein": 46.5,
+                  "ratioCH": 0.301,
+                  "ratioF": 0.082,
+                  "ratioP": 0.617
+                },
+                {
+                  "calories": 336.04,
+                  "carbohydrate": 22.7,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "点心",
+                    "desc": null,
+                    "id": 2,
+                    "name": "Dessert"
+                  },
+                  "category": 2,
+                  "cellulose": 0,
+                  "cnName": "生鱼片",
+                  "fat": 6.2,
+                  "id": 48,
+                  "img": "/9j/4AAQSkZJRgABAQAAAQABAAD/4QCkRXhpZgAASUkqAAgAAAAFABIBAwABAAAAAQAAABoBBQABAAAASgAAABsBBQABAAAAUgAAACgBAwABA",
+                  "name": "dried fish",
+                  "protein": 37.3,
+                  "ratioCH": 0,
+                  "ratioF": 0.206,
+                  "ratioP": 0.794
+                },
+                {
+                  "calories": 83.2,
+                  "carbohydrate": 7.4,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "肉蛋奶",
+                    "desc": null,
+                    "id": 3,
+                    "name": "Proteins"
+                  },
+                  "category": 3,
+                  "cellulose": 0,
+                  "cnName": "日式咖喱牛肉",
+                  "fat": 3.6,
+                  "id": 6,
+                  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQo",
+                  "name": "beef curry",
+                  "protein": 5.32,
+                  "ratioCH": 0.453,
+                  "ratioF": 0.221,
+                  "ratioP": 0.326
+                }
+              ],
+              "5": [
+                {
+                  "calories": 26.42,
+                  "carbohydrate": 0.88,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "汤",
+                    "desc": null,
+                    "id": 5,
+                    "name": "Soup"
+                  },
+                  "category": 5,
+                  "cellulose": 0.16,
+                  "cnName": "冬瓜汤",
+                  "fat": 1.03,
+                  "id": 301,
+                  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/4QAWRXhpZgAASUkqAAgAAAAAAAAAAAD/2wBDAAg",
+                  "name": "winter melon soup",
+                  "protein": 3.56,
+                  "ratioCH": 0.161,
+                  "ratioF": 0.188,
+                  "ratioP": 0.651
+                }
+              ],
+              "7": [
+                {
+                  "calories": 55,
+                  "carbohydrate": 5.1,
+                  "cate_info": {
+                    "cnDesc": null,
+                    "cnName": "主食",
+                    "desc": null,
+                    "id": 7,
+                    "name": "Staple Food"
+                  },
+                  "category": 7,
+                  "cellulose": 0.6,
+                  "cnName": "鸡肉面条",
+                  "fat": 2.6,
+                  "id": 282,
+                  "img": "/9j/2wBDAAQDAwQDAwQEAwQFBAQFBgoHBgYGBg0JCggKDw0QEA8NDw4RExgUERIXEg4PF",
+                  "name": "mie ayam",
+                  "protein": 2.9,
+                  "ratioCH": 0.481,
+                  "ratioF": 0.245,
+                  "ratioP": 0.274
+                }
+              ]
+            },
+            "recentConsumed": { },
+            "similarRecmd": { }
+          }

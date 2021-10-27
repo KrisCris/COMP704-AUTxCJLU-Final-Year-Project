@@ -1,0 +1,69 @@
+Query Daily Calories
+---
+tags:
+  - PLAN
+parameters:
+  - in: query
+    name: height
+    type: string
+    required: true
+    description: height
+  - in: query
+    name: weight
+    type: string
+    required: true
+    description: weight
+  - in: query
+    name: age
+    type: string
+    required: true
+    description: age
+  - in: query
+    name: gender
+    type: string
+    required: true
+    description: male 1, female 2
+  - in: query
+    name: plan
+    type: string
+    required: true
+    description: plan type, 1 = shedding weight, 2 = maintain, 3 = build muscle
+  - in: query
+    name: duration
+    type: string
+    required: true
+    description: days
+  - in: query
+    name: pal
+    type: string
+    required: true
+    description: physical activity level, normally 1.4 - 2.2
+  - in: query
+    name: goal_weight
+    type: string
+    required: false
+    description: weight to reach, should be provided if type 1
+responses:
+  1:
+    description: successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: object
+          example: {
+            "bmi": 0,
+            "completedCal": 2716,
+            "goalCal": 1390,
+            "low": false,
+            "maintainCal": 3044,
+            "protein_h": 112.87272727272726,
+            "protein_l": 77.6
+          }

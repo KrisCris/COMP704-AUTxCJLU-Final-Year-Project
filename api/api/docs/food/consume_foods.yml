@@ -1,0 +1,46 @@
+Consume Food
+---
+tags:
+  - FOOD
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: pid
+    type: string
+    required: true
+    description: plan id
+  - in: formData
+    name: type
+    type: string
+    required: true
+    description: meal type
+  - in: formData
+    name: foods_info
+    type: string
+    required: true
+    description: array of foods data
+responses:
+  1:
+    description: Successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: object
+          example: { 'stmp': 1127894133 }

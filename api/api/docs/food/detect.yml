@@ -1,0 +1,47 @@
+Detect Food
+---
+tags:
+  - FOOD
+parameters:
+  - in: formData
+    name: food_b64
+    type: string
+    required: true
+    description: base64 encoded image
+  - in: formData
+    name: rotation
+    type: string
+    required: true
+    description: camera rotation on the flutter in fixing rotation issues
+responses:
+  1:
+    description: Successful
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          items:
+            type: object
+            example: { "basic": { "img": "/i9v/1dsafadsfdasfdasaadfs", "name": "apple" }, "info": { 'id': 1, 'name': "apple", 'cnName': "苹果", 'category': 7,
+                                                                                                    'img': /i9v/12o312908fdklsjfa;dnm23904nml,
+                                                                                                    'calories': 70, 'fat': 0, 'carbohydrate': 88,
+                                                                                                    'protein': 24,
+                                                                                                    'cellulose': 9,
+                                                                                                    'ratioP': 0.2, 'ratioCH': 0.5, 'ratioF': 0.3,
+                                                                                                    "cate_info": {
+                                                                                                      'id': 7,
+                                                                                                      'name': "frutes",
+                                                                                                      'cnName': "果蔬",
+                                                                                                      'desc': "description",
+                                                                                                      'cnDesc': "描述"
+                                                                                                    }
+            }
+            }

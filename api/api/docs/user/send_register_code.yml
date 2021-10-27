@@ -1,0 +1,74 @@
+Send register code
+---
+tags:
+  - USER
+parameters:
+  - in: formData
+    name: email
+    type: string
+    required: true
+    description: Email
+responses:
+  1:
+    description: Successful Sent Email
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return info
+          example: 'success'
+        data:
+          type: array
+          example: [ ]
+  -3:
+    description: User Already Exists
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -3
+        msg:
+          type: string
+          description: return info
+          example: 'Already Exist'
+        data:
+          type: array
+          example: [ ]
+  -5:
+    description: Email Sending Failed
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -5
+        msg:
+          type: string
+          description: return info
+          example: 'Operation Failed'
+        data:
+          type: array
+          example: [ ]
+  -7:
+    description: Wait
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: -7
+        msg:
+          type: string
+          description: return info
+          example: 'Too Often'
+        data:
+          type: array
+          example: [ ]
+
+
+

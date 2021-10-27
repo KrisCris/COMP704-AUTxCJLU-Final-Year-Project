@@ -1,0 +1,98 @@
+update_body_info
+---
+tags:
+  - PLAN
+parameters:
+  - in: formData
+    name: uid
+    type: string
+    required: true
+    description: user id
+  - in: formData
+    name: token
+    type: string
+    required: true
+    description: token
+  - in: formData
+    name: weight
+    type: string
+    required: false
+    description: weight
+  - in: formData
+    name: height
+    type: string
+    required: false
+    description: height
+  - in: formData
+    name: pal
+    type: string
+    required: false
+    description: physical activities level
+responses:
+  1 - plan completed:
+    description: plan completed
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: number
+          example: None
+  1 - renewed subPlan:
+    escription: sub plan for next week is created
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: {
+            'pid': p.id,
+            'cl': newPlanDetail.caloriesL, 'ch': newPlanDetail.caloriesH,
+            'pl': newPlanDetail.proteinL, 'ph': newPlanDetail.proteinH,
+            'begin': p.begin, 'end': p.end,
+            'ext': None,
+            'type': p.type, 'goal': p.goalWeight,
+          }
+  -2:
+    description: need new plan instead
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: object
+          example: { 'hasRecommendation': True if FLAG_EXT else False, 'recommend_ext': FLAG_EXT }
+  -6:
+    description: plan not exist
+    schema:
+      properties:
+        code:
+          type: number
+          description: return code
+          example: 1
+        msg:
+          type: string
+          description: return msg
+          example: 'success'
+        data:
+          type: number
+          example: None
