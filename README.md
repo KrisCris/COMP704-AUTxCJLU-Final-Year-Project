@@ -4,30 +4,30 @@ A DIET-KEEPING MOBILE APP FEATURING FOOD RECOGNITION (Via phone camera)
 
 ### some imgs
 
-![choosePlan](/Users/kriscris/Coding/RND/Resources/choosePlan.png)
+![choosePlan](Resources/choosePlan.png)
 
-![basicData](/Users/kriscris/Coding/RND/Resources/basicData.png)
+![basicData](Resources/basicData.png)
 
-![actLv](/Users/kriscris/Coding/RND/Resources/actLv.png)
+![actLv](Resources/actLv.png)
 
-![goal](/Users/kriscris/Coding/RND/Resources/goal.png)
+![goal](Resources/goal.png)
 
-![calc](/Users/kriscris/Coding/RND/Resources/calc.png)
+![calc](Resources/calc.png)
 
-![camera](/Users/kriscris/Coding/RND/Resources/camera.png)
+![camera](Resources/camera.png)
 
-![res](/Users/kriscris/Coding/RND/Resources/res.png)
+![res](Resources/res.png)
 
-![main](/Users/kriscris/Coding/RND/Resources/main.png)
+![main](Resources/main.png)
 
-![status](/Users/kriscris/Coding/RND/Resources/status.png)
+![status](Resources/status.png)
 
-![rec](/Users/kriscris/Coding/RND/Resources/rec.png)
+![rec](Resources/rec.png)
 
-![search](/Users/kriscris/Coding/RND/Resources/search.png)
+![search](Resources/search.png)
 
-![searchRes](/Users/kriscris/Coding/RND/Resources/searchRes.png)
+![searchRes](Resources/searchRes.png)
 
-![i18n_theme](/Users/kriscris/Coding/RND/Resources/i18n_theme.jpg)
+![i18n_theme](Resources/i18n_theme.jpg)
 
-![db](/Users/kriscris/Coding/RND/Resources/db.png)
+![db](Resources/db.png)
